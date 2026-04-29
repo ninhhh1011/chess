@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #17120d; }
+
+@keyframes notice-pop {
+  0% { opacity: 0; transform: translate(-50%, -10px) scale(.96); }
+  12% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  78% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -8px) scale(.98); }
+}
+
+@layer components {
+  .btn-primary { @apply inline-flex items-center justify-center rounded-full bg-gradient-to-r from-gold to-amber-600 px-6 py-3 font-extrabold text-ink shadow-glow transition hover:-translate-y-0.5 hover:brightness-110; }
+  .btn-secondary { @apply inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-6 py-3 font-bold text-cream transition hover:-translate-y-0.5 hover:border-gold/60 hover:bg-white/15; }
+}
