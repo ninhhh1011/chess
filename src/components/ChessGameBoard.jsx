@@ -14,12 +14,17 @@ const GAME_MODES = {
 const YOUTUBE_BACKGROUND_MUSIC_URL = 'https://www.youtube.com/embed/IfMv0pJJtAA?autoplay=1&loop=1&playlist=IfMv0pJJtAA&controls=1&modestbranding=1&rel=0';
 
 const moveDotStyle = {
-  background: 'radial-gradient(circle, rgba(23,18,13,0.34) 18%, transparent 20%)',
+  backgroundImage: 'radial-gradient(circle, rgba(23,18,13,0.34) 18%, transparent 20%)',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  backgroundSize: '100% 100%',
 };
 
 const captureRingStyle = {
-  boxShadow: 'inset 0 0 0 7px rgba(23,18,13,0.28)',
-  borderRadius: '9999px',
+  backgroundImage: 'radial-gradient(circle, transparent 52%, rgba(23,18,13,0.34) 54%, rgba(23,18,13,0.34) 66%, transparent 68%)',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  backgroundSize: '100% 100%',
 };
 
 export default function ChessGameBoard() {
@@ -32,6 +37,7 @@ export default function ChessGameBoard() {
   const [startNotice, setStartNotice] = useState(true);
   const [isMusicOn, setIsMusicOn] = useState(true);
   const [selectedSquare, setSelectedSquare] = useState(null);
+  const [resultNotice, setResultNotice] = useState(null);
   const status = useMemo(() => getChessStatus(game), [game]);
   const history = game.history();
 
@@ -44,6 +50,21 @@ export default function ChessGameBoard() {
 
     return () => window.clearTimeout(timerId);
   }, [startNotice]);
+
+  useEffect(() => {
+    if (!game.isGameOver()) {
+      setResultNotice(null);
+      return;
+    }
+
+    if (game.isCheckmate()) {
+      const winner = game.turn() === 'w' ? 'Đen' : 'Trắng';
+      setResultNotice(`${winner} thắng bằng chiếu hết!`);
+      return;
+    }
+
+    setResultNotice('Ván cờ hòa!');
+  }, [game]);
 
   function showStartNotice() {
     setStartNotice(false);
@@ -112,6 +133,7 @@ export default function ChessGameBoard() {
     setIsBotThinking(false);
     setMoveHints({});
     setSelectedSquare(null);
+    setResultNotice(null);
     showStartNotice();
     setBoardKey((currentKey) => currentKey + 1);
   }
@@ -122,6 +144,7 @@ export default function ChessGameBoard() {
     setIsBotThinking(false);
     setMoveHints({});
     setSelectedSquare(null);
+    setResultNotice(null);
     showStartNotice();
     setBoardKey((currentKey) => currentKey + 1);
   }
@@ -230,6 +253,14 @@ export default function ChessGameBoard() {
       src={YOUTUBE_BACKGROUND_MUSIC_URL}
       allow="autoplay; encrypted-media"
     />}
+    {resultNotice && <div className="fixed inset-0 z-50 grid place-items-center bg-ink/65 px-4 backdrop-blur-sm">
+      <div className="max-w-md rounded-[2rem] border border-gold/40 bg-ink/95 p-8 text-center shadow-glow">
+        <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-gold text-4xl text-ink">♔</div>
+        <h2 className="text-3xl font-black text-gold">Kết thúc ván đấu</h2>
+        <p className="mt-4 text-xl font-bold text-cream">{resultNotice}</p>
+        <button className="btn-primary mt-6" onClick={startNewGame}>Chơi ván mới</button>
+      </div>
+    </div>}
     <section className="mx-auto w-full max-w-[620px] rounded-[2rem] border border-white/10 bg-white/[.08] p-4 shadow-glow backdrop-blur">
       <Chessboard key={boardKey} options={{
         position: game.fen(),
