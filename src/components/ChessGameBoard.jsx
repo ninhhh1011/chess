@@ -29,12 +29,13 @@ const captureRingStyle = {
 
 const fixedBoardStyle = {
   width: '100%',
-  maxWidth: '620px',
+  height: '100%',
   aspectRatio: '1 / 1',
   border: '0',
-  borderRadius: '1.35rem',
+  borderRadius: 'clamp(0.75rem, 3vw, 1.35rem)',
   overflow: 'hidden',
   boxShadow: 'none',
+  touchAction: 'none',
 };
 
 const stableSquareStyle = {
@@ -260,7 +261,7 @@ export default function ChessGameBoard() {
     return nextGame;
   }
 
-  return <div className="relative grid gap-6 lg:grid-cols-[minmax(280px,620px)_1fr]">
+  return <div className="relative grid gap-4 sm:gap-6 lg:grid-cols-[minmax(280px,620px)_1fr]">
     {startNotice && <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-full border border-gold/40 bg-ink/90 px-6 py-3 text-center font-black text-gold shadow-glow backdrop-blur-xl">
       ♔ Bắt đầu ván cờ!
     </div>}
@@ -278,7 +279,7 @@ export default function ChessGameBoard() {
         <button className="btn-primary mt-6" onClick={startNewGame}>Chơi ván mới</button>
       </div>
     </div>}
-    <section className="mx-auto aspect-square w-full max-w-[620px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[.08] p-4 shadow-glow backdrop-blur box-border">
+    <section className="mx-auto aspect-square w-[min(100%,calc(100svw-2rem),620px)] max-w-[620px] overflow-hidden rounded-[1.25rem] border border-white/10 bg-white/[.08] p-2 shadow-glow backdrop-blur box-border sm:rounded-[2rem] sm:p-4">
       <Chessboard key={boardKey} options={{
         position: game.fen(),
         onPieceDrop: onDrop,
@@ -301,7 +302,7 @@ export default function ChessGameBoard() {
         lightSquareStyle: { backgroundColor: '#f4ddb5', ...stableSquareStyle },
       }} />
     </section>
-    <aside className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
+    <aside className="rounded-[1.5rem] border border-white/10 bg-white/[.08] p-4 backdrop-blur sm:rounded-[2rem] sm:p-6">
       <label className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45" htmlFor="game-mode">Chế độ chơi</label>
       <select id="game-mode" value={gameMode} onChange={(event) => changeGameMode(event.target.value)} className="mt-3 w-full rounded-2xl border border-white/10 bg-ink/70 px-4 py-3 font-bold text-cream outline-none transition focus:border-gold">
         <option value={GAME_MODES.LOCAL}>2 người chơi</option>

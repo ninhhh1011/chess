@@ -5,7 +5,10 @@
 
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }
-body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #17120d; }
+html { width: 100%; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+body { margin: 0; width: 100%; overflow-x: hidden; font-family: Inter, system-ui, sans-serif; background: #17120d; }
+button, select { font: inherit; }
+img, svg, canvas, iframe { max-width: 100%; }
 
 @keyframes notice-pop {
   0% { opacity: 0; transform: translate(-50%, -10px) scale(.96); }
