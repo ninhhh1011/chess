@@ -27,6 +27,23 @@ const captureRingStyle = {
   backgroundSize: '100% 100%',
 };
 
+const fixedBoardStyle = {
+  width: '100%',
+  maxWidth: '620px',
+  aspectRatio: '1 / 1',
+  border: '0',
+  borderRadius: '1.35rem',
+  overflow: 'hidden',
+  boxShadow: 'none',
+};
+
+const stableSquareStyle = {
+  boxSizing: 'border-box',
+  border: '0',
+  outline: '0',
+  boxShadow: 'none',
+};
+
 export default function ChessGameBoard() {
   const [game, setGame] = useState(() => new Chess());
   const [boardKey, setBoardKey] = useState(0);
@@ -261,7 +278,7 @@ export default function ChessGameBoard() {
         <button className="btn-primary mt-6" onClick={startNewGame}>Chơi ván mới</button>
       </div>
     </div>}
-    <section className="mx-auto w-full max-w-[620px] rounded-[2rem] border border-white/10 bg-white/[.08] p-4 shadow-glow backdrop-blur">
+    <section className="mx-auto aspect-square w-full max-w-[620px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[.08] p-4 shadow-glow backdrop-blur box-border">
       <Chessboard key={boardKey} options={{
         position: game.fen(),
         onPieceDrop: onDrop,
@@ -275,8 +292,13 @@ export default function ChessGameBoard() {
         onPieceClick: ({ square }) => showLegalMoveHints(square),
         onSquareClick: handleSquareClick,
         squareStyles: moveHints,
-        darkSquareStyle: { backgroundColor: '#8a5a32' },
-        lightSquareStyle: { backgroundColor: '#f4ddb5' },
+        boardStyle: fixedBoardStyle,
+        squareStyle: stableSquareStyle,
+        showNotation: false,
+        showAnimations: true,
+        animationDurationInMs: 120,
+        darkSquareStyle: { backgroundColor: '#8a5a32', ...stableSquareStyle },
+        lightSquareStyle: { backgroundColor: '#f4ddb5', ...stableSquareStyle },
       }} />
     </section>
     <aside className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
