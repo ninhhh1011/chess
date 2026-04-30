@@ -3,30 +3,38 @@ import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { sameMove } from '../utils/chessStatus';
 
-export default function ExerciseBoard({ exercise }) {
+export default function ExerciseBoard({ exercise, onResult }) {
   const [game, setGame] = useState(() => new Chess(exercise.fen));
   const [message, setMessage] = useState('Kéo quân để nhập đáp án của bạn.');
   const [showHint, setShowHint] = useState(false);
+  const [isSolved, setIsSolved] = useState(false);
 
   function reset() {
     setGame(new Chess(exercise.fen));
     setMessage('Kéo quân để nhập đáp án của bạn.');
     setShowHint(false);
+    setIsSolved(false);
   }
 
   function onDrop({ sourceSquare, targetSquare }) {
+    if (isSolved) return false;
+
     const copy = new Chess(game.fen());
     const move = copy.move({ from: sourceSquare, to: targetSquare, promotion: 'q' });
     if (!move) {
       setMessage('Chưa đúng, thử lại.');
+      onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: false, tags: exercise.tags || ['illegal_move'] });
       return false;
     }
     if (sameMove(move, exercise.correctMove)) {
       setGame(copy);
       setMessage('Chính xác!');
+      setIsSolved(true);
+      onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: true, tags: exercise.tags || ['tactic'] });
       return true;
     }
     setMessage('Chưa đúng, thử lại.');
+    onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: false, tags: exercise.tags || ['wrong_candidate_move'] });
     return false;
   }
 
@@ -35,6 +43,7 @@ export default function ExerciseBoard({ exercise }) {
       <Chessboard options={{
         position: game.fen(),
         onPieceDrop: onDrop,
+        showNotation: true,
         darkSquareStyle: { backgroundColor: '#7a4f2d' },
         lightSquareStyle: { backgroundColor: '#f7e4bf' },
       }} />

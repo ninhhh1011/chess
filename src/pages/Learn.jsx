@@ -2,9 +2,16 @@ import { useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 import LessonCard from '../components/LessonCard';
 import { lessons } from '../data/lessons';
+import { getUserProfile, markLessonCompleted } from '../services/userProfileService';
 
 export default function Learn() {
   const [selected, setSelected] = useState(null);
+  const [profile, setProfile] = useState(() => getUserProfile());
+
+  function completeLesson(lessonId) {
+    setProfile(markLessonCompleted(lessonId));
+  }
+
   if (selected) return <section>
     <button className="btn-secondary mb-6" onClick={() => setSelected(null)}>← Quay lại danh sách bài học</button>
     <div className="grid gap-8 lg:grid-cols-[1fr_440px]">
@@ -13,11 +20,15 @@ export default function Learn() {
         <p className="mt-6 text-lg leading-9 text-cream/75">{selected.content}</p>
         <h2 className="mt-8 text-2xl font-extrabold">Ví dụ minh họa</h2>
         <p className="mt-3 leading-8 text-cream/70">{selected.example}</p>
+        <button className="btn-primary mt-8" onClick={() => completeLesson(selected.id)}>
+          {profile.lessonsCompleted.includes(selected.id) ? 'Đã học xong ✓' : 'Đánh dấu đã học xong'}
+        </button>
       </article>
       <div className="mx-auto w-full max-w-[440px] rounded-[2rem] border border-white/10 bg-white/[.08] p-4 shadow-glow backdrop-blur">
         <Chessboard options={{
           position: selected.fen,
           allowDragging: false,
+          showNotation: true,
           darkSquareStyle: { backgroundColor: '#8a5a32' },
           lightSquareStyle: { backgroundColor: '#f4ddb5' },
         }} />

@@ -3,8 +3,14 @@ import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import StatusBadge from './StatusBadge';
 import { getChessStatus, getTurnLabel } from '../utils/chessStatus';
-import { getRandomBotMove, BOT_LEVELS, getBotLevelByElo } from '../utils/randomBot';
+import { getBotMove, uciToMoveObject } from '../services/botService';
+import { BOT_ELO_LEVELS } from '../data/botLevels';
 import { playCaptureSound, playMoveSound, playStartSound } from '../utils/sound';
+import AICoachPanel from './AICoachPanel';
+import EngineAnalysisPanel from './analysis/EngineAnalysisPanel';
+import { analyzeFen } from '../services/stockfishService';
+import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
+import { addMistake, updateAfterGame } from '../services/userProfileService';
 
 const GAME_MODES = {
   LOCAL: 'local',
@@ -50,12 +56,21 @@ export default function ChessGameBoard() {
   const [boardKey, setBoardKey] = useState(0);
   const [gameMode, setGameMode] = useState(GAME_MODES.LOCAL);
   const [isBotThinking, setIsBotThinking] = useState(false);
-  const [botElo, setBotElo] = useState(800);
+  const [botElo, setBotElo] = useState(1200);
+  const [botMoveSource, setBotMoveSource] = useState(null);
+  const [botRequestId, setBotRequestId] = useState(0);
   const [moveHints, setMoveHints] = useState({});
   const [startNotice, setStartNotice] = useState(true);
-  const [isMusicOn, setIsMusicOn] = useState(true);
+  const [isMusicOn, setIsMusicOn] = useState(false);
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [resultNotice, setResultNotice] = useState(null);
+  const [recordedGamePgn, setRecordedGamePgn] = useState(null);
+  const [autoAnalyze, setAutoAnalyze] = useState(false);
+  const [autoComment, setAutoComment] = useState('');
+  const [lastMoveFenPair, setLastMoveFenPair] = useState(null);
+  const [review, setReview] = useState(null);
+  const [isReviewing, setIsReviewing] = useState(false);
+  const [activeTab, setActiveTab] = useState('moves');
   const status = useMemo(() => getChessStatus(game), [game]);
   const history = game.history();
 
@@ -75,6 +90,14 @@ export default function ChessGameBoard() {
       return;
     }
 
+    const currentPgn = game.pgn();
+    if (recordedGamePgn !== currentPgn) {
+      const result = game.isCheckmate() ? (game.turn() === 'w' ? 'black_win' : 'white_win') : 'draw';
+      const mistakes = history.length < 12 ? ['opening_development'] : [];
+      updateAfterGame({ result, movesCount: history.length, mistakes });
+      setRecordedGamePgn(currentPgn);
+    }
+
     if (game.isCheckmate()) {
       const winner = game.turn() === 'w' ? 'Đen' : 'Trắng';
       setResultNotice(`${winner} thắng bằng chiếu hết!`);
@@ -82,7 +105,28 @@ export default function ChessGameBoard() {
     }
 
     setResultNotice('Ván cờ hòa!');
-  }, [game]);
+  }, [game, history.length, recordedGamePgn]);
+
+  useEffect(() => {
+    if (!autoAnalyze || !lastMoveFenPair) return;
+    let cancelled = false;
+    async function analyzeLastMove() {
+      try {
+        const before = await analyzeFen({ fen: lastMoveFenPair.beforeFen, depth: 8 });
+        if (cancelled) return;
+        const bestSan = before.bestMove ? getSanFromUci(lastMoveFenPair.beforeFen, before.bestMove) : 'không rõ';
+        if (lastMoveFenPair.playedUci !== before.bestMove) {
+          setAutoComment(`Nước này có thể chưa tối ưu. Engine gợi ý ${bestSan}.`);
+        } else {
+          setAutoComment(`Rất tốt! Bạn đã đi đúng nước engine gợi ý: ${bestSan}.`);
+        }
+      } catch {
+        if (!cancelled) setAutoComment('Engine chưa sẵn sàng, vui lòng thử lại.');
+      }
+    }
+    analyzeLastMove();
+    return () => { cancelled = true; };
+  }, [autoAnalyze, lastMoveFenPair]);
 
   function showStartNotice() {
     setStartNotice(false);
@@ -109,25 +153,49 @@ export default function ChessGameBoard() {
     return currentGame.isGameOver();
   }
 
-  function makeRandomBotMove(afterPlayerGame) {
+  async function makeRandomBotMove(afterPlayerGame) {
     if (gameMode !== GAME_MODES.BOT || afterPlayerGame.turn() !== 'b' || isGameOver(afterPlayerGame)) {
       return;
     }
 
     setIsBotThinking(true);
     setMoveHints({});
+    setBotMoveSource(null);
 
-    window.setTimeout(() => {
+    const currentRequestId = botRequestId + 1;
+    setBotRequestId(currentRequestId);
+
+    try {
+      const fen = afterPlayerGame.fen();
+      const result = await getBotMove({ fen, botElo });
+
+      // Check if this request is still valid
+      if (currentRequestId !== botRequestId + 1) {
+        return;
+      }
+
+      if (!result || !result.move) {
+        setIsBotThinking(false);
+        return;
+      }
+
+      setBotMoveSource(result.source);
+
       const botGame = cloneGame(afterPlayerGame);
       if (isGameOver(botGame)) {
         setIsBotThinking(false);
         return;
       }
 
-      const botMove = getRandomBotMove(botGame, botElo);
-      if (botMove) {
-        botGame.move(botMove);
-        if (botMove.captured) {
+      const moveObj = uciToMoveObject(result.move);
+      if (!moveObj) {
+        setIsBotThinking(false);
+        return;
+      }
+
+      const move = botGame.move(moveObj);
+      if (move) {
+        if (move.captured) {
           playCaptureSound();
         } else {
           playMoveSound();
@@ -135,7 +203,10 @@ export default function ChessGameBoard() {
         setGame(botGame);
       }
       setIsBotThinking(false);
-    }, 450);
+    } catch (error) {
+      console.error('[ChessGameBoard] Bot move error:', error);
+      setIsBotThinking(false);
+    }
   }
 
   function safeGameMutate(modify) {
@@ -149,9 +220,12 @@ export default function ChessGameBoard() {
     ensureMusicAfterInteraction();
     setGame(new Chess());
     setIsBotThinking(false);
+    setBotRequestId((id) => id + 1);
+    setBotMoveSource(null);
     setMoveHints({});
     setSelectedSquare(null);
     setResultNotice(null);
+    setRecordedGamePgn(null);
     showStartNotice();
     setBoardKey((currentKey) => currentKey + 1);
   }
@@ -160,9 +234,12 @@ export default function ChessGameBoard() {
     setGameMode(nextMode);
     setGame(new Chess());
     setIsBotThinking(false);
+    setBotRequestId((id) => id + 1);
+    setBotMoveSource(null);
     setMoveHints({});
     setSelectedSquare(null);
     setResultNotice(null);
+    setRecordedGamePgn(null);
     showStartNotice();
     setBoardKey((currentKey) => currentKey + 1);
   }
@@ -226,8 +303,37 @@ export default function ChessGameBoard() {
     } else {
       playMoveSound();
     }
+    setLastMoveFenPair({ beforeFen: game.fen(), afterFen: nextGame.fen(), playedUci: `${move.from}${move.to}${move.promotion || ''}` });
     makeRandomBotMove(nextGame);
     return true;
+  }
+
+  async function reviewGameWithEngine() {
+    const moves = game.history({ verbose: true }).slice(-20);
+    if (!moves.length) return;
+    setIsReviewing(true);
+    const replay = new Chess();
+    const results = [];
+    try {
+      for (let index = 0; index < moves.length; index += 1) {
+        const beforeFen = replay.fen();
+        const played = moves[index];
+        const before = await analyzeFen({ fen: beforeFen, depth: 8 });
+        replay.move(played.san);
+        const after = await analyzeFen({ fen: replay.fen(), depth: 6 });
+        const classification = classifyMoveLoss(before.evaluation, after.evaluation);
+        const bestSan = before.bestMove ? getSanFromUci(beforeFen, before.bestMove) : 'không rõ';
+        results.push({ index, playedSan: played.san, bestSan, classification });
+      }
+      const counts = { good: 0, inaccuracy: 0, mistake: 0, blunder: 0 };
+      results.forEach((item) => { counts[item.classification.type] = (counts[item.classification.type] || 0) + 1; });
+      const worstMoves = results.filter((item) => item.classification.type !== 'good').slice(-3);
+      if (counts.blunder) addMistake('engine_blunder');
+      if (counts.mistake || counts.inaccuracy) addMistake('engine_mistake');
+      setReview({ total: results.length, counts, worstMoves });
+    } finally {
+      setIsReviewing(false);
+    }
   }
 
   function onDrop({ sourceSquare, targetSquare }) {
@@ -261,7 +367,13 @@ export default function ChessGameBoard() {
     return nextGame;
   }
 
-  return <div className="relative grid gap-4 sm:gap-6 lg:grid-cols-[minmax(280px,620px)_1fr]">
+  const tabs = [
+    { id: 'moves', label: 'Nước đi' },
+    { id: 'analysis', label: 'Phân tích' },
+    { id: 'coach', label: 'AI Coach' },
+  ];
+
+  return <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.85fr)]">
     {startNotice && <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-full border border-gold/40 bg-ink/90 px-6 py-3 text-center font-black text-gold shadow-glow backdrop-blur-xl">
       ♔ Bắt đầu ván cờ!
     </div>}
@@ -279,63 +391,115 @@ export default function ChessGameBoard() {
         <button className="btn-primary mt-6" onClick={startNewGame}>Chơi ván mới</button>
       </div>
     </div>}
-    <section className="mx-auto aspect-square w-[min(100%,calc(100svw-2rem),620px)] max-w-[620px] overflow-hidden rounded-[1.25rem] border border-white/10 bg-white/[.08] p-2 shadow-glow backdrop-blur box-border sm:rounded-[2rem] sm:p-4">
-      <Chessboard key={boardKey} options={{
-        position: game.fen(),
-        onPieceDrop: onDrop,
-        canDragPiece: canDragPiece,
-        onMouseOverSquare: ({ square }) => {
-          if (game.get(square)) {
-            showLegalMoveHints(square);
-          }
-        },
-        onMouseOutSquare: () => {},
-        onPieceClick: ({ square }) => showLegalMoveHints(square),
-        onSquareClick: handleSquareClick,
-        squareStyles: moveHints,
-        boardStyle: fixedBoardStyle,
-        squareStyle: stableSquareStyle,
-        showNotation: false,
-        showAnimations: true,
-        animationDurationInMs: 120,
-        darkSquareStyle: { backgroundColor: '#8a5a32', ...stableSquareStyle },
-        lightSquareStyle: { backgroundColor: '#f4ddb5', ...stableSquareStyle },
-      }} />
+
+    <section className="rounded-[2.25rem] border border-white/10 bg-gradient-to-br from-white/[.10] via-white/[.055] to-gold/[.06] p-4 shadow-glow backdrop-blur-xl sm:p-6">
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-sm font-black uppercase tracking-[0.24em] text-gold/75">Vua Cờ · Play</p>
+          <h1 className="mt-2 text-4xl font-black md:text-5xl">Chơi cờ</h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-cream/60">Bàn cờ là trung tâm. Các công cụ phân tích, lịch sử và Coach được gom gọn ở panel bên phải.</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusBadge label={status.label} tone={status.tone}/>
+          <StatusBadge label={isBotThinking ? 'Bot đang nghĩ...' : getTurnLabel(game)} tone="muted"/>
+        </div>
+      </div>
+
+      <div className="mx-auto aspect-square w-[min(100%,calc(100svw-2rem),720px)] max-w-[720px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[.08] p-2 shadow-glow backdrop-blur box-border sm:p-4">
+        <Chessboard key={boardKey} options={{
+          position: game.fen(),
+          onPieceDrop: onDrop,
+          canDragPiece: canDragPiece,
+          onMouseOverSquare: ({ square }) => {
+            if (game.get(square)) {
+              showLegalMoveHints(square);
+            }
+          },
+          onMouseOutSquare: () => {},
+          onPieceClick: ({ square }) => showLegalMoveHints(square),
+          onSquareClick: handleSquareClick,
+          squareStyles: moveHints,
+          boardStyle: fixedBoardStyle,
+          squareStyle: stableSquareStyle,
+          showNotation: true,
+          showAnimations: true,
+          animationDurationInMs: 120,
+          darkSquareStyle: { backgroundColor: '#8a5a32', ...stableSquareStyle },
+          lightSquareStyle: { backgroundColor: '#f4ddb5', ...stableSquareStyle },
+        }} />
+      </div>
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto]">
+        <div className="rounded-[1.5rem] bg-ink/45 p-4 text-sm leading-6 text-cream/65">
+          <label className="text-xs font-black uppercase tracking-[0.2em] text-cream/40" htmlFor="game-mode">Chế độ chơi</label>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <select id="game-mode" value={gameMode} onChange={(event) => changeGameMode(event.target.value)} className="rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 font-bold text-cream outline-none transition focus:border-gold">
+              <option value={GAME_MODES.LOCAL}>2 người chơi</option>
+              <option value={GAME_MODES.BOT}>Chơi với bot</option>
+            </select>
+            {gameMode === GAME_MODES.BOT && <select id="bot-elo" value={botElo} onChange={(event) => setBotElo(Number(event.target.value))} className="rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 font-bold text-cream outline-none transition focus:border-gold">
+              {BOT_ELO_LEVELS.map((level) => <option key={level.elo} value={level.elo}>{level.label} - {level.description}</option>)}
+            </select>}
+          </div>
+          {gameMode === GAME_MODES.BOT && (
+            <div className="mt-3 space-y-2">
+              <p>Bạn cầm quân trắng. Bot <strong>{BOT_ELO_LEVELS.find(l => l.elo === botElo)?.label}</strong> sẽ tự đi sau mỗi nước hợp lệ của bạn.</p>
+              {botMoveSource && (
+                <p className="text-xs">
+                  {botMoveSource === 'stockfish_wasm' && <span className="text-gold">✓ Engine: Stockfish WASM</span>}
+                  {botMoveSource === 'random_weak' && <span className="text-amber-400">○ Bot chơi yếu (ELO thấp)</span>}
+                  {botMoveSource === 'fallback' && <span className="text-red-400">⚠ Engine: Fallback cơ bản (Stockfish không khả dụng)</span>}
+                </p>
+              )}
+              {isBotThinking && <p className="text-xs text-cream/60">Bot đang suy nghĩ...</p>}
+            </div>
+          )}
+          {gameMode === GAME_MODES.LOCAL && <p className="mt-3">Hai người chơi lần lượt trên cùng một thiết bị.</p>}
+        </div>
+        <div className="flex flex-wrap content-start gap-3 lg:justify-end">
+          <button className="btn-primary" onClick={startNewGame}>Ván mới</button>
+          <button className="btn-secondary" onClick={undoMove}>Hoàn tác</button>
+          <button className="btn-secondary" onClick={toggleMusic}>{isMusicOn ? 'Tắt nhạc' : 'Bật nhạc'}</button>
+        </div>
+      </div>
     </section>
-    <aside className="rounded-[1.5rem] border border-white/10 bg-white/[.08] p-4 backdrop-blur sm:rounded-[2rem] sm:p-6">
-      <label className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45" htmlFor="game-mode">Chế độ chơi</label>
-      <select id="game-mode" value={gameMode} onChange={(event) => changeGameMode(event.target.value)} className="mt-3 w-full rounded-2xl border border-white/10 bg-ink/70 px-4 py-3 font-bold text-cream outline-none transition focus:border-gold">
-        <option value={GAME_MODES.LOCAL}>2 người chơi</option>
-        <option value={GAME_MODES.BOT}>Chơi với bot</option>
-      </select>
 
-      {gameMode === GAME_MODES.BOT && <div className="mt-5 rounded-2xl border border-white/10 bg-ink/35 p-4">
-        <label className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45" htmlFor="bot-elo">Mức độ bot</label>
-        <select id="bot-elo" value={botElo} onChange={(event) => setBotElo(Number(event.target.value))} className="mt-3 w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 font-bold text-cream outline-none transition focus:border-gold">
-          {BOT_LEVELS.map((level) => <option key={level.elo} value={level.elo}>{level.label}</option>)}
-        </select>
-        <p className="mt-3 text-sm leading-6 text-cream/60">
-          {getBotLevelByElo(botElo).elo < 1200
-            ? 'Bot sẽ đi ngẫu nhiên nhiều hơn, phù hợp để luyện cơ bản.'
-            : 'Bot ưu tiên ăn quân, chiếu và các nước mạnh hơn nhưng vẫn chưa phải Stockfish.'}
-        </p>
-      </div>}
+    <aside className="rounded-[2.25rem] border border-white/10 bg-white/[.075] p-3 shadow-glow backdrop-blur-xl sm:p-4 xl:sticky xl:top-6 xl:max-h-[calc(100vh-3rem)] xl:overflow-hidden">
+      <div className="grid grid-cols-3 gap-2 rounded-[1.5rem] bg-ink/55 p-2">
+        {tabs.map((tab) => <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`rounded-2xl px-3 py-3 text-sm font-black transition ${activeTab === tab.id ? 'bg-gold text-ink shadow-glow' : 'text-cream/60 hover:bg-white/10 hover:text-cream'}`}>{tab.label}</button>)}
+      </div>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
-        <StatusBadge label={status.label} tone={status.tone}/>
-        <StatusBadge label={isBotThinking ? 'Bot đang nghĩ...' : getTurnLabel(game)} tone="muted"/>
-      </div>
-      <p className="mt-4 rounded-2xl bg-ink/45 p-4 text-sm leading-6 text-cream/65">
-        {gameMode === GAME_MODES.BOT ? `Bạn cầm quân trắng. Bot random cầm quân đen ở mức ${botElo} ELO và sẽ tự đi sau mỗi nước hợp lệ của bạn.` : 'Hai người chơi lần lượt trên cùng một thiết bị.'}
-      </p>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <button className="btn-primary" onClick={startNewGame}>Ván mới</button>
-        <button className="btn-secondary" onClick={undoMove}>Hoàn tác nước đi</button>
-        <button className="btn-secondary" onClick={toggleMusic}>{isMusicOn ? 'Tắt nhạc nền' : 'Bật nhạc nền'}</button>
-      </div>
-      <h3 className="mt-8 text-xl font-extrabold">Lịch sử nước đi</h3>
-      <div className="mt-4 max-h-80 overflow-auto rounded-2xl bg-ink/45 p-4">
-        {history.length ? <ol className="grid grid-cols-2 gap-2 text-sm text-cream/80">{history.map((m,i)=><li key={i} className="rounded-xl bg-white/5 px-3 py-2"><b>{i+1}.</b> {m}</li>)}</ol> : <p className="text-cream/55">Chưa có nước đi nào.</p>}
+      <div className="mt-4 xl:max-h-[calc(100vh-9rem)] xl:overflow-auto">
+        {activeTab === 'moves' && <section className="rounded-[1.75rem] bg-ink/35 p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-gold/70">Move list</p>
+              <h2 className="mt-1 text-2xl font-black">Lịch sử nước đi</h2>
+            </div>
+            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black text-cream/60">{history.length} nước</span>
+          </div>
+          <div className="mt-5 max-h-[32rem] overflow-auto rounded-2xl bg-ink/55 p-4">
+            {history.length ? <ol className="grid grid-cols-2 gap-2 text-sm text-cream/80">{history.map((m,i)=><li key={i} className="rounded-xl bg-white/5 px-3 py-2"><b className="text-gold">{i+1}.</b> {m}</li>)}</ol> : <p className="text-cream/55">Chưa có nước đi nào.</p>}
+          </div>
+        </section>}
+
+        {activeTab === 'analysis' && <EngineAnalysisPanel
+          fen={game.fen()}
+          autoAnalyze={autoAnalyze}
+          onAutoAnalyzeChange={setAutoAnalyze}
+          autoComment={autoComment}
+          review={review}
+          isReviewing={isReviewing}
+          onReview={reviewGameWithEngine}
+        />}
+
+        {activeTab === 'coach' && <AICoachPanel
+          fen={game.fen()}
+          pgn={game.pgn()}
+          history={history}
+          turn={game.turn()}
+          status={status.label}
+        />}
       </div>
     </aside>
   </div>;
