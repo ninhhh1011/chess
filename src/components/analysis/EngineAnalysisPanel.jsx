@@ -1,26 +1,33 @@
 import { useEffect, useState } from 'react';
-import { analyzeFen, initEngine, isEngineReady, stopEngine } from '../../services/stockfishService';
+import { analyzeFen, isEngineReady, stopEngine } from '../../services/stockfishService';
 import { formatEvaluation, getSanFromUci } from '../../utils/chessMoveUtils';
 import GameReviewPanel from './GameReviewPanel';
 
-export default function EngineAnalysisPanel({ fen, onReview, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
-  const [status, setStatus] = useState('Đang tải');
+export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
+  const [status, setStatus] = useState(() => (isEngineReady() ? 'Sẵn sàng' : 'Chưa tải'));
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const bestSan = analysis?.bestMove ? getSanFromUci(analysis.fen, analysis.bestMove) : null;
-
+  const bestRoute = analysis?.bestMove ? `${analysis.bestMove.slice(0, 2)} → ${analysis.bestMove.slice(2, 4)}` : null;
+  
   useEffect(() => {
-    initEngine().then(() => setStatus(isEngineReady() ? 'Sẵn sàng' : 'Lỗi')).catch(() => setStatus('Lỗi'));
-  }, []);
+    setAnalysis(null);
+    setError('');
+  }, [fen]);
 
   async function runAnalysis(showHint = false) {
-    setIsAnalyzing(true); setError(''); setStatus('Đang phân tích');
+    setIsAnalyzing(true); setError(''); setStatus(isEngineReady() ? 'Đang phân tích' : 'Đang tải engine');
     try {
       const result = await analyzeFen({ fen, depth: 10 });
       setAnalysis(result);
-      setStatus('Sẵn sàng');
-      if (showHint && result.bestMove) setError(`Engine gợi ý: ${getSanFromUci(result.fen, result.bestMove)}`);
+      setStatus(result.source === 'fallback' ? 'Fallback' : 'Sẵn sàng');
+      if (result.bestMove) {
+        onBestMove?.({ bestMove: result.bestMove, fen: result.fen, evaluation: result.evaluation });
+      }
+      if (showHint && result.bestMove) {
+        setError(`Engine gợi ý: ${result.bestMove.slice(0, 2)} → ${result.bestMove.slice(2, 4)} (${getSanFromUci(result.fen, result.bestMove)})`);
+      }
     } catch (err) {
       setStatus('Lỗi');
       setError(err.message || 'Engine chưa sẵn sàng, vui lòng thử lại.');
@@ -42,6 +49,7 @@ export default function EngineAnalysisPanel({ fen, onReview, review, isReviewing
     <div className="mt-4 grid gap-3 rounded-2xl bg-ink/45 p-4 text-sm">
       <p>Evaluation: <b className="text-gold">{formatEvaluation(analysis?.evaluation)}</b></p>
       <p>Best move: <b className="text-gold">{bestSan || 'Chưa có'}</b></p>
+      <p>Quân đi: <b className="text-gold">{bestRoute || 'Chưa có'}</b></p>
       <p>PV: <span className="text-cream/65">{analysis?.pv?.map((uci) => getSanFromUci(analysis.fen, uci)).join(' ') || 'Chưa có'}</span></p>
     </div>
     {error && <p className="mt-3 rounded-2xl bg-ink/50 p-3 text-sm font-bold text-gold">{error}</p>}

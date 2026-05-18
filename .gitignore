@@ -4,3 +4,6 @@ dist
 .env.local
 server/.env
 .DS_Store
+.codex-dev*.log
+/public/stockfish.js
+/public/stockfish.wasm

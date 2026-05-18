@@ -6,7 +6,6 @@ import {
   shouldLevelUp,
 } from './recommendationService';
 import { syncOnAction } from './syncService';
-import { useAuth } from '../contexts/AuthContext';
 
 const STORAGE_KEY = 'vuaCoUserTrainingProfile';
 const VALID_LEVELS = ['noob', 'beginner', 'intermediate', 'advanced'];

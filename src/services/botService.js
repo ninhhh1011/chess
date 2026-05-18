@@ -2,6 +2,14 @@ import { Chess } from 'chess.js';
 import { analyzeFen } from './stockfishService';
 import { getBotLevelByElo } from '../data/botLevels';
 
+const BOT_DEBUG = false;
+
+function debugBot(...args) {
+  if (BOT_DEBUG) {
+    console.log(...args);
+  }
+}
+
 function getRandomLegalMove(fen) {
   const game = new Chess(fen);
   const moves = game.moves({ verbose: true });
@@ -21,9 +29,12 @@ export async function getBotMove({ fen, botElo = 1200 }) {
     throw new Error(`Invalid bot ELO: ${botElo}`);
   }
 
+  debugBot(`[Bot] Getting move for ELO ${botElo}`, config);
+
   // Check if should use random move for lower ELO
   if (config.randomChance > 0 && Math.random() < config.randomChance) {
     const randomMove = getRandomLegalMove(fen);
+    debugBot(`[Bot] Using random move (${config.randomChance * 100}% chance):`, randomMove);
     return {
       move: randomMove,
       source: 'random_weak',
@@ -34,6 +45,8 @@ export async function getBotMove({ fen, botElo = 1200 }) {
   }
 
   try {
+    debugBot(`[Bot] Calling analyzeFen with depth=${config.depth}, movetime=${config.movetime}, skillLevel=${config.skillLevel}`);
+    
     // Use Stockfish WASM with ELO configuration
     const analysis = await analyzeFen({ 
       fen, 
@@ -43,7 +56,14 @@ export async function getBotMove({ fen, botElo = 1200 }) {
       skillLevel: config.skillLevel
     });
     
+    debugBot(`[Bot] Analysis result:`, analysis);
+    
     if (analysis.success && analysis.bestMove) {
+      if (analysis.source === 'stockfish_wasm') {
+        debugBot(`[Bot] Using Stockfish move: ${analysis.bestMove} (source: ${analysis.source})`);
+      } else {
+        debugBot(`[Bot] Using fallback move: ${analysis.bestMove} (source: ${analysis.source})`);
+      }
       return {
         move: analysis.bestMove,
         source: analysis.source,
@@ -57,6 +77,7 @@ export async function getBotMove({ fen, botElo = 1200 }) {
     
     // Fallback to random if no best move
     const fallbackMove = getRandomLegalMove(fen);
+    debugBot(`[Bot] No best move found, using fallback random:`, fallbackMove);
     return {
       move: fallbackMove,
       source: 'fallback',
@@ -64,10 +85,11 @@ export async function getBotMove({ fen, botElo = 1200 }) {
       warning: 'Không tìm được nước tốt nhất, bot dùng nước ngẫu nhiên.',
     };
   } catch (error) {
-    console.error('[botService] Error:', error);
+    console.error('[Bot] Error getting move:', error);
     
     // Fallback to random on error
     const fallbackMove = getRandomLegalMove(fen);
+    debugBot(`[Bot] Error occurred, using fallback random:`, fallbackMove);
     return {
       move: fallbackMove,
       source: 'fallback',

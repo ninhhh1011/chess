@@ -20,6 +20,31 @@ const LEVELS = [
   { value: 'advanced', label: 'Advanced' },
 ];
 
+function CoachAvatar({ compact = false }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const sizeClass = compact ? 'h-10 w-10' : 'h-16 w-16';
+
+  if (imageFailed) {
+    return (
+      <div
+        aria-label="Avatar ninh lớp trưởng"
+        className={`${compact ? 'mt-1 ' : ''}${sizeClass} grid flex-none place-items-center rounded-2xl border border-gold/40 bg-gold text-xl font-black text-ink shadow-glow`}
+      >
+        ♔
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={coachAvatar}
+      alt="Avatar ninh lớp trưởng"
+      onError={() => setImageFailed(true)}
+      className={`${compact ? 'mt-1 ' : ''}${sizeClass} flex-none rounded-2xl border border-gold/35 object-cover shadow-glow`}
+    />
+  );
+}
+
 export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish = null, openingContext = null }) {
   const [messages, setMessages] = useState([
     {
@@ -83,7 +108,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
     <div className="border-b border-white/10 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4">
-          <img src={coachAvatar} alt="Avatar ninh lốp trưởng" className="h-16 w-16 rounded-2xl border border-gold/40 object-cover shadow-glow" />
+          <CoachAvatar />
           <div>
             <p className="text-sm font-black uppercase tracking-[0.25em] text-gold/80">AI Coach Agent</p>
             <h2 className="mt-1 text-2xl font-black text-cream">{COACH_NAME}</h2>
@@ -104,7 +129,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
 
     <div className="max-h-96 space-y-3 overflow-auto p-5">
       {messages.map((message, index) => <article key={`${message.role}-${index}`} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-        {message.role === 'coach' && <img src={coachAvatar} alt="Avatar ninh lốp trưởng" className="mt-1 h-10 w-10 flex-none rounded-2xl border border-gold/35 object-cover" />}
+        {message.role === 'coach' && <CoachAvatar compact />}
         <div className={`max-w-[calc(100%-3.25rem)] rounded-3xl px-4 py-3 text-sm leading-6 ${message.role === 'user' ? 'bg-gold text-ink' : 'border border-white/10 bg-ink/55 text-cream/85'}`}>
           <div className="mb-1 flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-[0.18em] opacity-80">
             <span>{message.role === 'user' ? 'Bạn' : COACH_NAME}</span>
