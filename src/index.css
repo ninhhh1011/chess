@@ -29,4 +29,20 @@ img, svg, canvas, iframe { max-width: 100%; }
     @apply border border-slate-700/80 bg-slate-800/90 backdrop-blur-xl;
     box-shadow: 0 18px 48px rgba(2,6,23,.32);
   }
+  .play-board-frame {
+    width: 100%;
+    max-width: 720px;
+  }
+  @media (min-width: 1024px) {
+    .play-board-frame {
+      width: clamp(420px, min(100%, 620px, calc(100vh - 22rem)), 620px);
+      max-width: 620px;
+    }
+  }
+  @media (min-width: 1024px) and (max-height: 780px) {
+    .play-board-frame {
+      width: clamp(360px, min(100%, 520px, calc(100vh - 22rem)), 520px);
+      max-width: 520px;
+    }
+  }
 }

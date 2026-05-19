@@ -806,7 +806,7 @@ export default function ChessGameBoard() {
     setLastMoveSquares(getLastMoveSquares(game));
   }
 
-  return <div className="relative grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(350px,420px)] xl:grid-cols-[minmax(0,1fr)_minmax(390px,430px)]">
+  return <div className="relative grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(350px,420px)] xl:grid-cols-[minmax(0,1fr)_minmax(390px,430px)]">
     {startNotice && <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-xl border border-amber-400/40 bg-slate-950/95 px-6 py-3 text-center font-black text-amber-300 shadow-glow backdrop-blur-xl">
       ♔ Bắt đầu ván cờ!
     </div>}
@@ -822,12 +822,11 @@ export default function ChessGameBoard() {
       </div>
     </div>}
 
-    <section className="panel-dark min-w-0 rounded-2xl p-3 sm:p-5">
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <section className="panel-dark min-w-0 rounded-2xl p-3 sm:p-4">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-black uppercase tracking-[0.24em] text-amber-400/75">Vua Cờ · Play</p>
-          <h1 className="mt-2 text-3xl font-black text-slate-50 md:text-4xl">Chơi cờ</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">Bàn cờ nằm trung tâm, panel phải gom Eval Bar, lịch sử nước đi và AI Coach.</p>
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400/75">Vua Cờ · Play</p>
+          <h2 className="mt-1 text-xl font-black text-slate-50 md:text-2xl">Bàn cờ</h2>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <StatusBadge label={status.label} tone={status.tone}/>
@@ -836,25 +835,25 @@ export default function ChessGameBoard() {
       </div>
 
       {gameMode === GAME_MODES.BOT && (
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-700 bg-slate-900/70 p-4">
-          <div className="flex min-w-0 items-center gap-4">
-            <img src={coachAvatar} alt={`Avatar ${BOT_NAME}`} className="h-16 w-16 flex-none rounded-xl border border-amber-400/40 object-cover shadow-glow" />
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-700 bg-slate-900/70 p-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <img src={coachAvatar} alt={`Avatar ${BOT_NAME}`} className="h-12 w-12 flex-none rounded-xl border border-amber-400/40 object-cover shadow-glow" />
             <div className="min-w-0">
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-400/70">Đối thủ</p>
-              <h2 className="mt-1 truncate text-2xl font-black text-slate-50">{BOT_NAME}</h2>
-              <p className="mt-1 text-sm font-semibold text-slate-400">Bạn cầm {playerColorLabel}. {BOT_NAME} cầm {botColorLabel}.</p>
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-amber-400/70">Đối thủ</p>
+              <h2 className="mt-0.5 truncate text-lg font-black text-slate-50">{BOT_NAME}</h2>
+              <p className="mt-0.5 text-xs font-semibold text-slate-400">Bạn {playerColorLabel}. Bot {botColorLabel}.</p>
             </div>
           </div>
-          <div className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-right">
+          <div className="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-right">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">ELO đang đấu</p>
-            <p className="mt-1 text-3xl font-black text-amber-300">{selectedBotLevel.elo}</p>
+            <p className="text-2xl font-black text-amber-300">{selectedBotLevel.elo}</p>
             <p className="text-sm font-bold text-slate-400">{selectedBotLevel.description}</p>
           </div>
         </div>
       )}
 
       {analysisMode && (
-        <div className="mb-5 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-4">
+        <div className="mb-3 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-300">Analysis Mode</p>
@@ -871,15 +870,15 @@ export default function ChessGameBoard() {
       )}
 
       {activeGame.isCheck() && (
-        <div className="mx-auto mb-4 w-full max-w-[720px] rounded-2xl border border-red-500/45 bg-red-950/35 px-4 py-3 text-sm font-bold text-red-100">
+        <div className="mx-auto mb-3 w-full max-w-[720px] rounded-2xl border border-red-500/45 bg-red-950/35 px-4 py-3 text-sm font-bold text-red-100">
           Vua {checkedColorLabel} đang bị chiếu. Phải cứu vua trước, các nước khác sẽ không hợp lệ.
         </div>
       )}
 
-      <div className="mx-auto flex w-full max-w-[780px] items-stretch justify-center gap-3">
+      <div className="mx-auto flex w-full max-w-[700px] items-stretch justify-center gap-3">
         <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
         <div className="min-w-0 flex-1">
-          <div className="aspect-square w-full max-w-[720px] overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/70 p-2 shadow-[0_18px_48px_rgba(2,6,23,.32)] backdrop-blur box-border sm:p-3">
+          <div className="play-board-frame aspect-square overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/70 p-2 shadow-[0_18px_48px_rgba(2,6,23,.32)] backdrop-blur box-border sm:p-3">
             <Chessboard key={boardKey} options={{
               pieces: standardPieces,
               position: activeFen,
