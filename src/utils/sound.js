@@ -64,3 +64,10 @@ export function playCaptureSound() {
     { frequency: 520, start: 0.018, duration: 0.035, type: 'sine', gain: 0.018 },
   ]);
 }
+
+export function playCheckSound() {
+  playToneSequence([
+    { frequency: 880, duration: 0.07, type: 'square', gain: 0.035 },
+    { frequency: 740, start: 0.09, duration: 0.08, type: 'triangle', gain: 0.032 },
+  ]);
+}

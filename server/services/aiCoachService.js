@@ -5,22 +5,9 @@ function createMockAnswer({ fen, history = [], turn, playerLevel, question }) {
   const moveCount = Array.isArray(history) ? history.length : 0;
   const simpleMode = ['noob', 'beginner'].includes(playerLevel);
 
-  return `Mình đang chạy ở chế độ mock vì backend chưa có AI_API_KEY.
-
-**Tình hình nhanh**
-- Lượt đi: ${sideToMove}
-- Số nước đã đi: ${moveCount}
-- FEN hiện tại: ${fen || 'chưa nhận được'}
-
-**Gợi ý học tập**
-${simpleMode
-  ? '- Hãy kiểm tra vua của bạn có an toàn không.\n- Ưu tiên phát triển mã/tượng, nhập thành sớm và đừng để quân bị ăn miễn phí.\n- Trước khi đi, tự hỏi: “nước này có bị đối thủ ăn quân không?”'
-  : '- Xác định candidate moves theo forcing moves: check, capture, threat.\n- Đánh giá king safety, pawn structure và các quân chưa phát triển.\n- Tìm tactical motifs như fork, pin hoặc discovered attack nếu có.'}
-
-**Về câu hỏi của bạn**
-“${question}”
-
-Để có đánh giá nước đi chính xác như engine, nên tích hợp thêm Stockfish. Còn hiện tại mình có thể giải thích nguyên tắc và kế hoạch dựa trên thế cờ.`;
+  return `${sideToMove} đi. Ván đã có ${moveCount} nước.
+${simpleMode ? 'Ưu tiên: không treo quân, phát triển mã/tượng, giữ vua an toàn.' : 'Ưu tiên: kiểm tra chiếu, ăn quân, đe dọa trước khi chọn kế hoạch.'}
+Việc cần làm: chọn 1 nước cải thiện quân và không tạo điểm yếu mới.`;
 }
 
 async function callOpenAI(prompt) {
@@ -36,11 +23,11 @@ async function callOpenAI(prompt) {
     body: JSON.stringify({
       model,
       messages: [
-        { role: 'system', content: 'Bạn là huấn luyện viên cờ vua chuyên nghiệp, trả lời bằng tiếng Việt.' },
+        { role: 'system', content: 'Bạn là huấn luyện viên cờ vua chuyên nghiệp, trả lời bằng tiếng Việt. Trả lời tối đa 3 dòng, không mở bài, không disclaimer.' },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.7,
-      max_tokens: 900,
+      temperature: 0.35,
+      max_tokens: 220,
     }),
   });
 

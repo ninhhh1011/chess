@@ -33,8 +33,8 @@ export default async function handler(req, res) {
           { role: 'system', content: coachSystemPrompt },
           { role: 'user', content: buildCoachUserPrompt(payload) },
         ],
-        temperature: 0.45,
-        max_tokens: 900,
+        temperature: 0.35,
+        max_tokens: 220,
       }),
     });
     clearTimeout(timeout);

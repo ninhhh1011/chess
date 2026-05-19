@@ -26,10 +26,10 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border-b border-slate-700/80 bg-slate-950/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4">
-        <NavLink to="/" className="flex items-center gap-3 text-2xl font-black text-cream">
-          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-gold to-amber-700 shadow-glow">♔</span> Vua Cờ
+        <NavLink to="/" className="flex items-center gap-3 text-2xl font-black text-slate-100">
+          <span className="grid h-11 w-11 place-items-center rounded-xl bg-amber-500 text-slate-950 shadow-glow">♔</span> Vua Cờ
         </NavLink>
 
         {/* Desktop menu */}
@@ -38,7 +38,7 @@ export default function Navbar() {
             <NavLink
               key={link.to}
               to={link.to}
-              className={({isActive}) => `rounded-full px-4 py-2 text-sm font-semibold transition ${isActive ? 'bg-gold text-ink' : 'text-cream/80 hover:bg-white/10 hover:text-cream'}`
+              className={({isActive}) => `rounded-xl px-4 py-2 text-sm font-semibold transition ${isActive ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-800 hover:text-slate-50'}`
             }
             >
               {link.label}
@@ -50,7 +50,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
-              <span className="hidden text-sm font-bold text-cream md:block">{user?.email}</span>
+              <span className="hidden text-sm font-bold text-slate-200 md:block">{user?.email}</span>
               <button
                 onClick={handleLogout}
                 className="btn-secondary hidden md:block"
@@ -80,21 +80,21 @@ export default function Navbar() {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <span className="text-2xl text-cream">☰</span>
+            <span className="text-2xl text-slate-100">☰</span>
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-white/10 bg-ink/95 backdrop-blur-xl">
+        <div className="md:hidden border-t border-slate-700/80 bg-slate-950/95 backdrop-blur-xl">
           <div className="mx-auto max-w-7xl px-4 py-4">
             <div className="flex flex-col gap-2">
               {links.map(link => (
                 <NavLink
                   key={link.to}
                   to={link.to}
-                  className={({isActive}) => `rounded-xl px-4 py-3 text-sm font-semibold transition ${isActive ? 'bg-gold text-ink' : 'text-cream/80 hover:bg-white/10'}`
+                  className={({isActive}) => `rounded-xl px-4 py-3 text-sm font-semibold transition ${isActive ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-800'}`
                 }
                 >
                   {link.label}
@@ -104,7 +104,7 @@ export default function Navbar() {
             <div className="mt-4 flex flex-col gap-2">
               {isAuthenticated ? (
                 <>
-                  <span className="px-4 text-sm text-cream/60">{user?.email}</span>
+                  <span className="px-4 text-sm text-slate-400">{user?.email}</span>
                   <button
                     onClick={handleLogout}
                     className="btn-secondary px-4 py-3 text-center"

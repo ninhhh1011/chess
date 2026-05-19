@@ -5,12 +5,15 @@ export default {
     extend: {
       fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
       colors: {
-        ink: '#17120d',
-        cream: '#fff8ed',
-        board: '#8a5a32',
-        gold: '#d6a74b',
+        ink: '#0f172a',
+        cream: '#f8fafc',
+        board: '#334155',
+        gold: '#f59e0b',
       },
-      boxShadow: { glow: '0 24px 80px rgba(214,167,75,.22)' },
+      boxShadow: {
+        glow: '0 22px 70px rgba(245,158,11,.18)',
+        panel: '0 18px 48px rgba(2,6,23,.32)',
+      },
     },
   },
   plugins: [],

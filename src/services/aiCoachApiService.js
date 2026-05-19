@@ -17,6 +17,7 @@ function compactPayload(payload = {}) {
     recommendations: payload.recommendations || {},
     stockfish: payload.stockfish || null,
     openingContext: payload.openingContext || null,
+    responseStyle: payload.responseStyle || 'very_short',
   };
 }
 

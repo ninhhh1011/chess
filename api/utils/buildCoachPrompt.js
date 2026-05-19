@@ -39,11 +39,13 @@ export function buildCoachPayload(body = {}) {
     dailyTrainingPlan: body.dailyTrainingPlan || body.userProfile?.dailyTrainingPlan || null,
     stockfish: compactStockfish(body.stockfish),
     openingContext: body.openingContext || null,
+    responseStyle: body.responseStyle || 'very_short',
   };
 }
 
 export function buildCoachUserPrompt(payload) {
   return `Mode yêu cầu: ${payload.mode}
+Kiểu trả lời: ${payload.responseStyle}
 Câu hỏi người dùng: ${payload.message}
 Level: ${payload.level}
 FEN: ${payload.fen || 'không có'}
@@ -68,5 +70,12 @@ ${JSON.stringify(payload.openingContext, null, 2)}
 PGN rút gọn:
 ${payload.pgn || 'không có'}
 
-Hãy trả lời đúng format, bằng tiếng Việt, ngắn gọn, có tính huấn luyện và phù hợp level.`;
+Quy tắc trả lời bắt buộc:
+- Tối đa 3 dòng.
+- Mỗi dòng tối đa 1 ý.
+- Không nhắc FEN, PGN, mock, fallback, API key hay metadata.
+- Không mở bài, không disclaimer, không hỏi lại cuối câu.
+- Nếu gợi ý nước đi: nêu đúng 1 nước, 1 lý do, 1 cảnh báo ngắn.
+
+Hãy trả lời bằng tiếng Việt, rất ngắn, có tính huấn luyện và phù hợp level.`;
 }

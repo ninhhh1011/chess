@@ -7,6 +7,7 @@ let engineReady = false;
 let engineState = 'idle'; // idle, loading, ready, analyzing, error
 let engineInitPromise = null;
 let currentAnalysis = null;
+let analysisQueue = Promise.resolve();
 
 function debugStockfish(...args) {
   if (STOCKFISH_DEBUG) {
@@ -161,7 +162,7 @@ export async function configureEngineForElo({ elo, skillLevel }) {
   }
 }
 
-export async function analyzeFen({ fen, depth = 10, movetime = null, elo = null, skillLevel = null } = {}) {
+async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, skillLevel = null } = {}) {
   if (!fen) {
     throw new Error('FEN is required');
   }
@@ -284,6 +285,15 @@ export async function analyzeFen({ fen, depth = 10, movetime = null, elo = null,
         .catch(reject);
     }
   });
+}
+
+export async function analyzeFen(options = {}) {
+  const queuedAnalysis = analysisQueue
+    .catch(() => {})
+    .then(() => runAnalyzeFen(options));
+
+  analysisQueue = queuedAnalysis.catch(() => {});
+  return queuedAnalysis;
 }
 
 export async function getBestMove({ fen, depth = 8, movetime = null, elo = null, skillLevel = null } = {}) {
