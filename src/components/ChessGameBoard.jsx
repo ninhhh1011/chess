@@ -806,7 +806,7 @@ export default function ChessGameBoard() {
     setLastMoveSquares(getLastMoveSquares(game));
   }
 
-  return <div className="relative grid min-w-0 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(350px,420px)] xl:grid-cols-[minmax(0,2fr)_minmax(390px,430px)]">
+  return <div className="relative grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(320px,380px)] xl:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
     {startNotice && <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-xl border border-amber-400/40 bg-slate-950/95 px-6 py-3 text-center font-black text-amber-300 shadow-glow backdrop-blur-xl">
       ♔ Bắt đầu ván cờ!
     </div>}
