@@ -71,8 +71,9 @@ const lastMoveSquareStyle = {
 };
 
 const checkedKingSquareStyle = {
-  backgroundImage: 'radial-gradient(circle, rgba(248,113,113,0.28) 0 62%, rgba(248,113,113,0.45) 63%, transparent 64%)',
-  boxShadow: 'inset 0 0 0 4px rgba(248,113,113,0.84), 0 0 26px rgba(248,113,113,0.32)',
+  backgroundColor: 'rgba(239, 68, 68, 0.22)',
+  boxShadow: 'inset 0 0 0 2px rgba(239, 68, 68, 0.75)',
+  animation: 'king-check-soft-pulse 1.4s ease-in-out infinite',
 };
 
 const engineFromSquareStyle = {
