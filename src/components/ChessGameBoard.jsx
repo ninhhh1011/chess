@@ -806,7 +806,7 @@ export default function ChessGameBoard() {
     setLastMoveSquares(getLastMoveSquares(game));
   }
 
-  return <div className="relative grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(350px,420px)] xl:grid-cols-[minmax(0,1fr)_minmax(390px,430px)]">
+  return <div className="relative grid min-w-0 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(350px,420px)] xl:grid-cols-[minmax(0,2fr)_minmax(390px,430px)]">
     {startNotice && <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-xl border border-amber-400/40 bg-slate-950/95 px-6 py-3 text-center font-black text-amber-300 shadow-glow backdrop-blur-xl">
       ♔ Bắt đầu ván cờ!
     </div>}
@@ -870,12 +870,12 @@ export default function ChessGameBoard() {
       )}
 
       {activeGame.isCheck() && (
-        <div className="mx-auto mb-3 w-full max-w-[720px] rounded-2xl border border-red-500/45 bg-red-950/35 px-4 py-3 text-sm font-bold text-red-100">
+        <div className="mx-auto mb-3 w-full rounded-2xl border border-red-500/45 bg-red-950/35 px-4 py-3 text-sm font-bold text-red-100">
           Vua {checkedColorLabel} đang bị chiếu. Phải cứu vua trước, các nước khác sẽ không hợp lệ.
         </div>
       )}
 
-      <div className="mx-auto flex w-full max-w-[700px] items-stretch justify-center gap-3">
+      <div className="mx-auto flex w-full items-stretch justify-center gap-3">
         <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
         <div className="min-w-0 flex-1">
           <div className="play-board-frame aspect-square overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/70 p-2 shadow-[0_18px_48px_rgba(2,6,23,.32)] backdrop-blur box-border sm:p-3">
@@ -906,7 +906,7 @@ export default function ChessGameBoard() {
         </div>
       </div>
 
-      <div className="mx-auto mt-4 grid w-full max-w-[720px] gap-3 text-sm">
+      <div className="mx-auto mt-4 grid w-full gap-3 text-sm">
         {engineMove ? (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-400/25 bg-amber-500/10 px-4 py-3 text-slate-100">
             <p>

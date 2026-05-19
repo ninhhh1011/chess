@@ -102,7 +102,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
   const [messages, setMessages] = useState([
     {
       role: 'coach',
-      content: 'Mình là ninh lốp trưởng. Hỏi gì mình trả lời ngắn: nước nên đi, lý do, việc cần làm.',
+      content: 'Chào bạn! Mình là ninh lốp trưởng - AI Coach của bạn.\n\nMình sẽ giúp bạn:\n• Gợi ý chiến thuật trong ván đấu\n• Giải thích thế cờ hiện tại\n• Review và phân tích ván cờ\n• Lên kế hoạch luyện tập\n\nHãy dùng các nút bên dưới hoặc hỏi trực tiếp nhé!',
       source: 'mock',
     },
   ]);
