@@ -1,9 +1,34 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 
-export default function ResultModal() {
-  const { resultNotice, shouldShowGameOverModal, analysisMode, enterAnalysisMode, newGame } = useChessGame();
+const BOT_NAME = 'ngoại lệ của cô ấy';
 
-  if (!resultNotice || !shouldShowGameOverModal || analysisMode) return null;
+export default function ResultModal() {
+  const { activeGame, playerColor, gameMode, shouldShowGameOverModal, analysisMode, enterAnalysisMode, newGame, GAME_MODES } = useChessGame();
+
+  if (!shouldShowGameOverModal || analysisMode) return null;
+  if (!activeGame.isGameOver()) return null;
+
+  // Generate personalized result message
+  let resultMessage = '';
+
+  if (activeGame.isCheckmate()) {
+    const winner = activeGame.turn() === 'w' ? 'b' : 'w'; // Winner is opposite of current turn
+
+    if (gameMode === GAME_MODES.BOT) {
+      if (winner === playerColor) {
+        resultMessage = 'Bạn đã thắng';
+      } else {
+        resultMessage = `Bạn đã thua ${BOT_NAME}`;
+      }
+    } else {
+      // Local mode
+      resultMessage = winner === 'w' ? 'Trắng thắng' : 'Đen thắng';
+    }
+  } else if (activeGame.isDraw()) {
+    resultMessage = 'Hòa';
+  } else {
+    resultMessage = 'Kết thúc ván đấu';
+  }
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/75 px-4 backdrop-blur-sm">
@@ -12,7 +37,7 @@ export default function ResultModal() {
           ♔
         </div>
         <h2 className="text-3xl font-black text-amber-300">Kết thúc ván đấu</h2>
-        <p className="mt-4 text-xl font-bold text-slate-100">{resultNotice}</p>
+        <p className="mt-4 text-xl font-bold text-slate-100">{resultMessage}</p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <button className="btn-primary" onClick={enterAnalysisMode}>
             Phân tích ván
