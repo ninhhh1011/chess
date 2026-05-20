@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { Chessboard } from 'react-chessboard';
 import { standardPieces } from './standardPieces';
@@ -72,8 +72,12 @@ export default function ChessBoardPanel({ engineHint }) {
     selectSquare,
     clearSelection,
     getKingSquare,
+    getLegalMoves,
     GAME_MODES,
   } = useChessGame();
+
+  const [hoverSquare, setHoverSquare] = useState(null);
+  const [hoverHints, setHoverHints] = useState({});
 
   const boardOrientation = playerColor === 'b' ? 'black' : 'white';
   const checkedKingSquare = useMemo(
@@ -83,9 +87,15 @@ export default function ChessBoardPanel({ engineHint }) {
 
   const engineMove = useMemo(() => describeEngineMove(engineHint, activeGame), [engineHint, activeGame]);
 
+  // Merge selected hints and hover hints
+  const mergedHints = useMemo(() => {
+    if (selectedSquare) return moveHints; // Selected takes priority
+    return hoverHints;
+  }, [selectedSquare, moveHints, hoverHints]);
+
   const { boardSquareStyles, engineArrows } = useMoveHighlights({
     selectedSquare,
-    moveHints,
+    moveHints: mergedHints,
     lastMoveSquares,
     checkedKingSquare,
     engineMove,
@@ -167,6 +177,42 @@ export default function ChessBoardPanel({ engineHint }) {
     selectSquare(square);
   }
 
+  // Hover handlers for desktop legal move preview
+  function handleMouseOverSquare({ square }) {
+    if (!square || selectedSquare || isBotThinking || isGameOver) return;
+
+    const piece = activeGame.get(square);
+    if (!piece || piece.color !== activeGame.turn()) return;
+
+    // In bot mode, only show hover for player's pieces
+    if (gameMode === GAME_MODES.BOT && piece.color !== playerColor) return;
+
+    const moves = getLegalMoves(square);
+    const hints = moves.reduce((acc, move) => {
+      const style = move.captured
+        ? {
+            backgroundImage: 'radial-gradient(circle, transparent 0 48%, rgba(245,158,11,0.9) 49%, rgba(245,158,11,0.9) 58%, transparent 59%)',
+            boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.45), 0 0 22px rgba(245,158,11,0.26)',
+          }
+        : {
+            backgroundImage: 'radial-gradient(circle, rgba(245,158,11,0.95) 0 13%, rgba(245,158,11,0.18) 14% 27%, transparent 28%)',
+            boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.28), 0 0 18px rgba(245,158,11,0.22)',
+          };
+      acc[move.to] = style;
+      return acc;
+    }, {});
+
+    setHoverSquare(square);
+    setHoverHints(hints);
+  }
+
+  function handleMouseOutSquare() {
+    if (!selectedSquare) {
+      setHoverSquare(null);
+      setHoverHints({});
+    }
+  }
+
   // REMOVE onPieceClick and onPieceDrag - use onSquareClick only
 
   return (
@@ -181,6 +227,8 @@ export default function ChessBoardPanel({ engineHint }) {
           canDragPiece,
           onPieceClick: handlePieceClick,
           onSquareClick: handleSquareClick,
+          onMouseOverSquare: handleMouseOverSquare,
+          onMouseOutSquare: handleMouseOutSquare,
           squareStyles: boardSquareStyles,
           arrows: engineArrows,
           boardStyle: fixedBoardStyle,

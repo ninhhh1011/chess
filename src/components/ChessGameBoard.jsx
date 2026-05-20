@@ -11,7 +11,6 @@ import ChessBoardPanel from './chess/ChessBoardPanel';
 import GameStatusBanner from './chess/GameStatusBanner';
 import BotInfoPanel from './chess/BotInfoPanel';
 import AnalysisControls from './chess/AnalysisControls';
-import CheckWarning from './chess/CheckWarning';
 import LiveEvaluationBar from './chess/LiveEvaluationBar';
 import MoveHintDisplay from './chess/MoveHintDisplay';
 import StartNotice from './chess/StartNotice';
@@ -278,7 +277,6 @@ export default function ChessGameBoard() {
 
         <BotInfoPanel />
         <AnalysisControls />
-        <CheckWarning />
 
         <div className="mx-auto flex w-full items-stretch justify-center gap-2 sm:gap-3">
           <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
