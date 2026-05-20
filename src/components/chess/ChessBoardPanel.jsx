@@ -208,7 +208,7 @@ export default function ChessBoardPanel({ engineHint }) {
   }
 
   return (
-    <div className="aspect-square overflow-hidden rounded-lg border border-slate-700/60 bg-slate-900/30 p-2 shadow-md">
+    <div className="chess-board-container">
       <Chessboard
         key={boardKey}
         options={{

@@ -16,15 +16,13 @@ import EngineAnalysisPanel from '../analysis/EngineAnalysisPanel';
 import AICoachPanel from '../AICoachPanel';
 
 /**
- * GameLayout - Refactored cho giao diện chuyên nghiệp
+ * GameLayout - Production-quality chess app layout
  *
- * Thay đổi chính:
- * - Xóa PlayerInfoBar cũ (card lớn với avatar)
- * - Thêm GameInfoBar gọn (1 dòng, 48px)
- * - Xóa BotInfoPanel, AnalysisControls, GameStatusBanner thừa
- * - Layout 2 cột: 65% board + 35% sidebar
- * - Bàn cờ lên cao hơn, là trung tâm
- * - Sidebar gọn với tabs rõ ràng
+ * Optimized for 100% desktop zoom:
+ * - Controlled board sizing (max 620px)
+ * - Compact player strips
+ * - Balanced sidebar (360px)
+ * - No wasted vertical space
  */
 export default function GameLayout({
   liveAnalysis,
@@ -57,61 +55,65 @@ export default function GameLayout({
       <ResultModal />
       <PromotionModal />
 
-      {/* Layout 2 cột: Board (65-70%) + Sidebar (30-35%) */}
-      <div className="mx-auto flex max-w-[1600px] gap-4 px-4 py-4 lg:flex-row flex-col">
+      {/* Main layout: 2 columns, controlled sizing */}
+      <div className="mx-auto flex max-w-[1400px] gap-4 px-3 py-3 lg:flex-row flex-col">
 
-        {/* CỘT TRÁI: Bàn cờ */}
-        <section className="flex-1 lg:max-w-[70%]">
-          {/* Thanh thông tin ván đấu gọn */}
-          <GameInfoBar botElo={botElo} />
+        {/* LEFT COLUMN: Board area */}
+        <section className="flex-1 min-w-0">
+          {/* Game status bar - compact */}
+          <div className="mb-2">
+            <GameInfoBar botElo={botElo} />
+          </div>
 
-          {/* Đối thủ - phía trên bàn cờ */}
+          {/* Opponent strip - above board */}
           <div className="mb-2">
             <PlayerBar position="top" />
           </div>
 
-          {/* Bàn cờ với evaluation bar */}
-          <div className="flex items-stretch gap-3">
+          {/* Board with evaluation bar */}
+          <div className="flex items-start gap-2">
             <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
-            <div className="flex-1">
+            <div className="flex-1 flex justify-center">
               <ChessBoardPanel engineHint={engineHint} />
             </div>
           </div>
 
-          {/* Người chơi - phía dưới bàn cờ */}
+          {/* Player strip - below board */}
           <div className="mt-2">
             <PlayerBar position="bottom" />
           </div>
 
-          {/* Gợi ý nước đi */}
-          <div className="mt-3">
-            <MoveHintDisplay engineMove={engineMove} />
-          </div>
+          {/* Move hint - compact */}
+          {engineMove && (
+            <div className="mt-2">
+              <MoveHintDisplay engineMove={engineMove} />
+            </div>
+          )}
         </section>
 
-        {/* CỘT PHẢI: Sidebar */}
-        <aside className="w-full lg:w-[400px] lg:sticky lg:top-20 lg:self-start">
+        {/* RIGHT COLUMN: Sidebar - fixed width */}
+        <aside className="w-full lg:w-[360px] lg:sticky lg:top-20 lg:self-start">
           <div className="rounded-lg border border-slate-700/60 bg-slate-900/40 overflow-hidden">
-            {/* Tabs */}
+            {/* Tabs - compact */}
             <nav className="flex border-b border-slate-700/60 bg-slate-800/40">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 px-3 py-3 text-xs font-bold transition ${
+                  className={`flex-1 px-2 py-2.5 text-xs font-bold transition ${
                     activeTab === tab.id
                       ? 'bg-amber-500/20 text-amber-300 border-b-2 border-amber-400'
                       : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-300'
                   }`}
                 >
-                  <span className="block text-sm mb-1">{tab.icon}</span>
+                  <span className="block text-sm mb-0.5">{tab.icon}</span>
                   {tab.label}
                 </button>
               ))}
             </nav>
 
-            {/* Nội dung tabs */}
-            <div className="p-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 12rem)' }}>
+            {/* Tab content - reduced padding */}
+            <div className="p-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 10rem)' }}>
               {activeTab === 'moves' && <MoveHistory />}
 
               {activeTab === 'analysis' && (
@@ -157,7 +159,7 @@ export default function GameLayout({
               )}
 
               {activeTab === 'settings' && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <BotSettings />
                   <GameControls />
                 </div>

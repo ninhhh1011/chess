@@ -39,24 +39,23 @@ img, svg, canvas, iframe { max-width: 100%; }
     @apply border border-slate-700/60 bg-slate-800/50;
     box-shadow: 0 4px 12px rgba(2,6,23,.2);
   }
-  .play-board-frame {
+
+  /* Optimized board sizing for 100% zoom desktop viewport */
+  .chess-board-container {
     width: 100%;
-    max-width: min(90vw, 500px, 70vh);
+    max-width: clamp(360px, 58vh, 580px);
     aspect-ratio: 1 / 1;
   }
-  @media (min-width: 640px) {
-    .play-board-frame {
-      max-width: min(85vw, 560px, 68vh);
-    }
-  }
+
   @media (min-width: 1024px) {
-    .play-board-frame {
-      max-width: min(620px, 68vh);
+    .chess-board-container {
+      max-width: clamp(420px, 60vh, 620px);
     }
   }
-  @media (min-width: 1280px) {
-    .play-board-frame {
-      max-width: min(680px, 70vh);
+
+  @media (min-width: 1280px) and (min-height: 900px) {
+    .chess-board-container {
+      max-width: clamp(480px, 62vh, 640px);
     }
   }
 }
