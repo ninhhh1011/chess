@@ -10,9 +10,9 @@ const fixedBoardStyle = {
   height: '100%',
   aspectRatio: '1 / 1',
   border: '0',
-  borderRadius: 'clamp(0.75rem, 3vw, 1.35rem)',
+  borderRadius: 'clamp(0.5rem, 2vw, 1rem)',
   overflow: 'hidden',
-  boxShadow: '0 24px 70px rgba(2,6,23,.45)',
+  boxShadow: '0 20px 60px rgba(2,6,23,.4)',
   touchAction: 'none',
 };
 
@@ -131,6 +131,12 @@ export default function ChessBoardPanel({ engineHint }) {
       return;
     }
 
+    // If clicking same square, deselect
+    if (selectedSquare === square) {
+      clearSelection();
+      return;
+    }
+
     // Select piece if it's player's turn
     const piece = activeGame.get(square);
     if (piece && piece.color === activeGame.turn()) {
@@ -138,7 +144,7 @@ export default function ChessBoardPanel({ engineHint }) {
       return;
     }
 
-    // Clear selection
+    // Clear selection if clicking empty square or opponent piece
     clearSelection();
   }
 
