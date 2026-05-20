@@ -1,9 +1,9 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 
 export default function ResultModal() {
-  const { resultNotice, enterAnalysisMode, newGame } = useChessGame();
+  const { resultNotice, shouldShowGameOverModal, analysisMode, enterAnalysisMode, newGame } = useChessGame();
 
-  if (!resultNotice) return null;
+  if (!resultNotice || !shouldShowGameOverModal || analysisMode) return null;
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/75 px-4 backdrop-blur-sm">

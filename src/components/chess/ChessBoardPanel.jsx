@@ -94,28 +94,20 @@ export default function ChessBoardPanel({ engineHint }) {
   // v5 API: canDragPiece({ isSparePiece, piece, square })
   // piece is PieceDataType object with pieceType: string like "wP", "bN"
   function canDragPiece({ isSparePiece, piece, square }) {
-    console.log('[canDragPiece]', { isSparePiece, piece, square, isBotThinking, isGameOver });
-
     if (isSparePiece || isBotThinking || isGameOver || !piece?.pieceType) return false;
 
     // pieceType is string like "wP", "bN" — first char is color
     const pieceColor = piece.pieceType[0]; // 'w' or 'b'
 
     if (gameMode === GAME_MODES.BOT) {
-      const canDrag = activeGame.turn() === playerColor && pieceColor === playerColor;
-      console.log('[canDragPiece] BOT mode:', canDrag, { turn: activeGame.turn(), playerColor, pieceColor });
-      return canDrag;
+      return activeGame.turn() === playerColor && pieceColor === playerColor;
     }
 
-    const canDrag = pieceColor === activeGame.turn();
-    console.log('[canDragPiece] LOCAL mode:', canDrag);
-    return canDrag;
+    return pieceColor === activeGame.turn();
   }
 
   // v5 API: onPieceDrop({ piece, sourceSquare, targetSquare }) => boolean
   function onPieceDrop({ piece, sourceSquare, targetSquare }) {
-    console.log('[onPieceDrop]', { piece, sourceSquare, targetSquare });
-
     // Check if this is a promotion move
     const boardPiece = activeGame.get(sourceSquare);
     const isPromotion = boardPiece?.type === 'p' &&
@@ -126,8 +118,6 @@ export default function ChessBoardPanel({ engineHint }) {
       ? makeMove(sourceSquare, targetSquare, null)
       : makeMove(sourceSquare, targetSquare);
 
-    console.log('[onPieceDrop] result:', result);
-
     if (result && result.move) {
       result.move.captured ? playCaptureSound() : playMoveSound();
     }
@@ -136,8 +126,6 @@ export default function ChessBoardPanel({ engineHint }) {
 
   // v5 API: onSquareClick({ piece, square }) => void
   function handleSquareClick({ piece, square }) {
-    console.log('[handleSquareClick]', { piece, square, selectedSquare, hasMoveHint: !!moveHints[square] });
-
     if (!square) return;
 
     // If square has legal move hint, execute move
@@ -150,8 +138,6 @@ export default function ChessBoardPanel({ engineHint }) {
       const result = isPromotion
         ? makeMove(selectedSquare, square, null)
         : makeMove(selectedSquare, square);
-
-      console.log('[handleSquareClick] move result:', result);
 
       if (result && result.move) {
         result.move.captured ? playCaptureSound() : playMoveSound();
@@ -177,7 +163,6 @@ export default function ChessBoardPanel({ engineHint }) {
 
   // v5 API: onPieceClick({ isSparePiece, piece, square }) => void
   function handlePieceClick({ isSparePiece, piece, square }) {
-    console.log('[handlePieceClick]', { isSparePiece, piece, square });
     if (isSparePiece || !square) return;
     selectSquare(square);
   }

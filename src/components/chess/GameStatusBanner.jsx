@@ -10,7 +10,20 @@ export default function GameStatusBanner() {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <StatusBadge label={status.label} tone={status.tone} />
-      <StatusBadge label={isBotThinking ? 'Đang nghĩ...' : turnLabel} tone="muted" />
+      <StatusBadge
+        label={turnLabel}
+        tone="muted"
+        extra={isBotThinking ? <BotThinkingDot /> : null}
+      />
     </div>
+  );
+}
+
+function BotThinkingDot() {
+  return (
+    <span
+      className="ml-1 inline-block h-2 w-2 animate-pulse rounded-full bg-amber-400"
+      title="Bot đang tính..."
+    />
   );
 }

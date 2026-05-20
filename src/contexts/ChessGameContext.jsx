@@ -48,6 +48,7 @@ export function ChessGameProvider({ children }) {
   // Game status
   const [resultNotice, setResultNotice] = useState(null);
   const [recordedGamePgn, setRecordedGamePgn] = useState(null);
+  const [shouldShowGameOverModal, setShouldShowGameOverModal] = useState(false);
 
   // Move annotations
   const [moveAnnotations, setMoveAnnotations] = useState({});
@@ -107,25 +108,20 @@ export function ChessGameProvider({ children }) {
     const { byBot = false } = options;
 
     if (!from || !to || from === to) {
-      console.log('[makeMove] rejected: invalid from/to', { from, to });
       return false;
     }
     if (isGameOver) {
-      console.log('[makeMove] rejected: game over');
       return false;
     }
 
     if (!analysisMode) {
       if (!byBot && isBotThinking) {
-        console.log('[makeMove] rejected: human tried to move while bot thinking');
         return false;
       }
       if (!byBot && gameMode === GAME_MODES.BOT && currentTurn !== playerColor) {
-        console.log('[makeMove] rejected: not player turn', { currentTurn, playerColor });
         return false;
       }
       if (byBot && gameMode === GAME_MODES.BOT && currentTurn === playerColor) {
-        console.log('[makeMove] rejected: bot tried to move on player turn', { currentTurn, playerColor });
         return false;
       }
     }
@@ -179,53 +175,40 @@ export function ChessGameProvider({ children }) {
         color: move.color,
         san: move.san,
       });
+
+      // Check if game just ended from this live move
+      if (nextGame.isGameOver()) {
+        setShouldShowGameOverModal(true);
+      }
     }
 
     return { move, nextGame };
   }
 
   function selectSquare(square) {
-    console.log('[selectSquare] CALLED', {
-      square,
-      analysisMode,
-      isBotThinking,
-      gameMode,
-      playerColor,
-      currentTurn
-    });
-
     if (!square) {
-      console.log('[selectSquare] No square, clearing');
       setSelectedSquare(null);
       setMoveHints({});
       return;
     }
 
     const piece = activeGame.get(square);
-    console.log('[selectSquare] Piece at square:', piece);
 
     if (!piece || piece.color !== currentTurn) {
-      console.log('[selectSquare] No piece or wrong color, clearing');
       setSelectedSquare(null);
       setMoveHints({});
       return;
     }
 
     if (!analysisMode && isBotThinking) {
-      console.log('[selectSquare] BLOCKED: Bot is thinking');
       return;
     }
 
     if (!analysisMode && gameMode === GAME_MODES.BOT && piece.color !== playerColor) {
-      console.log('[selectSquare] BLOCKED: Not player color in bot mode', {
-        pieceColor: piece.color,
-        playerColor
-      });
       return;
     }
 
     const moves = getLegalMoves(square);
-    console.log('[selectSquare] Legal moves:', moves.length);
 
     const hints = moves.reduce((acc, move) => {
       const style = move.captured
@@ -241,7 +224,6 @@ export function ChessGameProvider({ children }) {
       return acc;
     }, {});
 
-    console.log('[selectSquare] Setting selected square and hints');
     setSelectedSquare(square);
     setMoveHints(hints);
   }
@@ -270,6 +252,7 @@ export function ChessGameProvider({ children }) {
     setRecordedGamePgn(null);
     setMoveAnnotations({});
     setLastMoveFenPair(null);
+    setShouldShowGameOverModal(false);
     setBoardKey((k) => k + 1);
 
     return freshGame;
@@ -347,6 +330,7 @@ export function ChessGameProvider({ children }) {
     setAnalysisGame(analysisCopy);
     setAnalysisPly(mainline.length);
     setResultNotice(null);
+    setShouldShowGameOverModal(false);
     setIsBotThinking(false);
     setEngineHint(null);
     setMoveHints({});
@@ -361,6 +345,7 @@ export function ChessGameProvider({ children }) {
     setAnalysisGame(new Chess());
     setAnalysisMainline([]);
     setAnalysisPly(0);
+    setShouldShowGameOverModal(false);
     setEngineHint(null);
     setMoveHints({});
     setSelectedSquare(null);
@@ -436,6 +421,8 @@ export function ChessGameProvider({ children }) {
     setResultNotice,
     recordedGamePgn,
     setRecordedGamePgn,
+    shouldShowGameOverModal,
+    setShouldShowGameOverModal,
 
     // Annotations
     moveAnnotations,

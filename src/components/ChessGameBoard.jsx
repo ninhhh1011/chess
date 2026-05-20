@@ -79,6 +79,7 @@ export default function ChessGameBoard() {
     setResultNotice,
     recordedGamePgn,
     setRecordedGamePgn,
+    setShouldShowGameOverModal,
   } = useChessGame();
 
   const { triggerBotMove } = useBotMove();
@@ -120,7 +121,7 @@ export default function ChessGameBoard() {
     setLiveEvalStatus('Đang phân tích');
 
     const timerId = window.setTimeout(() => {
-      analyzeFen({ fen: currentFen, depth: 8, movetime: 650 })
+      analyzeFen({ fen: currentFen, depth: 8, movetime: 400 })
         .then((result) => {
           if (liveAnalysisRequestRef.current !== requestId) return;
           setLiveAnalysis(result);
@@ -130,15 +131,15 @@ export default function ChessGameBoard() {
           if (liveAnalysisRequestRef.current !== requestId) return;
           setLiveEvalStatus('Lỗi engine');
         });
-    }, 180);
+    }, 400);
 
     return () => window.clearTimeout(timerId);
   }, [currentFen, analysisMode, isBotThinking]);
 
-  // Game over handling
+  // Game over handling — only trigger modal for live game, not analysis/replay
   useEffect(() => {
+    if (analysisMode) return;
     if (!isGameOver) {
-      setResultNotice(null);
       return;
     }
 
@@ -157,7 +158,7 @@ export default function ChessGameBoard() {
     }
 
     setResultNotice('Ván cờ hòa!');
-  }, [isGameOver, game, recordedGamePgn, moveHistory.length, setResultNotice, setRecordedGamePgn]);
+  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn]);
 
   // Move annotation
   useEffect(() => {
@@ -166,9 +167,9 @@ export default function ChessGameBoard() {
 
     async function analyzeLastMove() {
       try {
-        const before = await analyzeFen({ fen: lastMoveFenPair.beforeFen, depth: 8, movetime: 650 });
+        const before = await analyzeFen({ fen: lastMoveFenPair.beforeFen, depth: 8, movetime: 500 });
         if (cancelled) return;
-        const after = await analyzeFen({ fen: lastMoveFenPair.afterFen, depth: 7, movetime: 550 });
+        const after = await analyzeFen({ fen: lastMoveFenPair.afterFen, depth: 7, movetime: 400 });
         if (cancelled) return;
 
         const annotation = classifyMoveAnnotation({
