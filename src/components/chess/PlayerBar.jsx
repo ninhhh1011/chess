@@ -27,7 +27,7 @@ export default function PlayerBar({ position = 'top' }) {
   } else {
     // Opponent
     if (gameMode === GAME_MODES.BOT) {
-      displayName = 'ninh lốp trưởng';
+      displayName = 'ngoại lệ của cô ấy';
       displayBadge = botElo;
       avatarSrc = coachAvatar;
       isActive = currentTurn !== playerColor;

@@ -37,7 +37,7 @@ export default function GameInfoBar({ botElo = 1200 }) {
       } else if (isPlayerTurn) {
         turnText = 'Lượt của bạn';
       } else {
-        turnText = 'Lượt của ninh lốp trưởng';
+        turnText = 'Lượt của ngoại lệ của cô ấy';
       }
     } else {
       turnText = currentTurn === 'w' ? 'Lượt trắng' : 'Lượt đen';
