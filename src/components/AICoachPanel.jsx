@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { askAICoach } from '../services/aiCoachApiService';
 import { getUserProfile } from '../services/userProfileService';
 import { getRecommendedExercises, getRecommendedLessons, getRecommendedOpenings } from '../services/recommendationService';
+import coachAvatar from '../assets/avatarcoach.webp';
 
 const COACH_NAME = 'ninh lốp trưởng';
 const MAX_COACH_LINES = 2;
@@ -127,7 +128,11 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
       {/* Header gọn */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg">🤖</span>
+          <img
+            src={coachAvatar}
+            alt="ninh lốp trưởng"
+            className="h-8 w-8 rounded-lg border border-slate-600/60 object-cover"
+          />
           <div>
             <h3 className="text-sm font-bold text-slate-300">
               <span className="text-amber-300">ninh lốp trưởng</span> · AI Coach
