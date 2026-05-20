@@ -13,7 +13,27 @@ function annotationClassName(tone) {
 }
 
 export default function MoveHistory() {
-  const { moveHistory, moveAnnotations } = useChessGame();
+  const { moveHistory, moveAnnotations, currentPgn } = useChessGame();
+
+  function copyPgn() {
+    if (!currentPgn) return;
+    navigator.clipboard.writeText(currentPgn).then(
+      () => {
+        // Success - could add toast notification here
+      },
+      () => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = currentPgn;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+    );
+  }
 
   return (
     <section className="rounded-2xl border border-slate-700/80 bg-slate-900/60 p-4">
@@ -22,9 +42,20 @@ export default function MoveHistory() {
           <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-400/75">Lịch sử</p>
           <h2 className="mt-1 text-xl font-black text-slate-50">Nước đi</h2>
         </div>
-        <span className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-black text-slate-300">
-          {moveHistory.length} nước
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-black text-slate-300">
+            {moveHistory.length} nước
+          </span>
+          {moveHistory.length > 0 && (
+            <button
+              onClick={copyPgn}
+              className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs font-bold text-slate-300 transition hover:border-amber-400/60 hover:bg-slate-700 hover:text-amber-300"
+              title="Sao chép PGN"
+            >
+              📋 PGN
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mt-4 max-h-64 overflow-auto rounded-xl border border-slate-700 bg-slate-950/45 p-3">
