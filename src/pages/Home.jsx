@@ -50,7 +50,7 @@ export default function Home() {
   useEffect(() => {
     const timerId = window.setTimeout(() => {
       setShowWelcome(false);
-    }, 3600);
+    }, 3000);
 
     return () => window.clearTimeout(timerId);
   }, []);
@@ -81,7 +81,7 @@ export default function Home() {
           </h1>
           
           <p className="mt-6 max-w-2xl text-xl leading-9 text-cream/80">
-            Học cờ vua từ cơ bản đến nâng cao, luyện chiến thuật và chơi với AI thông minh ngay trên trình duyệt.
+            Học cờ vua từ cơ bản đến nâng cao. Luyện chiến thuật và chơi với AI thông minh.
           </p>
 
           {isAuthenticated && profile && (
@@ -164,7 +164,7 @@ export default function Home() {
           <p className="mt-4 text-lg text-cream/70">Mọi thứ bạn cần để trở thành cao thủ cờ vua</p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {features.map((feature, index) => (
             <Link
               key={index}
