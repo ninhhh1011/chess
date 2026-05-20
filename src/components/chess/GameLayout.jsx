@@ -14,6 +14,7 @@ import BotSettings from './BotSettings';
 import GameControls from './GameControls';
 import EngineAnalysisPanel from '../analysis/EngineAnalysisPanel';
 import AICoachPanel from '../AICoachPanel';
+import coachAvatar from '../../assets/avatarcoach.webp';
 
 /**
  * GameLayout - Production-quality chess app layout
@@ -44,7 +45,7 @@ export default function GameLayout({
   const tabs = [
     { id: 'moves', label: 'Nước đi', icon: '📜' },
     { id: 'analysis', label: 'Phân tích', icon: '📊' },
-    { id: 'coach', label: 'AI Coach', icon: '🤖' },
+    { id: 'coach', label: 'AI Coach', iconType: 'avatar', iconSrc: coachAvatar },
     { id: 'settings', label: 'Cài đặt', icon: '⚙️' },
   ];
 
@@ -106,7 +107,15 @@ export default function GameLayout({
                       : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-300'
                   }`}
                 >
-                  <span className="block text-sm mb-0.5">{tab.icon}</span>
+                  {tab.iconType === 'avatar' ? (
+                    <img
+                      src={tab.iconSrc}
+                      alt={tab.label}
+                      className="mx-auto mb-0.5 h-5 w-5 rounded object-cover"
+                    />
+                  ) : (
+                    <span className="block text-sm mb-0.5">{tab.icon}</span>
+                  )}
                   {tab.label}
                 </button>
               ))}
