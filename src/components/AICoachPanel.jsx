@@ -3,7 +3,7 @@ import { askAICoach } from '../services/aiCoachApiService';
 import { getUserProfile } from '../services/userProfileService';
 import { getRecommendedExercises, getRecommendedLessons, getRecommendedOpenings } from '../services/recommendationService';
 
-const COACH_NAME = 'AI Coach';
+const COACH_NAME = 'ninh lốp trưởng';
 const MAX_COACH_LINES = 2;
 const MAX_COACH_CHARS = 240;
 
@@ -66,7 +66,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
   const [messages, setMessages] = useState([
     {
       role: 'coach',
-      content: 'Xin chào! Tôi là AI Coach.\n\nTôi có thể giúp bạn:\n• Gợi ý chiến thuật\n• Giải thích thế cờ\n• Review ván đấu\n\nDùng các nút bên dưới hoặc hỏi trực tiếp!',
+      content: 'Xin chào! Tôi là ninh lốp trưởng, AI Coach của bạn.\n\nTôi có thể giúp bạn:\n• Gợi ý chiến thuật\n• Giải thích thế cờ\n• Review ván đấu\n\nDùng các nút bên dưới hoặc hỏi trực tiếp!',
       source: 'mock',
     },
   ]);
@@ -126,7 +126,14 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
     <div>
       {/* Header gọn */}
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-300">AI Coach</h3>
+        <div className="flex items-center gap-2">
+          <span className="text-lg">🤖</span>
+          <div>
+            <h3 className="text-sm font-bold text-slate-300">
+              <span className="text-amber-300">ninh lốp trưởng</span> · AI Coach
+            </h3>
+          </div>
+        </div>
         <select
           value={playerLevel}
           onChange={(e) => setPlayerLevel(e.target.value)}
