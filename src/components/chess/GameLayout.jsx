@@ -3,6 +3,7 @@ import { useChessGame } from '../../contexts/ChessGameContext';
 
 import ChessBoardPanel from './ChessBoardPanel';
 import GameInfoBar from './GameInfoBar';
+import PlayerBar from './PlayerBar';
 import LiveEvaluationBar from './LiveEvaluationBar';
 import MoveHintDisplay from './MoveHintDisplay';
 import StartNotice from './StartNotice';
@@ -61,8 +62,13 @@ export default function GameLayout({
 
         {/* CỘT TRÁI: Bàn cờ */}
         <section className="flex-1 lg:max-w-[70%]">
-          {/* Thanh thông tin ván đấu gọn - thay thế card cũ */}
+          {/* Thanh thông tin ván đấu gọn */}
           <GameInfoBar botElo={botElo} />
+
+          {/* Đối thủ - phía trên bàn cờ */}
+          <div className="mb-2">
+            <PlayerBar position="top" />
+          </div>
 
           {/* Bàn cờ với evaluation bar */}
           <div className="flex items-stretch gap-3">
@@ -70,6 +76,11 @@ export default function GameLayout({
             <div className="flex-1">
               <ChessBoardPanel engineHint={engineHint} />
             </div>
+          </div>
+
+          {/* Người chơi - phía dưới bàn cờ */}
+          <div className="mt-2">
+            <PlayerBar position="bottom" />
           </div>
 
           {/* Gợi ý nước đi */}

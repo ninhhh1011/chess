@@ -1,8 +1,8 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 
 /**
- * Thanh thông tin ván đấu gọn - thay thế PlayerInfoBar cũ
- * Chỉ 1 dòng, chiều cao 48-56px, không chiếm nhiều không gian
+ * GameInfoBar - Thanh thông tin ván đấu gọn
+ * Hiển thị rõ tên đối thủ "ninh lốp trưởng"
  */
 export default function GameInfoBar({ botElo = 1200 }) {
   const { activeGame, playerColor, gameMode, isBotThinking, isGameOver, isCheck, GAME_MODES } = useChessGame();
@@ -10,9 +10,12 @@ export default function GameInfoBar({ botElo = 1200 }) {
   const currentTurn = activeGame.turn();
   const isPlayerTurn = currentTurn === playerColor;
 
-  // Xác định thông tin người chơi
+  // Xác định thông tin
   const playerColorText = playerColor === 'w' ? 'trắng' : 'đen';
-  const botColorText = playerColor === 'w' ? 'đen' : 'trắng';
+  const opponentColorText = playerColor === 'w' ? 'đen' : 'trắng';
+
+  // Tên đối thủ
+  const opponentName = gameMode === GAME_MODES.BOT ? 'ninh lốp trưởng' : 'Đối thủ';
 
   // Trạng thái ván đấu
   let statusText = 'Đang chơi';
@@ -50,22 +53,23 @@ export default function GameInfoBar({ botElo = 1200 }) {
 
   return (
     <div className="mb-3 flex items-center justify-between rounded-lg border border-slate-700/60 bg-slate-800/40 px-4 py-3">
-      {/* Thông tin bên trái */}
+      {/* Thông tin bên trái - hiển thị rõ tên đối thủ */}
       <div className="flex items-center gap-3 text-sm">
         <span className="font-bold text-slate-200">
-          Bạn {playerColorText}
+          Bạn ({playerColorText})
         </span>
-        <span className="text-slate-500">·</span>
-        {gameMode === GAME_MODES.BOT ? (
+        <span className="text-slate-500">vs</span>
+        <span className="font-bold text-amber-300">
+          {opponentName}
+        </span>
+        <span className="text-slate-400">({opponentColorText})</span>
+        {gameMode === GAME_MODES.BOT && (
           <>
-            <span className="text-slate-300">Stockfish Bot {botColorText}</span>
             <span className="text-slate-500">·</span>
             <span className="rounded bg-slate-700/60 px-2 py-0.5 text-xs font-bold text-slate-300">
               {botElo} ELO
             </span>
           </>
-        ) : (
-          <span className="text-slate-300">Người chơi 2</span>
         )}
         <span className="text-slate-500">·</span>
         <span className={`font-bold ${statusColor}`}>{statusText}</span>
