@@ -104,7 +104,7 @@ export default function ChessBoardPanel({ engineHint }) {
   }
 
   function onPieceDrop(sourceSquare, targetSquare) {
-    const result = makeMove(sourceSquare, targetSquare);
+    const result = makeMove(sourceSquare, targetSquare, null);
     if (result && result.move) {
       if (result.move.captured) {
         playCaptureSound();
@@ -120,7 +120,7 @@ export default function ChessBoardPanel({ engineHint }) {
 
     // If square has legal move hint, execute move
     if (selectedSquare && moveHints[square]) {
-      const result = makeMove(selectedSquare, square);
+      const result = makeMove(selectedSquare, square, null);
       if (result && result.move) {
         if (result.move.captured) {
           playCaptureSound();

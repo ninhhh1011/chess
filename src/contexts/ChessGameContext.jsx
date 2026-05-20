@@ -53,6 +53,9 @@ export function ChessGameProvider({ children }) {
   const [moveAnnotations, setMoveAnnotations] = useState({});
   const [lastMoveFenPair, setLastMoveFenPair] = useState(null);
 
+  // Promotion state
+  const [pendingPromotion, setPendingPromotion] = useState(null);
+
   // Analysis mode
   const [analysisMode, setAnalysisMode] = useState(false);
   const [analysisGame, setAnalysisGame] = useState(() => new Chess());
@@ -104,6 +107,16 @@ export function ChessGameProvider({ children }) {
     if (!analysisMode && isBotThinking) return false;
     if (!analysisMode && gameMode === GAME_MODES.BOT && currentTurn !== playerColor) return false;
     if (isGameOver) return false;
+
+    // Check if this is a promotion move
+    const piece = activeGame.get(from);
+    const isPromotion = piece?.type === 'p' && ((piece.color === 'w' && to[1] === '8') || (piece.color === 'b' && to[1] === '1'));
+
+    // If promotion and no promotion piece specified, show modal
+    if (isPromotion && !promotion) {
+      setPendingPromotion({ from, to, color: piece.color });
+      return false;
+    }
 
     const beforeFen = activeGame.fen();
     const nextGame = cloneGame(activeGame);
@@ -385,6 +398,10 @@ export function ChessGameProvider({ children }) {
     setMoveAnnotations,
     lastMoveFenPair,
     setLastMoveFenPair,
+
+    // Promotion
+    pendingPromotion,
+    setPendingPromotion,
 
     // Analysis mode
     analysisMode,

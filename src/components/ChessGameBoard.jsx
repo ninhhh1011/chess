@@ -16,6 +16,7 @@ import LiveEvaluationBar from './chess/LiveEvaluationBar';
 import MoveHintDisplay from './chess/MoveHintDisplay';
 import StartNotice from './chess/StartNotice';
 import ResultModal from './chess/ResultModal';
+import PromotionModal from './chess/PromotionModal';
 import MoveHistory from './chess/MoveHistory';
 import BotSettings from './chess/BotSettings';
 import GameControls from './chess/GameControls';
@@ -263,6 +264,7 @@ export default function ChessGameBoard() {
     <div className="relative grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(320px,380px)] xl:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
       {showStartNotice && <StartNotice />}
       <ResultModal />
+      <PromotionModal />
 
       <section className="panel-dark min-w-0 rounded-2xl p-3 sm:p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
