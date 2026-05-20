@@ -11,6 +11,7 @@ import OpeningDetail from './pages/OpeningDetail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { AuthProvider } from './contexts/AuthContext';
+import { ChessGameProvider } from './contexts/ChessGameContext';
 import { getUserProfile } from './services/userProfileService';
 
 export default function App() {
@@ -21,19 +22,21 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/learn" element={<Learn />} />
-            <Route path="/play" element={<Play />} />
-            <Route path="/exercises" element={<Exercises />} />
-            <Route path="/training" element={<Training />} />
-            <Route path="/openings" element={<Openings />} />
-            <Route path="/openings/:openingId" element={<OpeningDetail />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Routes>
-        </Layout>
+        <ChessGameProvider>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/learn" element={<Learn />} />
+              <Route path="/play" element={<Play />} />
+              <Route path="/exercises" element={<Exercises />} />
+              <Route path="/training" element={<Training />} />
+              <Route path="/openings" element={<Openings />} />
+              <Route path="/openings/:openingId" element={<OpeningDetail />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Routes>
+          </Layout>
+        </ChessGameProvider>
       </AuthProvider>
     </BrowserRouter>
   );
