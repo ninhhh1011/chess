@@ -12,6 +12,10 @@ function annotationClassName(tone) {
   return tones[tone] || tones.pending;
 }
 
+/**
+ * MoveHistory - Refactored gọn gàng hơn
+ * Bỏ header lớn, chỉ giữ danh sách nước đi
+ */
 export default function MoveHistory() {
   const { moveHistory, moveAnnotations, currentPgn } = useChessGame();
 
@@ -19,10 +23,10 @@ export default function MoveHistory() {
     if (!currentPgn) return;
     navigator.clipboard.writeText(currentPgn).then(
       () => {
-        // Success - could add toast notification here
+        // Success
       },
       () => {
-        // Fallback for older browsers
+        // Fallback
         const textarea = document.createElement('textarea');
         textarea.value = currentPgn;
         textarea.style.position = 'fixed';
@@ -36,56 +40,55 @@ export default function MoveHistory() {
   }
 
   return (
-    <section className="rounded-lg border border-slate-700/60 bg-slate-900/50 p-4">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-amber-400/70">Lịch sử</p>
-          <h2 className="mt-1 text-lg font-bold text-slate-50">Nước đi</h2>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full border border-slate-700/60 bg-slate-800/60 px-3 py-1 text-xs font-bold text-slate-300">
-            {moveHistory.length} nước
-          </span>
-          {moveHistory.length > 0 && (
-            <button
-              onClick={copyPgn}
-              className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-2.5 py-1 text-xs font-bold text-slate-300 transition hover:border-amber-400/60 hover:bg-slate-700/60 hover:text-amber-300"
-              title="Sao chép PGN"
-            >
-              📋 PGN
-            </button>
-          )}
-        </div>
+    <div>
+      {/* Header gọn */}
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-300">
+          {moveHistory.length} nước đi
+        </h3>
+        {moveHistory.length > 0 && (
+          <button
+            onClick={copyPgn}
+            className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-slate-300 transition hover:bg-slate-600"
+            title="Sao chép PGN"
+          >
+            📋 Sao chép
+          </button>
+        )}
       </div>
 
-      <div className="mt-4 max-h-64 overflow-auto rounded-lg border border-slate-700/60 bg-slate-950/30 p-3">
+      {/* Danh sách nước đi */}
+      <div className="max-h-[400px] overflow-y-auto rounded-lg border border-slate-700/60 bg-slate-950/30 p-2">
         {moveHistory.length ? (
-          <ol className="grid grid-cols-1 gap-2 text-sm text-slate-300 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-1.5">
             {moveHistory.map((move, index) => {
               const annotation = moveAnnotations[index];
               return (
-                <li key={index} className="flex items-center justify-between gap-2 rounded-lg bg-slate-800/60 px-3 py-2">
-                  <span className="min-w-0 truncate">
+                <div
+                  key={index}
+                  className="flex items-center justify-between gap-2 rounded bg-slate-800/60 px-2 py-1.5 text-sm"
+                >
+                  <span className="min-w-0 truncate text-slate-300">
                     <b className="text-amber-300">{index + 1}.</b> {move}
                   </span>
                   {annotation && (
                     <span
                       title={annotation.label}
-                      className={`shrink-0 rounded-md border px-1.5 py-0.5 text-xs font-black ${annotationClassName(
+                      className={`shrink-0 rounded border px-1 py-0.5 text-xs font-bold ${annotationClassName(
                         annotation.tone
                       )}`}
                     >
                       {annotation.symbol}
                     </span>
                   )}
-                </li>
+                </div>
               );
             })}
-          </ol>
+          </div>
         ) : (
-          <p className="text-sm text-slate-400">Chưa có nước đi nào.</p>
+          <p className="py-8 text-center text-sm text-slate-400">Chưa có nước đi nào</p>
         )}
       </div>
-    </section>
+    </div>
   );
 }

@@ -2,50 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { askAICoach } from '../services/aiCoachApiService';
 import { getUserProfile } from '../services/userProfileService';
 import { getRecommendedExercises, getRecommendedLessons, getRecommendedOpenings } from '../services/recommendationService';
-import coachAvatar from '../assets/avatarcoach.webp';
 
-const COACH_NAME = 'ninh lốp trưởng';
+const COACH_NAME = 'AI Coach';
 const MAX_COACH_LINES = 2;
 const MAX_COACH_CHARS = 240;
 
 const QUICK_ACTIONS = [
-  { id: 'hint', label: 'Gợi ý chiến thuật', mode: 'hint', question: 'Dựa trên PGN và thế hiện tại, gợi ý 1 nước chiến thuật nên cân nhắc. Trả lời tối đa 2 ý.' },
-  { id: 'explain', label: 'Hỏi AI Coach', mode: 'explain_position', question: 'Dựa trên PGN ván đấu hiện tại, giải thích thế trận bằng tiếng Việt trong tối đa 3 dòng.' },
-  { id: 'review', label: 'Review ván', mode: 'review_game', question: 'Review thật ngắn: 1 lỗi chính và 1 việc cần sửa.' },
-  { id: 'plan', label: 'Luyện hôm nay', mode: 'training_plan', question: 'Cho tôi 1 bài cần luyện hôm nay, trả lời cực ngắn.' },
+  { id: 'hint', label: 'Gợi ý', mode: 'hint', question: 'Gợi ý 1 nước chiến thuật.' },
+  { id: 'explain', label: 'Giải thích', mode: 'explain_position', question: 'Giải thích thế trận ngắn gọn.' },
+  { id: 'review', label: 'Review', mode: 'review_game', question: 'Review ngắn: 1 lỗi chính.' },
 ];
 
 const LEVELS = [
-  { value: 'noob', label: 'Noob' },
   { value: 'beginner', label: 'Beginner' },
   { value: 'intermediate', label: 'Intermediate' },
   { value: 'advanced', label: 'Advanced' },
 ];
-
-function CoachAvatar({ compact = false }) {
-  const [imageFailed, setImageFailed] = useState(false);
-  const sizeClass = compact ? 'h-10 w-10' : 'h-16 w-16';
-
-  if (imageFailed) {
-    return (
-      <div
-        aria-label="Avatar ninh lớp trưởng"
-        className={`${compact ? 'mt-1 ' : ''}${sizeClass} grid flex-none place-items-center rounded-xl border border-amber-400/40 bg-amber-500 text-xl font-black text-slate-950 shadow-glow`}
-      >
-        ♔
-      </div>
-    );
-  }
-
-  return (
-    <img
-      src={coachAvatar}
-      alt="Avatar ninh lớp trưởng"
-      onError={() => setImageFailed(true)}
-      className={`${compact ? 'mt-1 ' : ''}${sizeClass} flex-none rounded-xl border border-amber-400/35 object-cover shadow-glow`}
-    />
-  );
-}
 
 function cleanCoachLine(line) {
   return line
@@ -61,21 +33,8 @@ function isNoisyCoachLine(line) {
   return (
     lower.startsWith('lưu ý') ||
     lower.includes('mock mode') ||
-    lower.includes('chế độ mock') ||
     lower.includes('fallback') ||
-    lower.includes('api key') ||
-    lower.startsWith('fen ') ||
-    lower.startsWith('fen:') ||
-    lower.startsWith('các nước gần đây') ||
-    lower.startsWith('với level') ||
-    lower.startsWith('profile') ||
-    lower.endsWith('nước đi:') ||
-    lower.endsWith('thế cờ:') ||
-    lower.startsWith('cách tự chọn') ||
-    lower.startsWith('bạn nên quan sát') ||
-    lower.startsWith('bài học chính') ||
-    lower.includes('cá nhân hóa theo tiến độ') ||
-    lower.includes('để có đánh giá nước đi chính xác như engine')
+    lower.includes('api key')
   );
 }
 
@@ -87,7 +46,7 @@ function compactCoachReply(reply = '', mode = 'chat') {
     .filter((line) => !isNoisyCoachLine(line));
 
   const lines = rawLines.length ? rawLines : String(reply).split('\n').map(cleanCoachLine).filter(Boolean);
-  const maxLines = mode === 'training_plan' ? 3 : MAX_COACH_LINES;
+  const maxLines = MAX_COACH_LINES;
   const compactLines = lines.slice(0, maxLines);
   let compactReply = compactLines.join('\n');
 
@@ -95,14 +54,19 @@ function compactCoachReply(reply = '', mode = 'chat') {
     compactReply = `${compactReply.slice(0, MAX_COACH_CHARS).trimEnd()}...`;
   }
 
-  return compactReply || 'Đi ngắn gọn: ưu tiên nước an toàn, không treo quân, rồi phát triển quân.';
+  return compactReply || 'Ưu tiên nước an toàn, không treo quân.';
 }
 
+/**
+ * AICoachPanel - Refactored gọn gàng
+ * Bỏ avatar lớn, header phức tạp
+ * Giữ chat đơn giản, input ở dưới
+ */
 export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish = null, openingContext = null }) {
   const [messages, setMessages] = useState([
     {
       role: 'coach',
-      content: 'Chào bạn! Mình là ninh lốp trưởng - AI Coach của bạn.\n\nMình sẽ giúp bạn:\n• Gợi ý chiến thuật trong ván đấu\n• Giải thích thế cờ hiện tại\n• Review và phân tích ván cờ\n• Lên kế hoạch luyện tập\n\nHãy dùng các nút bên dưới hoặc hỏi trực tiếp nhé!',
+      content: 'Xin chào! Tôi là AI Coach.\n\nTôi có thể giúp bạn:\n• Gợi ý chiến thuật\n• Giải thích thế cờ\n• Review ván đấu\n\nDùng các nút bên dưới hoặc hỏi trực tiếp!',
       source: 'mock',
     },
   ]);
@@ -149,7 +113,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
     setMessages((current) => [...current, { role: 'user', content: finalQuestion }]);
 
     const result = await askAICoach(buildPayload(finalQuestion, mode));
-    setMessages((current) => [...current, { role: 'coach', content: compactCoachReply(result.reply, mode), source: result.source, suggestedActions: result.suggestedActions || [] }]);
+    setMessages((current) => [...current, { role: 'coach', content: compactCoachReply(result.reply, mode), source: result.source }]);
     setIsLoading(false);
   }
 
@@ -158,46 +122,80 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
     askCoach();
   }
 
-  return <section className="overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900/60">
-    <div className="border-b border-slate-700 p-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-4">
-          <CoachAvatar />
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-400/80">AI Coach</p>
-            <h2 className="mt-1 text-xl font-black text-slate-50">{COACH_NAME}</h2>
-            <p className="mt-1 text-sm font-semibold text-slate-400">Trả lời ngắn theo thế cờ hiện tại</p>
-          </div>
-        </div>
-        <label className="min-w-40 text-sm font-bold text-slate-400" htmlFor="coach-level">
-          Level người chơi
-          <select id="coach-level" value={playerLevel} onChange={(event) => setPlayerLevel(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 font-extrabold text-slate-100 outline-none transition focus:border-amber-400">
-            {LEVELS.map((level) => <option key={level.value} value={level.value}>{level.label}</option>)}
-          </select>
-        </label>
+  return (
+    <div>
+      {/* Header gọn */}
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-300">AI Coach</h3>
+        <select
+          value={playerLevel}
+          onChange={(e) => setPlayerLevel(e.target.value)}
+          className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-slate-300 outline-none"
+        >
+          {LEVELS.map((level) => (
+            <option key={level.value} value={level.value}>
+              {level.label}
+            </option>
+          ))}
+        </select>
       </div>
-      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
-        {QUICK_ACTIONS.map((action) => <button key={action.id} id={`coach-${action.id}-button`} type="button" onClick={() => askCoach(action.question, action.mode)} className="rounded-xl border border-slate-700 bg-slate-800 px-3 py-3 text-sm font-extrabold text-slate-100 transition hover:-translate-y-0.5 hover:border-amber-400/60 hover:bg-slate-700 disabled:opacity-60" disabled={isLoading}>{action.label}</button>)}
+
+      {/* Quick actions */}
+      <div className="mb-3 grid grid-cols-3 gap-1.5">
+        {QUICK_ACTIONS.map((action) => (
+          <button
+            key={action.id}
+            onClick={() => askCoach(action.question, action.mode)}
+            className="rounded bg-slate-700/60 px-2 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-slate-600"
+            disabled={isLoading}
+          >
+            {action.label}
+          </button>
+        ))}
       </div>
-    </div>
 
-    <div className="max-h-80 space-y-3 overflow-auto p-4">
-      {messages.map((message, index) => <article key={`${message.role}-${index}`} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-        {message.role === 'coach' && <CoachAvatar compact />}
-        <div className={`max-w-[calc(100%-3.25rem)] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === 'user' ? 'bg-amber-500 text-slate-950' : 'border border-slate-700 bg-slate-800 text-slate-200'}`}>
-          <div className="mb-1 flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-[0.18em] opacity-80">
-            <span>{message.role === 'user' ? 'Bạn' : COACH_NAME}</span>
+      {/* Chat messages */}
+      <div className="mb-3 max-h-[300px] space-y-2 overflow-y-auto rounded-lg border border-slate-700/60 bg-slate-950/30 p-2">
+        {messages.map((message, index) => (
+          <div
+            key={`${message.role}-${index}`}
+            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[85%] rounded-lg px-3 py-2 text-xs leading-relaxed ${
+                message.role === 'user'
+                  ? 'bg-amber-500 text-slate-950'
+                  : 'border border-slate-700/60 bg-slate-800/60 text-slate-200'
+              }`}
+            >
+              <p className="whitespace-pre-wrap">{message.content}</p>
+            </div>
           </div>
-          <p className="whitespace-pre-wrap">{message.content}</p>
-        </div>
-      </article>)}
-      {isLoading && <div className="mr-8 rounded-2xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-bold text-amber-300">Coach đang suy nghĩ...</div>}
-      <div ref={chatEndRef} />
-    </div>
+        ))}
+        {isLoading && (
+          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-3 py-2 text-xs font-bold text-amber-300">
+            Đang suy nghĩ...
+          </div>
+        )}
+        <div ref={chatEndRef} />
+      </div>
 
-    <form className="flex gap-2 border-t border-slate-700 p-4" onSubmit={handleSubmit}>
-      <input id="coach-question-input" value={question} onChange={(event) => setQuestion(event.target.value)} className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-amber-400" placeholder="Ví dụ: Mình nên phát triển quân nào tiếp theo?" />
-      <button id="coach-send-button" className="btn-primary px-5" disabled={isLoading || !question.trim()} type="submit">Gửi</button>
-    </form>
-  </section>;
+      {/* Input form */}
+      <form className="flex gap-2" onSubmit={handleSubmit}>
+        <input
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          className="min-w-0 flex-1 rounded-lg border border-slate-700/60 bg-slate-950/50 px-3 py-2 text-xs text-slate-100 outline-none placeholder:text-slate-500 focus:border-amber-400"
+          placeholder="Hỏi AI Coach..."
+        />
+        <button
+          className="btn-primary px-3 py-2 text-xs"
+          disabled={isLoading || !question.trim()}
+          type="submit"
+        >
+          Gửi
+        </button>
+      </form>
+    </div>
+  );
 }

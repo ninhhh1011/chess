@@ -11,13 +11,16 @@ function getEvalPercent(evaluation) {
   return Math.max(4, Math.min(96, 50 + Math.tanh(pawns / 4) * 44));
 }
 
+/**
+ * EngineAnalysisPanel - Refactored gọn gàng
+ * Bỏ header lớn, giảm padding, tối ưu layout
+ */
 export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
   const [status, setStatus] = useState(() => (isEngineReady() ? 'Sẵn sàng' : 'Chưa tải'));
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const bestSan = analysis?.bestMove ? getSanFromUci(analysis.fen, analysis.bestMove) : null;
-  const bestRoute = analysis?.bestMove ? `${analysis.bestMove.slice(0, 2)} -> ${analysis.bestMove.slice(2, 4)}` : null;
   const whiteEvalPercent = getEvalPercent(analysis?.evaluation);
 
   useEffect(() => {
@@ -38,11 +41,11 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
         onBestMove?.({ bestMove: result.bestMove, fen: result.fen, evaluation: result.evaluation });
       }
       if (showHint && result.bestMove) {
-        setError(`Engine gợi ý: ${result.bestMove.slice(0, 2)} -> ${result.bestMove.slice(2, 4)} (${getSanFromUci(result.fen, result.bestMove)})`);
+        setError(`Gợi ý: ${getSanFromUci(result.fen, result.bestMove)}`);
       }
     } catch (err) {
       setStatus('Lỗi');
-      setError(err.message || 'Engine chưa sẵn sàng, vui lòng thử lại.');
+      setError(err.message || 'Engine chưa sẵn sàng');
     } finally {
       setIsAnalyzing(false);
     }
@@ -55,62 +58,69 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
   }
 
   return (
-    <section className="rounded-lg border border-slate-700/60 bg-slate-900/50 p-4">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-amber-400/70">Eval Bar</p>
-          <h2 className="mt-1 text-lg font-bold text-slate-50">Stockfish</h2>
-        </div>
-        <span className="rounded-full border border-slate-600/60 bg-slate-800/60 px-3 py-1 text-xs font-bold text-amber-300">{status}</span>
+    <div>
+      {/* Header gọn */}
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-slate-300">Stockfish</h3>
+        <span className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-amber-300">{status}</span>
       </div>
 
-      <div className="mt-4 grid grid-cols-[1.1rem_1fr] gap-3">
-        <div className="relative overflow-hidden rounded-full border border-slate-600/60 bg-slate-950/50">
+      {/* Evaluation bar + info */}
+      <div className="mb-3 grid grid-cols-[1rem_1fr] gap-2">
+        {/* Vertical eval bar */}
+        <div className="relative h-32 overflow-hidden rounded-full border border-slate-600/60 bg-slate-950/50">
           <div className="absolute bottom-0 left-0 right-0 bg-slate-50 transition-all duration-300" style={{ height: `${whiteEvalPercent}%` }} />
           <div className="absolute inset-x-0 top-1/2 h-px bg-amber-400/60" />
         </div>
-        <div className="grid gap-3">
-          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-3 text-sm">
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-slate-400">Evaluation</span>
+
+        {/* Eval info */}
+        <div className="space-y-2">
+          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400">Đánh giá</span>
               <b className="text-amber-300">{formatEvaluation(analysis?.evaluation)}</b>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-700/60">
+            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-700/60">
               <div className="h-full bg-amber-500 transition-all duration-300" style={{ width: `${whiteEvalPercent}%` }} />
-            </div>
-            <div className="mt-2 flex justify-between text-[0.68rem] font-bold uppercase tracking-wider text-slate-500">
-              <span>Black</span>
-              <span>White</span>
             </div>
           </div>
 
-          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-3 text-sm text-slate-300">
-            <p>Best move: <b className="text-amber-300">{bestSan || 'Chưa có'}</b></p>
-            <p className="mt-1">Route: <b className="text-amber-300">{bestRoute || 'Chưa có'}</b></p>
+          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs text-slate-300">
+            <p>Nước tốt nhất: <b className="text-amber-300">{bestSan || '—'}</b></p>
           </div>
         </div>
       </div>
 
-      <label className="mt-4 flex items-center gap-3 rounded-lg border border-slate-700/60 bg-slate-800/60 p-3 text-sm font-bold text-slate-300">
-        <input type="checkbox" checked={autoAnalyze} onChange={(event) => onAutoAnalyzeChange(event.target.checked)} />
-        Tự phân tích sau mỗi nước
+      {/* Auto analyze */}
+      <label className="mb-3 flex items-center gap-2 rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs font-bold text-slate-300 cursor-pointer">
+        <input type="checkbox" checked={autoAnalyze} onChange={(e) => onAutoAnalyzeChange(e.target.checked)} className="rounded" />
+        Tự động phân tích
       </label>
 
-      {autoComment && <p className="mt-3 rounded-lg border border-amber-400/20 bg-amber-500/10 p-3 text-sm font-bold text-amber-200">{autoComment}</p>}
-      <p className="mt-3 rounded-lg border border-slate-700/60 bg-slate-950/30 p-3 text-xs leading-5 text-slate-400">
-        PV: <span className="text-slate-300">{analysis?.pv?.map((uci) => getSanFromUci(analysis.fen, uci)).join(' ') || 'Chưa có'}</span>
+      {/* Comments */}
+      {autoComment && <p className="mb-3 rounded-lg border border-amber-400/20 bg-amber-500/10 p-2 text-xs font-bold text-amber-200">{autoComment}</p>}
+      {error && <p className="mb-3 rounded-lg border border-amber-400/20 bg-amber-500/10 p-2 text-xs font-bold text-amber-200">{error}</p>}
+
+      {/* PV */}
+      <p className="mb-3 rounded-lg border border-slate-700/60 bg-slate-950/30 p-2 text-xs leading-relaxed text-slate-400">
+        <span className="text-slate-500">PV:</span> <span className="text-slate-300">{analysis?.pv?.map((uci) => getSanFromUci(analysis.fen, uci)).join(' ') || '—'}</span>
       </p>
-      {error && <p className="mt-3 rounded-lg border border-amber-400/20 bg-amber-500/10 p-3 text-sm font-bold text-amber-200">{error}</p>}
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-2">
-        <button className="btn-primary min-h-11 px-3 py-2 text-sm" onClick={() => runAnalysis(false)} disabled={isAnalyzing}>{isAnalyzing ? 'Đang phân tích...' : 'Phân tích'}</button>
-        <button className="btn-secondary min-h-11 px-3 py-2 text-sm" onClick={() => runAnalysis(true)} disabled={isAnalyzing}>Gợi ý</button>
-        <button className="btn-secondary min-h-11 px-3 py-2 text-sm sm:col-span-2" onClick={handleStop}>Dừng phân tích</button>
+      {/* Actions */}
+      <div className="grid grid-cols-2 gap-2 mb-3">
+        <button className="btn-primary px-3 py-2 text-xs" onClick={() => runAnalysis(false)} disabled={isAnalyzing}>
+          {isAnalyzing ? 'Đang phân tích...' : 'Phân tích'}
+        </button>
+        <button className="btn-secondary px-3 py-2 text-xs" onClick={() => runAnalysis(true)} disabled={isAnalyzing}>
+          Gợi ý
+        </button>
       </div>
+      <button className="btn-secondary w-full px-3 py-2 text-xs" onClick={handleStop}>Dừng</button>
 
-      <div className="mt-4">
+      {/* Game review */}
+      <div className="mt-3">
         <GameReviewPanel review={review} isReviewing={isReviewing} onReview={onReview} />
       </div>
-    </section>
+    </div>
   );
 }
