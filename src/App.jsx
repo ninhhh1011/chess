@@ -13,10 +13,16 @@ import Signup from './pages/Signup';
 import { AuthProvider } from './contexts/AuthContext';
 import { ChessGameProvider } from './contexts/ChessGameContext';
 import { getUserProfile } from './services/userProfileService';
+import { disposeEngine } from './services/stockfishService';
 
 export default function App() {
   useEffect(() => {
     getUserProfile();
+
+    // Cleanup Stockfish worker on app unmount
+    return () => {
+      disposeEngine();
+    };
   }, []);
 
   return (

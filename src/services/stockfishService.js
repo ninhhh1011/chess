@@ -118,6 +118,8 @@ export function stopEngine() {
   if (worker && engineReady) {
     try {
       worker.postMessage('stop');
+      // Clear message handler to prevent stale messages
+      worker.onmessage = null;
       debugStockfish('[Stockfish] Stop command sent');
     } catch (error) {
       console.warn('[Stockfish] Stop error:', error);
@@ -138,6 +140,13 @@ export function disposeEngine() {
     engineReady = false;
     engineState = 'idle';
   }
+}
+
+// Cleanup on page unload
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', () => {
+    disposeEngine();
+  });
 }
 
 export async function configureEngineForElo({ elo, skillLevel }) {
