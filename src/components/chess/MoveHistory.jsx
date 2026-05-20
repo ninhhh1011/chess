@@ -36,20 +36,20 @@ export default function MoveHistory() {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-700/80 bg-slate-900/60 p-4">
+    <section className="rounded-lg border border-slate-700/60 bg-slate-900/50 p-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-400/75">Lịch sử</p>
-          <h2 className="mt-1 text-xl font-black text-slate-50">Nước đi</h2>
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-400/70">Lịch sử</p>
+          <h2 className="mt-1 text-lg font-bold text-slate-50">Nước đi</h2>
         </div>
         <div className="flex items-center gap-2">
-          <span className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-black text-slate-300">
+          <span className="rounded-full border border-slate-700/60 bg-slate-800/60 px-3 py-1 text-xs font-bold text-slate-300">
             {moveHistory.length} nước
           </span>
           {moveHistory.length > 0 && (
             <button
               onClick={copyPgn}
-              className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs font-bold text-slate-300 transition hover:border-amber-400/60 hover:bg-slate-700 hover:text-amber-300"
+              className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-2.5 py-1 text-xs font-bold text-slate-300 transition hover:border-amber-400/60 hover:bg-slate-700/60 hover:text-amber-300"
               title="Sao chép PGN"
             >
               📋 PGN
@@ -58,13 +58,13 @@ export default function MoveHistory() {
         </div>
       </div>
 
-      <div className="mt-4 max-h-64 overflow-auto rounded-xl border border-slate-700 bg-slate-950/45 p-3">
+      <div className="mt-4 max-h-64 overflow-auto rounded-lg border border-slate-700/60 bg-slate-950/30 p-3">
         {moveHistory.length ? (
           <ol className="grid grid-cols-1 gap-2 text-sm text-slate-300 sm:grid-cols-2">
             {moveHistory.map((move, index) => {
               const annotation = moveAnnotations[index];
               return (
-                <li key={index} className="flex items-center justify-between gap-2 rounded-lg bg-slate-800/80 px-3 py-2">
+                <li key={index} className="flex items-center justify-between gap-2 rounded-lg bg-slate-800/60 px-3 py-2">
                   <span className="min-w-0 truncate">
                     <b className="text-amber-300">{index + 1}.</b> {move}
                   </span>

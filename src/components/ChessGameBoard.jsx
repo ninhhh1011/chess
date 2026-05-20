@@ -7,20 +7,7 @@ import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
 import { addMistake, updateAfterGame } from '../services/userProfileService';
 import { playCheckSound } from '../utils/sound';
 
-import ChessBoardPanel from './chess/ChessBoardPanel';
-import GameStatusBanner from './chess/GameStatusBanner';
-import BotInfoPanel from './chess/BotInfoPanel';
-import AnalysisControls from './chess/AnalysisControls';
-import LiveEvaluationBar from './chess/LiveEvaluationBar';
-import MoveHintDisplay from './chess/MoveHintDisplay';
-import StartNotice from './chess/StartNotice';
-import ResultModal from './chess/ResultModal';
-import PromotionModal from './chess/PromotionModal';
-import MoveHistory from './chess/MoveHistory';
-import BotSettings from './chess/BotSettings';
-import GameControls from './chess/GameControls';
-import EngineAnalysisPanel from './analysis/EngineAnalysisPanel';
-import AICoachPanel from './AICoachPanel';
+import GameLayout from './chess/GameLayout';
 
 function evaluationForColor(analysis, color) {
   if (!analysis?.evaluation) return 0;
@@ -261,80 +248,19 @@ export default function ChessGameBoard() {
   const engineMove = parseEngineMove(engineHint);
 
   return (
-    <div className="relative grid min-w-0 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)] xl:grid-cols-[minmax(0,1fr)_minmax(320px,360px)]">
-      {showStartNotice && <StartNotice />}
-      <ResultModal />
-      <PromotionModal />
-
-      <section className="panel-dark min-w-0 rounded-2xl p-3 sm:p-4">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400/75">Vua Cờ · Play</p>
-            <h2 className="mt-1 text-xl font-black text-slate-50 md:text-2xl">Bàn cờ</h2>
-          </div>
-          <GameStatusBanner />
-        </div>
-
-        <BotInfoPanel />
-        <AnalysisControls />
-
-        <div className="mx-auto flex w-full items-stretch justify-center gap-2 sm:gap-3">
-          <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
-          <div className="min-w-0 flex-1">
-            <ChessBoardPanel engineHint={engineHint} />
-          </div>
-        </div>
-
-        <div className="mx-auto mt-3 grid w-full gap-2 text-sm sm:mt-4">
-          <MoveHintDisplay engineMove={engineMove} />
-        </div>
-      </section>
-
-      <aside className="panel-dark min-w-0 rounded-2xl p-3 sm:p-4 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-auto">
-        <div className="mb-3 rounded-2xl border border-slate-700 bg-slate-900/70 p-3 sm:p-4">
-          <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-400/75">Trận đấu</p>
-          <h2 className="mt-1 text-xl font-black text-slate-50 sm:text-2xl">Điều khiển</h2>
-          <p className="mt-1.5 text-sm leading-6 text-slate-400 sm:mt-2">
-            Phân tích, lịch sử nước đi và AI Coach trong một cột.
-          </p>
-        </div>
-
-        <div className="grid gap-3">
-          <EngineAnalysisPanel
-            fen={currentFen}
-            onBestMove={setEngineHint}
-            autoAnalyze={autoAnalyze}
-            onAutoAnalyzeChange={setAutoAnalyze}
-            autoComment={autoComment}
-            review={review}
-            isReviewing={isReviewing}
-            onReview={reviewGameWithEngine}
-          />
-
-          <MoveHistory />
-
-          <AICoachPanel
-            fen={currentFen}
-            pgn={currentPgn}
-            history={moveHistory}
-            stockfish={
-              liveAnalysis
-                ? {
-                    bestMove: liveAnalysis.bestMove,
-                    bestMoveSan: liveAnalysis.bestMove ? getSanFromUci(liveAnalysis.fen, liveAnalysis.bestMove) : null,
-                    evaluation: liveAnalysis.evaluation,
-                    pv: liveAnalysis.pv,
-                  }
-                : null
-            }
-            turn={activeGame.turn()}
-            status={isGameOver ? 'Game Over' : isCheck ? 'Check' : 'Playing'}
-          />
-
-          <BotSettings />
-          <GameControls />
-        </div>
-      </aside>
-    </div>
+    <GameLayout
+      liveAnalysis={liveAnalysis}
+      liveEvalStatus={liveEvalStatus}
+      engineHint={engineHint}
+      setEngineHint={setEngineHint}
+      autoAnalyze={autoAnalyze}
+      setAutoAnalyze={setAutoAnalyze}
+      autoComment={autoComment}
+      review={review}
+      isReviewing={isReviewing}
+      reviewGameWithEngine={reviewGameWithEngine}
+      engineMove={engineMove}
+      showStartNotice={showStartNotice}
+    />
   );
 }

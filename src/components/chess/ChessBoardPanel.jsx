@@ -219,7 +219,7 @@ export default function ChessBoardPanel({ engineHint }) {
   // REMOVE onPieceClick and onPieceDrag - use onSquareClick only
 
   return (
-    <div className="play-board-frame aspect-square overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/70 p-2 shadow-[0_18px_48px_rgba(2,6,23,.32)] backdrop-blur box-border sm:p-3">
+    <div className="aspect-square overflow-hidden rounded-lg border border-slate-700/60 bg-slate-900/30 p-2 shadow-md">
       <Chessboard
         key={boardKey}
         options={{
@@ -245,6 +245,7 @@ export default function ChessBoardPanel({ engineHint }) {
           draggingPieceStyle: { filter: 'drop-shadow(0 20px 24px rgba(0,0,0,.5))', transform: 'scale(1.08)' },
           darkSquareNotationStyle: { color: 'rgba(248,250,252,.58)', fontWeight: 800 },
           lightSquareNotationStyle: { color: 'rgba(15,23,42,.58)', fontWeight: 800 },
+          ariaLabel: '',
         }}
       />
     </div>
