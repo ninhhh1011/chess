@@ -64,17 +64,7 @@ export default function BotSettings() {
         )}
       </div>
 
-      {gameMode === GAME_MODES.BOT && (
-        <div className="mt-3 space-y-2">
-          <p>
-            Bạn cầm quân {playerColorLabel}. <strong className="text-slate-200">{BOT_NAME}</strong> ở mức{' '}
-            <strong className="text-amber-300">{selectedBotLevel.label}</strong> sẽ tự đi sau mỗi nước hợp lệ của bạn.
-          </p>
-          {isBotThinking && <p className="text-xs text-slate-400">{BOT_NAME} đang suy nghĩ...</p>}
-        </div>
-      )}
-
-      {gameMode === GAME_MODES.LOCAL && <p className="mt-3">Hai người chơi lần lượt trên cùng một thiết bị.</p>}
+      <p className="mt-3 text-xs text-slate-500">Các thay đổi sẽ áp dụng từ ván mới.</p>
     </section>
   );
 }

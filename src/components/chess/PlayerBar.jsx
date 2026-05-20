@@ -2,8 +2,8 @@ import { useChessGame } from '../../contexts/ChessGameContext';
 import coachAvatar from '../../assets/avatarcoach.webp';
 
 /**
- * PlayerBar - Compact player/opponent strip for modern chess UI
- * Positioned directly above/below the board
+ * PlayerBar - Compact player/opponent identity strip
+ * Shows only: avatar · name · badge
  */
 export default function PlayerBar({ position = 'top' }) {
   const { activeGame, playerColor, gameMode, botElo, isBotThinking, GAME_MODES } = useChessGame();
@@ -16,27 +16,24 @@ export default function PlayerBar({ position = 'top' }) {
   const isPlayer = isTop ? isPlayerAtTop : !isPlayerAtTop;
 
   // Display info
-  let displayName, displayRole, displayElo, avatarSrc, isActive;
+  let displayName, displayBadge, avatarSrc, isActive;
 
   if (isPlayer) {
     // Player
     displayName = 'Bạn';
-    displayRole = playerColor === 'w' ? 'Trắng' : 'Đen';
-    displayElo = null;
+    displayBadge = playerColor === 'w' ? 'Trắng' : 'Đen';
     avatarSrc = null;
     isActive = currentTurn === playerColor;
   } else {
     // Opponent
     if (gameMode === GAME_MODES.BOT) {
       displayName = 'ninh lốp trưởng';
-      displayRole = 'Bot';
-      displayElo = botElo;
+      displayBadge = botElo;
       avatarSrc = coachAvatar;
       isActive = currentTurn !== playerColor;
     } else {
       displayName = 'Đối thủ';
-      displayRole = playerColor === 'w' ? 'Đen' : 'Trắng';
-      displayElo = null;
+      displayBadge = playerColor === 'w' ? 'Đen' : 'Trắng';
       avatarSrc = null;
       isActive = currentTurn !== playerColor;
     }
@@ -50,9 +47,9 @@ export default function PlayerBar({ position = 'top' }) {
           : 'border-slate-700/60 bg-slate-800/30'
       }`}
     >
-      {/* Left: Avatar + Name + Role */}
+      {/* Left: Avatar + Name + Badge */}
       <div className="flex items-center gap-2">
-        {/* Avatar - 32px compact */}
+        {/* Avatar */}
         {avatarSrc ? (
           <img
             src={avatarSrc}
@@ -65,22 +62,15 @@ export default function PlayerBar({ position = 'top' }) {
           </div>
         )}
 
-        {/* Name and role */}
-        <div className="flex items-center gap-2">
-          <span className={`text-sm font-bold ${isActive ? 'text-amber-300' : 'text-slate-300'}`}>
-            {displayName}
-          </span>
-          <span className="text-slate-500">·</span>
-          <span className="text-xs text-slate-400">{displayRole}</span>
-          {displayElo && (
-            <>
-              <span className="text-slate-500">·</span>
-              <span className="rounded bg-slate-700/60 px-1.5 py-0.5 text-xs font-bold text-slate-300">
-                {displayElo}
-              </span>
-            </>
-          )}
-        </div>
+        {/* Name */}
+        <span className={`text-sm font-bold ${isActive ? 'text-amber-300' : 'text-slate-300'}`}>
+          {displayName}
+        </span>
+
+        {/* Badge */}
+        <span className="rounded bg-slate-700/60 px-2 py-0.5 text-xs font-bold text-slate-300">
+          {displayBadge}
+        </span>
       </div>
 
       {/* Right: Active indicator */}
