@@ -91,70 +91,98 @@ export default function ChessBoardPanel({ engineHint }) {
     engineMove,
   });
 
-  function canDragPiece({ piece }) {
-    if (isBotThinking || isGameOver || !piece?.pieceType) return false;
+  // v5 API: canDragPiece({ isSparePiece, piece, square })
+  // piece is PieceDataType object with pieceType: string like "wP", "bN"
+  function canDragPiece({ isSparePiece, piece, square }) {
+    console.log('[canDragPiece]', { isSparePiece, piece, square, isBotThinking, isGameOver });
 
-    const pieceColor = piece.pieceType[0];
+    if (isSparePiece || isBotThinking || isGameOver || !piece?.pieceType) return false;
+
+    // pieceType is string like "wP", "bN" — first char is color
+    const pieceColor = piece.pieceType[0]; // 'w' or 'b'
 
     if (gameMode === GAME_MODES.BOT) {
-      return activeGame.turn() === playerColor && pieceColor === playerColor;
+      const canDrag = activeGame.turn() === playerColor && pieceColor === playerColor;
+      console.log('[canDragPiece] BOT mode:', canDrag, { turn: activeGame.turn(), playerColor, pieceColor });
+      return canDrag;
     }
 
-    return pieceColor === activeGame.turn();
+    const canDrag = pieceColor === activeGame.turn();
+    console.log('[canDragPiece] LOCAL mode:', canDrag);
+    return canDrag;
   }
 
-  function onPieceDrop(sourceSquare, targetSquare) {
-    const result = makeMove(sourceSquare, targetSquare, null);
+  // v5 API: onPieceDrop({ piece, sourceSquare, targetSquare }) => boolean
+  function onPieceDrop({ piece, sourceSquare, targetSquare }) {
+    console.log('[onPieceDrop]', { piece, sourceSquare, targetSquare });
+
+    // Check if this is a promotion move
+    const boardPiece = activeGame.get(sourceSquare);
+    const isPromotion = boardPiece?.type === 'p' &&
+      ((boardPiece.color === 'w' && targetSquare?.[1] === '8') ||
+       (boardPiece.color === 'b' && targetSquare?.[1] === '1'));
+
+    const result = isPromotion
+      ? makeMove(sourceSquare, targetSquare, null)
+      : makeMove(sourceSquare, targetSquare);
+
+    console.log('[onPieceDrop] result:', result);
+
     if (result && result.move) {
-      if (result.move.captured) {
-        playCaptureSound();
-      } else {
-        playMoveSound();
-      }
+      result.move.captured ? playCaptureSound() : playMoveSound();
     }
     return !!result;
   }
 
-  function handleSquareClick(square) {
+  // v5 API: onSquareClick({ piece, square }) => void
+  function handleSquareClick({ piece, square }) {
+    console.log('[handleSquareClick]', { piece, square, selectedSquare, hasMoveHint: !!moveHints[square] });
+
     if (!square) return;
 
     // If square has legal move hint, execute move
     if (selectedSquare && moveHints[square]) {
-      const result = makeMove(selectedSquare, square, null);
+      const boardPiece = activeGame.get(selectedSquare);
+      const isPromotion = boardPiece?.type === 'p' &&
+        ((boardPiece.color === 'w' && square[1] === '8') ||
+         (boardPiece.color === 'b' && square[1] === '1'));
+
+      const result = isPromotion
+        ? makeMove(selectedSquare, square, null)
+        : makeMove(selectedSquare, square);
+
+      console.log('[handleSquareClick] move result:', result);
+
       if (result && result.move) {
-        if (result.move.captured) {
-          playCaptureSound();
-        } else {
-          playMoveSound();
-        }
+        result.move.captured ? playCaptureSound() : playMoveSound();
       }
       return;
     }
 
-    // If clicking same square, deselect
+    // Deselect same square
     if (selectedSquare === square) {
       clearSelection();
       return;
     }
 
     // Select piece if it's player's turn
-    const piece = activeGame.get(square);
-    if (piece && piece.color === activeGame.turn()) {
+    const boardPiece = activeGame.get(square);
+    if (boardPiece && boardPiece.color === activeGame.turn()) {
       selectSquare(square);
       return;
     }
 
-    // Clear selection if clicking empty square or opponent piece
     clearSelection();
   }
 
-  function handlePieceClick(square) {
+  // v5 API: onPieceClick({ isSparePiece, piece, square }) => void
+  function handlePieceClick({ isSparePiece, piece, square }) {
+    console.log('[handlePieceClick]', { isSparePiece, piece, square });
+    if (isSparePiece || !square) return;
     selectSquare(square);
   }
 
-  function handlePieceDrag(square) {
-    selectSquare(square);
-  }
+  // REMOVE onPieceClick and onPieceDrag - use onSquareClick only
 
   return (
     <div className="play-board-frame aspect-square overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/70 p-2 shadow-[0_18px_48px_rgba(2,6,23,.32)] backdrop-blur box-border sm:p-3">
@@ -167,7 +195,6 @@ export default function ChessBoardPanel({ engineHint }) {
           onPieceDrop,
           canDragPiece,
           onPieceClick: handlePieceClick,
-          onPieceDrag: handlePieceDrag,
           onSquareClick: handleSquareClick,
           squareStyles: boardSquareStyles,
           arrows: engineArrows,

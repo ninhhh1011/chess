@@ -102,11 +102,33 @@ export function ChessGameProvider({ children }) {
   }
 
   // Actions
-  function makeMove(from, to, promotion = 'q') {
-    if (!from || !to || from === to) return false;
-    if (!analysisMode && isBotThinking) return false;
-    if (!analysisMode && gameMode === GAME_MODES.BOT && currentTurn !== playerColor) return false;
-    if (isGameOver) return false;
+  // options.byBot = true  → được phép đi dù isBotThinking, dù không phải lượt playerColor
+  function makeMove(from, to, promotion = 'q', options = {}) {
+    const { byBot = false } = options;
+
+    if (!from || !to || from === to) {
+      console.log('[makeMove] rejected: invalid from/to', { from, to });
+      return false;
+    }
+    if (isGameOver) {
+      console.log('[makeMove] rejected: game over');
+      return false;
+    }
+
+    if (!analysisMode) {
+      if (!byBot && isBotThinking) {
+        console.log('[makeMove] rejected: human tried to move while bot thinking');
+        return false;
+      }
+      if (!byBot && gameMode === GAME_MODES.BOT && currentTurn !== playerColor) {
+        console.log('[makeMove] rejected: not player turn', { currentTurn, playerColor });
+        return false;
+      }
+      if (byBot && gameMode === GAME_MODES.BOT && currentTurn === playerColor) {
+        console.log('[makeMove] rejected: bot tried to move on player turn', { currentTurn, playerColor });
+        return false;
+      }
+    }
 
     // Check if this is a promotion move
     const piece = activeGame.get(from);
@@ -163,23 +185,48 @@ export function ChessGameProvider({ children }) {
   }
 
   function selectSquare(square) {
+    console.log('[selectSquare] CALLED', {
+      square,
+      analysisMode,
+      isBotThinking,
+      gameMode,
+      playerColor,
+      currentTurn
+    });
+
     if (!square) {
+      console.log('[selectSquare] No square, clearing');
       setSelectedSquare(null);
       setMoveHints({});
       return;
     }
 
     const piece = activeGame.get(square);
+    console.log('[selectSquare] Piece at square:', piece);
+
     if (!piece || piece.color !== currentTurn) {
+      console.log('[selectSquare] No piece or wrong color, clearing');
       setSelectedSquare(null);
       setMoveHints({});
       return;
     }
 
-    if (!analysisMode && isBotThinking) return;
-    if (!analysisMode && gameMode === GAME_MODES.BOT && piece.color !== playerColor) return;
+    if (!analysisMode && isBotThinking) {
+      console.log('[selectSquare] BLOCKED: Bot is thinking');
+      return;
+    }
+
+    if (!analysisMode && gameMode === GAME_MODES.BOT && piece.color !== playerColor) {
+      console.log('[selectSquare] BLOCKED: Not player color in bot mode', {
+        pieceColor: piece.color,
+        playerColor
+      });
+      return;
+    }
 
     const moves = getLegalMoves(square);
+    console.log('[selectSquare] Legal moves:', moves.length);
+
     const hints = moves.reduce((acc, move) => {
       const style = move.captured
         ? {
@@ -194,6 +241,7 @@ export function ChessGameProvider({ children }) {
       return acc;
     }, {});
 
+    console.log('[selectSquare] Setting selected square and hints');
     setSelectedSquare(square);
     setMoveHints(hints);
   }
