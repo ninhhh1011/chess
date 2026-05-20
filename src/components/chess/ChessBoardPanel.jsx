@@ -131,6 +131,21 @@ export default function ChessBoardPanel({ engineHint }) {
     return pieceColor === activeGame.turn();
   }
 
+  // NEW: Handle drag begin - show legal move hints
+  function handlePieceDragBegin({ piece, sourceSquare }) {
+    if (!sourceSquare) return;
+
+    // Select the piece being dragged to show legal move hints
+    selectSquare(sourceSquare);
+  }
+
+  // NEW: Handle drag end - clear selection after drop
+  function handlePieceDragEnd() {
+    // Clear selection after drag completes
+    // Note: onPieceDrop will handle the move if valid
+    clearSelection();
+  }
+
   function onPieceDrop({ piece, sourceSquare, targetSquare }) {
     const boardPiece = activeGame.get(sourceSquare);
     const isPromotion = boardPiece?.type === 'p' &&
@@ -144,6 +159,10 @@ export default function ChessBoardPanel({ engineHint }) {
     if (result && result.move) {
       result.move.captured ? playCaptureSound() : playMoveSound();
     }
+
+    // Clear selection after drop attempt
+    clearSelection();
+
     return !!result;
   }
 
@@ -217,6 +236,8 @@ export default function ChessBoardPanel({ engineHint }) {
           boardOrientation,
           onPieceDrop,
           canDragPiece,
+          onPieceDragBegin: handlePieceDragBegin,
+          onPieceDragEnd: handlePieceDragEnd,
           onPieceClick: handlePieceClick,
           onSquareClick: handleSquareClick,
           onMouseOverSquare: handleMouseOverSquare,
