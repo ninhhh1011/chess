@@ -34,6 +34,7 @@ img, svg, canvas, iframe { max-width: 100%; }
 @layer components {
   .btn-primary { @apply inline-flex items-center justify-center rounded-xl bg-amber-500 px-5 py-3 font-extrabold text-slate-950 shadow-glow transition hover:-translate-y-0.5 hover:bg-amber-400 disabled:pointer-events-none disabled:opacity-60; }
   .btn-secondary { @apply inline-flex items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800 px-5 py-3 font-bold text-slate-100 transition hover:-translate-y-0.5 hover:border-amber-400/70 hover:bg-slate-700 disabled:pointer-events-none disabled:opacity-60; }
+  .btn-sm { @apply px-3 py-2 text-sm; }
   .panel-dark {
     @apply border border-slate-700/80 bg-slate-800/90 backdrop-blur-xl;
     box-shadow: 0 18px 48px rgba(2,6,23,.32);
