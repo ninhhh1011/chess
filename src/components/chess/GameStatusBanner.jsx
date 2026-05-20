@@ -10,7 +10,7 @@ export default function GameStatusBanner() {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <StatusBadge label={status.label} tone={status.tone} />
-      <StatusBadge label={isBotThinking ? 'Bot đang nghĩ...' : turnLabel} tone="muted" />
+      <StatusBadge label={isBotThinking ? 'Đang nghĩ...' : turnLabel} tone="muted" />
     </div>
   );
 }

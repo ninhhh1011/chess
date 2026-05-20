@@ -24,7 +24,7 @@ export default function MoveHintDisplay({ engineMove }) {
     return (
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-400/25 bg-amber-500/10 px-4 py-3 text-sm text-slate-100">
         <p>
-          <b className="text-amber-300">Gợi ý engine:</b> {engineMove.pieceLabel} từ{' '}
+          <b className="text-amber-300">Gợi ý:</b> {engineMove.pieceLabel} từ{' '}
           <b className="text-amber-300">{engineMove.from}</b> đến <b className="text-amber-300">{engineMove.to}</b>
           {engineMove.san && <span className="text-slate-400"> ({engineMove.san})</span>}
         </p>
@@ -37,13 +37,10 @@ export default function MoveHintDisplay({ engineMove }) {
       {selectedPiece ? (
         <span>
           Đang chọn <b className="text-amber-300">{getPieceLabel(selectedPiece)}</b> ở{' '}
-          <b className="text-amber-300">{selectedSquare}</b>: {selectedLegalMoves.length} nước hợp lệ đang sáng trên
-          bàn.
+          <b className="text-amber-300">{selectedSquare}</b>. Chọn ô sáng để di chuyển.
         </span>
       ) : (
-        <span>
-          Chọn một quân để xem các ô có thể đi. Khi engine gợi ý, ô xuất phát và ô đích sẽ sáng trực tiếp trên bàn.
-        </span>
+        <span>Chọn quân để xem nước hợp lệ. Bật gợi ý để thấy nước tốt nhất.</span>
       )}
     </div>
   );

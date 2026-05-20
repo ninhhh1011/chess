@@ -53,7 +53,7 @@ export default function LiveEvaluationBar({ analysis, status }) {
         <div className="absolute inset-x-0 top-1/2 h-px bg-amber-400/70" />
       </div>
       <div className="text-center text-[0.62rem] font-black uppercase leading-3 tracking-[0.12em] text-slate-400">
-        {status || leader}
+        {leader}
       </div>
     </div>
   );

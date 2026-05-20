@@ -73,15 +73,6 @@ export default function BotSettings() {
             Bạn cầm quân {playerColorLabel}. <strong className="text-slate-200">{BOT_NAME}</strong> ở mức{' '}
             <strong className="text-amber-300">{selectedBotLevel.label}</strong> sẽ tự đi sau mỗi nước hợp lệ của bạn.
           </p>
-          {botMoveSource && (
-            <p className="text-xs">
-              {botMoveSource === 'stockfish_wasm' && <span className="text-amber-300">✓ Engine: Stockfish WASM</span>}
-              {botMoveSource === 'random_weak' && <span className="text-amber-300">○ Bot chơi yếu (ELO thấp)</span>}
-              {botMoveSource === 'fallback' && (
-                <span className="text-red-300">⚠ Engine: Fallback cơ bản (Stockfish không khả dụng)</span>
-              )}
-            </p>
-          )}
           {isBotThinking && <p className="text-xs text-slate-400">{BOT_NAME} đang suy nghĩ...</p>}
         </div>
       )}
