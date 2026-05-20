@@ -159,10 +159,6 @@ export function ChessGameProvider({ children }) {
       });
     }
 
-    console.log('[Move] FEN:', nextGame.fen());
-    console.log('[Move] PGN:', nextGame.pgn());
-    console.log('[Move] SAN:', move.san);
-
     return { move, nextGame };
   }
 

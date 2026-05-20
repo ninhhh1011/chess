@@ -1,6 +1,5 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BOT_ELO_LEVELS } from '../../data/botLevels';
-import coachAvatar from '../../assets/avatarcoach.webp';
 
 const BOT_NAME = 'ninh lốp trưởng';
 
@@ -13,14 +12,12 @@ export default function BotSettings() {
     changePlayerColor,
     changeBotElo,
     isBotThinking,
-    botMoveSource,
     GAME_MODES,
     PLAYER_COLORS,
   } = useChessGame();
 
   const selectedBotLevel = BOT_ELO_LEVELS.find((level) => level.elo === botElo) || BOT_ELO_LEVELS[2];
   const playerColorLabel = playerColor === PLAYER_COLORS.WHITE ? 'trắng' : 'đen';
-  const botColorLabel = playerColor === PLAYER_COLORS.WHITE ? 'đen' : 'trắng';
 
   return (
     <section className="rounded-2xl border border-slate-700/80 bg-slate-900/60 p-4 text-sm leading-6 text-slate-400">
