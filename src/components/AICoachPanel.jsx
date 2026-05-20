@@ -67,7 +67,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
   const [messages, setMessages] = useState([
     {
       role: 'coach',
-      content: 'Xin chào! Tôi là ninh lốp trưởng, AI Coach của bạn.\n\nTôi có thể giúp bạn:\n• Gợi ý chiến thuật\n• Giải thích thế cờ\n• Review ván đấu\n\nDùng các nút bên dưới hoặc hỏi trực tiếp!',
+      content: `Xin chào! Tôi là ${COACH_NAME}, AI Coach của bạn.\n\nTôi có thể giúp bạn:\n• Gợi ý chiến thuật\n• Giải thích thế cờ\n• Review ván đấu\n\nDùng các nút bên dưới hoặc hỏi trực tiếp!`,
       source: 'mock',
     },
   ]);
