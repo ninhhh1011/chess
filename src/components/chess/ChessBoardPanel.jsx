@@ -76,8 +76,8 @@ export default function ChessBoardPanel({ engineHint }) {
     GAME_MODES,
   } = useChessGame();
 
-  const [hoverSquare, setHoverSquare] = useState(null);
-  const [hoverHints, setHoverHints] = useState({});
+  // FIX BUG 3: Remove hover hints state - only show hints on selection
+  const [hoveredSquare, setHoveredSquare] = useState(null);
 
   const boardOrientation = playerColor === 'b' ? 'black' : 'white';
   const checkedKingSquare = useMemo(
@@ -87,27 +87,42 @@ export default function ChessBoardPanel({ engineHint }) {
 
   const engineMove = useMemo(() => describeEngineMove(engineHint, activeGame), [engineHint, activeGame]);
 
-  // Merge selected hints and hover hints
-  const mergedHints = useMemo(() => {
-    if (selectedSquare) return moveHints; // Selected takes priority
-    return hoverHints;
-  }, [selectedSquare, moveHints, hoverHints]);
-
+  // FIX BUG 3: Only use selected hints, never hover hints
   const { boardSquareStyles, engineArrows } = useMoveHighlights({
     selectedSquare,
-    moveHints: mergedHints,
+    moveHints: selectedSquare ? moveHints : {}, // Only show hints when piece is selected
     lastMoveSquares,
     checkedKingSquare,
     engineMove,
   });
 
-  // v5 API: canDragPiece({ isSparePiece, piece, square })
-  // piece is PieceDataType object with pieceType: string like "wP", "bN"
+  // FIX BUG 3: Add subtle hover effect only on the piece itself
+  const customSquareStyles = useMemo(() => {
+    const styles = { ...boardSquareStyles };
+
+    // Add subtle hover effect on hoverable pieces (no legal move dots)
+    if (hoveredSquare && !selectedSquare && !isBotThinking && !isGameOver) {
+      const piece = activeGame.get(hoveredSquare);
+      if (piece && piece.color === activeGame.turn()) {
+        if (gameMode === GAME_MODES.BOT && piece.color !== playerColor) {
+          // Don't highlight opponent pieces in bot mode
+        } else {
+          styles[hoveredSquare] = {
+            ...styles[hoveredSquare],
+            cursor: 'grab',
+            transform: 'scale(1.05)',
+          };
+        }
+      }
+    }
+
+    return styles;
+  }, [boardSquareStyles, hoveredSquare, selectedSquare, isBotThinking, isGameOver, activeGame, gameMode, playerColor, GAME_MODES]);
+
   function canDragPiece({ isSparePiece, piece, square }) {
     if (isSparePiece || isBotThinking || isGameOver || !piece?.pieceType) return false;
 
-    // pieceType is string like "wP", "bN" — first char is color
-    const pieceColor = piece.pieceType[0]; // 'w' or 'b'
+    const pieceColor = piece.pieceType[0];
 
     if (gameMode === GAME_MODES.BOT) {
       return activeGame.turn() === playerColor && pieceColor === playerColor;
@@ -116,9 +131,7 @@ export default function ChessBoardPanel({ engineHint }) {
     return pieceColor === activeGame.turn();
   }
 
-  // v5 API: onPieceDrop({ piece, sourceSquare, targetSquare }) => boolean
   function onPieceDrop({ piece, sourceSquare, targetSquare }) {
-    // Check if this is a promotion move
     const boardPiece = activeGame.get(sourceSquare);
     const isPromotion = boardPiece?.type === 'p' &&
       ((boardPiece.color === 'w' && targetSquare?.[1] === '8') ||
@@ -134,7 +147,7 @@ export default function ChessBoardPanel({ engineHint }) {
     return !!result;
   }
 
-  // v5 API: onSquareClick({ piece, square }) => void
+  // FIX BUG 3: Click selects piece and shows hints
   function handleSquareClick({ piece, square }) {
     if (!square) return;
 
@@ -168,55 +181,31 @@ export default function ChessBoardPanel({ engineHint }) {
       return;
     }
 
+    // Click on empty square or opponent piece clears selection
     clearSelection();
   }
 
-  // v5 API: onPieceClick({ isSparePiece, piece, square }) => void
   function handlePieceClick({ isSparePiece, piece, square }) {
     if (isSparePiece || !square) return;
     selectSquare(square);
   }
 
-  // Hover handlers for desktop legal move preview
+  // FIX BUG 3: Hover only adds subtle effect, NO legal move dots
   function handleMouseOverSquare({ square }) {
     if (!square || selectedSquare || isBotThinking || isGameOver) return;
 
     const piece = activeGame.get(square);
     if (!piece || piece.color !== activeGame.turn()) return;
 
-    // In bot mode, only show hover for player's pieces
+    // In bot mode, only allow hover on player's pieces
     if (gameMode === GAME_MODES.BOT && piece.color !== playerColor) return;
 
-    const moves = getLegalMoves(square);
-    const hints = moves.reduce((acc, move) => {
-      // Check if target square has opponent piece (capture)
-      const targetPiece = activeGame.get(move.to);
-      const isCapture = targetPiece && targetPiece.color !== piece.color;
-
-      const style = isCapture
-        ? { boxShadow: 'inset 0 0 0 4px rgba(234,179,8,0.42)' }
-        : {
-            backgroundImage: 'radial-gradient(circle, rgba(234,179,8,0.45) 0 18%, transparent 20%)',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: '100% 100%',
-          };
-      acc[move.to] = style;
-      return acc;
-    }, {});
-
-    setHoverSquare(square);
-    setHoverHints(hints);
+    setHoveredSquare(square);
   }
 
   function handleMouseOutSquare() {
-    if (!selectedSquare) {
-      setHoverSquare(null);
-      setHoverHints({});
-    }
+    setHoveredSquare(null);
   }
-
-  // REMOVE onPieceClick and onPieceDrag - use onSquareClick only
 
   return (
     <div className="aspect-square overflow-hidden rounded-lg border border-slate-700/60 bg-slate-900/30 p-2 shadow-md">
@@ -232,7 +221,7 @@ export default function ChessBoardPanel({ engineHint }) {
           onSquareClick: handleSquareClick,
           onMouseOverSquare: handleMouseOverSquare,
           onMouseOutSquare: handleMouseOutSquare,
-          squareStyles: boardSquareStyles,
+          squareStyles: customSquareStyles,
           arrows: engineArrows,
           boardStyle: fixedBoardStyle,
           squareStyle: stableSquareStyle,
