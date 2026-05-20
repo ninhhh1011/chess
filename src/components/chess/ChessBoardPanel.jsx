@@ -189,14 +189,17 @@ export default function ChessBoardPanel({ engineHint }) {
 
     const moves = getLegalMoves(square);
     const hints = moves.reduce((acc, move) => {
-      const style = move.captured
-        ? {
-            backgroundImage: 'radial-gradient(circle, transparent 0 48%, rgba(245,158,11,0.9) 49%, rgba(245,158,11,0.9) 58%, transparent 59%)',
-            boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.45), 0 0 22px rgba(245,158,11,0.26)',
-          }
+      // Check if target square has opponent piece (capture)
+      const targetPiece = activeGame.get(move.to);
+      const isCapture = targetPiece && targetPiece.color !== piece.color;
+
+      const style = isCapture
+        ? { boxShadow: 'inset 0 0 0 4px rgba(234,179,8,0.42)' }
         : {
-            backgroundImage: 'radial-gradient(circle, rgba(245,158,11,0.95) 0 13%, rgba(245,158,11,0.18) 14% 27%, transparent 28%)',
-            boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.28), 0 0 18px rgba(245,158,11,0.22)',
+            backgroundImage: 'radial-gradient(circle, rgba(234,179,8,0.45) 0 18%, transparent 20%)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: '100% 100%',
           };
       acc[move.to] = style;
       return acc;

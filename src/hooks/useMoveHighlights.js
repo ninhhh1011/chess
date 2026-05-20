@@ -1,36 +1,37 @@
 import { useMemo } from 'react';
 
+// Empty square legal move - small dot
 const moveDotStyle = {
-  backgroundImage: 'radial-gradient(circle, rgba(245,158,11,0.95) 0 13%, rgba(245,158,11,0.18) 14% 27%, transparent 28%)',
+  backgroundImage: 'radial-gradient(circle, rgba(234,179,8,0.45) 0 18%, transparent 20%)',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
   backgroundSize: '100% 100%',
-  boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.28), 0 0 18px rgba(245,158,11,0.22)',
 };
 
+// Capture legal move - ring outline
 const captureRingStyle = {
-  backgroundImage: 'radial-gradient(circle, transparent 0 48%, rgba(245,158,11,0.9) 49%, rgba(245,158,11,0.9) 58%, transparent 59%)',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center',
-  backgroundSize: '100% 100%',
-  boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.45), 0 0 22px rgba(245,158,11,0.26)',
+  boxShadow: 'inset 0 0 0 4px rgba(234,179,8,0.42)',
 };
 
+// Selected square - amber border
 const selectedSquareStyle = {
-  boxShadow: 'inset 0 0 0 3px rgba(245,158,11,0.78), 0 0 18px rgba(245,158,11,0.24)',
+  backgroundColor: 'rgba(245,158,11,0.28)',
+  boxShadow: 'inset 0 0 0 3px rgba(245,158,11,0.65)',
 };
 
+// Last move - very light yellow background
 const lastMoveSquareStyle = {
-  backgroundImage: 'linear-gradient(135deg, rgba(245,158,11,0.28), rgba(245,158,11,0.08))',
-  boxShadow: 'inset 0 0 0 3px rgba(245,158,11,0.52), 0 0 22px rgba(245,158,11,0.20)',
+  backgroundColor: 'rgba(234,179,8,0.18)',
 };
 
+// Checked king - red with pulse
 const checkedKingSquareStyle = {
-  backgroundColor: 'rgba(239, 68, 68, 0.22)',
-  boxShadow: 'inset 0 0 0 2px rgba(239, 68, 68, 0.75)',
+  backgroundColor: 'rgba(239,68,68,0.28)',
+  boxShadow: 'inset 0 0 0 3px rgba(239,68,68,0.65)',
   animation: 'king-check-soft-pulse 1.4s ease-in-out infinite',
 };
 
+// Engine hint squares
 const engineFromSquareStyle = {
   boxShadow: 'inset 0 0 0 3px rgba(245,158,11,0.78), 0 0 20px rgba(245,158,11,0.26)',
 };
@@ -48,48 +49,39 @@ export function useMoveHighlights({
   engineMove,
 }) {
   const boardSquareStyles = useMemo(() => {
-    const styles = { ...moveHints };
+    const styles = {};
 
-    if (lastMoveSquares?.from) {
-      styles[lastMoveSquares.from] = {
-        ...styles[lastMoveSquares.from],
-        ...lastMoveSquareStyle,
-      };
+    // Priority 1 (lowest): Last move - light background only
+    if (lastMoveSquares?.from && lastMoveSquares.from !== checkedKingSquare && lastMoveSquares.from !== selectedSquare) {
+      styles[lastMoveSquares.from] = lastMoveSquareStyle;
+    }
+    if (lastMoveSquares?.to && lastMoveSquares.to !== checkedKingSquare && lastMoveSquares.to !== selectedSquare) {
+      styles[lastMoveSquares.to] = lastMoveSquareStyle;
     }
 
-    if (lastMoveSquares?.to) {
-      styles[lastMoveSquares.to] = {
-        ...styles[lastMoveSquares.to],
-        ...lastMoveSquareStyle,
-      };
+    // Priority 2: Legal move hints (from moveHints prop - selected or hover)
+    Object.keys(moveHints).forEach((square) => {
+      if (square !== checkedKingSquare && square !== selectedSquare) {
+        styles[square] = moveHints[square];
+      }
+    });
+
+    // Priority 3: Engine hint squares
+    if (engineMove?.from && engineMove.from !== checkedKingSquare && engineMove.from !== selectedSquare) {
+      styles[engineMove.from] = engineFromSquareStyle;
+    }
+    if (engineMove?.to && engineMove.to !== checkedKingSquare && engineMove.to !== selectedSquare) {
+      styles[engineMove.to] = engineToSquareStyle;
     }
 
-    if (engineMove?.from) {
-      styles[engineMove.from] = {
-        ...styles[engineMove.from],
-        ...engineFromSquareStyle,
-      };
+    // Priority 4: Selected square - amber highlight
+    if (selectedSquare && selectedSquare !== checkedKingSquare) {
+      styles[selectedSquare] = selectedSquareStyle;
     }
 
-    if (engineMove?.to) {
-      styles[engineMove.to] = {
-        ...styles[engineMove.to],
-        ...engineToSquareStyle,
-      };
-    }
-
-    if (selectedSquare) {
-      styles[selectedSquare] = {
-        ...styles[selectedSquare],
-        ...selectedSquareStyle,
-      };
-    }
-
+    // Priority 5 (highest): Checked king - red highlight, never overridden
     if (checkedKingSquare) {
-      styles[checkedKingSquare] = {
-        ...styles[checkedKingSquare],
-        ...checkedKingSquareStyle,
-      };
+      styles[checkedKingSquare] = checkedKingSquareStyle;
     }
 
     return styles;
