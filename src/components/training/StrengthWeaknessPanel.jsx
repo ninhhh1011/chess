@@ -1,9 +1,9 @@
 function TagList({ title, items, emptyText, tone = 'emerald-500' }) {
   const color = tone === 'weak' ? 'border-rose-300/25 bg-rose-400/10 text-rose-100' : 'border-emerald-500/25 bg-emerald-500/10 text-emerald-500';
-  return <article className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
-    <h2 className="text-2xl font-black">{title}</h2>
+  return <article className="rounded-xl border border-slate-800 bg-slate-800 p-6 ">
+    <h2 className="text-2xl font-bold">{title}</h2>
     <div className="mt-4 flex flex-wrap gap-2">
-      {items?.length ? items.map((item) => <span key={item} className={`rounded-full border px-3 py-1 text-sm font-bold ${color}`}>{item}</span>) : <p className="text-cream/45">{emptyText}</p>}
+      {items?.length ? items.map((item) => <span key={item} className={`rounded-full border px-3 py-1 text-sm font-bold ${color}`}>{item}</span>) : <p className="text-slate-400">{emptyText}</p>}
     </div>
   </article>;
 }

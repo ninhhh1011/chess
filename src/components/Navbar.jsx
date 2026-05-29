@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth, useIsSupabaseConfigured } from '../contexts/AuthContext';
 import { signOutUser } from '../services/authService';
 import logoImg from '../assets/avatarcoach.webp';
+import { brandName } from '../config/brand';
 
 const links = [
   { to: '/', label: 'Trang chủ' },
@@ -30,7 +31,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-900">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4">
         <NavLink to="/" className="flex items-center gap-3 text-xl font-bold text-slate-100">
-          <img src={logoImg} alt="Vua Cờ" className="h-9 w-9 rounded-md object-cover shadow-sm" /> Vua Cờ
+          <img src={logoImg} alt={brandName} className="h-9 w-9 rounded-md object-cover shadow-sm" /> {brandName}
         </NavLink>
 
         {/* Desktop menu */}

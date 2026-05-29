@@ -1,17 +1,17 @@
 import LevelBadge from './LevelBadge';
 
 function StatCard({ label, value, helper }) {
-  return <div className="rounded-[1.5rem] border border-white/10 bg-white/[.08] p-5 backdrop-blur">
-    <p className="text-sm font-black uppercase tracking-[0.2em] text-cream/45">{label}</p>
-    <p className="mt-3 text-3xl font-black text-emerald-500">{value}</p>
-    {helper && <p className="mt-2 text-sm text-cream/55">{helper}</p>}
+  return <div className="rounded-xl border border-slate-800 bg-slate-800 p-5 ">
+    <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">{label}</p>
+    <p className="mt-3 text-3xl font-bold text-emerald-500">{value}</p>
+    {helper && <p className="mt-2 text-sm text-slate-400">{helper}</p>}
   </div>;
 }
 
 export default function TrainingOverview({ profile }) {
   return <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-    <div className="rounded-[1.5rem] border border-white/10 bg-white/[.08] p-5 backdrop-blur">
-      <p className="text-sm font-black uppercase tracking-[0.2em] text-cream/45">Level hiện tại</p>
+    <div className="rounded-xl border border-slate-800 bg-slate-800 p-5 ">
+      <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Level hiện tại</p>
       <div className="mt-4"><LevelBadge level={profile.currentLevel} /></div>
     </div>
     <StatCard label="Ván đã chơi" value={profile.gamesPlayed} />

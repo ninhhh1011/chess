@@ -39,25 +39,25 @@ export default function ExerciseBoard({ exercise, onResult }) {
   }
 
   return <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
-    <div className="mx-auto w-full max-w-[560px] rounded-[2rem] border border-white/10 bg-white/[.08] p-4 shadow-glow backdrop-blur">
+    <div className="mx-auto w-full max-w-[560px] rounded-xl border border-slate-800 bg-slate-800 p-4 shadow-sm ">
       <Chessboard options={{
         position: game.fen(),
         onPieceDrop: onDrop,
         showNotation: true,
-        darkSquareStyle: { backgroundColor: '#7a4f2d' },
-        lightSquareStyle: { backgroundColor: '#f7e4bf' },
+        darkSquareStyle: { backgroundColor: '#334155' },
+        lightSquareStyle: { backgroundColor: '#94a3b8' },
       }} />
     </div>
-    <div className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
-      <h2 className="text-2xl font-black">{exercise.title}</h2>
-      <p className="mt-3 leading-7 text-cream/75">{exercise.description}</p>
-      <div className={`mt-5 rounded-2xl p-4 font-bold ${message === 'Chính xác!' ? 'bg-emerald-400/15 text-emerald-100' : 'bg-emerald-400/15 text-emerald-100'}`}>{message}</div>
-      {showHint && <p className="mt-4 rounded-2xl bg-ink/45 p-4 text-cream/75">Gợi ý: {exercise.hint}</p>}
+    <div className="rounded-xl border border-slate-800 bg-slate-800 p-6 ">
+      <h2 className="text-2xl font-bold">{exercise.title}</h2>
+      <p className="mt-3 leading-7 text-slate-300">{exercise.description}</p>
+      <div className={`mt-5 rounded-xl p-4 font-bold ${message === 'Chính xác!' ? 'bg-emerald-400/15 text-emerald-100' : 'bg-emerald-400/15 text-emerald-100'}`}>{message}</div>
+      {showHint && <p className="mt-4 rounded-xl bg-slate-900 p-4 text-slate-300">Gợi ý: {exercise.hint}</p>}
       <div className="mt-6 flex flex-wrap gap-3">
         <button className="btn-secondary" onClick={() => setShowHint(true)}>Gợi ý</button>
         <button className="btn-secondary" onClick={reset}>Làm lại</button>
       </div>
-      <p className="mt-5 break-all text-xs text-cream/45">FEN: {exercise.fen}</p>
+      <p className="mt-5 break-all text-xs text-slate-400">FEN: {exercise.fen}</p>
     </div>
   </div>;
 }

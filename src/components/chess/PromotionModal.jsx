@@ -32,10 +32,10 @@ export default function PromotionModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/80 px-4 backdrop-blur-sm">
-      <div className="max-w-sm rounded-2xl border border-emerald-400/40 bg-slate-900/95 p-6 shadow-glow">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950 px-4 ">
+      <div className="max-w-sm rounded-xl border border-emerald-400/40 bg-slate-900/95 p-6 shadow-sm">
         <div className="mb-4 text-center">
-          <h2 className="text-2xl font-black text-emerald-300">Phong cấp</h2>
+          <h2 className="text-2xl font-bold text-emerald-300">Phong cấp</h2>
           <p className="mt-2 text-sm text-slate-300">Chọn quân để phong cấp tốt</p>
         </div>
 

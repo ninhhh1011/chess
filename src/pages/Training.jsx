@@ -66,31 +66,31 @@ export default function Training() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-black text-cream">Huấn luyện</h1>
-        <p className="mt-2 text-cream/60">Lộ trình cá nhân hóa và tiến độ học tập</p>
+        <h1 className="text-4xl font-bold text-slate-100">Huấn luyện</h1>
+        <p className="mt-2 text-slate-100/60">Lộ trình cá nhân hóa và tiến độ học tập</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left column: Level & Plan */}
         <div className="space-y-6">
-          <div className="rounded-3xl bg-gradient-to-br from-emerald-500/20 to-emerald-700/20 p-6 border border-emerald-500/30">
+          <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-700/20 p-6 border border-emerald-500/30">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Level hiện tại</p>
-                <h2 className="mt-2 text-3xl font-black text-emerald-500 capitalize">{profile.currentLevel}</h2>
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Level hiện tại</p>
+                <h2 className="mt-2 text-3xl font-bold text-emerald-500 capitalize">{profile.currentLevel}</h2>
               </div>
               <div className="text-right">
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Trò chơi</p>
-                <p className="text-2xl font-black text-cream">{profile.gamesPlayed}</p>
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Trò chơi</p>
+                <p className="text-2xl font-bold text-slate-100">{profile.gamesPlayed}</p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-3xl bg-ink/60 p-6 backdrop-blur-xl border border-white/10">
+          <div className="rounded-xl bg-slate-900 p-6  border border-slate-800">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Lộ trình hôm nay</p>
-                <p className="mt-2 text-lg font-bold text-cream">
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Lộ trình hôm nay</p>
+                <p className="mt-2 text-lg font-bold text-slate-100">
                   {profile.dailyTrainingPlan?.tasks?.length || 0} nhiệm vụ
                 </p>
               </div>
@@ -104,11 +104,11 @@ export default function Training() {
             {profile.dailyTrainingPlan?.tasks?.length > 0 && (
               <div className="mt-4 space-y-3">
                 {profile.dailyTrainingPlan.tasks.map((task, i) => (
-                  <div key={i} className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-sm font-black text-ink">
+                  <div key={i} className="flex items-center gap-3 rounded-xl bg-slate-800 px-4 py-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-ink">
                       {i + 1}
                     </span>
-                    <span className="text-cream">{task}</span>
+                    <span className="text-slate-100">{task}</span>
                   </div>
                 ))}
               </div>
@@ -118,20 +118,20 @@ export default function Training() {
 
         {/* Right column: Stats & Account */}
         <div className="space-y-6">
-          <div className="rounded-3xl bg-ink/60 p-6 backdrop-blur-xl border border-white/10">
-            <h2 className="text-xl font-black text-cream">Thống kê</h2>
+          <div className="rounded-xl bg-slate-900 p-6  border border-slate-800">
+            <h2 className="text-xl font-bold text-slate-100">Thống kê</h2>
             <div className="mt-4 grid grid-cols-2 gap-4">
-              <div className="rounded-2xl bg-white/5 p-4">
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Bài tập</p>
-                <p className="mt-2 text-2xl font-black text-cream">{profile.exerciseStats.total}</p>
-                <p className="text-xs text-cream/60">
+              <div className="rounded-xl bg-slate-800 p-4">
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Bài tập</p>
+                <p className="mt-2 text-2xl font-bold text-slate-100">{profile.exerciseStats.total}</p>
+                <p className="text-xs text-slate-100/60">
                   Chính xác: {profile.exerciseStats.accuracy}%
                 </p>
               </div>
-              <div className="rounded-2xl bg-white/5 p-4">
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Khai cuộc</p>
-                <p className="mt-2 text-2xl font-black text-cream">{profile.openingStats.totalAttempts}</p>
-                <p className="text-xs text-cream/60">
+              <div className="rounded-xl bg-slate-800 p-4">
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Khai cuộc</p>
+                <p className="mt-2 text-2xl font-bold text-slate-100">{profile.openingStats.totalAttempts}</p>
+                <p className="text-xs text-slate-100/60">
                   Hoàn thành: {profile.openingStats.completedOpenings.length}
                 </p>
               </div>
@@ -139,18 +139,18 @@ export default function Training() {
           </div>
 
           {/* Account Status Section */}
-          <div className="rounded-3xl bg-ink/60 p-6 backdrop-blur-xl border border-white/10">
+          <div className="rounded-xl bg-slate-900 p-6  border border-slate-800">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Trạng thái tài khoản</p>
-                <p className="mt-2 text-lg font-bold text-cream">
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Trạng thái tài khoản</p>
+                <p className="mt-2 text-lg font-bold text-slate-100">
                   {isAuthenticated ? (
                     <span className="flex items-center gap-2">
                       {user?.email}
                       <SyncStatusBadge />
                     </span>
                   ) : (
-                    <span className="text-cream/60">Chưa đăng nhập</span>
+                    <span className="text-slate-100/60">Chưa đăng nhập</span>
                   )}
                 </p>
               </div>
@@ -169,13 +169,13 @@ export default function Training() {
             </div>
 
             {!isAuthenticated && (
-              <p className="mt-4 text-sm text-cream/60">
+              <p className="mt-4 text-sm text-slate-100/60">
                 Đăng nhập để đồng bộ tiến độ giữa nhiều thiết bị.
               </p>
             )}
 
             {isAuthenticated && showSyncPrompt && (
-              <div className="mt-4 rounded-2xl bg-emerald-400/20 p-4">
+              <div className="mt-4 rounded-xl bg-emerald-400/20 p-4">
                 <p className="text-sm text-emerald-400">
                   Bạn có muốn đồng bộ tiến độ hiện tại lên tài khoản không?
                 </p>

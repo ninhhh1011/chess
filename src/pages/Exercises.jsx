@@ -38,7 +38,7 @@ export default function Exercises() {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="text-center">
-          <h1 className="text-4xl font-black text-cream">Đang tải...</h1>
+          <h1 className="text-4xl font-bold text-slate-100">Đang tải...</h1>
         </div>
       </div>
     );
@@ -47,9 +47,9 @@ export default function Exercises() {
   if (error) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-3xl border border-red-400/30 bg-red-400/10 p-8 text-center">
-          <h1 className="text-4xl font-black text-red-400">Lỗi</h1>
-          <p className="mt-4 text-cream/70">{error}</p>
+        <div className="rounded-xl border border-red-400/30 bg-red-400/10 p-8 text-center">
+          <h1 className="text-4xl font-bold text-red-400">Lỗi</h1>
+          <p className="mt-4 text-slate-300">{error}</p>
         </div>
       </div>
     );
@@ -58,9 +58,9 @@ export default function Exercises() {
   if (!exercises || exercises.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-8 text-center">
-          <h1 className="text-4xl font-black text-emerald-400">Chưa có bài tập</h1>
-          <p className="mt-4 text-cream/70">Hiện tại chưa có bài tập nào. Vui lòng quay lại sau.</p>
+        <div className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-8 text-center">
+          <h1 className="text-4xl font-bold text-emerald-400">Chưa có bài tập</h1>
+          <p className="mt-4 text-slate-300">Hiện tại chưa có bài tập nào. Vui lòng quay lại sau.</p>
         </div>
       </div>
     );
@@ -71,9 +71,9 @@ export default function Exercises() {
   if (!exercise) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-3xl border border-red-400/30 bg-red-400/10 p-8 text-center">
-          <h1 className="text-4xl font-black text-red-400">Lỗi bài tập</h1>
-          <p className="mt-4 text-cream/70">Không tìm thấy bài tập #{index + 1}</p>
+        <div className="rounded-xl border border-red-400/30 bg-red-400/10 p-8 text-center">
+          <h1 className="text-4xl font-bold text-red-400">Lỗi bài tập</h1>
+          <p className="mt-4 text-slate-300">Không tìm thấy bài tập #{index + 1}</p>
           <button 
             className="btn-primary mt-6" 
             onClick={() => setIndex(0)}
@@ -89,8 +89,8 @@ export default function Exercises() {
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-black text-cream md:text-5xl">Bài tập cờ vua</h1>
-          <p className="mt-4 text-cream/70">
+          <h1 className="text-4xl font-bold text-slate-100 md:text-5xl">Bài tập cờ vua</h1>
+          <p className="mt-4 text-slate-300">
             Giải bài {index + 1}/{exercises.length}. 
             {profile?.exerciseStats && ` Độ chính xác hiện tại: ${profile.exerciseStats.accuracy}%.`}
           </p>

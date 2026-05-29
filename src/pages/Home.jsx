@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile } from '../services/userProfileService';
 import logoImg from '../assets/avatarcoach.webp';
+import { brandName, BRAND_TAGLINE, BRAND_DESCRIPTION } from '../config/brand';
 
 const features = [
   {
@@ -57,16 +58,16 @@ export default function Home() {
       <section className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_.9fr]">
         <div>
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-sm font-medium text-emerald-500">
-            <img src={logoImg} alt="Vua Cờ" className="h-5 w-5 rounded object-cover" />
-            Ứng dụng học cờ vua cho người Việt
+            <img src={logoImg} alt={brandName} className="h-5 w-5 rounded object-cover" />
+            {BRAND_TAGLINE}
           </div>
           
           <h1 className="text-5xl font-bold tracking-tight text-slate-100 md:text-7xl">
-            Vua Cờ
+            {brandName}
           </h1>
           
           <p className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-400">
-            Học cờ vua từ cơ bản đến nâng cao. Luyện chiến thuật và chơi với AI thông minh trong một không gian tối giản, chuyên nghiệp.
+            {BRAND_DESCRIPTION}
           </p>
 
           {isAuthenticated && profile && (
@@ -104,7 +105,7 @@ export default function Home() {
 
         {/* Chess board preview */}
         <div className="relative">
-          <div className="relative rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-xl">
+          <div className="relative rounded-xl border border-slate-800 bg-slate-900 p-4 shadow-xl">
             <div className="grid grid-cols-8 overflow-hidden rounded-lg border border-slate-700">
               {Array.from({ length: 64 }).map((_, i) => {
                 const row = Math.floor(i / 8);
@@ -172,7 +173,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="rounded-2xl border border-slate-800 bg-slate-900 p-12 text-center">
+      <section className="rounded-xl border border-slate-800 bg-slate-900 p-12 text-center">
         <h2 className="text-3xl font-bold text-slate-100 md:text-4xl">Sẵn sàng bắt đầu?</h2>
         <p className="mx-auto mt-4 max-w-2xl text-slate-400">
           Tham gia cùng hàng nghìn người học cờ vua mỗi ngày. Hoàn toàn miễn phí, không cần đăng ký.

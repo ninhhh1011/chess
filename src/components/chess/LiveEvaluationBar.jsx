@@ -42,7 +42,7 @@ export default function LiveEvaluationBar({ analysis, status }) {
 
   return (
     <div className="flex w-10 shrink-0 flex-col items-center gap-2 sm:w-12">
-      <div className="rounded-lg border border-slate-700 bg-slate-900 px-1.5 py-1 text-[0.65rem] font-black text-emerald-300 sm:text-xs">
+      <div className="rounded-lg border border-slate-700 bg-slate-900 px-1.5 py-1 text-[0.65rem] font-bold text-emerald-300 sm:text-xs">
         {display}
       </div>
       <div className="relative min-h-[260px] flex-1 overflow-hidden rounded-full border border-slate-600 bg-slate-950 shadow-inner">
@@ -52,7 +52,7 @@ export default function LiveEvaluationBar({ analysis, status }) {
         />
         <div className="absolute inset-x-0 top-1/2 h-px bg-emerald-400/70" />
       </div>
-      <div className="text-center text-[0.62rem] font-black uppercase leading-3 tracking-[0.12em] text-slate-400">
+      <div className="text-center text-[0.62rem] font-bold uppercase leading-3 tracking-[0.12em] text-slate-400">
         {leader}
       </div>
     </div>

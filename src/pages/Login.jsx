@@ -23,13 +23,13 @@ export default function Login() {
 
   if (!isSupabaseConfigured) {
     return (
-      <div className="min-h-screen grid place-items-center bg-ink/95 px-4">
+      <div className="min-h-screen grid place-items-center bg-slate-950/95 px-4">
         <div className="max-w-md text-center">
-          <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-glow">
+          <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm">
             <span className="text-5xl">♔</span>
           </div>
-          <h1 className="text-4xl font-black text-cream">Đăng nhập</h1>
-          <p className="mt-4 text-lg text-cream/70">
+          <h1 className="text-4xl font-bold text-slate-100">Đăng nhập</h1>
+          <p className="mt-4 text-lg text-slate-300">
             Tính năng đăng nhập chưa được cấu hình. Vui lòng liên hệ quản trị viên để kích hoạt.
           </p>
           <button
@@ -60,17 +60,17 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen grid place-items-center bg-ink/95 px-4">
+    <div className="min-h-screen grid place-items-center bg-slate-950/95 px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-glow">
+          <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm">
             <span className="text-3xl">♔</span>
           </div>
-          <h1 className="text-3xl font-black text-cream">Đăng nhập</h1>
-          <p className="mt-2 text-cream/60">Vào tài khoản để đồng bộ tiến độ</p>
+          <h1 className="text-3xl font-bold text-slate-100">Đăng nhập</h1>
+          <p className="mt-2 text-slate-100/60">Vào tài khoản để đồng bộ tiến độ</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="rounded-3xl bg-ink/60 p-6 backdrop-blur-xl border border-white/10">
+        <form onSubmit={handleSubmit} className="rounded-xl bg-slate-900 p-6  border border-slate-800">
           {error && (
             <div className="mb-4 rounded-xl bg-red/20 p-4 text-sm text-red/90">
               {error}
@@ -79,28 +79,28 @@ export default function Login() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold uppercase tracking-[0.18em] text-cream/45 mb-2">
+              <label className="block text-sm font-bold uppercase tracking-[0.18em] text-slate-400 mb-2">
                 Email
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-emerald-500"
                 placeholder="email@example.com"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold uppercase tracking-[0.18em] text-cream/45 mb-2">
+              <label className="block text-sm font-bold uppercase tracking-[0.18em] text-slate-400 mb-2">
                 Mật khẩu
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-emerald-500"
                 placeholder="••••••••"
                 required
               />
@@ -116,7 +116,7 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-cream/60">
+        <p className="mt-6 text-center text-slate-100/60">
           Chưa có tài khoản?{' '}
           <button
             onClick={() => navigate('/signup')}

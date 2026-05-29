@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
+import { getSanFromUci } from '../../utils/chessMoveUtils';
 
 import ChessBoardPanel from './ChessBoardPanel';
 import GameInfoBar from './GameInfoBar';
@@ -7,11 +8,12 @@ import PlayerBar from './PlayerBar';
 import LiveEvaluationBar from './LiveEvaluationBar';
 import MoveHintDisplay from './MoveHintDisplay';
 import StartNotice from './StartNotice';
-import ResultModal from './ResultModal';
 import PromotionModal from './PromotionModal';
 import MoveHistory from './MoveHistory';
 import BotSettings from './BotSettings';
 import GameControls from './GameControls';
+import PreGameLobby from './PreGameLobby';
+import PostGameReview from './PostGameReview';
 import EngineAnalysisPanel from '../analysis/EngineAnalysisPanel';
 import AICoachPanel from '../AICoachPanel';
 import coachAvatar from '../../assets/avatarcoach.webp';
@@ -39,7 +41,7 @@ export default function GameLayout({
   engineMove,
   showStartNotice,
 }) {
-  const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo } = useChessGame();
+  const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState } = useChessGame();
   const [activeTab, setActiveTab] = useState('moves');
 
   const tabs = [
@@ -51,13 +53,21 @@ export default function GameLayout({
 
   return (
     <>
-      {/* Modals */}
-      {showStartNotice && <StartNotice />}
-      <ResultModal />
-      <PromotionModal />
+      {/* Pre-Game Lobby */}
+      {playState === 'lobby' && <PreGameLobby />}
 
-      {/* Main layout: 2 columns, controlled sizing */}
-      <div className="mx-auto flex max-w-[1400px] gap-4 px-3 py-3 lg:flex-row flex-col">
+      {/* Main Game Layout (Only visible if not lobby) */}
+      {playState !== 'lobby' && (
+        <div className="relative">
+          {/* Post-Game Review Modal */}
+          {playState === 'review' && <PostGameReview />}
+
+          {/* Modals */}
+          {showStartNotice && playState === 'playing' && <StartNotice />}
+          <PromotionModal />
+
+          {/* Main layout: 2 columns, controlled sizing */}
+          <div className="mx-auto flex max-w-[1400px] gap-4 px-3 py-3 lg:flex-row flex-col">
 
         {/* LEFT COLUMN: Board area */}
         <section className="flex-1 min-w-0">
@@ -150,7 +160,6 @@ export default function GameLayout({
                           bestMoveSan: liveAnalysis.bestMove
                             ? (() => {
                                 try {
-                                  const { getSanFromUci } = require('../../utils/chessMoveUtils');
                                   return getSanFromUci(liveAnalysis.fen, liveAnalysis.bestMove);
                                 } catch {
                                   return null;
@@ -177,6 +186,8 @@ export default function GameLayout({
           </div>
         </aside>
       </div>
+      </div>
+      )}
     </>
   );
 }

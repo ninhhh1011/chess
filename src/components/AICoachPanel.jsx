@@ -1,213 +1,115 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { askAICoach } from '../services/aiCoachApiService';
 import { getUserProfile } from '../services/userProfileService';
-import { getRecommendedExercises, getRecommendedLessons, getRecommendedOpenings } from '../services/recommendationService';
 import coachAvatar from '../assets/avatarcoach.webp';
+import { brandName } from '../config/brand';
 
-const COACH_NAME = 'ninh lốp trưởng';
-const MAX_COACH_LINES = 2;
-const MAX_COACH_CHARS = 240;
+const COACH_NAME = 'Ninh lốp trưởng';
 
-const QUICK_ACTIONS = [
-  { id: 'hint', label: 'Gợi ý', mode: 'hint', question: 'Gợi ý 1 nước chiến thuật.' },
-  { id: 'explain', label: 'Giải thích', mode: 'explain_position', question: 'Giải thích thế trận ngắn gọn.' },
-  { id: 'review', label: 'Review', mode: 'review_game', question: 'Review ngắn: 1 lỗi chính.' },
-];
-
-const LEVELS = [
-  { value: 'beginner', label: 'Beginner' },
-  { value: 'intermediate', label: 'Intermediate' },
-  { value: 'advanced', label: 'Advanced' },
-];
-
-function cleanCoachLine(line) {
-  return line
-    .replace(/^#{1,6}\s*/, '')
-    .replace(/^\*\*(.+)\*\*:?$/, '$1:')
-    .replace(/^[-*]\s*/, '')
-    .replace(/^\d+[.)]\s*/, '')
-    .trim();
-}
-
-function isNoisyCoachLine(line) {
-  const lower = line.toLowerCase();
-  return (
-    lower.startsWith('lưu ý') ||
-    lower.includes('mock mode') ||
-    lower.includes('fallback') ||
-    lower.includes('api key')
-  );
-}
-
-function compactCoachReply(reply = '', mode = 'chat') {
-  const rawLines = String(reply)
-    .split('\n')
-    .map(cleanCoachLine)
-    .filter(Boolean)
-    .filter((line) => !isNoisyCoachLine(line));
-
-  const lines = rawLines.length ? rawLines : String(reply).split('\n').map(cleanCoachLine).filter(Boolean);
-  const maxLines = MAX_COACH_LINES;
-  const compactLines = lines.slice(0, maxLines);
-  let compactReply = compactLines.join('\n');
-
-  if (compactReply.length > MAX_COACH_CHARS) {
-    compactReply = `${compactReply.slice(0, MAX_COACH_CHARS).trimEnd()}...`;
-  }
-
-  return compactReply || 'Ưu tiên nước an toàn, không treo quân.';
-}
-
-/**
- * AICoachPanel - Refactored gọn gàng
- * Bỏ avatar lớn, header phức tạp
- * Giữ chat đơn giản, input ở dưới
- */
 export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish = null, openingContext = null }) {
-  const [messages, setMessages] = useState([
-    {
-      role: 'coach',
-      content: `Xin chào! Tôi là ${COACH_NAME}, AI Coach của bạn.\n\nTôi có thể giúp bạn:\n• Gợi ý chiến thuật\n• Giải thích thế cờ\n• Review ván đấu\n\nDùng các nút bên dưới hoặc hỏi trực tiếp!`,
-      source: 'mock',
-    },
-  ]);
-  const [question, setQuestion] = useState('');
-  const [playerLevel, setPlayerLevel] = useState('beginner');
+  const [advice, setAdvice] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const chatEndRef = useRef(null);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+  async function getAdvice(type) {
+    if (isLoading) return;
+    setIsLoading(true);
+    setAdvice(null);
 
-  function buildPayload(finalQuestion, mode = 'chat') {
+    let prompt = '';
+    if (type === 'quick') prompt = 'Nhận xét thế cờ hiện tại thật ngắn gọn trong 1-2 câu.';
+    if (type === 'focus') prompt = 'Tôi nên chú ý điều gì trên bàn cờ lúc này? Ngắn gọn 1-2 câu.';
+    if (type === 'hint') prompt = 'Gợi ý cho tôi một nước đi hoặc ý tưởng chiến thuật tiếp theo. Không dài dòng.';
+
     const userProfile = getUserProfile();
-    return {
-      message: finalQuestion,
-      mode,
+    const payload = {
+      message: prompt,
+      mode: 'chat',
       fen,
       history,
       pgn,
       playerColor: 'white',
-      level: playerLevel || userProfile.currentLevel,
+      level: userProfile.currentLevel || 'beginner',
       userProfile,
-      recommendations: {
-        lessons: getRecommendedLessons(userProfile),
-        exercises: getRecommendedExercises(userProfile),
-        openings: getRecommendedOpenings(userProfile),
-      },
       responseStyle: 'very_short',
-      dailyTrainingPlan: userProfile.dailyTrainingPlan || null,
       stockfish,
       openingContext,
       turn,
       status,
     };
-  }
 
-  async function askCoach(customQuestion, mode = 'chat') {
-    const finalQuestion = (customQuestion || question).trim();
-    if (!finalQuestion || isLoading) return;
-
-    setQuestion('');
-    setIsLoading(true);
-    setMessages((current) => [...current, { role: 'user', content: finalQuestion }]);
-
-    const result = await askAICoach(buildPayload(finalQuestion, mode));
-    setMessages((current) => [...current, { role: 'coach', content: compactCoachReply(result.reply, mode), source: result.source }]);
-    setIsLoading(false);
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    askCoach();
+    try {
+      const result = await askAICoach(payload);
+      setAdvice({ type, text: result.reply });
+    } catch (error) {
+      setAdvice({ type, text: 'Đang bận đánh giải, bạn đợi xíu hỏi lại nhé!' });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <div>
-      {/* Header gọn */}
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img
-            src={coachAvatar}
-            alt="ninh lốp trưởng"
-            className="h-8 w-8 rounded-lg border border-slate-600/60 object-cover"
-          />
-          <div>
-            <h3 className="text-sm font-bold text-slate-300">
-              <span className="text-emerald-300">ninh lốp trưởng</span> · AI Coach
-            </h3>
-          </div>
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <img
+          src={coachAvatar}
+          alt={COACH_NAME}
+          className="h-10 w-10 rounded-md border border-slate-700 object-cover shadow-sm"
+        />
+        <div>
+          <h3 className="text-sm font-bold text-slate-100">{COACH_NAME}</h3>
+          <p className="text-xs text-slate-400">HLV cá nhân của bạn</p>
         </div>
-        <select
-          value={playerLevel}
-          onChange={(e) => setPlayerLevel(e.target.value)}
-          className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-medium text-slate-200 outline-none"
+      </div>
+
+      {/* Actions */}
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        <button
+          onClick={() => getAdvice('quick')}
+          disabled={isLoading}
+          className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50"
         >
-          {LEVELS.map((level) => (
-            <option key={level.value} value={level.value}>
-              {level.label}
-            </option>
-          ))}
-        </select>
+          Nhận xét nhanh
+        </button>
+        <button
+          onClick={() => getAdvice('focus')}
+          disabled={isLoading}
+          className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50"
+        >
+          Nên chú ý
+        </button>
+        <button
+          onClick={() => getAdvice('hint')}
+          disabled={isLoading}
+          className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50"
+        >
+          Gợi ý nước đi
+        </button>
       </div>
 
-      {/* Quick actions */}
-      <div className="mb-3 grid grid-cols-3 gap-1.5">
-        {QUICK_ACTIONS.map((action) => (
-          <button
-            key={action.id}
-            onClick={() => askCoach(action.question, action.mode)}
-            className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700"
-            disabled={isLoading}
-          >
-            {action.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Chat messages */}
-      <div className="mb-3 max-h-[300px] space-y-2 overflow-y-auto rounded-lg border border-slate-800 bg-slate-900 p-2">
-        {messages.map((message, index) => (
-          <div
-            key={`${message.role}-${index}`}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[85%] rounded-lg px-3 py-2 text-xs leading-relaxed ${
-                message.role === 'user'
-                  ? 'bg-emerald-600 text-slate-50'
-                  : 'bg-slate-800 text-slate-200'
-              }`}
-            >
-              <p className="whitespace-pre-wrap">{message.content}</p>
-            </div>
+      {/* Advice Display */}
+      <div className="min-h-[120px] rounded-xl border border-emerald-500/20 bg-slate-900 p-4">
+        {isLoading ? (
+          <div className="flex h-full items-center justify-center space-x-2 text-emerald-500">
+            <div className="h-2 w-2 animate-bounce rounded-full bg-emerald-500"></div>
+            <div className="h-2 w-2 animate-bounce rounded-full bg-emerald-500" style={{ animationDelay: '0.1s' }}></div>
+            <div className="h-2 w-2 animate-bounce rounded-full bg-emerald-500" style={{ animationDelay: '0.2s' }}></div>
           </div>
-        ))}
-        {isLoading && (
-          <div className="rounded-lg bg-slate-800 px-3 py-2 text-xs font-medium text-emerald-500">
-            Đang suy nghĩ...
+        ) : advice ? (
+          <div className="animate-in fade-in slide-in-from-bottom-2">
+            <div className="mb-2 inline-flex items-center gap-1.5 rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+              {advice.type === 'quick' && 'Nhận xét'}
+              {advice.type === 'focus' && 'Chú ý'}
+              {advice.type === 'hint' && 'Gợi ý'}
+            </div>
+            <p className="text-sm leading-relaxed text-slate-200">{advice.text}</p>
+          </div>
+        ) : (
+          <div className="flex h-full flex-col items-center justify-center text-center text-slate-500">
+            <p className="text-sm">Bấm vào các nút ở trên để nhận lời khuyên từ {COACH_NAME}.</p>
           </div>
         )}
-        <div ref={chatEndRef} />
       </div>
-
-      {/* Input form */}
-      <form className="flex gap-2" onSubmit={handleSubmit}>
-        <input
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none placeholder:text-slate-500 focus:border-emerald-500"
-          placeholder="Hỏi AI Coach..."
-        />
-        <button
-          className="btn-primary px-3 py-2 text-xs"
-          disabled={isLoading || !question.trim()}
-          type="submit"
-        >
-          Gửi
-        </button>
-      </form>
     </div>
   );
 }

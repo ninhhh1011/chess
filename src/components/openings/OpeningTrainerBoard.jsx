@@ -119,19 +119,19 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
   function showCorrect(){ setMessage(`Nước đúng là ${expectedMove?.san || 'hết line'}: ${expectedMove?.explanation || ''}`); }
 
   return <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
-    <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-[2rem] border border-white/10 bg-white/[.08] p-3 shadow-glow backdrop-blur">
-      <Chessboard options={{ position: game.fen(), boardOrientation, onPieceDrop:onDrop, onPieceDrag:({ square })=>showLegalMoveHints(square, true), onPieceClick:({ square })=>showLegalMoveHints(square), onSquareClick:handleSquareClick, squareStyles:moveHints, showNotation:true, boardStyle:{ borderRadius:'1.25rem', overflow:'hidden' }, darkSquareStyle:{backgroundColor:'#7a4f2d'}, lightSquareStyle:{backgroundColor:'#f7e4bf'} }} />
+    <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-xl border border-slate-800 bg-slate-800 p-3 shadow-sm ">
+      <Chessboard options={{ position: game.fen(), boardOrientation, onPieceDrop:onDrop, onPieceDrag:({ square })=>showLegalMoveHints(square, true), onPieceClick:({ square })=>showLegalMoveHints(square), onSquareClick:handleSquareClick, squareStyles:moveHints, showNotation:true, boardStyle:{ borderRadius:'1.25rem', overflow:'hidden' }, darkSquareStyle:{backgroundColor: '#334155'}, lightSquareStyle:{backgroundColor: '#94a3b8'} }} />
     </div>
-    <aside className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
-      <h2 className="text-2xl font-black">Practice Mode</h2>
-      <p className="mt-3 rounded-2xl bg-ink/45 p-4 font-bold text-emerald-500">{message}</p>
-      <p className="mt-4 text-cream/65">Nước cần luyện: <b>{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b></p>
+    <aside className="rounded-xl border border-slate-800 bg-slate-800 p-6 ">
+      <h2 className="text-2xl font-bold">Practice Mode</h2>
+      <p className="mt-3 rounded-xl bg-slate-900 p-4 font-bold text-emerald-500">{message}</p>
+      <p className="mt-4 text-slate-400">Nước cần luyện: <b>{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b></p>
       <div className="mt-6 flex flex-wrap gap-3">
         <button className="btn-secondary" onClick={() => setMessage(expectedMove?.explanation || 'Đã hết line.')}>Gợi ý</button>
         <button className="btn-secondary" onClick={showCorrect}>Hiện nước đúng</button>
         <button className="btn-secondary" onClick={reset}>Làm lại</button>
       </div>
-      <p className="mt-5 text-sm text-cream/55">Lỗi sai phiên này: {mistakes.length}</p>
+      <p className="mt-5 text-sm text-slate-400">Lỗi sai phiên này: {mistakes.length}</p>
     </aside>
   </div>;
 }

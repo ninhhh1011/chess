@@ -7,5 +7,5 @@ const styles = {
 };
 
 export default function MoveClassificationBadge({ type = 'good', label }) {
-  return <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase ${styles[type] || styles.good}`}>{label || type}</span>;
+  return <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold uppercase ${styles[type] || styles.good}`}>{label || type}</span>;
 }

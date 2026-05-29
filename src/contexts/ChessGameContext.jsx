@@ -26,6 +26,9 @@ export function ChessGameProvider({ children }) {
   const [game, setGame] = useState(() => new Chess());
   const [boardKey, setBoardKey] = useState(0);
 
+  // Play state: 'lobby', 'playing', 'review'
+  const [playState, setPlayState] = useState('lobby');
+
   // Game mode and settings
   const [gameMode, setGameMode] = useState(GAME_MODES.BOT);
   const [playerColor, setPlayerColor] = useState(PLAYER_COLORS.WHITE);
@@ -261,6 +264,14 @@ export function ChessGameProvider({ children }) {
     return freshGame;
   }
 
+  function startGame({ elo = 1200, color = 'w', mode = GAME_MODES.BOT }) {
+    setBotElo(elo);
+    setPlayerColor(color);
+    setGameMode(mode);
+    newGame();
+    setPlayState('playing');
+  }
+
   function undoMove() {
     if (analysisMode) {
       const nextGame = cloneGame(analysisGame);
@@ -426,6 +437,8 @@ export function ChessGameProvider({ children }) {
     setRecordedGamePgn,
     shouldShowGameOverModal,
     setShouldShowGameOverModal,
+    playState,
+    setPlayState,
 
     // Annotations
     moveAnnotations,
@@ -450,6 +463,7 @@ export function ChessGameProvider({ children }) {
     getLegalMoves,
     getKingSquare,
     newGame,
+    startGame,
     undoMove,
     changeGameMode,
     changePlayerColor,

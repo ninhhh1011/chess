@@ -66,6 +66,7 @@ export default function ChessGameBoard() {
     recordedGamePgn,
     setRecordedGamePgn,
     setShouldShowGameOverModal,
+    setPlayState,
   } = useChessGame();
 
   const { triggerBotMove } = useBotMove();
@@ -140,11 +141,13 @@ export default function ChessGameBoard() {
     if (game.isCheckmate()) {
       const winner = game.turn() === 'w' ? 'Đen' : 'Trắng';
       setResultNotice(`${winner} thắng bằng chiếu hết!`);
+      setPlayState('review');
       return;
     }
 
     setResultNotice('Ván cờ hòa!');
-  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn]);
+    setPlayState('review');
+  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn, setPlayState]);
 
   // Move annotation
   useEffect(() => {

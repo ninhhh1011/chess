@@ -45,7 +45,7 @@ export default function OpeningDetail(){
   const [selectedSquare,setSelectedSquare] = useState(null);
   const boardState = useMemo(() => opening ? buildFen(opening,currentIndex) : {fen:'start',error:null,game:new Chess()}, [opening,currentIndex]);
 
-  if(!opening) return <section><h1 className="text-4xl font-black">Không tìm thấy khai cuộc</h1><Link className="btn-primary mt-6" to="/openings">Quay lại danh sách</Link></section>;
+  if(!opening) return <section><h1 className="text-4xl font-bold">Không tìm thấy khai cuộc</h1><Link className="btn-primary mt-6" to="/openings">Quay lại danh sách</Link></section>;
   const currentMove = opening.moves[currentIndex];
   const boardOrientation = opening.side === 'black' ? 'black' : 'white';
 
@@ -69,21 +69,21 @@ export default function OpeningDetail(){
   return <section>
     <Link to="/openings" className="btn-secondary mb-6">← Danh sách khai cuộc</Link>
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div><h1 className="text-4xl font-black md:text-5xl">{opening.name}</h1><p className="mt-2 text-xl font-bold text-emerald-500">{opening.vietnameseName}</p></div>
+      <div><h1 className="text-4xl font-bold md:text-5xl">{opening.name}</h1><p className="mt-2 text-xl font-bold text-emerald-500">{opening.vietnameseName}</p></div>
       <div className="flex gap-2"><button className={mode==='learn'?'btn-primary':'btn-secondary'} onClick={()=>setMode('learn')}>Learn Mode</button><button className={mode==='practice'?'btn-primary':'btn-secondary'} onClick={()=>setMode('practice')}>Practice Mode</button></div>
     </div>
 
     {mode === 'learn' ? <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
-      <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-[2rem] border border-white/10 bg-white/[.08] p-3 shadow-glow backdrop-blur"><Chessboard options={{ position: boardState.fen, boardOrientation, allowDragging:false, onPieceClick:({ square })=>showLegalMoveHints(square), onSquareClick:handleSquareClick, squareStyles:moveHints, showNotation:true, boardStyle:{borderRadius:'1.25rem',overflow:'hidden'}, darkSquareStyle:{backgroundColor:'#7a4f2d'}, lightSquareStyle:{backgroundColor:'#f7e4bf'} }} /></div>
-      <aside className="space-y-5 rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
+      <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-xl border border-slate-800 bg-slate-800 p-3 shadow-sm "><Chessboard options={{ position: boardState.fen, boardOrientation, allowDragging:false, onPieceClick:({ square })=>showLegalMoveHints(square), onSquareClick:handleSquareClick, squareStyles:moveHints, showNotation:true, boardStyle:{borderRadius:'1.25rem',overflow:'hidden'}, darkSquareStyle:{backgroundColor: '#334155'}, lightSquareStyle:{backgroundColor: '#94a3b8'} }} /></div>
+      <aside className="space-y-5 rounded-xl border border-slate-800 bg-slate-800 p-6 ">
         <OpeningProgress progress={progress}/>
-        <p className="leading-7 text-cream/75">{opening.description}</p>
-        {boardState.error && <p className="rounded-2xl bg-rose-400/15 p-4 font-bold text-rose-100">{boardState.error}</p>}
-        <div><h2 className="text-xl font-black">Ý tưởng chính</h2><ul className="mt-3 space-y-2 text-cream/70">{opening.mainIdeas.map(i=><li key={i}>• {i}</li>)}</ul></div>
-        <div className="rounded-2xl bg-ink/45 p-4"><b>Giải thích nước hiện tại:</b><p className="mt-2 text-cream/70">{currentMove ? `${currentMove.san}: ${currentMove.explanation}` : 'Bấm Bước tiếp theo để bắt đầu replay line.'}</p></div>
+        <p className="leading-7 text-slate-300">{opening.description}</p>
+        {boardState.error && <p className="rounded-xl bg-rose-400/15 p-4 font-bold text-rose-100">{boardState.error}</p>}
+        <div><h2 className="text-xl font-bold">Ý tưởng chính</h2><ul className="mt-3 space-y-2 text-slate-300">{opening.mainIdeas.map(i=><li key={i}>• {i}</li>)}</ul></div>
+        <div className="rounded-xl bg-slate-900 p-4"><b>Giải thích nước hiện tại:</b><p className="mt-2 text-slate-300">{currentMove ? `${currentMove.san}: ${currentMove.explanation}` : 'Bấm Bước tiếp theo để bắt đầu replay line.'}</p></div>
         <OpeningMoveList moves={opening.moves} currentIndex={currentIndex}/>
         <div className="flex flex-wrap gap-3"><button className="btn-secondary" onClick={()=>goToMove(Math.max(-1,currentIndex-1))}>Bước trước</button><button className="btn-primary" onClick={()=>goToMove(Math.min(opening.moves.length-1,currentIndex+1))}>Bước tiếp theo</button><button className="btn-secondary" onClick={()=>goToMove(-1)}>Về đầu</button><button className="btn-secondary" onClick={()=>setMode('practice')}>Chuyển sang luyện tập</button></div>
-        <div><h2 className="text-xl font-black">Lỗi thường gặp</h2><ul className="mt-3 space-y-2 text-cream/70">{opening.commonMistakes.map(i=><li key={i}>• {i}</li>)}</ul></div>
+        <div><h2 className="text-xl font-bold">Lỗi thường gặp</h2><ul className="mt-3 space-y-2 text-slate-300">{opening.commonMistakes.map(i=><li key={i}>• {i}</li>)}</ul></div>
         <OpeningCoachPanel opening={opening}/>
       </aside>
     </div> : <OpeningTrainerBoard opening={opening} onProgress={setProgress} />}
