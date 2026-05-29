@@ -6,7 +6,15 @@ import { getLegalMoveFromUci, moveToUci } from '../utils/chessMoveValidation';
 import { playCaptureSound, playMoveSound } from '../utils/sound';
 
 const BOT_TIMEOUT_MS = 3000;
-const DEBUG_BOT_MOVES = import.meta.env.DEV;
+const DEBUG_BOT_MOVES = (() => {
+  if (!import.meta.env.DEV || typeof window === 'undefined') return false;
+
+  try {
+    return window.localStorage?.getItem('debugBotMoves') === '1';
+  } catch {
+    return false;
+  }
+})();
 
 function debugBotMove(...args) {
   if (DEBUG_BOT_MOVES) {

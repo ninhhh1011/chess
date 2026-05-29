@@ -2,7 +2,8 @@ import { analyzeFenFallback, getBestMoveFallback } from './fallbackChessEngine';
 import { isLegalUciMove } from '../utils/chessMoveValidation';
 
 const STOCKFISH_DEBUG = false;
-const ENGINE_CRASH_COOLDOWN_MS = 15000;
+const ENGINE_CRASH_BASE_COOLDOWN_MS = 60000;
+const ENGINE_CRASH_MAX_COOLDOWN_MS = 300000;
 const ENGINE_WARNING_THROTTLE_MS = 5000;
 
 let worker = null;
@@ -15,6 +16,8 @@ let analysisSeq = 0;
 let activeFen = null;
 let engineDisabledUntil = 0;
 let lastEngineWarningAt = 0;
+let engineFailureCount = 0;
+let hasLoggedWorkerUnavailable = false;
 
 function debugStockfish(...args) {
   if (STOCKFISH_DEBUG) {
@@ -41,7 +44,13 @@ function warnStockfish(message, data = null) {
 }
 
 function disableEngineForCooldown(error) {
-  engineDisabledUntil = Date.now() + ENGINE_CRASH_COOLDOWN_MS;
+  engineFailureCount += 1;
+  const cooldownMs = Math.min(
+    ENGINE_CRASH_BASE_COOLDOWN_MS * (2 ** Math.max(engineFailureCount - 1, 0)),
+    ENGINE_CRASH_MAX_COOLDOWN_MS
+  );
+
+  engineDisabledUntil = Date.now() + cooldownMs;
   engineState = 'error';
   engineReady = false;
 
@@ -54,10 +63,14 @@ function disableEngineForCooldown(error) {
   }
 
   worker = null;
-  warnStockfish('[Stockfish] Worker unavailable; using fallback temporarily', {
-    error: serializeEngineError(error),
-    cooldownMs: ENGINE_CRASH_COOLDOWN_MS,
-  });
+
+  if (!hasLoggedWorkerUnavailable || STOCKFISH_DEBUG) {
+    warnStockfish('[Stockfish] Worker unavailable; using fallback temporarily', {
+      error: serializeEngineError(error),
+      cooldownMs,
+    });
+    hasLoggedWorkerUnavailable = true;
+  }
 }
 
 function noLegalMovesResult(fen, warning = 'No legal moves') {
@@ -156,6 +169,8 @@ export async function initEngine() {
         if (message.success) {
           engineReady = true;
           engineState = 'ready';
+          engineFailureCount = 0;
+          hasLoggedWorkerUnavailable = false;
           debugStockfish('[Stockfish] Engine ready!');
           resolve(true);
         } else {

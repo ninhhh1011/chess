@@ -25,7 +25,9 @@
 - Added safe heuristic fallback for 1200+ bots; weak random fallback remains limited to low ELO.
 - Validated Stockfish bestmove and timeout partial PV before returning success.
 - Added sequential analysis queue, request IDs, and worker crash cooldown.
+- Added exponential worker crash cooldown and suppressed repetitive raw worker crash logs.
 - Hardened `useBotMove()` so illegal/stale engine moves never reach `makeMove()`.
+- Gated bot move debug logs behind `localStorage.debugBotMoves = "1"` in development.
 - Removed auto-cancel from `useEngineAnalysis()` cleanup so hint/review does not cancel bot analysis.
 - Tuned 1200/1600/2000 bot depth/movetime/skill slightly without relying on tuning to hide invalid moves.
 

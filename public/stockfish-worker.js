@@ -102,7 +102,7 @@ async function initStockfish() {
     };
 
     stockfish.onerror = (error) => {
-      console.warn('[Worker] Stockfish worker error:', error?.message || error?.type || 'error');
+      error?.preventDefault?.();
       if (!isReady) {
         failInit(error.message || 'Stockfish worker failed to load');
       } else {
@@ -128,7 +128,6 @@ self.onmessage = async (event) => {
       await initStockfish();
       self.postMessage({ type: 'ready', success: true });
     } catch (error) {
-      console.warn('[Worker] Failed to init Stockfish:', error?.message || error);
       self.postMessage({ type: 'ready', success: false, error: error.message });
     }
     return;
