@@ -41,10 +41,10 @@ export default function PlayerBar({ position = 'top' }) {
 
   return (
     <div
-      className={`flex items-center justify-between rounded-lg border px-3 py-2 transition-all ${
+      className={`flex items-center justify-between rounded-lg px-3 py-2 transition-all ${
         isActive
-          ? 'border-amber-400/60 bg-amber-500/10'
-          : 'border-slate-700/60 bg-slate-800/30'
+          ? 'bg-slate-800 border border-slate-700'
+          : 'bg-slate-900 border border-slate-800'
       }`}
     >
       {/* Left: Avatar + Name + Badge */}
@@ -63,12 +63,12 @@ export default function PlayerBar({ position = 'top' }) {
         )}
 
         {/* Name */}
-        <span className={`text-sm font-bold ${isActive ? 'text-amber-300' : 'text-slate-300'}`}>
+        <span className={`text-sm font-semibold ${isActive ? 'text-emerald-500' : 'text-slate-300'}`}>
           {displayName}
         </span>
 
         {/* Badge */}
-        <span className="rounded bg-slate-700/60 px-2 py-0.5 text-xs font-bold text-slate-300">
+        <span className="rounded bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400 border border-slate-700">
           {displayBadge}
         </span>
       </div>
@@ -77,9 +77,9 @@ export default function PlayerBar({ position = 'top' }) {
       {isActive && (
         <div className="flex items-center gap-1.5">
           {!isPlayer && isBotThinking && (
-            <span className="text-xs font-bold text-amber-300">Đang nghĩ</span>
+            <span className="text-xs font-bold text-emerald-300">Đang nghĩ</span>
           )}
-          <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+          <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
         </div>
       )}
     </div>

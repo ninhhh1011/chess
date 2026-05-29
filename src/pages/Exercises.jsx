@@ -58,8 +58,8 @@ export default function Exercises() {
   if (!exercises || exercises.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-8 text-center">
-          <h1 className="text-4xl font-black text-amber-400">Chưa có bài tập</h1>
+        <div className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-8 text-center">
+          <h1 className="text-4xl font-black text-emerald-400">Chưa có bài tập</h1>
           <p className="mt-4 text-cream/70">Hiện tại chưa có bài tập nào. Vui lòng quay lại sau.</p>
         </div>
       </div>

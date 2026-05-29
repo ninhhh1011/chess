@@ -20,8 +20,8 @@ export default function BotSettings() {
   const playerColorLabel = playerColor === PLAYER_COLORS.WHITE ? 'trắng' : 'đen';
 
   return (
-    <section className="rounded-2xl border border-slate-700/80 bg-slate-900/60 p-4 text-sm leading-6 text-slate-400">
-      <label className="text-xs font-black uppercase tracking-[0.2em] text-slate-500" htmlFor="game-mode">
+    <section className="rounded-lg border border-slate-800 bg-slate-900 p-4 text-sm leading-6 text-slate-400">
+      <label className="text-xs font-bold uppercase tracking-wider text-slate-500" htmlFor="game-mode">
         Chế độ chơi
       </label>
 
@@ -30,7 +30,7 @@ export default function BotSettings() {
           id="game-mode"
           value={gameMode}
           onChange={(event) => changeGameMode(event.target.value)}
-          className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 font-bold text-slate-100 outline-none transition focus:border-amber-400"
+          className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 font-medium text-slate-100 outline-none transition focus:border-emerald-500"
         >
           <option value={GAME_MODES.LOCAL}>2 người chơi</option>
           <option value={GAME_MODES.BOT}>Đấu với {BOT_NAME}</option>
@@ -42,7 +42,7 @@ export default function BotSettings() {
               id="player-color"
               value={playerColor}
               onChange={(event) => changePlayerColor(event.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 font-bold text-slate-100 outline-none transition focus:border-amber-400"
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 font-medium text-slate-100 outline-none transition focus:border-emerald-500"
             >
               <option value={PLAYER_COLORS.WHITE}>Bạn cầm trắng</option>
               <option value={PLAYER_COLORS.BLACK}>Bạn cầm đen</option>
@@ -52,7 +52,7 @@ export default function BotSettings() {
               id="bot-elo"
               value={botElo}
               onChange={(event) => changeBotElo(Number(event.target.value))}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 font-bold text-slate-100 outline-none transition focus:border-amber-400"
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 font-medium text-slate-100 outline-none transition focus:border-emerald-500"
             >
               {BOT_ELO_LEVELS.map((level) => (
                 <option key={level.elo} value={level.elo}>

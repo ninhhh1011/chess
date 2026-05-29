@@ -69,7 +69,7 @@ export default function OpeningDetail(){
   return <section>
     <Link to="/openings" className="btn-secondary mb-6">← Danh sách khai cuộc</Link>
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div><h1 className="text-4xl font-black md:text-5xl">{opening.name}</h1><p className="mt-2 text-xl font-bold text-gold">{opening.vietnameseName}</p></div>
+      <div><h1 className="text-4xl font-black md:text-5xl">{opening.name}</h1><p className="mt-2 text-xl font-bold text-emerald-500">{opening.vietnameseName}</p></div>
       <div className="flex gap-2"><button className={mode==='learn'?'btn-primary':'btn-secondary'} onClick={()=>setMode('learn')}>Learn Mode</button><button className={mode==='practice'?'btn-primary':'btn-secondary'} onClick={()=>setMode('practice')}>Practice Mode</button></div>
     </div>
 

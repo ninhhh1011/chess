@@ -45,7 +45,7 @@ export default function GameInfoBar({ botElo = 1200 }) {
   }
 
   return (
-    <div className="flex items-center justify-between rounded-lg border border-slate-700/60 bg-slate-800/30 px-3 py-2">
+    <div className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2">
       {/* Left: Game status */}
       <span className={`text-sm font-bold ${statusColor}`}>{statusText}</span>
 
@@ -53,9 +53,9 @@ export default function GameInfoBar({ botElo = 1200 }) {
       {turnText && (
         <div className="flex items-center gap-1.5">
           {!isGameOver && (
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
           )}
-          <span className="text-sm font-bold text-amber-300">{turnText}</span>
+          <span className="text-sm font-bold text-emerald-300">{turnText}</span>
         </div>
       )}
     </div>

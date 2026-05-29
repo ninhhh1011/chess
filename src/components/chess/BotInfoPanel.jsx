@@ -19,10 +19,10 @@ export default function BotInfoPanel() {
         <img
           src={coachAvatar}
           alt={`Avatar ${BOT_NAME}`}
-          className="h-12 w-12 flex-none rounded-xl border border-amber-400/40 object-cover shadow-glow"
+          className="h-12 w-12 flex-none rounded-xl border border-emerald-400/40 object-cover shadow-glow"
         />
         <div className="min-w-0">
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-amber-400/70">Đối thủ</p>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-emerald-400/70">Đối thủ</p>
           <h2 className="mt-0.5 truncate text-lg font-black text-slate-50">{BOT_NAME}</h2>
           <p className="mt-0.5 text-xs font-semibold text-slate-400">
             Bạn {playerColorLabel}. Bot {botColorLabel}.
@@ -31,7 +31,7 @@ export default function BotInfoPanel() {
       </div>
       <div className="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-right">
         <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">ELO đang đấu</p>
-        <p className="text-2xl font-black text-amber-300">{selectedBotLevel.elo}</p>
+        <p className="text-2xl font-black text-emerald-300">{selectedBotLevel.elo}</p>
         <p className="text-sm font-bold text-slate-400">{selectedBotLevel.description}</p>
       </div>
     </div>

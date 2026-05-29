@@ -73,11 +73,11 @@ export default function Training() {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left column: Level & Plan */}
         <div className="space-y-6">
-          <div className="rounded-3xl bg-gradient-to-br from-gold/20 to-amber-700/20 p-6 border border-gold/30">
+          <div className="rounded-3xl bg-gradient-to-br from-emerald-500/20 to-emerald-700/20 p-6 border border-emerald-500/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Level hiện tại</p>
-                <h2 className="mt-2 text-3xl font-black text-gold capitalize">{profile.currentLevel}</h2>
+                <h2 className="mt-2 text-3xl font-black text-emerald-500 capitalize">{profile.currentLevel}</h2>
               </div>
               <div className="text-right">
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-cream/45">Trò chơi</p>
@@ -105,7 +105,7 @@ export default function Training() {
               <div className="mt-4 space-y-3">
                 {profile.dailyTrainingPlan.tasks.map((task, i) => (
                   <div key={i} className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold text-sm font-black text-ink">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-sm font-black text-ink">
                       {i + 1}
                     </span>
                     <span className="text-cream">{task}</span>
@@ -175,8 +175,8 @@ export default function Training() {
             )}
 
             {isAuthenticated && showSyncPrompt && (
-              <div className="mt-4 rounded-2xl bg-amber-400/20 p-4">
-                <p className="text-sm text-amber-400">
+              <div className="mt-4 rounded-2xl bg-emerald-400/20 p-4">
+                <p className="text-sm text-emerald-400">
                   Bạn có muốn đồng bộ tiến độ hiện tại lên tài khoản không?
                 </p>
                 <div className="mt-3 flex gap-3">

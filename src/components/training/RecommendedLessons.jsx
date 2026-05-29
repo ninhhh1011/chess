@@ -3,7 +3,7 @@ export default function RecommendedLessons({ lessons }) {
     <h2 className="text-2xl font-black">Bài học đề xuất</h2>
     <div className="mt-4 space-y-3">
       {lessons?.length ? lessons.map((lesson) => <div key={lesson.id || lesson.title} className="rounded-2xl bg-ink/45 p-4">
-        <h3 className="font-extrabold text-gold">{lesson.title}</h3>
+        <h3 className="font-extrabold text-emerald-500">{lesson.title}</h3>
         <p className="mt-1 text-sm leading-6 text-cream/65">{lesson.reason}</p>
       </div>) : <p className="text-cream/45">Chưa có đề xuất bài học. Hãy làm thêm bài tập hoặc chơi một ván.</p>}
     </div>

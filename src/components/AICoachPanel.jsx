@@ -135,14 +135,14 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           />
           <div>
             <h3 className="text-sm font-bold text-slate-300">
-              <span className="text-amber-300">ninh lốp trưởng</span> · AI Coach
+              <span className="text-emerald-300">ninh lốp trưởng</span> · AI Coach
             </h3>
           </div>
         </div>
         <select
           value={playerLevel}
           onChange={(e) => setPlayerLevel(e.target.value)}
-          className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-slate-300 outline-none"
+          className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-medium text-slate-200 outline-none"
         >
           {LEVELS.map((level) => (
             <option key={level.value} value={level.value}>
@@ -158,7 +158,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           <button
             key={action.id}
             onClick={() => askCoach(action.question, action.mode)}
-            className="rounded bg-slate-700/60 px-2 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-slate-600"
+            className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700"
             disabled={isLoading}
           >
             {action.label}
@@ -167,7 +167,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
       </div>
 
       {/* Chat messages */}
-      <div className="mb-3 max-h-[300px] space-y-2 overflow-y-auto rounded-lg border border-slate-700/60 bg-slate-950/30 p-2">
+      <div className="mb-3 max-h-[300px] space-y-2 overflow-y-auto rounded-lg border border-slate-800 bg-slate-900 p-2">
         {messages.map((message, index) => (
           <div
             key={`${message.role}-${index}`}
@@ -176,8 +176,8 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
             <div
               className={`max-w-[85%] rounded-lg px-3 py-2 text-xs leading-relaxed ${
                 message.role === 'user'
-                  ? 'bg-amber-500 text-slate-950'
-                  : 'border border-slate-700/60 bg-slate-800/60 text-slate-200'
+                  ? 'bg-emerald-600 text-slate-50'
+                  : 'bg-slate-800 text-slate-200'
               }`}
             >
               <p className="whitespace-pre-wrap">{message.content}</p>
@@ -185,7 +185,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           </div>
         ))}
         {isLoading && (
-          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-3 py-2 text-xs font-bold text-amber-300">
+          <div className="rounded-lg bg-slate-800 px-3 py-2 text-xs font-medium text-emerald-500">
             Đang suy nghĩ...
           </div>
         )}
@@ -197,7 +197,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
         <input
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          className="min-w-0 flex-1 rounded-lg border border-slate-700/60 bg-slate-950/50 px-3 py-2 text-xs text-slate-100 outline-none placeholder:text-slate-500 focus:border-amber-400"
+          className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none placeholder:text-slate-500 focus:border-emerald-500"
           placeholder="Hỏi AI Coach..."
         />
         <button

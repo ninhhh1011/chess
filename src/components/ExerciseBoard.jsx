@@ -51,7 +51,7 @@ export default function ExerciseBoard({ exercise, onResult }) {
     <div className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
       <h2 className="text-2xl font-black">{exercise.title}</h2>
       <p className="mt-3 leading-7 text-cream/75">{exercise.description}</p>
-      <div className={`mt-5 rounded-2xl p-4 font-bold ${message === 'Chính xác!' ? 'bg-emerald-400/15 text-emerald-100' : 'bg-amber-400/15 text-amber-100'}`}>{message}</div>
+      <div className={`mt-5 rounded-2xl p-4 font-bold ${message === 'Chính xác!' ? 'bg-emerald-400/15 text-emerald-100' : 'bg-emerald-400/15 text-emerald-100'}`}>{message}</div>
       {showHint && <p className="mt-4 rounded-2xl bg-ink/45 p-4 text-cream/75">Gợi ý: {exercise.hint}</p>}
       <div className="mt-6 flex flex-wrap gap-3">
         <button className="btn-secondary" onClick={() => setShowHint(true)}>Gợi ý</button>

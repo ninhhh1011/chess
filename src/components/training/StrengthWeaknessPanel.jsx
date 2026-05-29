@@ -1,5 +1,5 @@
-function TagList({ title, items, emptyText, tone = 'gold' }) {
-  const color = tone === 'weak' ? 'border-rose-300/25 bg-rose-400/10 text-rose-100' : 'border-gold/25 bg-gold/10 text-gold';
+function TagList({ title, items, emptyText, tone = 'emerald-500' }) {
+  const color = tone === 'weak' ? 'border-rose-300/25 bg-rose-400/10 text-rose-100' : 'border-emerald-500/25 bg-emerald-500/10 text-emerald-500';
   return <article className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
     <h2 className="text-2xl font-black">{title}</h2>
     <div className="mt-4 flex flex-wrap gap-2">

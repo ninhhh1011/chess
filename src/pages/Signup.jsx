@@ -18,7 +18,7 @@ export default function Signup() {
     return (
       <div className="min-h-screen grid place-items-center bg-ink/95 px-4">
         <div className="max-w-md text-center">
-          <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-gold to-amber-700 shadow-glow">
+          <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-glow">
             <span className="text-5xl">♔</span>
           </div>
           <h1 className="text-4xl font-black text-cream">Đăng ký</h1>
@@ -81,7 +81,7 @@ export default function Signup() {
     <div className="min-h-screen grid place-items-center bg-ink/95 px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-gold to-amber-700 shadow-glow">
+          <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-glow">
             <span className="text-3xl">♔</span>
           </div>
           <h1 className="text-3xl font-black text-cream">Tạo tài khoản</h1>
@@ -104,7 +104,7 @@ export default function Signup() {
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-gold"
+                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-emerald-500"
                 placeholder="Nguyễn Văn A"
                 required
               />
@@ -118,7 +118,7 @@ export default function Signup() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-gold"
+                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-emerald-500"
                 placeholder="email@example.com"
                 required
               />
@@ -132,7 +132,7 @@ export default function Signup() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-gold"
+                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-emerald-500"
                 placeholder="••••••••"
                 required
               />
@@ -146,7 +146,7 @@ export default function Signup() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-gold"
+                className="w-full rounded-2xl border border-white/10 bg-ink/80 px-4 py-3 text-cream outline-none transition focus:border-emerald-500"
                 placeholder="••••••••"
                 required
               />
@@ -166,7 +166,7 @@ export default function Signup() {
           Đã có tài khoản?{' '}
           <button
             onClick={() => navigate('/login')}
-            className="font-bold text-gold hover:text-amber-400 transition"
+            className="font-bold text-emerald-500 hover:text-emerald-400 transition"
           >
             Đăng nhập ngay
           </button>

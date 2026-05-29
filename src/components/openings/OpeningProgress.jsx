@@ -5,7 +5,7 @@ export default function OpeningProgress({ progress }) {
       <span>Mastery</span><span>{percent}%</span>
     </div>
     <div className="mt-2 h-3 overflow-hidden rounded-full bg-ink/70">
-      <div className="h-full rounded-full bg-gradient-to-r from-gold to-amber-500" style={{ width: `${percent}%` }} />
+      <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-500" style={{ width: `${percent}%` }} />
     </div>
     {progress?.attempts ? <p className="mt-2 text-xs text-cream/50">{progress.attempts} lần luyện · {progress.successCount} lần hoàn thành</p> : <p className="mt-2 text-xs text-cream/45">Chưa có tiến độ.</p>}
   </div>;

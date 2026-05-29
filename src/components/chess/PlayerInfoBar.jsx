@@ -25,13 +25,13 @@ export default function PlayerInfoBar({ botElo = 1200, botDifficulty = 'Medium' 
     <div
       className={`flex items-center gap-3 rounded-lg border p-3 transition-all ${
         isActive
-          ? 'border-amber-400/60 bg-amber-500/10 shadow-md'
+          ? 'border-emerald-400/60 bg-emerald-500/10 shadow-md'
           : 'border-slate-700/60 bg-slate-800/40'
       }`}
     >
       {/* Avatar */}
       <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
-        isActive ? 'border-amber-400 bg-amber-500/20' : 'border-slate-600 bg-slate-700'
+        isActive ? 'border-emerald-400 bg-emerald-500/20' : 'border-slate-600 bg-slate-700'
       }`}>
         {player.isBot ? (
           <span className="text-lg">🤖</span>
@@ -44,12 +44,12 @@ export default function PlayerInfoBar({ botElo = 1200, botDifficulty = 'Medium' 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <p className={`truncate text-sm font-bold ${
-            isActive ? 'text-amber-300' : 'text-slate-300'
+            isActive ? 'text-emerald-300' : 'text-slate-300'
           }`}>
             {player.name}
           </p>
           {isActive && (
-            <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
           )}
         </div>
         <p className="text-xs text-slate-400">

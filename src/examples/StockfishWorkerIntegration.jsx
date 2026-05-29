@@ -72,7 +72,7 @@ export default function ChessGameBoardWithWorker() {
       <div className="analysis-status">
         {isThinking && <span>Đang phân tích...</span>}
         {source === 'fallback_minimax' && (
-          <span className="text-amber-400">Fallback engine</span>
+          <span className="text-emerald-400">Fallback engine</span>
         )}
         {error && <span className="text-red-400">Lỗi: {error}</span>}
       </div>

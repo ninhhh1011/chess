@@ -5,7 +5,7 @@ function annotationClassName(tone) {
     pending: 'border-slate-600 bg-slate-700 text-slate-200',
     brilliant: 'border-cyan-300/50 bg-cyan-400/15 text-cyan-100',
     best: 'border-emerald-300/50 bg-emerald-400/15 text-emerald-100',
-    inaccuracy: 'border-amber-300/50 bg-amber-400/15 text-amber-100',
+    inaccuracy: 'border-yellow-300/50 bg-yellow-400/15 text-yellow-100',
     mistake: 'border-orange-300/50 bg-orange-400/15 text-orange-100',
     blunder: 'border-red-300/50 bg-red-500/15 text-red-100',
   };
@@ -49,7 +49,7 @@ export default function MoveHistory() {
         {moveHistory.length > 0 && (
           <button
             onClick={copyPgn}
-            className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-slate-300 transition hover:bg-slate-600"
+            className="rounded bg-slate-800 px-2 py-1 text-xs font-medium text-slate-300 transition hover:bg-slate-700"
             title="Sao chép PGN"
           >
             📋 Sao chép
@@ -58,7 +58,7 @@ export default function MoveHistory() {
       </div>
 
       {/* Danh sách nước đi */}
-      <div className="max-h-[400px] overflow-y-auto rounded-lg border border-slate-700/60 bg-slate-950/30 p-2">
+      <div className="max-h-[400px] overflow-y-auto rounded-lg border border-slate-800 bg-slate-900 p-2">
         {moveHistory.length ? (
           <div className="grid grid-cols-2 gap-1.5">
             {moveHistory.map((move, index) => {
@@ -66,10 +66,10 @@ export default function MoveHistory() {
               return (
                 <div
                   key={index}
-                  className="flex items-center justify-between gap-2 rounded bg-slate-800/60 px-2 py-1.5 text-sm"
+                  className="flex items-center justify-between gap-2 rounded bg-slate-800 px-2 py-1.5 text-sm"
                 >
                   <span className="min-w-0 truncate text-slate-300">
-                    <b className="text-amber-300">{index + 1}.</b> {move}
+                    <b className="text-slate-400 font-medium">{index + 1}.</b> {move}
                   </span>
                   {annotation && (
                     <span

@@ -94,24 +94,24 @@ export default function GameLayout({
 
         {/* RIGHT COLUMN: Sidebar - fixed width */}
         <aside className="w-full lg:w-[360px] lg:sticky lg:top-20 lg:self-start">
-          <div className="rounded-lg border border-slate-700/60 bg-slate-900/40 overflow-hidden">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden shadow-sm">
             {/* Tabs - compact */}
-            <nav className="flex border-b border-slate-700/60 bg-slate-800/40">
+            <nav className="flex border-b border-slate-800 bg-slate-900">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 px-2 py-2.5 text-xs font-bold transition ${
+                  className={`flex-1 px-2 py-3 text-xs font-medium transition ${
                     activeTab === tab.id
-                      ? 'bg-amber-500/20 text-amber-300 border-b-2 border-amber-400'
-                      : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-300'
+                      ? 'text-emerald-500 border-b-2 border-emerald-500 bg-slate-800/50'
+                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                   }`}
                 >
                   {tab.iconType === 'avatar' ? (
                     <img
                       src={tab.iconSrc}
                       alt={tab.label}
-                      className="mx-auto mb-0.5 h-5 w-5 rounded object-cover"
+                      className="mx-auto mb-1 h-5 w-5 rounded-full object-cover"
                     />
                   ) : (
                     <span className="block text-sm mb-0.5">{tab.icon}</span>

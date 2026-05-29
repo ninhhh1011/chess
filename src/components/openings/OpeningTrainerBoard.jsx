@@ -124,7 +124,7 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
     </div>
     <aside className="rounded-[2rem] border border-white/10 bg-white/[.08] p-6 backdrop-blur">
       <h2 className="text-2xl font-black">Practice Mode</h2>
-      <p className="mt-3 rounded-2xl bg-ink/45 p-4 font-bold text-gold">{message}</p>
+      <p className="mt-3 rounded-2xl bg-ink/45 p-4 font-bold text-emerald-500">{message}</p>
       <p className="mt-4 text-cream/65">Nước cần luyện: <b>{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b></p>
       <div className="mt-6 flex flex-wrap gap-3">
         <button className="btn-secondary" onClick={() => setMessage(expectedMove?.explanation || 'Đã hết line.')}>Gợi ý</button>

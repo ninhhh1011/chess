@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth, useIsSupabaseConfigured } from '../contexts/AuthContext';
 import { signOutUser } from '../services/authService';
+import logoImg from '../assets/avatarcoach.webp';
 
 const links = [
   { to: '/', label: 'Trang chủ' },
@@ -26,10 +27,10 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-700/80 bg-slate-950/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-900">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4">
-        <NavLink to="/" className="flex items-center gap-3 text-2xl font-black text-slate-100">
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-amber-500 text-slate-950 shadow-glow">♔</span> Vua Cờ
+        <NavLink to="/" className="flex items-center gap-3 text-xl font-bold text-slate-100">
+          <img src={logoImg} alt="Vua Cờ" className="h-9 w-9 rounded-md object-cover shadow-sm" /> Vua Cờ
         </NavLink>
 
         {/* Desktop menu */}
@@ -38,7 +39,7 @@ export default function Navbar() {
             <NavLink
               key={link.to}
               to={link.to}
-              className={({isActive}) => `rounded-xl px-4 py-2 text-sm font-semibold transition ${isActive ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-800 hover:text-slate-50'}`
+              className={({isActive}) => `rounded-md px-3 py-1.5 text-sm font-medium transition ${isActive ? 'bg-slate-800 text-emerald-500' : 'text-slate-400 hover:text-slate-200'}`
             }
             >
               {link.label}
@@ -87,14 +88,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-slate-700/80 bg-slate-950/95 backdrop-blur-xl">
+        <div className="md:hidden border-t border-slate-900 bg-slate-950">
           <div className="mx-auto max-w-7xl px-4 py-4">
             <div className="flex flex-col gap-2">
               {links.map(link => (
                 <NavLink
                   key={link.to}
                   to={link.to}
-                  className={({isActive}) => `rounded-xl px-4 py-3 text-sm font-semibold transition ${isActive ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-800'}`
+                  className={({isActive}) => `rounded-md px-4 py-2 text-sm font-medium transition ${isActive ? 'bg-slate-800 text-emerald-500' : 'text-slate-400 hover:bg-slate-900'}`
                 }
                 >
                   {link.label}

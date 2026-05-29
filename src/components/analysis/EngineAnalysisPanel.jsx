@@ -62,7 +62,7 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
       {/* Header gọn */}
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-bold text-slate-300">Stockfish</h3>
-        <span className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-amber-300">{status}</span>
+        <span className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-emerald-300">{status}</span>
       </div>
 
       {/* Evaluation bar + info */}
@@ -70,7 +70,7 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
         {/* Vertical eval bar */}
         <div className="relative h-32 overflow-hidden rounded-full border border-slate-600/60 bg-slate-950/50">
           <div className="absolute bottom-0 left-0 right-0 bg-slate-50 transition-all duration-300" style={{ height: `${whiteEvalPercent}%` }} />
-          <div className="absolute inset-x-0 top-1/2 h-px bg-amber-400/60" />
+          <div className="absolute inset-x-0 top-1/2 h-px bg-emerald-400/60" />
         </div>
 
         {/* Eval info */}
@@ -78,15 +78,15 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
           <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="text-slate-400">Đánh giá</span>
-              <b className="text-amber-300">{formatEvaluation(analysis?.evaluation)}</b>
+              <b className="text-emerald-300">{formatEvaluation(analysis?.evaluation)}</b>
             </div>
             <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-700/60">
-              <div className="h-full bg-amber-500 transition-all duration-300" style={{ width: `${whiteEvalPercent}%` }} />
+              <div className="h-full bg-emerald-500 transition-all duration-300" style={{ width: `${whiteEvalPercent}%` }} />
             </div>
           </div>
 
           <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs text-slate-300">
-            <p>Nước tốt nhất: <b className="text-amber-300">{bestSan || '—'}</b></p>
+            <p>Nước tốt nhất: <b className="text-emerald-300">{bestSan || '—'}</b></p>
           </div>
         </div>
       </div>
@@ -98,8 +98,8 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
       </label>
 
       {/* Comments */}
-      {autoComment && <p className="mb-3 rounded-lg border border-amber-400/20 bg-amber-500/10 p-2 text-xs font-bold text-amber-200">{autoComment}</p>}
-      {error && <p className="mb-3 rounded-lg border border-amber-400/20 bg-amber-500/10 p-2 text-xs font-bold text-amber-200">{error}</p>}
+      {autoComment && <p className="mb-3 rounded-lg border border-emerald-400/20 bg-emerald-500/10 p-2 text-xs font-bold text-emerald-200">{autoComment}</p>}
+      {error && <p className="mb-3 rounded-lg border border-emerald-400/20 bg-emerald-500/10 p-2 text-xs font-bold text-emerald-200">{error}</p>}
 
       {/* PV */}
       <p className="mb-3 rounded-lg border border-slate-700/60 bg-slate-950/30 p-2 text-xs leading-relaxed text-slate-400">

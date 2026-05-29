@@ -22,7 +22,7 @@ export default function GameStatusBanner() {
 function BotThinkingDot() {
   return (
     <span
-      className="ml-1 inline-block h-2 w-2 animate-pulse rounded-full bg-amber-400"
+      className="ml-1 inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-400"
       title="Bot đang tính..."
     />
   );

@@ -4,8 +4,8 @@ import { getSyncStatus, setSyncStatus } from '../services/syncService';
 
 const SYNC_STATUS = {
   LOCAL_ONLY: { label: 'Local only', color: 'text-cream/50', bg: 'bg-ink/40' },
-  SYNCING: { label: 'Đang đồng bộ', color: 'text-amber-400', bg: 'bg-amber-400/20' },
-  SYNCED: { label: 'Đã đồng bộ', color: 'text-gold', bg: 'bg-gold/20' },
+  SYNCING: { label: 'Đang đồng bộ', color: 'text-emerald-400', bg: 'bg-emerald-400/20' },
+  SYNCED: { label: 'Đã đồng bộ', color: 'text-emerald-500', bg: 'bg-emerald-500/20' },
   ERROR: { label: 'Lỗi đồng bộ', color: 'text-red-400', bg: 'bg-red-400/20' },
 };
 

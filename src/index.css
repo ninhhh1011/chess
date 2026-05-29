@@ -3,24 +3,28 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: dark; }
+:root {
+  color-scheme: dark;
+  --color-bg: #020617; /* slate-950 */
+  --color-surface: #0f172a; /* slate-900 */
+  --color-border: #1e293b; /* slate-800 */
+  --color-primary: #059669; /* emerald-600 */
+  --color-primary-hover: #10b981; /* emerald-500 */
+  --color-text-main: #f1f5f9; /* slate-100 */
+  --color-text-muted: #94a3b8; /* slate-400 */
+}
 * { box-sizing: border-box; }
 html { width: 100%; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
-body { margin: 0; width: 100%; overflow-x: hidden; font-family: Inter, system-ui, sans-serif; background: #0f172a; }
+body { margin: 0; width: 100%; overflow-x: hidden; font-family: Inter, system-ui, sans-serif; background: var(--color-bg); color: var(--color-text-main); }
 button, select { font: inherit; }
 img, svg, canvas, iframe { max-width: 100%; }
-::selection { background: rgba(245,158,11,.32); color: #f8fafc; }
+::selection { background: rgba(5,150,105,.32); color: #f8fafc; }
 ::-webkit-scrollbar { width: .65rem; height: .65rem; }
 ::-webkit-scrollbar-track { background: rgba(15,23,42,.75); }
 ::-webkit-scrollbar-thumb { background: rgba(100,116,139,.75); border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(245,158,11,.75); }
+::-webkit-scrollbar-thumb:hover { background: rgba(5,150,105,.75); }
 
-@keyframes notice-pop {
-  0% { opacity: 0; transform: translate(-50%, -10px) scale(.96); }
-  12% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-  78% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -8px) scale(.98); }
-}
+
 
 @keyframes king-check-soft-pulse {
   0%, 100% {
@@ -32,13 +36,23 @@ img, svg, canvas, iframe { max-width: 100%; }
 }
 
 @layer components {
-  .btn-primary { @apply inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 font-bold text-slate-950 shadow-sm transition hover:bg-amber-400 disabled:pointer-events-none disabled:opacity-60; }
-  .btn-secondary { @apply inline-flex items-center justify-center rounded-lg border border-slate-600/60 bg-slate-800/60 px-5 py-3 font-bold text-slate-100 transition hover:border-amber-400/70 hover:bg-slate-700/60 disabled:pointer-events-none disabled:opacity-60; }
-  .btn-sm { @apply px-3 py-2 text-sm; }
-  .panel-dark {
-    @apply border border-slate-700/60 bg-slate-800/50;
-    box-shadow: 0 4px 12px rgba(2,6,23,.2);
-  }
+  .ui-button-primary { @apply inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 font-medium text-slate-50 transition hover:bg-emerald-500 disabled:pointer-events-none disabled:opacity-60; }
+  .ui-button-secondary { @apply inline-flex items-center justify-center rounded-md border border-slate-700 bg-slate-800 px-4 py-2 font-medium text-slate-200 transition hover:bg-slate-700 disabled:pointer-events-none disabled:opacity-60; }
+  .ui-button-sm { @apply px-3 py-1.5 text-sm; }
+  .ui-panel { @apply rounded-lg border border-slate-800 bg-slate-900; }
+  .ui-card { @apply rounded-xl border border-slate-800 bg-slate-900/80 p-4; }
+  .ui-badge { @apply rounded bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400 border border-slate-700; }
+  .ui-input { @apply rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500 focus:border-emerald-500 transition; }
+  .ui-select { @apply rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm font-medium text-slate-100 outline-none transition focus:border-emerald-500; }
+  .ui-tab { @apply flex-1 px-2 py-3 text-sm font-medium transition text-slate-400 hover:bg-slate-800 hover:text-slate-200; }
+  .ui-tab-active { @apply flex-1 px-2 py-3 text-sm font-medium transition text-emerald-500 border-b-2 border-emerald-500 bg-slate-800/50; }
+  
+  /* Legacy classes to avoid breaking until full migration */
+  .btn-primary { @apply ui-button-primary; }
+  .btn-secondary { @apply ui-button-secondary; }
+  .btn-sm { @apply ui-button-sm; }
+  .panel { @apply ui-panel; }
+  .card { @apply ui-card; }
 
   /* Optimized board sizing for 100% zoom desktop viewport */
   .chess-board-container {
