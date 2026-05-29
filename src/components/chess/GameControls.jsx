@@ -2,20 +2,10 @@ import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 
 export default function GameControls() {
-  const { newGame, undoMove, flipBoard, resignGame, playState, setPlayState, engineHint, setEngineHint } = useChessGame();
-  
+  const { newGame, undoMove, flipBoard, resignGame, playState, setPlayState } = useChessGame();
   const [confirmAction, setConfirmAction] = useState(null); // 'resign' or 'new'
 
   if (playState !== 'playing') return null;
-
-  const handleHintClick = () => {
-    // If we have an engine hint but it's not shown somehow or just to request a re-eval if needed
-    // In our setup, engineHint is automatically generated, we can just highlight it via CSS or it's handled by GameLayout
-    if (!engineHint) {
-      // Just a placeholder, as Engine is always analyzing in the background
-      alert('Đang chờ phân tích từ Engine...');
-    }
-  };
 
   const renderConfirm = () => {
     if (confirmAction === 'resign') {

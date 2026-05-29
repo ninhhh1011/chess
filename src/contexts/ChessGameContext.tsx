@@ -46,7 +46,7 @@ export function ChessGameProvider({ children }) {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [moveHints, setMoveHints] = useState({});
   const [lastMoveSquares, setLastMoveSquares] = useState(null);
-  const [boardOrientation, setBoardOrientation] = useState(PLAYER_COLORS.WHITE);
+  const [boardOrientation, setBoardOrientation] = useState('white');
 
   // Engine state
   const [engineHint, setEngineHint] = useState(null);
@@ -267,14 +267,20 @@ export function ChessGameProvider({ children }) {
     return freshGame;
   }
 
-  function startGame({ elo = 1200, color = 'w', mode = GAME_MODES.BOT, gameGoal = 'fun', timeControl = 'unlimited' }) {
+  function startGame({ elo = 1200, color = PLAYER_COLORS.WHITE, mode = GAME_MODES.BOT, gameGoal = 'fun', timeControl = 'unlimited' }) {
     setBotElo(elo);
     setPlayerColor(color);
-    setBoardOrientation(color === 'random' ? PLAYER_COLORS.WHITE : color); // random already resolved in PreGameLobby actually
+    setBoardOrientation(color === PLAYER_COLORS.BLACK ? 'black' : 'white');
     setGameMode(mode);
     setGameGoal(gameGoal);
     setTimeControl(timeControl);
     newGame();
+    setPlayState('playing');
+  }
+
+  function restartGameWithCurrentSettings() {
+    newGame();
+    setBoardOrientation(playerColor === PLAYER_COLORS.BLACK ? 'black' : 'white');
     setPlayState('playing');
   }
 
@@ -397,16 +403,16 @@ export function ChessGameProvider({ children }) {
   }
 
   function flipBoard() {
-    setBoardOrientation(prev => prev === 'w' ? 'b' : 'w');
+    setBoardOrientation(prev => prev === 'white' ? 'black' : 'white');
   }
 
   function resignGame() {
-    const winner = playerColor === 'w' ? 'Đen' : 'Trắng';
+    const winner = playerColor === PLAYER_COLORS.WHITE ? 'Đen' : 'Trắng';
     setResultNotice(`${winner} thắng do bạn đầu hàng.`);
-    setShouldShowGameOverModal(true); // actually we removed it, but we set playState
     setIsBotThinking(false);
     botRequestIdRef.current += 1;
     setBotRequestId(botRequestIdRef.current);
+    setShouldShowGameOverModal(false);
     setPlayState('review');
   }
 
@@ -500,6 +506,7 @@ export function ChessGameProvider({ children }) {
     cloneGame,
     flipBoard,
     resignGame,
+    restartGameWithCurrentSettings,
   };
 
   return <ChessGameContext.Provider value={value}>{children}</ChessGameContext.Provider>;

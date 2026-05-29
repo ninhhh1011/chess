@@ -8,12 +8,12 @@ export default function PostGameReview() {
     setPlayState, 
     newGame,
     gameGoal,
-    enterAnalysisMode
+    enterAnalysisMode,
+    restartGameWithCurrentSettings
   } = useChessGame();
 
   const handlePlayAgain = () => {
-    newGame();
-    setPlayState('lobby');
+    restartGameWithCurrentSettings();
   };
 
   const handleReviewBoard = () => {
@@ -29,15 +29,15 @@ export default function PostGameReview() {
   let inaccuracies = 0;
   let mistakes = 0;
   let blunders = 0;
-  let worstMoveSan = null;
-  let worstMoveLoss = 0;
+  let suggestedBestSan = null;
+  let largestLoss = 0;
 
   Object.values(moveAnnotations).forEach(annotation => {
     if (annotation.tone === 'blunder') {
       blunders++;
-      if (annotation.loss > worstMoveLoss) {
-        worstMoveLoss = annotation.loss;
-        worstMoveSan = annotation.bestSan;
+      if (annotation.loss > largestLoss) {
+        largestLoss = annotation.loss;
+        suggestedBestSan = annotation.bestSan;
       }
     }
     if (annotation.tone === 'mistake') mistakes++;
@@ -72,7 +72,7 @@ export default function PostGameReview() {
   }
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 -sm">
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4">
       <div className="ui-card w-full max-w-lg space-y-6 p-8 shadow-2xl">
         
         <div className="text-center">
@@ -116,13 +116,13 @@ export default function PostGameReview() {
           </div>
         </div>
 
-        {worstMoveLoss > 0 && (
+        {largestLoss > 0 && (
           <div className="rounded-lg bg-slate-950 p-4 text-center text-sm">
             <span className="text-slate-400">Lỗi lớn nhất: </span>
             <span className="font-bold text-rose-400">Chưa đủ dữ liệu để xác định</span>
             <br />
             <span className="text-slate-400">Nước engine gợi ý: </span>
-            <span className="font-bold text-emerald-400">{worstMoveSan || 'Chưa có'}</span>
+            <span className="font-bold text-emerald-400">{suggestedBestSan || 'Chưa có'}</span>
           </div>
         )}
 
@@ -146,13 +146,16 @@ export default function PostGameReview() {
               onClick={handlePlayAgain}
               className="ui-button-secondary w-full py-2"
             >
-              Chơi ván mới
+              Chơi lại
             </button>
             <button 
-              onClick={() => setPlayState('lobby')}
+              onClick={() => {
+                newGame();
+                setPlayState('lobby');
+              }}
               className="ui-button-secondary w-full py-2"
             >
-              Về sảnh
+              Đổi thiết lập
             </button>
           </div>
         </div>

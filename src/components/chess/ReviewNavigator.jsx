@@ -8,10 +8,11 @@ export default function ReviewNavigator() {
     exitAnalysisMode,
     newGame,
     setPlayState,
-    playState
+    playState,
+    restartGameWithCurrentSettings
   } = useChessGame();
 
-  if (playState !== 'analysis' && playState !== 'review') return null;
+  if (playState !== 'analysis') return null;
 
   const totalMoves = analysisMainline.length;
 
@@ -93,8 +94,7 @@ export default function ReviewNavigator() {
         <button 
           onClick={() => {
             exitAnalysisMode();
-            newGame();
-            setPlayState('playing'); // restart right away
+            restartGameWithCurrentSettings();
           }}
           className="ui-button-primary py-2 text-xs"
         >
