@@ -3,7 +3,67 @@ import { useChessGame } from '../contexts/ChessGameContext';
 import { getBotMove, uciToMoveObject } from '../services/botService';
 import { playCaptureSound, playMoveSound } from '../utils/sound';
 
-const BOT_TIMEOUT_MS = 3000; // 3 giây – nếu Stockfish chậm thì fallback
+const BOT_TIMEOUT_MS = 3000;
+const DEBUG_BOT_MOVES = import.meta.env.DEV;
+
+function debugBotMove(...args) {
+  if (DEBUG_BOT_MOVES) {
+    console.log(...args);
+  }
+}
+
+function warnBotMove(...args) {
+  if (DEBUG_BOT_MOVES) {
+    console.warn(...args);
+  }
+}
+
+function moveToObject(move) {
+  if (!move) return null;
+  return {
+    from: move.from,
+    to: move.to,
+    promotion: move.promotion || undefined,
+  };
+}
+
+function isSameMove(legalMove, moveObj) {
+  const requestedPromotion = moveObj.promotion || undefined;
+  const legalPromotion = legalMove.promotion || undefined;
+
+  return (
+    legalMove.from === moveObj.from &&
+    legalMove.to === moveObj.to &&
+    (legalPromotion === requestedPromotion || !legalPromotion)
+  );
+}
+
+function pickRandomLegalMove(currentGame) {
+  const legalMoves = currentGame.moves({ verbose: true });
+  if (!legalMoves.length) return null;
+  const randomMove = legalMoves[Math.floor(Math.random() * legalMoves.length)];
+  return moveToObject(randomMove);
+}
+
+function getLegalMoveOnSnapshot(currentGame, moveObj, fen) {
+  const legalMoves = currentGame.moves({ verbose: true });
+  if (!legalMoves.length) return null;
+
+  if (moveObj) {
+    const matchingMove = legalMoves.find((legalMove) => isSameMove(legalMove, moveObj));
+    if (matchingMove) return moveToObject(matchingMove);
+
+    warnBotMove('[BOT] move is illegal on snapshot, fallback random', { moveObj, fen });
+  }
+
+  const randomMove = legalMoves[Math.floor(Math.random() * legalMoves.length)];
+  return moveToObject(randomMove);
+}
+
+function playMoveAudio(moveResult) {
+  if (!moveResult?.move) return;
+  moveResult.move.captured ? playCaptureSound() : playMoveSound();
+}
 
 export function useBotMove() {
   const {
@@ -24,17 +84,15 @@ export function useBotMove() {
 
   const isProcessingRef = useRef(false);
 
-  // Tự động trigger bot sau mỗi lần game state thay đổi
   useEffect(() => {
     if (gameMode !== GAME_MODES.BOT) return;
     if (isGameOver) return;
-    if (pendingPromotion) return; // Đợi người chơi chọn quân phong cấp
+    if (pendingPromotion) return;
 
     const botColor = playerColor === 'w' ? 'b' : 'w';
-    if (game.turn() !== botColor) return; // Chưa đến lượt bot
+    if (game.turn() !== botColor) return;
     if (game.isGameOver()) return;
 
-    // Trigger bot move
     triggerBotMove(game);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, gameMode, playerColor, isGameOver, pendingPromotion]);
@@ -42,17 +100,17 @@ export function useBotMove() {
   async function triggerBotMove(currentGame) {
     if (gameMode !== GAME_MODES.BOT) return;
     if (isProcessingRef.current) {
-      console.log('[BOT] already processing, skip');
+      debugBotMove('[BOT] already processing, skip');
       return;
     }
 
     const botColor = playerColor === 'w' ? 'b' : 'w';
     if (currentGame.turn() !== botColor) {
-      console.log('[BOT] not bot turn, skip', { turn: currentGame.turn(), botColor });
+      debugBotMove('[BOT] not bot turn, skip', { turn: currentGame.turn(), botColor });
       return;
     }
     if (currentGame.isGameOver()) {
-      console.log('[BOT] game over, skip');
+      debugBotMove('[BOT] game over, skip');
       return;
     }
 
@@ -60,16 +118,14 @@ export function useBotMove() {
     setIsBotThinking(true);
     setBotMoveSource(null);
 
-    // Tăng requestId để huỷ request cũ nếu newGame được gọi
     botRequestIdRef.current += 1;
     const currentRequestId = botRequestIdRef.current;
     setBotRequestId(currentRequestId);
 
     const fen = currentGame.fen();
-    console.log('[BOT] triggerBotMove called', { fen, turn: currentGame.turn(), botColor, botElo });
+    debugBotMove('[BOT] triggerBotMove called', { fen, turn: currentGame.turn(), botColor, botElo });
 
     try {
-      // Race giữa getBotMove và timeout 3s
       const result = await Promise.race([
         getBotMove({ fen, botElo }),
         new Promise((_, reject) =>
@@ -77,78 +133,73 @@ export function useBotMove() {
         ),
       ]);
 
-      // Kiểm tra request còn hợp lệ không (newGame có thể đã được gọi)
       if (currentRequestId !== botRequestIdRef.current) {
-        console.log('[BOT] stale request, abort', { currentRequestId, latest: botRequestIdRef.current });
+        debugBotMove('[BOT] stale request, abort', { currentRequestId, latest: botRequestIdRef.current });
         return;
       }
 
-      console.log('[BOT] getBotMove result', result);
+      debugBotMove('[BOT] getBotMove result', result);
 
-      if (!result?.move) {
-        console.warn('[BOT] no move returned');
-        return;
-      }
-
-      setBotMoveSource(result.source);
-
-      const moveObj = uciToMoveObject(result.move);
-      console.log('[BOT] moveObj', moveObj);
+      const requestedMove = uciToMoveObject(result?.move);
+      const moveObj = getLegalMoveOnSnapshot(currentGame, requestedMove, fen);
 
       if (!moveObj) {
-        console.warn('[BOT] invalid moveObj from UCI', result.move);
+        warnBotMove('[BOT] no legal bot move available', { fen });
         return;
       }
 
-      // Kiểm tra lại game chưa kết thúc và request vẫn valid
+      setBotMoveSource(requestedMove ? result.source : 'snapshot_random');
+
       if (currentGame.isGameOver()) {
-        console.log('[BOT] game ended before bot could move');
+        debugBotMove('[BOT] game ended before bot could move');
         return;
       }
       if (currentRequestId !== botRequestIdRef.current) {
-        console.log('[BOT] request invalidated before applying move');
+        debugBotMove('[BOT] request invalidated before applying move');
         return;
       }
 
-      // Apply bot move với byBot = true để bypass guards
       const moveResult = makeMove(
         moveObj.from,
         moveObj.to,
         moveObj.promotion || 'q',
-        { byBot: true }
+        { byBot: true, sourceFen: fen }
       );
 
-      console.log('[BOT] makeMove result', moveResult);
-
-      if (moveResult && moveResult.move) {
-        moveResult.move.captured ? playCaptureSound() : playMoveSound();
-      } else {
-        console.warn('[BOT] makeMove returned false – move may be illegal', moveObj);
+      if (moveResult?.move) {
+        playMoveAudio(moveResult);
+        return;
       }
+
+      warnBotMove('[BOT] makeMove rejected; bot move skipped', { moveObj, sourceFen: fen });
     } catch (error) {
-      if (currentRequestId !== botRequestIdRef.current) return; // newGame already called
+      if (currentRequestId !== botRequestIdRef.current) return;
+
       if (error.message === 'BOT_TIMEOUT') {
-        console.warn('[BOT] timeout – falling back to random move');
-        // Fallback: random legal move
-        const moves = currentGame.moves({ verbose: true });
-        if (moves.length > 0 && currentRequestId === botRequestIdRef.current) {
-          const rnd = moves[Math.floor(Math.random() * moves.length)];
-          const fallbackResult = makeMove(rnd.from, rnd.to, rnd.promotion || 'q', { byBot: true });
-          if (fallbackResult?.move) {
-            fallbackResult.move.captured ? playCaptureSound() : playMoveSound();
-          }
+        console.warn('[BOT] timeout; falling back to random move');
+        const fallbackMove = pickRandomLegalMove(currentGame);
+        if (!fallbackMove) return;
+
+        const fallbackResult = makeMove(
+          fallbackMove.from,
+          fallbackMove.to,
+          fallbackMove.promotion || 'q',
+          { byBot: true, sourceFen: fen }
+        );
+
+        if (fallbackResult?.move) {
+          setBotMoveSource('timeout_random');
+          playMoveAudio(fallbackResult);
+        } else {
+          warnBotMove('[BOT] timeout fallback move rejected; bot move skipped', { fallbackMove, sourceFen: fen });
         }
       } else {
         console.error('[BOT] error', error);
       }
     } finally {
-      // Luôn reset, kể cả khi có lỗi – tránh kẹt isBotThinking = true
+      isProcessingRef.current = false;
       if (currentRequestId === botRequestIdRef.current) {
-        isProcessingRef.current = false;
         setIsBotThinking(false);
-      } else {
-        // newGame đã clear, chỉ reset local flag
-        isProcessingRef.current = false;
       }
     }
   }

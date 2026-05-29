@@ -11,15 +11,20 @@ function debugBot(...args) {
 }
 
 function getRandomLegalMove(fen) {
-  const game = new Chess(fen);
-  const moves = game.moves({ verbose: true });
-  
-  if (moves.length === 0) return null;
-  
-  const randomIndex = Math.floor(Math.random() * moves.length);
-  const move = moves[randomIndex];
-  
-  return `${move.from}${move.to}${move.promotion || ''}`;
+  try {
+    const game = new Chess(fen);
+    const moves = game.moves({ verbose: true });
+    
+    if (moves.length === 0) return null;
+    
+    const randomIndex = Math.floor(Math.random() * moves.length);
+    const move = moves[randomIndex];
+    
+    return `${move.from}${move.to}${move.promotion || ''}`;
+  } catch (error) {
+    console.warn('[Bot] Cannot choose random legal move:', error);
+    return null;
+  }
 }
 
 export async function getBotMove({ fen, botElo = 1200 }) {
@@ -35,6 +40,15 @@ export async function getBotMove({ fen, botElo = 1200 }) {
   if (config.randomChance > 0 && Math.random() < config.randomChance) {
     const randomMove = getRandomLegalMove(fen);
     debugBot(`[Bot] Using random move (${config.randomChance * 100}% chance):`, randomMove);
+    if (!randomMove) {
+      return {
+        move: null,
+        source: 'none',
+        elo: config.elo,
+        warning: 'No legal moves',
+      };
+    }
+
     return {
       move: randomMove,
       source: 'random_weak',
@@ -58,7 +72,7 @@ export async function getBotMove({ fen, botElo = 1200 }) {
     
     debugBot(`[Bot] Analysis result:`, analysis);
     
-    if (analysis.success && analysis.bestMove) {
+    if (analysis?.bestMove) {
       if (analysis.source === 'stockfish_wasm') {
         debugBot(`[Bot] Using Stockfish move: ${analysis.bestMove} (source: ${analysis.source})`);
       } else {
@@ -78,6 +92,15 @@ export async function getBotMove({ fen, botElo = 1200 }) {
     // Fallback to random if no best move
     const fallbackMove = getRandomLegalMove(fen);
     debugBot(`[Bot] No best move found, using fallback random:`, fallbackMove);
+    if (!fallbackMove) {
+      return {
+        move: null,
+        source: 'none',
+        elo: config.elo,
+        warning: 'No legal moves',
+      };
+    }
+
     return {
       move: fallbackMove,
       source: 'fallback',
@@ -90,6 +113,15 @@ export async function getBotMove({ fen, botElo = 1200 }) {
     // Fallback to random on error
     const fallbackMove = getRandomLegalMove(fen);
     debugBot(`[Bot] Error occurred, using fallback random:`, fallbackMove);
+    if (!fallbackMove) {
+      return {
+        move: null,
+        source: 'none',
+        elo: config.elo,
+        warning: 'No legal moves',
+      };
+    }
+
     return {
       move: fallbackMove,
       source: 'fallback',

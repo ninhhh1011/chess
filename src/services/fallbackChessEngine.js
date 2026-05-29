@@ -27,6 +27,20 @@ function getRandomLegalMove(fen) {
   return `${move.from}${move.to}${move.promotion || ''}`;
 }
 
+function noLegalMovesResult(fen, depth = 0) {
+  return {
+    success: false,
+    source: 'none',
+    fen,
+    depth,
+    bestMove: null,
+    evaluation: null,
+    pv: [],
+    raw: 'fallback-material-engine',
+    warning: 'No legal moves',
+  };
+}
+
 function chooseBestMove(fen, elo = 1200) {
   const game = new Chess(fen);
   const moves = game.moves({ verbose: true });
@@ -84,12 +98,19 @@ export async function analyzeFenFallback({ fen, depth = 10, elo = 1200 } = {}) {
   if (!fen) throw new Error('Thiếu FEN để phân tích.');
 
   return new Promise((resolve, reject) => {
-    const timeout = window.setTimeout(() => reject(new Error('Fallback engine timeout.')), 3000);
+    const setTimer = typeof window !== 'undefined' ? window.setTimeout.bind(window) : setTimeout;
+    const clearTimer = typeof window !== 'undefined' ? window.clearTimeout.bind(window) : clearTimeout;
+    const timeout = setTimer(() => reject(new Error('Fallback engine timeout.')), 3000);
     
-    window.setTimeout(() => {
+    setTimer(() => {
       try {
         const result = chooseBestMove(fen, elo);
-        window.clearTimeout(timeout);
+        clearTimer(timeout);
+        if (!result.bestMove) {
+          resolve(noLegalMovesResult(fen, depth));
+          return;
+        }
+
         resolve({
           success: true,
           source: 'fallback',
@@ -103,9 +124,10 @@ export async function analyzeFenFallback({ fen, depth = 10, elo = 1200 } = {}) {
           },
           pv: result.pv,
           raw: 'fallback-material-engine',
+          warning: 'Stockfish unavailable, using fallback',
         });
       } catch (error) {
-        window.clearTimeout(timeout);
+        clearTimer(timeout);
         reject(error);
       }
     }, 100);

@@ -15,6 +15,41 @@ function debugStockfish(...args) {
   }
 }
 
+function noLegalMovesResult(fen, warning = 'No legal moves') {
+  return {
+    success: false,
+    source: 'none',
+    fen,
+    bestMove: null,
+    evaluation: null,
+    depth: 0,
+    pv: [],
+    raw: [],
+    warning,
+  };
+}
+
+async function getStableFallbackAnalysis({ fen, depth = 10, elo = 1200 } = {}, warning = 'Stockfish unavailable, using fallback') {
+  try {
+    const fallback = await analyzeFenFallback({ fen, depth, elo });
+    if (!fallback?.bestMove) {
+      return noLegalMovesResult(fen, fallback?.warning || 'No legal moves');
+    }
+
+    return {
+      ...fallback,
+      success: true,
+      source: fallback.source || 'fallback',
+      evaluation: fallback.evaluation || null,
+      depth: fallback.depth || 0,
+      warning: fallback.warning || warning,
+    };
+  } catch (error) {
+    console.warn('[Stockfish] Fallback analysis failed:', error);
+    return noLegalMovesResult(fen, 'No legal moves');
+  }
+}
+
 export function getEngineState() {
   return engineState;
 }
@@ -150,9 +185,10 @@ export function disposeEngine() {
 
 export function cancelPendingAnalysis() {
   if (currentAnalysis) {
+    const analysisToCancel = currentAnalysis;
     stopEngine();
-    if (currentAnalysis.reject) {
-      currentAnalysis.reject(new Error('CANCELLED'));
+    if (analysisToCancel.reject) {
+      analysisToCancel.reject(new Error('CANCELLED'));
     }
     currentAnalysis = null;
     engineState = 'ready';
@@ -201,7 +237,7 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
     const initialized = await initEngine();
     if (!initialized) {
       console.warn('[Stockfish] Engine not available, using fallback');
-      return await analyzeFenFallback({ fen, depth, elo });
+      return await getStableFallbackAnalysis({ fen, depth, elo });
     }
   }
   
@@ -241,7 +277,10 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
         });
       } else {
         console.warn('[Stockfish] Analysis timeout, using fallback');
-        analyzeFenFallback({ fen, depth, elo }).then(resolve).catch(reject);
+        getStableFallbackAnalysis(
+          { fen, depth, elo },
+          'Stockfish timeout, using fallback'
+        ).then(resolve).catch(reject);
       }
     }, timeoutMs);
     
@@ -326,7 +365,10 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
       clearTimeout(timeout);
       console.error('[Stockfish] Analysis error:', error);
       engineState = 'error';
-      analyzeFenFallback({ fen, depth, elo })
+      getStableFallbackAnalysis(
+        { fen, depth, elo },
+        'Stockfish unavailable, using fallback'
+      )
         .then(resolve)
         .catch(reject);
     }
@@ -336,11 +378,20 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
 let activeFen = null;
 
 export async function analyzeFen(options = {}) {
-  if (currentAnalysis) {
-    cancelPendingAnalysis();
+  try {
+    if (currentAnalysis) {
+      cancelPendingAnalysis();
+    }
+    activeFen = options.fen;
+    return await runAnalyzeFen(options);
+  } catch (error) {
+    if (error?.message === 'CANCELLED') {
+      throw error;
+    }
+
+    console.warn('[Stockfish] Analysis failed, using fallback:', error);
+    return getStableFallbackAnalysis(options);
   }
-  activeFen = options.fen;
-  return runAnalyzeFen(options);
 }
 
 export async function getBestMove({ fen, depth = 8, movetime = null, elo = null, skillLevel = null } = {}) {
