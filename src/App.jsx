@@ -1,15 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import Learn from './pages/Learn';
-import Play from './pages/Play';
-import Exercises from './pages/Exercises';
-import Training from './pages/Training';
-import Openings from './pages/Openings';
-import OpeningDetail from './pages/OpeningDetail';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import PageSkeleton from './components/PageSkeleton';
+
+const Home = lazy(() => import('./pages/Home'));
+const Learn = lazy(() => import('./pages/Learn'));
+const Play = lazy(() => import('./pages/Play'));
+const OnlinePlay = lazy(() => import('./pages/OnlinePlay'));
+const Exercises = lazy(() => import('./pages/Exercises'));
+const Training = lazy(() => import('./pages/Training'));
+const Openings = lazy(() => import('./pages/Openings'));
+const OpeningDetail = lazy(() => import('./pages/OpeningDetail'));
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
+
 import { AuthProvider } from './contexts/AuthContext';
 import { ChessGameProvider } from './contexts/ChessGameContext';
 import { getUserProfile } from './services/userProfileService';
@@ -30,17 +34,20 @@ export default function App() {
       <AuthProvider>
         <ChessGameProvider>
           <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/learn" element={<Learn />} />
-              <Route path="/play" element={<Play />} />
-              <Route path="/exercises" element={<Exercises />} />
-              <Route path="/training" element={<Training />} />
-              <Route path="/openings" element={<Openings />} />
-              <Route path="/openings/:openingId" element={<OpeningDetail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-            </Routes>
+            <Suspense fallback={<PageSkeleton />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/learn" element={<Learn />} />
+                <Route path="/play" element={<Play />} />
+                <Route path="/play/online/:gameId" element={<OnlinePlay />} />
+                <Route path="/exercises" element={<Exercises />} />
+                <Route path="/training" element={<Training />} />
+                <Route path="/openings" element={<Openings />} />
+                <Route path="/openings/:openingId" element={<OpeningDetail />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+              </Routes>
+            </Suspense>
           </Layout>
         </ChessGameProvider>
       </AuthProvider>

@@ -1,55 +1,63 @@
-import { coachSystemPrompt } from './prompts/coachSystemPrompt.js';
-import { buildCoachPayload, buildCoachUserPrompt } from './utils/buildCoachPrompt.js';
+export const config = {
+  runtime: 'edge',
+};
 
-const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
-const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+export default async function handler(req) {
+  if (req.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
+  }
 
-function send(res, status, body) {
-  res.status(status).setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(body));
-}
-
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return send(res, 405, { success: false, reply: 'Method not allowed', source: 'fallback', suggestedActions: [] });
-
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.VITE_CLAUDE_API_KEY || process.env.CLAUDE_API_KEY;
   if (!apiKey) {
-    return send(res, 200, { success: false, reply: 'AI hiện chưa khả dụng, đang dùng Coach cơ bản.', source: 'fallback', suggestedActions: [] });
+    return new Response(JSON.stringify({ error: 'Missing API Key' }), { status: 500 });
   }
 
   try {
-    const payload = buildCoachPayload(req.body || {});
-    if (!payload.message) return send(res, 400, { success: false, reply: 'Thiếu câu hỏi cho AI Coach.', source: 'fallback', suggestedActions: [] });
+    const { message, history, fen, pgn, stockfish, turn, status } = await req.json();
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 18000);
-    const response = await fetch(OPENAI_URL, {
+    const systemPrompt = `You are a chess coach. 
+Current FEN: ${fen}
+Current PGN: ${pgn}
+Stockfish Evaluation: ${stockfish ? JSON.stringify(stockfish) : 'None'}
+Status: ${status}
+Turn: ${turn}
+
+Keep responses short, clear, and focused on chess improvement. Use Vietnamese.`;
+
+    const claudePayload = {
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 300,
+      system: systemPrompt,
+      messages: [
+        { role: 'user', content: message }
+      ],
+      stream: false
+    };
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: MODEL,
-        messages: [
-          { role: 'system', content: coachSystemPrompt },
-          { role: 'user', content: buildCoachUserPrompt(payload) },
-        ],
-        temperature: 0.35,
-        max_tokens: 220,
-      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify(claudePayload)
     });
-    clearTimeout(timeout);
 
     if (!response.ok) {
-      const sourceMessage = response.status === 429 ? 'AI đang bị giới hạn lượt gọi, đang dùng Coach cơ bản.' : 'AI API đang lỗi, đang dùng Coach cơ bản.';
-      return send(res, 200, { success: false, reply: sourceMessage, source: 'fallback', suggestedActions: [] });
+      const err = await response.text();
+      throw new Error(`Anthropic API error: ${err}`);
     }
 
     const data = await response.json();
-    const reply = data?.choices?.[0]?.message?.content?.trim();
-    if (!reply) return send(res, 200, { success: false, reply: 'AI chưa trả lời được, đang dùng Coach cơ bản.', source: 'fallback', suggestedActions: [] });
+    const replyText = data.content?.[0]?.text || '';
 
-    return send(res, 200, { success: true, reply, source: 'ai', suggestedActions: [] });
-  } catch (error) {
-    return send(res, 200, { success: false, reply: 'AI hiện chưa khả dụng, đang dùng Coach cơ bản.', source: 'fallback', suggestedActions: [] });
+    return new Response(JSON.stringify({ success: true, reply: replyText, source: 'ai' }), {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }

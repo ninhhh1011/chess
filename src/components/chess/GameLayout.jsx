@@ -14,6 +14,7 @@ import BotSettings from './BotSettings';
 import GameControls from './GameControls';
 import PreGameLobby from './PreGameLobby';
 import PostGameReview from './PostGameReview';
+import ReviewNavigator from './ReviewNavigator';
 import EngineAnalysisPanel from '../analysis/EngineAnalysisPanel';
 import AICoachPanel from '../AICoachPanel';
 import coachAvatar from '../../assets/avatarcoach.webp';
@@ -103,7 +104,11 @@ export default function GameLayout({
         </section>
 
         {/* RIGHT COLUMN: Sidebar - fixed width */}
-        <aside className="w-full lg:w-[360px] lg:sticky lg:top-20 lg:self-start">
+        <aside className="w-full lg:w-[360px] lg:sticky lg:top-20 lg:self-start flex flex-col gap-3">
+          
+          <GameControls />
+          <ReviewNavigator />
+
           <div className="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden shadow-sm">
             {/* Tabs - compact */}
             <nav className="flex border-b border-slate-800 bg-slate-900">
@@ -179,7 +184,6 @@ export default function GameLayout({
               {activeTab === 'settings' && (
                 <div className="space-y-3">
                   <BotSettings />
-                  <GameControls />
                 </div>
               )}
             </div>

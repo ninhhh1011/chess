@@ -6,14 +6,14 @@ import coachAvatar from '../../assets/avatarcoach.webp';
  * Shows only: avatar · name · badge
  */
 export default function PlayerBar({ position = 'top' }) {
-  const { activeGame, playerColor, gameMode, botElo, isBotThinking, GAME_MODES } = useChessGame();
+  const { activeGame, playerColor, boardOrientation, gameMode, botElo, isBotThinking, GAME_MODES } = useChessGame();
 
   const currentTurn = activeGame.turn();
   const isTop = position === 'top';
 
-  // Determine who is at this position
-  const isPlayerAtTop = playerColor === 'b';
-  const isPlayer = isTop ? isPlayerAtTop : !isPlayerAtTop;
+  // Determine who is at this position based on board orientation
+  const isPlayerAtBottom = boardOrientation === playerColor;
+  const isPlayer = isTop ? !isPlayerAtBottom : isPlayerAtBottom;
 
   // Display info
   let displayName, displayBadge, avatarSrc, isActive;

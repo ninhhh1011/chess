@@ -29,7 +29,19 @@ function write(progress){
 }
 
 function defaultProgress(openingId){
-  return { openingId, attempts:0, successCount:0, mistakeCount:0, lastPracticed:null, completedMovesBest:0, masteryPercent:0, mistakes:[] };
+  return { 
+    openingId, 
+    attempts:0, 
+    successCount:0, 
+    mistakeCount:0, 
+    lastPracticed:null, 
+    completedMovesBest:0, 
+    masteryPercent:0, 
+    mistakes:[],
+    interval: 0,
+    repetition: 0,
+    efactor: 2.5
+  };
 }
 
 function normalize(item, openingId){
@@ -75,6 +87,50 @@ export function updateOpeningAttempt({ openingId, success=false, mistakes=[], co
   write(all);
   updateOpeningStats({ openingId, success, mistakeCount: Array.isArray(mistakes) ? mistakes.length : 0 });
   return all[openingId];
+}
+
+export function updateOpeningProgressSM2(openingId, quality) {
+  // quality: 0-5
+  // 5: perfect response
+  // 4: correct response after a hesitation
+  // 3: correct response recalled with serious difficulty
+  // 2: incorrect response; where the correct one seemed easy to recall
+  // 1: incorrect response; the correct one remembered
+  // 0: complete blackout
+  
+  const all = getOpeningProgress();
+  const current = normalize(all[openingId], openingId);
+  
+  let { repetition, interval, efactor } = current;
+  
+  if (quality >= 3) {
+    if (repetition === 0) {
+      interval = 1;
+    } else if (repetition === 1) {
+      interval = 6;
+    } else {
+      interval = Math.round(interval * efactor);
+    }
+    repetition += 1;
+  } else {
+    repetition = 0;
+    interval = 1;
+  }
+  
+  efactor = efactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+  if (efactor < 1.3) efactor = 1.3;
+  
+  const next = {
+    ...current,
+    repetition,
+    interval,
+    efactor,
+    lastPracticed: nowIso(),
+  };
+  
+  all[openingId] = next;
+  write(all);
+  return next;
 }
 
 function calculateMasteryFromProgress(openingId, progress){

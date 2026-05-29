@@ -4,7 +4,7 @@ import OpeningProgress from './OpeningProgress';
 const sideLabel = { white:'Cho Trắng', black:'Cho Đen', both:'Hai bên' };
 
 export default function OpeningCard({ opening, progress }) {
-  return <article className="rounded-xl border border-slate-800 bg-slate-800 p-6  transition hover:-translate-y-1 hover:border-emerald-500/40">
+  return <article className="rounded-xl border border-slate-800 bg-slate-800 p-6  transition hover:border-slate-600 hover:bg-slate-800/80 hover:border-emerald-500/40">
     <div className="flex flex-wrap gap-2">
       <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-bold uppercase text-emerald-500">{sideLabel[opening.side]}</span>
       <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-bold uppercase text-slate-300">{opening.level}</span>

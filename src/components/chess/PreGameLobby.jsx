@@ -18,7 +18,7 @@ export default function PreGameLobby() {
     if (color === 'random') {
       color = Math.random() > 0.5 ? PLAYER_COLORS.WHITE : PLAYER_COLORS.BLACK;
     }
-    startGame({ elo: selectedElo, color, mode: GAME_MODES.BOT });
+    startGame({ elo: selectedElo, color, mode: GAME_MODES.BOT, gameGoal: selectedGoal, timeControl: selectedTime });
   }
 
   return (
@@ -86,9 +86,9 @@ export default function PreGameLobby() {
                   className="ui-select w-full"
                 >
                   <option value="unlimited">Không giới hạn</option>
-                  <option value="10">10 phút</option>
-                  <option value="5+3">5 + 3</option>
-                  <option value="3+2">3 + 2</option>
+                  <option value="10" disabled>10 phút — Sắp có</option>
+                  <option value="5+3" disabled>5 + 3 — Sắp có</option>
+                  <option value="3+2" disabled>3 + 2 — Sắp có</option>
                 </select>
               </div>
               <div className="space-y-2">

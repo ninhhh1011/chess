@@ -62,6 +62,7 @@ export default function ChessBoardPanel({ engineHint }) {
     currentFen,
     boardKey,
     playerColor,
+    boardOrientation,
     gameMode,
     isBotThinking,
     isGameOver,
@@ -79,7 +80,6 @@ export default function ChessBoardPanel({ engineHint }) {
   // FIX BUG 3: Remove hover hints state - only show hints on selection
   const [hoveredSquare, setHoveredSquare] = useState(null);
 
-  const boardOrientation = playerColor === 'b' ? 'black' : 'white';
   const checkedKingSquare = useMemo(
     () => (activeGame.isCheck() ? getKingSquare(activeGame.turn()) : null),
     [activeGame, getKingSquare]
@@ -249,13 +249,13 @@ export default function ChessBoardPanel({ engineHint }) {
           showNotation: true,
           showAnimations: true,
           animationDurationInMs: 190,
-          darkSquareStyle: { backgroundColor: '#334155', ...stableSquareStyle },
-          lightSquareStyle: { backgroundColor: '#94a3b8', ...stableSquareStyle },
-          dropSquareStyle: { boxShadow: 'inset 0 0 0 3px rgba(245,158,11,.82)' },
+          darkSquareStyle: { backgroundColor: 'var(--color-board-dark)', ...stableSquareStyle },
+          lightSquareStyle: { backgroundColor: 'var(--color-board-light)', ...stableSquareStyle },
+          dropSquareStyle: { boxShadow: 'inset 0 0 0 3px var(--color-board-last-move)' },
           draggingPieceStyle: { filter: 'drop-shadow(0 20px 24px rgba(0,0,0,.5))', transform: 'scale(1.08)' },
-          darkSquareNotationStyle: { color: 'rgba(248,250,252,.58)', fontWeight: 800 },
-          lightSquareNotationStyle: { color: 'rgba(15,23,42,.58)', fontWeight: 800 },
-          ariaLabel: '',
+          darkSquareNotationStyle: { color: 'var(--color-board-light)', opacity: 0.58, fontWeight: 800 },
+          lightSquareNotationStyle: { color: 'var(--color-board-dark)', opacity: 0.58, fontWeight: 800 },
+          ariaLabel: 'Bàn cờ vua',
         }}
       />
     </div>

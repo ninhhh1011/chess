@@ -3,11 +3,13 @@ import { useChessGame } from '../../contexts/ChessGameContext';
 function annotationClassName(tone) {
   const tones = {
     pending: 'border-slate-600 bg-slate-700 text-slate-200',
-    brilliant: 'border-cyan-300/50 bg-cyan-400/15 text-cyan-100',
-    best: 'border-emerald-300/50 bg-emerald-400/15 text-emerald-100',
-    inaccuracy: 'border-yellow-300/50 bg-yellow-400/15 text-yellow-100',
-    mistake: 'border-orange-300/50 bg-orange-400/15 text-orange-100',
-    blunder: 'border-red-300/50 bg-red-500/15 text-red-100',
+    brilliant: 'border-cyan-400 bg-cyan-900/40 text-cyan-200',
+    great: 'border-emerald-400 bg-emerald-900/40 text-emerald-200',
+    best: 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300',
+    good: 'border-slate-500/50 bg-slate-500/10 text-slate-300',
+    inaccuracy: 'border-yellow-400/50 bg-yellow-400/10 text-yellow-300',
+    mistake: 'border-orange-500/50 bg-orange-500/10 text-orange-300',
+    blunder: 'border-red-500 bg-red-900/40 text-red-200',
   };
   return tones[tone] || tones.pending;
 }
@@ -17,7 +19,7 @@ function annotationClassName(tone) {
  * Bỏ header lớn, chỉ giữ danh sách nước đi
  */
 export default function MoveHistory() {
-  const { moveHistory, moveAnnotations, currentPgn } = useChessGame();
+  const { moveHistory, moveAnnotations, currentPgn, analysisMode, goToAnalysisPly, analysisPly } = useChessGame();
 
   function copyPgn() {
     if (!currentPgn) return;
@@ -64,9 +66,16 @@ export default function MoveHistory() {
             {moveHistory.map((move, index) => {
               const annotation = moveAnnotations[index];
               return (
-                <div
+                <button
                   key={index}
-                  className="flex items-center justify-between gap-2 rounded bg-slate-800 px-2 py-1.5 text-sm"
+                  onClick={() => {
+                    if (analysisMode) goToAnalysisPly(index + 1);
+                  }}
+                  className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-sm transition text-left ${
+                    analysisMode && analysisPly === index + 1
+                      ? 'bg-slate-700 ring-1 ring-emerald-500/50'
+                      : 'bg-slate-800 hover:bg-slate-700'
+                  } ${analysisMode ? 'cursor-pointer' : 'cursor-default'}`}
                 >
                   <span className="min-w-0 truncate text-slate-300">
                     <b className="text-slate-400 font-medium">{index + 1}.</b> {move}
@@ -81,7 +90,7 @@ export default function MoveHistory() {
                       {annotation.symbol}
                     </span>
                   )}
-                </div>
+                </button>
               );
             })}
           </div>

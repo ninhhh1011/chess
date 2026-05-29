@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { analyzeFen } from '../services/stockfishService';
+import { analyzeFen, cancelPendingAnalysis } from '../services/stockfishService';
 
 export function useEngineAnalysis({ fen, enabled = true, depth = 8, movetime = 650 }) {
   const [analysis, setAnalysis] = useState(null);
@@ -34,6 +34,7 @@ export function useEngineAnalysis({ fen, enabled = true, depth = 8, movetime = 6
 
     return () => {
       window.clearTimeout(timerId);
+      cancelPendingAnalysis();
     };
   }, [fen, enabled, depth, movetime]);
 

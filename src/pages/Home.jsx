@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile } from '../services/userProfileService';
 import logoImg from '../assets/avatarcoach.webp';
 import { brandName, BRAND_TAGLINE, BRAND_DESCRIPTION } from '../config/brand';
+import { createGame } from '../services/onlineGameService';
+import { useNavigate } from 'react-router-dom';
 
 const features = [
   {
@@ -47,10 +49,28 @@ const features = [
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [isCreatingGame, setIsCreatingGame] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setProfile(getUserProfile());
   }, []);
+
+  const handleCreateOnlineGame = async () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    try {
+      setIsCreatingGame(true);
+      const { gameId } = await createGame(user.id);
+      navigate(`/play/online/${gameId}`);
+    } catch (error) {
+      console.error(error);
+      setIsCreatingGame(false);
+      alert('Failed to create online game');
+    }
+  };
 
   return (
     <div className="space-y-16 py-8">
@@ -97,7 +117,14 @@ export default function Home() {
             <Link className="btn-secondary text-base" to="/play">
               Chơi ngay
             </Link>
-            <Link className="btn-secondary text-base" to="/training">
+            <button 
+              className="btn-secondary text-base" 
+              onClick={handleCreateOnlineGame}
+              disabled={isCreatingGame}
+            >
+              {isCreatingGame ? 'Đang tạo ván...' : 'Chơi Online'}
+            </button>
+            <Link className="btn-secondary text-base hidden sm:inline-block" to="/training">
               Huấn luyện
             </Link>
           </div>
@@ -175,8 +202,8 @@ export default function Home() {
       {/* CTA Section */}
       <section className="rounded-xl border border-slate-800 bg-slate-900 p-12 text-center">
         <h2 className="text-3xl font-bold text-slate-100 md:text-4xl">Sẵn sàng bắt đầu?</h2>
-        <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-          Tham gia cùng hàng nghìn người học cờ vua mỗi ngày. Hoàn toàn miễn phí, không cần đăng ký.
+        <p className="mx-auto mt-6 max-w-2xl text-xl text-slate-300">
+          Chơi một ván, nhận nhận xét ngắn gọn, rồi luyện lại điểm yếu quan trọng nhất cùng Ninh.
         </p>
         
         <div className="mt-8 flex flex-wrap justify-center gap-4">

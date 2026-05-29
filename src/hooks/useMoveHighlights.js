@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 // Empty square legal move - small dot
 const moveDotStyle = {
-  backgroundImage: 'radial-gradient(circle, rgba(234,179,8,0.45) 0 18%, transparent 20%)',
+  backgroundImage: 'radial-gradient(circle, var(--color-board-legal-hint) 0 18%, transparent 20%)',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
   backgroundSize: '100% 100%',
@@ -10,18 +10,18 @@ const moveDotStyle = {
 
 // Capture legal move - ring outline
 const captureRingStyle = {
-  boxShadow: 'inset 0 0 0 4px rgba(234,179,8,0.42)',
+  boxShadow: 'inset 0 0 0 4px var(--color-board-legal-hint)',
 };
 
 // Selected square - amber border
 const selectedSquareStyle = {
-  backgroundColor: 'rgba(245,158,11,0.28)',
-  boxShadow: 'inset 0 0 0 3px rgba(245,158,11,0.65)',
+  backgroundColor: 'var(--color-board-selected)',
+  boxShadow: 'inset 0 0 0 3px var(--color-board-selected)',
 };
 
 // Last move - very light yellow background
 const lastMoveSquareStyle = {
-  backgroundColor: 'rgba(234,179,8,0.18)',
+  backgroundColor: 'var(--color-board-last-move)',
 };
 
 // Checked king - red with pulse

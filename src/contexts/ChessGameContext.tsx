@@ -33,6 +33,8 @@ export function ChessGameProvider({ children }) {
   const [gameMode, setGameMode] = useState(GAME_MODES.BOT);
   const [playerColor, setPlayerColor] = useState(PLAYER_COLORS.WHITE);
   const [botElo, setBotElo] = useState(1200);
+  const [gameGoal, setGameGoal] = useState('fun');
+  const [timeControl, setTimeControl] = useState('unlimited');
 
   // Bot state
   const [isBotThinking, setIsBotThinking] = useState(false);
@@ -44,6 +46,7 @@ export function ChessGameProvider({ children }) {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [moveHints, setMoveHints] = useState({});
   const [lastMoveSquares, setLastMoveSquares] = useState(null);
+  const [boardOrientation, setBoardOrientation] = useState(PLAYER_COLORS.WHITE);
 
   // Engine state
   const [engineHint, setEngineHint] = useState(null);
@@ -264,10 +267,13 @@ export function ChessGameProvider({ children }) {
     return freshGame;
   }
 
-  function startGame({ elo = 1200, color = 'w', mode = GAME_MODES.BOT }) {
+  function startGame({ elo = 1200, color = 'w', mode = GAME_MODES.BOT, gameGoal = 'fun', timeControl = 'unlimited' }) {
     setBotElo(elo);
     setPlayerColor(color);
+    setBoardOrientation(color === 'random' ? PLAYER_COLORS.WHITE : color); // random already resolved in PreGameLobby actually
     setGameMode(mode);
+    setGameGoal(gameGoal);
+    setTimeControl(timeControl);
     newGame();
     setPlayState('playing');
   }
@@ -390,6 +396,20 @@ export function ChessGameProvider({ children }) {
     setLastMoveSquares(lastMove ? { from: lastMove.from, to: lastMove.to } : null);
   }
 
+  function flipBoard() {
+    setBoardOrientation(prev => prev === 'w' ? 'b' : 'w');
+  }
+
+  function resignGame() {
+    const winner = playerColor === 'w' ? 'Đen' : 'Trắng';
+    setResultNotice(`${winner} thắng do bạn đầu hàng.`);
+    setShouldShowGameOverModal(true); // actually we removed it, but we set playState
+    setIsBotThinking(false);
+    botRequestIdRef.current += 1;
+    setBotRequestId(botRequestIdRef.current);
+    setPlayState('review');
+  }
+
   const value = {
     // State
     game,
@@ -408,6 +428,10 @@ export function ChessGameProvider({ children }) {
     gameMode,
     playerColor,
     botElo,
+    gameGoal,
+    setGameGoal,
+    timeControl,
+    setTimeControl,
     GAME_MODES,
     PLAYER_COLORS,
 
@@ -425,6 +449,8 @@ export function ChessGameProvider({ children }) {
     moveHints,
     lastMoveSquares,
     setLastMoveSquares,
+    boardOrientation,
+    setBoardOrientation,
 
     // Engine
     engineHint,
@@ -472,6 +498,8 @@ export function ChessGameProvider({ children }) {
     exitAnalysisMode,
     goToAnalysisPly,
     cloneGame,
+    flipBoard,
+    resignGame,
   };
 
   return <ChessGameContext.Provider value={value}>{children}</ChessGameContext.Provider>;

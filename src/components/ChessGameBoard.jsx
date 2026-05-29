@@ -4,45 +4,13 @@ import { useBotMove } from '../hooks/useBotMove';
 import { useEngineAnalysis } from '../hooks/useEngineAnalysis';
 import { analyzeFen } from '../services/stockfishService';
 import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
+import { classifyMoveAnnotation } from '../utils/moveQuality';
 import { addMistake, updateAfterGame } from '../services/userProfileService';
 import { playCheckSound } from '../utils/sound';
 
 import GameLayout from './chess/GameLayout';
 
-function evaluationForColor(analysis, color) {
-  if (!analysis?.evaluation) return 0;
-  const whitePawns =
-    analysis.evaluation.type === 'mate'
-      ? analysis.evaluation.value > 0
-        ? 99
-        : -99
-      : (Number(analysis.evaluation.value) || 0) / 100;
-  return color === 'w' ? whitePawns : -whitePawns;
-}
 
-function classifyMoveAnnotation({ before, after, playedUci, color }) {
-  const beforeForMover = evaluationForColor(before, color);
-  const afterForMover = evaluationForColor(after, color);
-  const delta = afterForMover - beforeForMover;
-  const loss = Math.max(0, -delta);
-  const playedBestMove = Boolean(before?.bestMove && playedUci === before.bestMove);
-  const bestSan = before?.bestMove ? getSanFromUci(before.fen, before.bestMove) : null;
-
-  if ((playedBestMove && delta >= 1.5) || delta >= 2.2) {
-    return { symbol: '!!', label: 'Thiên tài', tone: 'brilliant', loss, bestSan };
-  }
-  if (playedBestMove || loss < 0.25) {
-    return { symbol: '!', label: 'Tốt nhất', tone: 'best', loss, bestSan };
-  }
-  if (loss < 0.8) {
-    return { symbol: '?!', label: 'Không chính xác', tone: 'inaccuracy', loss, bestSan };
-  }
-  if (loss < 1.8) {
-    return { symbol: '?', label: 'Sai lầm', tone: 'mistake', loss, bestSan };
-  }
-
-  return { symbol: '??', label: 'Sai lầm nghiêm trọng', tone: 'blunder', loss, bestSan };
-}
 
 export default function ChessGameBoard() {
   const {
@@ -165,6 +133,7 @@ export default function ChessGameBoard() {
           before,
           after,
           playedUci: lastMoveFenPair.playedUci,
+          playedSan: lastMoveFenPair.san,
           color: lastMoveFenPair.color,
         });
 

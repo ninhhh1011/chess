@@ -19,6 +19,12 @@ export function getEngineState() {
   return engineState;
 }
 
+export function getStatus() {
+  if (engineState === 'error') return 'crashed';
+  if (engineState === 'analyzing') return 'busy';
+  return engineState;
+}
+
 export async function initEngine() {
   if (engineReady && worker) {
     debugStockfish('[Stockfish] Engine already ready');
@@ -142,9 +148,23 @@ export function disposeEngine() {
   }
 }
 
+export function cancelPendingAnalysis() {
+  if (currentAnalysis) {
+    stopEngine();
+    if (currentAnalysis.reject) {
+      currentAnalysis.reject(new Error('CANCELLED'));
+    }
+    currentAnalysis = null;
+    engineState = 'ready';
+  }
+}
+
 // Cleanup on page unload
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', () => {
+    disposeEngine();
+  });
+  window.addEventListener('pagehide', () => {
     disposeEngine();
   });
 }
@@ -199,16 +219,33 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
     
     engineState = 'analyzing';
     
+    let timeoutMs = 6000;
+    if (depth <= 12) timeoutMs = 1500;
+    else if (depth <= 18) timeoutMs = 3000;
+    
     const timeout = setTimeout(() => {
       stopEngine();
-      console.warn('[Stockfish] Analysis timeout, using fallback');
       engineState = 'ready';
-      analyzeFenFallback({ fen, depth, elo })
-        .then(resolve)
-        .catch(reject);
-    }, 10000);
+      
+      if (pv.length > 0) {
+        console.warn('[Stockfish] Analysis timeout, returning partial result');
+        resolve({
+            success: true,
+            source: 'stockfish_wasm_partial',
+            fen,
+            depth: lastDepth || depth,
+            bestMove: pv[0],
+            evaluation: evaluation || { type: 'cp', value: 0, display: '0.00' },
+            pv,
+            raw: rawMessages
+        });
+      } else {
+        console.warn('[Stockfish] Analysis timeout, using fallback');
+        analyzeFenFallback({ fen, depth, elo }).then(resolve).catch(reject);
+      }
+    }, timeoutMs);
     
-    currentAnalysis = { stopped: false };
+    currentAnalysis = { stopped: false, reject };
     
     const messageHandler = (event) => {
       if (currentAnalysis?.stopped) return;
@@ -265,7 +302,7 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
             source: 'stockfish_wasm',
             fen,
             depth: lastDepth || depth,
-            bestMove,
+            bestMove: bestMove || (pv.length > 0 ? pv[0] : null),
             evaluation: evaluation || { type: 'cp', value: 0, display: '0.00' },
             pv,
             raw: rawMessages
@@ -288,7 +325,7 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
     } catch (error) {
       clearTimeout(timeout);
       console.error('[Stockfish] Analysis error:', error);
-      engineState = 'ready';
+      engineState = 'error';
       analyzeFenFallback({ fen, depth, elo })
         .then(resolve)
         .catch(reject);
@@ -296,13 +333,14 @@ async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, ski
   });
 }
 
-export async function analyzeFen(options = {}) {
-  const queuedAnalysis = analysisQueue
-    .catch(() => {})
-    .then(() => runAnalyzeFen(options));
+let activeFen = null;
 
-  analysisQueue = queuedAnalysis.catch(() => {});
-  return queuedAnalysis;
+export async function analyzeFen(options = {}) {
+  if (currentAnalysis) {
+    cancelPendingAnalysis();
+  }
+  activeFen = options.fen;
+  return runAnalyzeFen(options);
 }
 
 export async function getBestMove({ fen, depth = 8, movetime = null, elo = null, skillLevel = null } = {}) {

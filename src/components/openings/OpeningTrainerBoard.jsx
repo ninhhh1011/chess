@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
-import { updateOpeningAttempt } from '../../services/openingProgressService';
+import { updateOpeningAttempt, updateOpeningProgressSM2 } from '../../services/openingProgressService';
 import { playCaptureSound, playMoveSound } from '../../utils/sound';
 
 const moveDotStyle = {
@@ -31,6 +31,7 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
   const [message, setMessage] = useState('Hãy đi đúng line khai cuộc.');
   const [mistakes, setMistakes] = useState([]);
   const [isFinished, setIsFinished] = useState(false);
+  const [showQualityRating, setShowQualityRating] = useState(false);
   const [moveHints, setMoveHints] = useState({});
   const [selectedSquare, setSelectedSquare] = useState(null);
   const boardOrientation = opening.side === 'black' ? 'black' : 'white';
@@ -41,11 +42,18 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
   function finishIfNeeded(nextIndex, nextMistakes = mistakes){
     if(nextIndex >= opening.moves.length){
       const success = nextMistakes.length === 0;
-      const progress = updateOpeningAttempt({ openingId: opening.id, success, mistakes: nextMistakes, completedMoves: nextIndex });
-      onProgress?.(progress);
+      updateOpeningAttempt({ openingId: opening.id, success, mistakes: nextMistakes, completedMoves: nextIndex });
       setIsFinished(true);
-      setMessage(success ? 'Hoàn thành line khai cuộc rất tốt!' : 'Đã hết line. Hãy luyện lại để giảm lỗi sai.');
+      setShowQualityRating(true);
+      setMessage(success ? 'Hoàn thành line khai cuộc rất tốt! Vui lòng tự đánh giá mức độ ghi nhớ (SM-2).' : 'Đã hết line. Vui lòng tự đánh giá (SM-2).');
     }
+  }
+
+  function handleRateQuality(quality) {
+    const progress = updateOpeningProgressSM2(opening.id, quality);
+    onProgress?.(progress);
+    setShowQualityRating(false);
+    setMessage(`Đã lưu kết quả đánh giá (điểm ${quality}).`);
   }
 
   useEffect(() => {
@@ -93,7 +101,7 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
   }
 
   function reset(){
-    setGame(new Chess()); setMoveIndex(0); setMistakes([]); setIsFinished(false); setMoveHints({}); setSelectedSquare(null); setMessage('Hãy đi đúng line khai cuộc.');
+    setGame(new Chess()); setMoveIndex(0); setMistakes([]); setIsFinished(false); setShowQualityRating(false); setMoveHints({}); setSelectedSquare(null); setMessage('Hãy đi đúng line khai cuộc.');
   }
 
   function showLegalMoveHints(square, force = false){
@@ -132,6 +140,20 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
         <button className="btn-secondary" onClick={reset}>Làm lại</button>
       </div>
       <p className="mt-5 text-sm text-slate-400">Lỗi sai phiên này: {mistakes.length}</p>
+      
+      {showQualityRating && (
+        <div className="mt-6 rounded-xl border border-slate-700 bg-slate-900 p-4">
+          <h3 className="mb-3 font-bold text-slate-200">Đánh giá mức độ ghi nhớ (SM-2)</h3>
+          <div className="flex flex-col gap-2">
+            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(5)}>5 - Hoàn hảo, nhớ ngay lập tức</button>
+            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(4)}>4 - Đúng, nhưng có chút ngập ngừng</button>
+            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(3)}>3 - Đúng, nhưng phải suy nghĩ lâu</button>
+            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(2)}>2 - Sai, nhưng khi thấy nước đúng thì nhớ ra ngay</button>
+            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(1)}>1 - Sai, và chỉ mang máng nhớ</button>
+            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(0)}>0 - Hoàn toàn không nhớ gì</button>
+          </div>
+        </div>
+      )}
     </aside>
   </div>;
 }
