@@ -76,11 +76,11 @@ export default function ChessGameBoard() {
     setLiveEvalStatus('Đang phân tích');
 
     const timerId = window.setTimeout(() => {
-      analyzeFen({ fen: currentFen, depth: 8, movetime: 400 })
+      analyzeFen({ fen: currentFen, depth: 8, movetime: 400, purpose: 'hint' })
         .then((result) => {
           if (liveAnalysisRequestRef.current !== requestId) return;
           setLiveAnalysis(result);
-          setLiveEvalStatus(result.source === 'fallback' ? 'Fallback' : 'Live');
+          setLiveEvalStatus(result.source?.startsWith('fallback') ? 'Fallback' : 'Live');
         })
         .catch(() => {
           if (liveAnalysisRequestRef.current !== requestId) return;
@@ -124,9 +124,9 @@ export default function ChessGameBoard() {
 
     async function analyzeLastMove() {
       try {
-        const before = await analyzeFen({ fen: lastMoveFenPair.beforeFen, depth: 8, movetime: 500 });
+        const before = await analyzeFen({ fen: lastMoveFenPair.beforeFen, depth: 8, movetime: 500, purpose: 'annotation' });
         if (cancelled) return;
-        const after = await analyzeFen({ fen: lastMoveFenPair.afterFen, depth: 7, movetime: 400 });
+        const after = await analyzeFen({ fen: lastMoveFenPair.afterFen, depth: 7, movetime: 400, purpose: 'annotation' });
         if (cancelled) return;
 
         const annotation = classifyMoveAnnotation({
@@ -180,9 +180,9 @@ export default function ChessGameBoard() {
       for (let index = 0; index < moves.length; index += 1) {
         const beforeFen = replay.fen();
         const played = moves[index];
-        const before = await analyzeFen({ fen: beforeFen, depth: 6, movetime: 450 });
+        const before = await analyzeFen({ fen: beforeFen, depth: 6, movetime: 450, purpose: 'review' });
         replay.move(played.san);
-        const after = await analyzeFen({ fen: replay.fen(), depth: 5, movetime: 350 });
+        const after = await analyzeFen({ fen: replay.fen(), depth: 5, movetime: 350, purpose: 'review' });
         const classification = classifyMoveLoss(before.evaluation, after.evaluation);
         const bestSan = before.bestMove ? getSanFromUci(beforeFen, before.bestMove) : 'không rõ';
         results.push({ index, playedSan: played.san, bestSan, classification });

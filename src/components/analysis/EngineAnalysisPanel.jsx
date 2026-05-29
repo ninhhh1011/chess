@@ -34,9 +34,9 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
     setStatus(isEngineReady() ? 'Đang phân tích' : 'Đang tải engine');
 
     try {
-      const result = await analyzeFen({ fen, depth: 10 });
+      const result = await analyzeFen({ fen, depth: 10, purpose: showHint ? 'hint' : 'review' });
       setAnalysis(result);
-      setStatus(result.source === 'fallback' ? 'Fallback' : 'Sẵn sàng');
+      setStatus(result.source?.startsWith('fallback') ? 'Fallback' : 'Sẵn sàng');
       if (result.bestMove) {
         onBestMove?.({ bestMove: result.bestMove, fen: result.fen, evaluation: result.evaluation });
       }

@@ -6,7 +6,7 @@ function evaluationToWhitePawns(evaluation, fen, source = 'stockfish_wasm') {
   const rawValue =
     evaluation.type === 'mate' ? (evaluation.value > 0 ? 99 : -99) : (Number(evaluation.value) || 0) / 100;
 
-  if (source === 'fallback') {
+  if (source?.startsWith('fallback')) {
     return rawValue;
   }
 

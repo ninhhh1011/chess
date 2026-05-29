@@ -1,6 +1,9 @@
 import { analyzeFenFallback, getBestMoveFallback } from './fallbackChessEngine';
+import { isLegalUciMove } from '../utils/chessMoveValidation';
 
 const STOCKFISH_DEBUG = false;
+const ENGINE_CRASH_COOLDOWN_MS = 15000;
+const ENGINE_WARNING_THROTTLE_MS = 5000;
 
 let worker = null;
 let engineReady = false;
@@ -8,11 +11,53 @@ let engineState = 'idle'; // idle, loading, ready, analyzing, error
 let engineInitPromise = null;
 let currentAnalysis = null;
 let analysisQueue = Promise.resolve();
+let analysisSeq = 0;
+let activeFen = null;
+let engineDisabledUntil = 0;
+let lastEngineWarningAt = 0;
 
 function debugStockfish(...args) {
   if (STOCKFISH_DEBUG) {
     console.log(...args);
   }
+}
+
+function serializeEngineError(error) {
+  if (!error) return 'Unknown engine error';
+  if (typeof error === 'string') return error;
+  if (error.message) return error.message;
+  if (error.error?.message) return error.error.message;
+  if (error.type) return error.type;
+  return String(error);
+}
+
+function warnStockfish(message, data = null) {
+  const now = Date.now();
+  if (STOCKFISH_DEBUG || now - lastEngineWarningAt > ENGINE_WARNING_THROTTLE_MS) {
+    if (data) console.warn(message, data);
+    else console.warn(message);
+    lastEngineWarningAt = now;
+  }
+}
+
+function disableEngineForCooldown(error) {
+  engineDisabledUntil = Date.now() + ENGINE_CRASH_COOLDOWN_MS;
+  engineState = 'error';
+  engineReady = false;
+
+  if (worker) {
+    try {
+      worker.terminate();
+    } catch {
+      // Worker is already unusable.
+    }
+  }
+
+  worker = null;
+  warnStockfish('[Stockfish] Worker unavailable; using fallback temporarily', {
+    error: serializeEngineError(error),
+    cooldownMs: ENGINE_CRASH_COOLDOWN_MS,
+  });
 }
 
 function noLegalMovesResult(fen, warning = 'No legal moves') {
@@ -39,7 +84,6 @@ async function getStableFallbackAnalysis({ fen, depth = 10, elo = 1200 } = {}, w
     return {
       ...fallback,
       success: true,
-      source: fallback.source || 'fallback',
       evaluation: fallback.evaluation || null,
       depth: fallback.depth || 0,
       warning: fallback.warning || warning,
@@ -61,73 +105,71 @@ export function getStatus() {
 }
 
 export async function initEngine() {
+  if (Date.now() < engineDisabledUntil) {
+    engineState = 'error';
+    engineReady = false;
+    return false;
+  }
+
+  if (typeof window === 'undefined' || typeof Worker === 'undefined') {
+    engineState = 'error';
+    engineReady = false;
+    return false;
+  }
+
   if (engineReady && worker) {
     debugStockfish('[Stockfish] Engine already ready');
     return true;
   }
-  
+
   if (engineState === 'loading') {
     debugStockfish('[Stockfish] Engine loading, please wait...');
     return engineInitPromise || false;
   }
-  
+
   engineState = 'loading';
-  
+
   try {
     debugStockfish('[Stockfish] Initializing engine...');
     debugStockfish('[Stockfish] window.crossOriginIsolated:', window.crossOriginIsolated);
-    
+
     if (worker) {
       worker.terminate();
       worker = null;
     }
 
-    // Tạo bridge worker từ public folder
     worker = new Worker('/stockfish-worker.js');
-    
+
     const initPromise = new Promise((resolve) => {
       const timeout = setTimeout(() => {
-        console.warn('[Stockfish] Init timeout');
-        engineState = 'error';
-        engineReady = false;
-        worker?.terminate();
-        worker = null;
+        disableEngineForCooldown(new Error('Stockfish init timeout'));
         resolve(false);
       }, 10000);
-      
+
       worker.onmessage = (event) => {
         const message = event.data;
         debugStockfish('[Stockfish] Worker message:', message);
-        
-        if (message.type === 'ready') {
-          clearTimeout(timeout);
-          if (message.success) {
-            engineReady = true;
-            engineState = 'ready';
-            debugStockfish('[Stockfish] Engine ready!');
-            resolve(true);
-          } else {
-            engineState = 'error';
-            engineReady = false;
-            console.error('[Stockfish] Init failed:', message.error);
-            worker?.terminate();
-            worker = null;
-            resolve(false);
-          }
+
+        if (message.type !== 'ready') return;
+
+        clearTimeout(timeout);
+        if (message.success) {
+          engineReady = true;
+          engineState = 'ready';
+          debugStockfish('[Stockfish] Engine ready!');
+          resolve(true);
+        } else {
+          disableEngineForCooldown(message.error || 'Stockfish init failed');
+          resolve(false);
         }
       };
-      
+
       worker.onerror = (error) => {
         clearTimeout(timeout);
-        console.error('[Stockfish] Worker error:', error);
-        engineState = 'error';
-        engineReady = false;
-        worker?.terminate();
-        worker = null;
+        disableEngineForCooldown(error);
         resolve(false);
       };
-      
-      // Gửi init command
+
       worker.postMessage('init');
     });
 
@@ -137,12 +179,8 @@ export async function initEngine() {
 
     return engineInitPromise;
   } catch (error) {
-    console.error('[Stockfish] Init error:', error);
-    engineState = 'error';
-    engineReady = false;
+    disableEngineForCooldown(error);
     engineInitPromise = null;
-    worker?.terminate();
-    worker = null;
     return false;
   }
 }
@@ -151,20 +189,30 @@ export function isEngineReady() {
   return engineReady && worker !== null;
 }
 
+function stopCurrentWorkerSearch() {
+  if (!worker || !engineReady) return;
+
+  try {
+    worker.postMessage('stop');
+    debugStockfish('[Stockfish] Stop command sent');
+  } catch (error) {
+    console.warn('[Stockfish] Stop error:', error);
+  }
+}
+
 export function stopEngine() {
   if (currentAnalysis) {
     currentAnalysis.stopped = true;
+    currentAnalysis.cleanup?.();
+    const reject = currentAnalysis.reject;
     currentAnalysis = null;
+    reject?.(new Error('CANCELLED'));
   }
-  if (worker && engineReady) {
-    try {
-      worker.postMessage('stop');
-      // Clear message handler to prevent stale messages
-      worker.onmessage = null;
-      debugStockfish('[Stockfish] Stop command sent');
-    } catch (error) {
-      console.warn('[Stockfish] Stop error:', error);
-    }
+
+  stopCurrentWorkerSearch();
+
+  if (worker) {
+    worker.onmessage = null;
   }
 }
 
@@ -177,25 +225,20 @@ export function disposeEngine() {
     } catch (error) {
       console.warn('[Stockfish] Dispose error:', error);
     }
-    worker = null;
-    engineReady = false;
-    engineState = 'idle';
   }
+
+  worker = null;
+  engineReady = false;
+  engineState = 'idle';
 }
 
 export function cancelPendingAnalysis() {
-  if (currentAnalysis) {
-    const analysisToCancel = currentAnalysis;
-    stopEngine();
-    if (analysisToCancel.reject) {
-      analysisToCancel.reject(new Error('CANCELLED'));
-    }
-    currentAnalysis = null;
-    engineState = 'ready';
+  stopEngine();
+  if (engineState !== 'idle') {
+    engineState = isEngineReady() ? 'ready' : engineState;
   }
 }
 
-// Cleanup on page unload
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', () => {
     disposeEngine();
@@ -207,19 +250,19 @@ if (typeof window !== 'undefined') {
 
 export async function configureEngineForElo({ elo, skillLevel }) {
   if (!isEngineReady()) return false;
-  
+
   try {
     if (skillLevel !== undefined) {
       worker.postMessage(`setoption name Skill Level value ${skillLevel}`);
       debugStockfish(`[Stockfish] Set Skill Level to ${skillLevel}`);
     }
-    
+
     if (elo) {
       worker.postMessage('setoption name UCI_LimitStrength value true');
       worker.postMessage(`setoption name UCI_Elo value ${elo}`);
       debugStockfish(`[Stockfish] Set UCI_Elo to ${elo}`);
     }
-    
+
     return true;
   } catch (error) {
     console.warn('[Stockfish] Configure error:', error);
@@ -227,163 +270,248 @@ export async function configureEngineForElo({ elo, skillLevel }) {
   }
 }
 
-async function runAnalyzeFen({ fen, depth = 10, movetime = null, elo = null, skillLevel = null } = {}) {
+function defaultEvaluation() {
+  return { type: 'cp', value: 0, display: '0.00' };
+}
+
+function isEmptyBestMove(move) {
+  return !move || move === '(none)' || move === '0000';
+}
+
+async function runAnalyzeFen({
+  fen,
+  depth = 10,
+  movetime = null,
+  elo = 1200,
+  skillLevel = null,
+  purpose = 'analysis',
+} = {}) {
   if (!fen) {
     throw new Error('FEN is required');
   }
-  
-  // Try to init engine if not ready
+
   if (!isEngineReady()) {
     const initialized = await initEngine();
     if (!initialized) {
-      console.warn('[Stockfish] Engine not available, using fallback');
-      return await getStableFallbackAnalysis({ fen, depth, elo });
+      return getStableFallbackAnalysis({ fen, depth, elo });
     }
   }
-  
-  // Configure engine for ELO/skill level
+
   if (elo || skillLevel !== null) {
     await configureEngineForElo({ elo, skillLevel });
   }
-  
+
   return new Promise((resolve, reject) => {
+    const requestId = ++analysisSeq;
+    let settled = false;
     let bestMove = null;
     let evaluation = null;
     let pv = [];
     let lastDepth = 0;
     const rawMessages = [];
-    
-    engineState = 'analyzing';
-    
+
     let timeoutMs = 6000;
     if (depth <= 12) timeoutMs = 1500;
     else if (depth <= 18) timeoutMs = 3000;
-    
-    const timeout = setTimeout(() => {
-      stopEngine();
-      engineState = 'ready';
-      
-      if (pv.length > 0) {
-        console.warn('[Stockfish] Analysis timeout, returning partial result');
-        resolve({
-            success: true,
-            source: 'stockfish_wasm_partial',
-            fen,
-            depth: lastDepth || depth,
-            bestMove: pv[0],
-            evaluation: evaluation || { type: 'cp', value: 0, display: '0.00' },
-            pv,
-            raw: rawMessages
-        });
-      } else {
-        console.warn('[Stockfish] Analysis timeout, using fallback');
-        getStableFallbackAnalysis(
-          { fen, depth, elo },
-          'Stockfish timeout, using fallback'
-        ).then(resolve).catch(reject);
+
+    function isCurrentRequest() {
+      return currentAnalysis?.requestId === requestId && !currentAnalysis.stopped;
+    }
+
+    function cleanup() {
+      clearTimeout(timeout);
+      if (worker) {
+        worker.onmessage = null;
       }
+    }
+
+    function finish(result) {
+      if (settled || !isCurrentRequest()) return;
+      settled = true;
+      cleanup();
+      currentAnalysis = null;
+      engineState = isEngineReady() ? 'ready' : engineState;
+      resolve(result);
+    }
+
+    function fail(error) {
+      if (settled || !isCurrentRequest()) return;
+      settled = true;
+      cleanup();
+      currentAnalysis = null;
+      engineState = isEngineReady() ? 'ready' : engineState;
+      reject(error);
+    }
+
+    function fallback(warning) {
+      if (settled || !isCurrentRequest()) return;
+      getStableFallbackAnalysis({ fen, depth, elo }, warning)
+        .then(finish)
+        .catch(fail);
+    }
+
+    const timeout = setTimeout(() => {
+      if (!isCurrentRequest()) return;
+
+      stopCurrentWorkerSearch();
+      const partialBestMove = pv[0] || null;
+
+      if (partialBestMove && isLegalUciMove(fen, partialBestMove)) {
+        warnStockfish('[Stockfish] Analysis timeout, returning legal partial result', {
+          fen,
+          bestMove: partialBestMove,
+          purpose,
+        });
+        finish({
+          success: true,
+          source: 'stockfish_wasm_partial',
+          fen,
+          depth: lastDepth || depth,
+          bestMove: partialBestMove,
+          evaluation: evaluation || defaultEvaluation(),
+          pv,
+          raw: rawMessages,
+        });
+        return;
+      }
+
+      warnStockfish('[Stockfish] Analysis timeout with invalid/stale PV, using fallback', {
+        fen,
+        pv0: partialBestMove,
+        turn: fen.split(' ')[1],
+        purpose,
+      });
+      fallback('Stockfish timeout, using fallback');
     }, timeoutMs);
-    
-    currentAnalysis = { stopped: false, reject };
-    
+
+    currentAnalysis = {
+      requestId,
+      stopped: false,
+      reject,
+      cleanup,
+      fen,
+      depth,
+      elo,
+      purpose,
+    };
+
     const messageHandler = (event) => {
-      if (currentAnalysis?.stopped) return;
-      
+      if (!isCurrentRequest()) return;
+
       const message = event.data;
-      
-      if (message.type === 'output') {
-        const line = message.data;
-        rawMessages.push(line);
-        debugStockfish('[Stockfish]', line);
-        
-        if (line.startsWith('info')) {
-          const depthMatch = line.match(/depth (\d+)/);
-          if (depthMatch) {
-            lastDepth = parseInt(depthMatch[1]);
-          }
-          
-          const cpMatch = line.match(/score cp (-?\d+)/);
-          const mateMatch = line.match(/score mate (-?\d+)/);
-          
-          if (mateMatch) {
-            const mateIn = parseInt(mateMatch[1]);
-            evaluation = {
-              type: 'mate',
-              value: mateIn,
-              display: `Mate in ${Math.abs(mateIn)}`
-            };
-          } else if (cpMatch) {
-            const cp = parseInt(cpMatch[1]);
-            evaluation = {
-              type: 'cp',
-              value: cp,
-              display: `${cp >= 0 ? '+' : ''}${(cp / 100).toFixed(2)}`
-            };
-          }
-          
-          const pvMatch = line.match(/(?:^|\s)pv\s+(.+)/);
-          if (pvMatch) {
-            pv = pvMatch[1].split(' ').filter(m => m.length >= 4);
-          }
-        } else if (line.startsWith('bestmove')) {
-          const match = line.match(/bestmove (\S+)/);
-          if (match) {
-            bestMove = match[1];
-          }
-          
-          clearTimeout(timeout);
-          worker.onmessage = null;
-          currentAnalysis = null;
-          engineState = 'ready';
-          
-          resolve({
+
+      if (message.type === 'error') {
+        disableEngineForCooldown(message.message || message.error || 'Stockfish worker error');
+        fallback('Stockfish unavailable, using fallback');
+        return;
+      }
+
+      if (message.type !== 'output') return;
+
+      const line = message.data;
+      rawMessages.push(line);
+      debugStockfish('[Stockfish]', line);
+
+      if (line.startsWith('info')) {
+        const depthMatch = line.match(/depth (\d+)/);
+        if (depthMatch) {
+          lastDepth = parseInt(depthMatch[1], 10);
+        }
+
+        const cpMatch = line.match(/score cp (-?\d+)/);
+        const mateMatch = line.match(/score mate (-?\d+)/);
+
+        if (mateMatch) {
+          const mateIn = parseInt(mateMatch[1], 10);
+          evaluation = {
+            type: 'mate',
+            value: mateIn,
+            display: `Mate in ${Math.abs(mateIn)}`,
+          };
+        } else if (cpMatch) {
+          const cp = parseInt(cpMatch[1], 10);
+          evaluation = {
+            type: 'cp',
+            value: cp,
+            display: `${cp >= 0 ? '+' : ''}${(cp / 100).toFixed(2)}`,
+          };
+        }
+
+        const pvMatch = line.match(/(?:^|\s)pv\s+(.+)/);
+        if (pvMatch) {
+          pv = pvMatch[1].split(' ').filter((move) => move.length >= 4);
+        }
+        return;
+      }
+
+      if (line.startsWith('bestmove')) {
+        const match = line.match(/bestmove (\S+)/);
+        if (match) {
+          bestMove = match[1];
+        }
+
+        const candidateBestMove = isEmptyBestMove(bestMove) ? (pv[0] || null) : bestMove;
+
+        if (candidateBestMove && isLegalUciMove(fen, candidateBestMove)) {
+          finish({
             success: true,
             source: 'stockfish_wasm',
             fen,
             depth: lastDepth || depth,
-            bestMove: bestMove || (pv.length > 0 ? pv[0] : null),
-            evaluation: evaluation || { type: 'cp', value: 0, display: '0.00' },
+            bestMove: candidateBestMove,
+            evaluation: evaluation || defaultEvaluation(),
             pv,
-            raw: rawMessages
+            raw: rawMessages,
           });
+          return;
         }
+
+        warnStockfish('[Stockfish] bestmove invalid/stale, using fallback', {
+          fen,
+          candidateBestMove,
+          turn: fen.split(' ')[1],
+          purpose,
+        });
+        fallback('Stockfish returned invalid move, using fallback');
       }
     };
-    
+
     worker.onmessage = messageHandler;
-    
+    worker.onerror = (error) => {
+      if (!isCurrentRequest()) return;
+      disableEngineForCooldown(error);
+      fallback('Stockfish unavailable, using fallback');
+    };
+
     try {
       worker.postMessage('ucinewgame');
       worker.postMessage(`position fen ${fen}`);
-      
+
       if (movetime) {
         worker.postMessage(`go movetime ${movetime}`);
       } else {
         worker.postMessage(`go depth ${depth}`);
       }
+
+      engineState = 'analyzing';
     } catch (error) {
-      clearTimeout(timeout);
-      console.error('[Stockfish] Analysis error:', error);
-      engineState = 'error';
-      getStableFallbackAnalysis(
-        { fen, depth, elo },
-        'Stockfish unavailable, using fallback'
-      )
-        .then(resolve)
-        .catch(reject);
+      disableEngineForCooldown(error);
+      fallback('Stockfish unavailable, using fallback');
     }
   });
 }
 
-let activeFen = null;
-
 export async function analyzeFen(options = {}) {
+  activeFen = options.fen;
+
+  const queuedAnalysis = analysisQueue
+    .catch(() => null)
+    .then(() => runAnalyzeFen(options));
+
+  analysisQueue = queuedAnalysis.catch(() => null);
+
   try {
-    if (currentAnalysis) {
-      cancelPendingAnalysis();
-    }
-    activeFen = options.fen;
-    return await runAnalyzeFen(options);
+    return await queuedAnalysis;
   } catch (error) {
     if (error?.message === 'CANCELLED') {
       throw error;
@@ -400,6 +528,6 @@ export async function getBestMove({ fen, depth = 8, movetime = null, elo = null,
     return analysis.bestMove;
   } catch (error) {
     console.error('[Stockfish] getBestMove error:', error);
-    return await getBestMoveFallback({ fen, depth });
+    return getBestMoveFallback({ fen, depth, elo });
   }
 }
