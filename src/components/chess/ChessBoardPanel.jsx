@@ -147,7 +147,12 @@ export default function ChessBoardPanel({ engineHint }) {
   }
 
   function onPieceDrop({ piece, sourceSquare, targetSquare }) {
-    if (!sourceSquare || !targetSquare || sourceSquare === targetSquare) {
+    if (!sourceSquare || !targetSquare) {
+      clearSelection();
+      return false;
+    }
+
+    if (sourceSquare === targetSquare) {
       clearSelection();
       return false;
     }
@@ -158,7 +163,7 @@ export default function ChessBoardPanel({ engineHint }) {
        (boardPiece.color === 'b' && targetSquare?.[1] === '1'));
 
     const result = isPromotion
-      ? makeMove(sourceSquare, targetSquare, null)
+      ? makeMove(sourceSquare, targetSquare, 'q')
       : makeMove(sourceSquare, targetSquare);
 
     if (result && result.move) {
@@ -183,7 +188,7 @@ export default function ChessBoardPanel({ engineHint }) {
          (boardPiece.color === 'b' && square[1] === '1'));
 
       const result = isPromotion
-        ? makeMove(selectedSquare, square, null)
+        ? makeMove(selectedSquare, square, 'q')
         : makeMove(selectedSquare, square);
 
       if (result && result.move) {
