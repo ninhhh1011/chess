@@ -277,18 +277,22 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export async function configureEngineForElo({ elo, skillLevel }) {
+export async function configureEngineForElo({ elo, skillLevel, useSkillLevelOnly = false }) {
   if (!isEngineReady()) return false;
 
   try {
-    // Use UCI_Elo for more accurate ELO-based weakening
-    // Don't mix Skill Level and UCI_Elo as they may conflict
-    if (elo) {
+    if (useSkillLevelOnly && skillLevel !== undefined) {
+      // For low ELO (400-800), use Skill Level only (more reliable for weak play)
+      worker.postMessage('setoption name UCI_LimitStrength value false');
+      worker.postMessage(`setoption name Skill Level value ${skillLevel}`);
+      debugStockfish(`[Stockfish] Set Skill Level to ${skillLevel} (low ELO mode)`);
+    } else if (elo) {
+      // For mid-high ELO (1200+), use UCI_Elo (more accurate ELO matching)
       worker.postMessage('setoption name UCI_LimitStrength value true');
       worker.postMessage(`setoption name UCI_Elo value ${elo}`);
       debugStockfish(`[Stockfish] Set UCI_Elo to ${elo}`);
     } else if (skillLevel !== undefined) {
-      // Only use Skill Level if no ELO is specified
+      // Fallback to Skill Level if no ELO specified
       worker.postMessage('setoption name UCI_LimitStrength value false');
       worker.postMessage(`setoption name Skill Level value ${skillLevel}`);
       debugStockfish(`[Stockfish] Set Skill Level to ${skillLevel}`);
@@ -315,6 +319,7 @@ async function runAnalyzeFen({
   movetime = null,
   elo = 1200,
   skillLevel = null,
+  useSkillLevelOnly = false,
   purpose = 'analysis',
 } = {}) {
   if (!fen) {
@@ -329,7 +334,7 @@ async function runAnalyzeFen({
   }
 
   if (elo || skillLevel !== null) {
-    await configureEngineForElo({ elo, skillLevel });
+    await configureEngineForElo({ elo, skillLevel, useSkillLevelOnly });
   }
 
   return new Promise((resolve, reject) => {

@@ -65,14 +65,15 @@ export async function getBotMove({ fen, botElo = 1200 }) {
   }
 
   try {
-    debugBot(`[Bot] Calling analyzeFen with depth=${config.depth}, movetime=${config.movetime}, skillLevel=${config.skillLevel}`);
-    
-    const analysis = await analyzeFen({ 
-      fen, 
-      depth: config.depth, 
+    debugBot(`[Bot] Calling analyzeFen with depth=${config.depth}, movetime=${config.movetime}, skillLevel=${config.skillLevel}, useSkillLevelOnly=${config.useSkillLevelOnly}`);
+
+    const analysis = await analyzeFen({
+      fen,
+      depth: config.depth,
       movetime: config.movetime,
       elo: config.elo,
       skillLevel: config.skillLevel,
+      useSkillLevelOnly: config.useSkillLevelOnly,
       purpose: 'bot_move',
     });
     
