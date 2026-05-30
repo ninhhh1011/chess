@@ -23,6 +23,8 @@
 ## Fixes
 - Added shared UCI parsing, legality validation, and move-to-UCI helpers.
 - Added safe heuristic fallback for 1200+ bots; weak random fallback remains limited to low ELO.
+- Hardened heuristic fallback so invalid FEN returns `null`, fallback moves are self-validated, and fallback scoring penalizes hanging the moved piece.
+- Hardened `botService` so an invalid fallback move returns `source: none` instead of leaking an illegal move downstream.
 - Validated Stockfish bestmove and timeout partial PV before returning success.
 - Added sequential analysis queue, request IDs, and worker crash cooldown.
 - Added exponential worker crash cooldown and suppressed repetitive raw worker crash logs.
@@ -36,10 +38,10 @@
 - `npm run build`: pass
 
 ## Manual test result
-- Bot 1200: `/play` starts, player move applies, bot returns turn, not stuck thinking.
+- Bot 1200: `/play` starts, player move applies, bot returns turn, not stuck thinking. Latest local check showed `2 nước đi` after `e2-e4` and bot reply.
 - Bot 1600: `/play` starts, player move applies, bot returns turn, not stuck thinking.
 - Stockfish crash fallback: worker failures now set cooldown and use fallback analysis.
-- Illegal move logs: new code path discards invalid Stockfish results before `makeMove()`.
+- Illegal move logs: new code path discards invalid Stockfish results before `makeMove()`. Latest local console check showed no `[MOVE] rejected`, no `makeMove returned false`, and no illegal snapshot spam.
 - Bot source distribution: intended sources are `stockfish_wasm`, `stockfish_wasm_partial`, `fallback_heuristic`, `fallback_random_weak`, and `none`.
 
 ## Additional test note

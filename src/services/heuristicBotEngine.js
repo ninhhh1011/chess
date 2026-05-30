@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js';
-import { moveToUci } from '../utils/chessMoveValidation';
+import { isLegalUciMove, moveToUci } from '../utils/chessMoveValidation';
 
 const PIECE_VALUES = {
   p: 100,
@@ -20,13 +20,18 @@ function scoreMove(game, move) {
     score += capturedValue - attackerValue * 0.12;
   }
 
-  if (move.flags?.includes('p')) {
+  if (move.promotion) {
     score += move.promotion === 'q' ? 850 : 500;
   }
 
   const nextGame = new Chess(game.fen());
   try {
     nextGame.move(move);
+
+    if (movingPiece && nextGame.isAttacked(move.to, nextGame.turn())) {
+      score -= (PIECE_VALUES[movingPiece.type] || 0) * 0.55;
+    }
+
     if (nextGame.isCheckmate()) score += 100000;
     else if (nextGame.isCheck()) score += 60;
   } catch {
@@ -60,14 +65,22 @@ function scoreMove(game, move) {
 }
 
 export function getSafeFallbackMove(fen, botElo = 1200) {
-  const game = new Chess(fen);
+  let game;
+
+  try {
+    game = new Chess(fen);
+  } catch {
+    return null;
+  }
+
   const moves = game.moves({ verbose: true });
 
   if (!moves.length) return null;
 
   if (botElo <= 800) {
     const randomMove = moves[Math.floor(Math.random() * moves.length)];
-    return moveToUci(randomMove);
+    const randomUci = moveToUci(randomMove);
+    return isLegalUciMove(fen, randomUci) ? randomUci : null;
   }
 
   const scored = moves
@@ -80,6 +93,15 @@ export function getSafeFallbackMove(fen, botElo = 1200) {
   const topN = botElo >= 1600 ? 2 : 3;
   const candidates = scored.slice(0, Math.min(topN, scored.length));
   const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+  const chosenUci = moveToUci(chosen.move);
 
-  return moveToUci(chosen.move);
+  if (isLegalUciMove(fen, chosenUci)) {
+    return chosenUci;
+  }
+
+  const safestLegal = scored
+    .map(({ move }) => moveToUci(move))
+    .find((uci) => isLegalUciMove(fen, uci));
+
+  return safestLegal || null;
 }

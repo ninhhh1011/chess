@@ -18,7 +18,7 @@ function getFallbackSource(botElo) {
 function getFallbackBotMove({ fen, botElo, config, warning }) {
   const fallbackMove = getSafeFallbackMove(fen, botElo);
 
-  if (!fallbackMove) {
+  if (!fallbackMove || !isLegalUciMove(fen, fallbackMove)) {
     return {
       move: null,
       source: 'none',
