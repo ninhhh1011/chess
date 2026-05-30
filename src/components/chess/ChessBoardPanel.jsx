@@ -147,6 +147,11 @@ export default function ChessBoardPanel({ engineHint }) {
   }
 
   function onPieceDrop({ piece, sourceSquare, targetSquare }) {
+    if (!sourceSquare || !targetSquare || sourceSquare === targetSquare) {
+      clearSelection();
+      return false;
+    }
+
     const boardPiece = activeGame.get(sourceSquare);
     const isPromotion = boardPiece?.type === 'p' &&
       ((boardPiece.color === 'w' && targetSquare?.[1] === '8') ||
@@ -206,6 +211,12 @@ export default function ChessBoardPanel({ engineHint }) {
 
   function handlePieceClick({ isSparePiece, piece, square }) {
     if (isSparePiece || !square) return;
+
+    if (selectedSquare === square) {
+      clearSelection();
+      return;
+    }
+
     selectSquare(square);
   }
 

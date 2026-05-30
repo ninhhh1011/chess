@@ -47,7 +47,7 @@ describe('useBotMove', () => {
 
     await waitFor(() => {
       expect(mockSetIsBotThinking).toHaveBeenCalledWith(true);
-      expect(mockMakeMove).toHaveBeenCalledWith('e7', 'e5', 'q', { byBot: true });
+      expect(mockMakeMove).toHaveBeenCalledWith('e7', 'e5', 'q', { byBot: true, sourceFen: game.fen() });
       expect(mockSetIsBotThinking).toHaveBeenCalledWith(false);
     });
   });

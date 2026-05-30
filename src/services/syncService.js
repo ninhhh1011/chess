@@ -1,6 +1,5 @@
 import { getUserProfile, saveUserProfile } from './userProfileService';
 import { getCloudProfile, createCloudProfile, saveCloudProfile } from './cloudProfileService';
-import { useAuth } from '../contexts/AuthContext';
 
 const SYNC_STATUS = {
   LOCAL_ONLY: 'local_only',

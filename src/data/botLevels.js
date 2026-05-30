@@ -21,27 +21,27 @@ export const BOT_ELO_LEVELS = [
     elo: 1200,
     label: "1200 ELO",
     description: "Sơ cấp",
-    depth: 4,
-    movetime: 500,
-    skillLevel: 5,
+    depth: 5,
+    movetime: 700,
+    skillLevel: 6,
     randomChance: 0
   },
   {
     elo: 1600,
     label: "1600 ELO",
     description: "Trung cấp",
-    depth: 7,
-    movetime: 1000,
-    skillLevel: 9,
+    depth: 8,
+    movetime: 1200,
+    skillLevel: 10,
     randomChance: 0
   },
   {
     elo: 2000,
     label: "2000 ELO",
     description: "Mạnh",
-    depth: 10,
-    movetime: 1500,
-    skillLevel: 14,
+    depth: 11,
+    movetime: 1800,
+    skillLevel: 15,
     randomChance: 0
   },
   {

@@ -12,7 +12,8 @@ export default function PlayerBar({ position = 'top' }) {
   const isTop = position === 'top';
 
   // Determine who is at this position based on board orientation
-  const isPlayerAtBottom = boardOrientation === playerColor;
+  const playerOrientation = playerColor === 'w' ? 'white' : 'black';
+  const isPlayerAtBottom = boardOrientation === playerOrientation;
   const isPlayer = isTop ? !isPlayerAtBottom : isPlayerAtBottom;
 
   // Display info

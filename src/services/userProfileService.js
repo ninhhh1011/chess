@@ -110,7 +110,8 @@ export function calculateLevel(profile) {
   return normalizeProfile(profile).currentLevel;
 }
 
-export function saveUserProfile(profile) {
+export function saveUserProfile(profile, options = {}) {
+  const { userId = null, syncCloud = false } = options;
   const normalized = withRecommendations({ ...profile, updatedAt: nowIso() });
 
   try {
@@ -121,16 +122,10 @@ export function saveUserProfile(profile) {
     console.warn('[profile] Cannot save user profile to localStorage:', error);
   }
 
-  // Sync to cloud in background (non-blocking)
-  try {
-    const { user } = useAuth();
-    if (user?.id) {
-      syncOnAction(user.id, 'save_profile').catch(err => {
-        console.warn('[profile] Cannot sync to cloud:', err);
-      });
-    }
-  } catch (error) {
-    console.warn('[profile] Cannot sync to cloud:', error);
+  if (syncCloud && userId) {
+    syncOnAction(userId, 'save_profile').catch((err) => {
+      console.warn('[profile] Cannot sync to cloud:', err);
+    });
   }
 
   return normalized;

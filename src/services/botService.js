@@ -1,6 +1,7 @@
-import { Chess } from 'chess.js';
 import { analyzeFen } from './stockfishService';
+import { getSafeFallbackMove } from './heuristicBotEngine';
 import { getBotLevelByElo } from '../data/botLevels';
+import { isLegalUciMove, parseUciMove } from '../utils/chessMoveValidation';
 
 const BOT_DEBUG = false;
 
@@ -10,16 +11,34 @@ function debugBot(...args) {
   }
 }
 
-function getRandomLegalMove(fen) {
-  const game = new Chess(fen);
-  const moves = game.moves({ verbose: true });
-  
-  if (moves.length === 0) return null;
-  
-  const randomIndex = Math.floor(Math.random() * moves.length);
-  const move = moves[randomIndex];
-  
-  return `${move.from}${move.to}${move.promotion || ''}`;
+function getFallbackSource(botElo) {
+  return botElo <= 800 ? 'fallback_random_weak' : 'fallback_heuristic';
+}
+
+function getFallbackBotMove({ fen, botElo, config, warning }) {
+  const fallbackMove = getSafeFallbackMove(fen, botElo);
+
+  if (!fallbackMove || !isLegalUciMove(fen, fallbackMove)) {
+    return {
+      move: null,
+      source: 'none',
+      elo: config.elo,
+      depth: config.depth,
+      movetime: config.movetime,
+      skillLevel: config.skillLevel,
+      warning: 'No legal moves',
+    };
+  }
+
+  return {
+    move: fallbackMove,
+    source: getFallbackSource(botElo),
+    elo: config.elo,
+    depth: config.depth,
+    movetime: config.movetime,
+    skillLevel: config.skillLevel,
+    warning,
+  };
 }
 
 export async function getBotMove({ fen, botElo = 1200 }) {
@@ -31,39 +50,35 @@ export async function getBotMove({ fen, botElo = 1200 }) {
 
   debugBot(`[Bot] Getting move for ELO ${botElo}`, config);
 
-  // Check if should use random move for lower ELO
   if (config.randomChance > 0 && Math.random() < config.randomChance) {
-    const randomMove = getRandomLegalMove(fen);
-    debugBot(`[Bot] Using random move (${config.randomChance * 100}% chance):`, randomMove);
+    const weakMove = getSafeFallbackMove(fen, 800);
+    debugBot(`[Bot] Using weak fallback (${config.randomChance * 100}% chance):`, weakMove);
+
     return {
-      move: randomMove,
-      source: 'random_weak',
+      move: weakMove,
+      source: weakMove ? 'fallback_random_weak' : 'none',
       elo: config.elo,
       depth: config.depth,
       skillLevel: config.skillLevel,
+      warning: weakMove ? undefined : 'No legal moves',
     };
   }
 
   try {
     debugBot(`[Bot] Calling analyzeFen with depth=${config.depth}, movetime=${config.movetime}, skillLevel=${config.skillLevel}`);
     
-    // Use Stockfish WASM with ELO configuration
     const analysis = await analyzeFen({ 
       fen, 
       depth: config.depth, 
       movetime: config.movetime,
       elo: config.elo,
-      skillLevel: config.skillLevel
+      skillLevel: config.skillLevel,
+      purpose: 'bot_move',
     });
     
-    debugBot(`[Bot] Analysis result:`, analysis);
+    debugBot('[Bot] Analysis result:', analysis);
     
-    if (analysis.success && analysis.bestMove) {
-      if (analysis.source === 'stockfish_wasm') {
-        debugBot(`[Bot] Using Stockfish move: ${analysis.bestMove} (source: ${analysis.source})`);
-      } else {
-        debugBot(`[Bot] Using fallback move: ${analysis.bestMove} (source: ${analysis.source})`);
-      }
+    if (analysis?.success && analysis.bestMove && isLegalUciMove(fen, analysis.bestMove)) {
       return {
         move: analysis.bestMove,
         source: analysis.source,
@@ -75,40 +90,33 @@ export async function getBotMove({ fen, botElo = 1200 }) {
       };
     }
     
-    // Fallback to random if no best move
-    const fallbackMove = getRandomLegalMove(fen);
-    debugBot(`[Bot] No best move found, using fallback random:`, fallbackMove);
-    return {
-      move: fallbackMove,
-      source: 'fallback',
-      elo: config.elo,
-      warning: 'Không tìm được nước tốt nhất, bot dùng nước ngẫu nhiên.',
-    };
+    if (analysis?.bestMove) {
+      console.warn('[Bot] Stockfish returned invalid move for current FEN', {
+        fen,
+        turn: fen.split(' ')[1],
+        bestMove: analysis.bestMove,
+        source: analysis.source,
+      });
+    }
+
+    return getFallbackBotMove({
+      fen,
+      botElo,
+      config,
+      warning: 'Stockfish unavailable or returned invalid move; using safe fallback.',
+    });
   } catch (error) {
     console.error('[Bot] Error getting move:', error);
-    
-    // Fallback to random on error
-    const fallbackMove = getRandomLegalMove(fen);
-    debugBot(`[Bot] Error occurred, using fallback random:`, fallbackMove);
-    return {
-      move: fallbackMove,
-      source: 'fallback',
-      elo: config.elo,
-      warning: 'Stockfish WASM không khả dụng, bot dùng fallback cơ bản.',
-    };
+
+    return getFallbackBotMove({
+      fen,
+      botElo,
+      config,
+      warning: 'Bot engine error; using safe fallback.',
+    });
   }
 }
 
 export function uciToMoveObject(uci) {
-  if (!uci || uci.length < 4) return null;
-  
-  const from = uci.substring(0, 2);
-  const to = uci.substring(2, 4);
-  const promotion = uci.length > 4 ? uci[4] : undefined;
-  
-  return {
-    from,
-    to,
-    promotion,
-  };
+  return parseUciMove(uci);
 }

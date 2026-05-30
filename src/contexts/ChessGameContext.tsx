@@ -21,6 +21,15 @@ const PLAYER_COLORS = {
   BLACK: 'b',
 };
 
+const DEBUG_MOVES = import.meta.env.DEV;
+
+function failMove(reason, data = {}) {
+  if (DEBUG_MOVES) {
+    console.warn('[MOVE] rejected:', reason, data);
+  }
+  return false;
+}
+
 export function ChessGameProvider({ children }) {
   // Core game state
   const [game, setGame] = useState(() => new Chess());
@@ -111,48 +120,66 @@ export function ChessGameProvider({ children }) {
   // Actions
   // options.byBot = true  → được phép đi dù isBotThinking, dù không phải lượt playerColor
   function makeMove(from, to, promotion = 'q', options = {}) {
-    const { byBot = false } = options;
+    const { byBot = false, sourceFen = null } = options;
+    const gameToUse = activeGame;
 
     if (!from || !to || from === to) {
-      return false;
+      return failMove('invalid from/to', { from, to });
     }
     if (isGameOver) {
-      return false;
+      return failMove('game over', { from, to });
     }
 
     if (!analysisMode) {
       if (!byBot && isBotThinking) {
-        return false;
+        return failMove('bot thinking', { from, to });
       }
       if (!byBot && gameMode === GAME_MODES.BOT && currentTurn !== playerColor) {
-        return false;
+        return failMove('not player turn', { currentTurn, playerColor });
       }
       if (byBot && gameMode === GAME_MODES.BOT && currentTurn === playerColor) {
-        return false;
+        return failMove('not bot turn', { currentTurn, playerColor });
+      }
+      if (byBot && sourceFen && gameToUse.fen() !== sourceFen) {
+        return failMove('stale sourceFen', {
+          sourceFen,
+          currentFen: gameToUse.fen(),
+          from,
+          to,
+          promotion,
+        });
       }
     }
 
     // Check if this is a promotion move
-    const piece = activeGame.get(from);
+    const piece = gameToUse.get(from);
     const isPromotion = piece?.type === 'p' && ((piece.color === 'w' && to[1] === '8') || (piece.color === 'b' && to[1] === '1'));
 
     // If promotion and no promotion piece specified, show modal
     if (isPromotion && !promotion) {
       setPendingPromotion({ from, to, color: piece.color });
-      return false;
+      return failMove('promotion required', { from, to });
     }
 
-    const beforeFen = activeGame.fen();
-    const nextGame = cloneGame(activeGame);
+    const beforeFen = gameToUse.fen();
+    const nextGame = cloneGame(gameToUse);
 
     let move = null;
     try {
       move = nextGame.move({ from, to, promotion });
-    } catch {
-      return false;
+    } catch (error) {
+      return failMove('chess.js threw move error', {
+        from,
+        to,
+        promotion,
+        fen: gameToUse.fen(),
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
 
-    if (!move) return false;
+    if (!move) {
+      return failMove('chess.js rejected move', { from, to, promotion, fen: gameToUse.fen() });
+    }
 
     // Clear UI state
     setSelectedSquare(null);

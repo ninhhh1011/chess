@@ -1,9 +1,41 @@
 import { useEffect, useRef } from 'react';
 import { useChessGame } from '../contexts/ChessGameContext';
-import { getBotMove, uciToMoveObject } from '../services/botService';
+import { getBotMove } from '../services/botService';
+import { getSafeFallbackMove } from '../services/heuristicBotEngine';
+import { getLegalMoveFromUci, moveToUci } from '../utils/chessMoveValidation';
 import { playCaptureSound, playMoveSound } from '../utils/sound';
 
-const BOT_TIMEOUT_MS = 3000; // 3 giây – nếu Stockfish chậm thì fallback
+const BOT_TIMEOUT_MS = 3000;
+const DEBUG_BOT_MOVES = (() => {
+  if (!import.meta.env.DEV || typeof window === 'undefined') return false;
+
+  try {
+    return window.localStorage?.getItem('debugBotMoves') === '1';
+  } catch {
+    return false;
+  }
+})();
+
+function debugBotMove(...args) {
+  if (DEBUG_BOT_MOVES) {
+    console.log(...args);
+  }
+}
+
+function warnBotMove(...args) {
+  if (DEBUG_BOT_MOVES) {
+    console.warn(...args);
+  }
+}
+
+function playMoveAudio(moveResult) {
+  if (!moveResult?.move) return;
+  moveResult.move.captured ? playCaptureSound() : playMoveSound();
+}
+
+function getFallbackSource(botElo) {
+  return botElo <= 800 ? 'fallback_random_weak' : 'fallback_heuristic';
+}
 
 export function useBotMove() {
   const {
@@ -23,18 +55,17 @@ export function useBotMove() {
   } = useChessGame();
 
   const isProcessingRef = useRef(false);
+  const lastIllegalWarnFenRef = useRef(null);
 
-  // Tự động trigger bot sau mỗi lần game state thay đổi
   useEffect(() => {
     if (gameMode !== GAME_MODES.BOT) return;
     if (isGameOver) return;
-    if (pendingPromotion) return; // Đợi người chơi chọn quân phong cấp
+    if (pendingPromotion) return;
 
     const botColor = playerColor === 'w' ? 'b' : 'w';
-    if (game.turn() !== botColor) return; // Chưa đến lượt bot
+    if (game.turn() !== botColor) return;
     if (game.isGameOver()) return;
 
-    // Trigger bot move
     triggerBotMove(game);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, gameMode, playerColor, isGameOver, pendingPromotion]);
@@ -42,17 +73,17 @@ export function useBotMove() {
   async function triggerBotMove(currentGame) {
     if (gameMode !== GAME_MODES.BOT) return;
     if (isProcessingRef.current) {
-      console.log('[BOT] already processing, skip');
+      debugBotMove('[BOT] already processing, skip');
       return;
     }
 
     const botColor = playerColor === 'w' ? 'b' : 'w';
     if (currentGame.turn() !== botColor) {
-      console.log('[BOT] not bot turn, skip', { turn: currentGame.turn(), botColor });
+      debugBotMove('[BOT] not bot turn, skip', { turn: currentGame.turn(), botColor });
       return;
     }
     if (currentGame.isGameOver()) {
-      console.log('[BOT] game over, skip');
+      debugBotMove('[BOT] game over, skip');
       return;
     }
 
@@ -60,16 +91,14 @@ export function useBotMove() {
     setIsBotThinking(true);
     setBotMoveSource(null);
 
-    // Tăng requestId để huỷ request cũ nếu newGame được gọi
     botRequestIdRef.current += 1;
     const currentRequestId = botRequestIdRef.current;
     setBotRequestId(currentRequestId);
 
     const fen = currentGame.fen();
-    console.log('[BOT] triggerBotMove called', { fen, turn: currentGame.turn(), botColor, botElo });
+    debugBotMove('[BOT] triggerBotMove called', { fen, turn: currentGame.turn(), botColor, botElo });
 
     try {
-      // Race giữa getBotMove và timeout 3s
       const result = await Promise.race([
         getBotMove({ fen, botElo }),
         new Promise((_, reject) =>
@@ -77,78 +106,105 @@ export function useBotMove() {
         ),
       ]);
 
-      // Kiểm tra request còn hợp lệ không (newGame có thể đã được gọi)
       if (currentRequestId !== botRequestIdRef.current) {
-        console.log('[BOT] stale request, abort', { currentRequestId, latest: botRequestIdRef.current });
+        debugBotMove('[BOT] stale request, abort', { currentRequestId, latest: botRequestIdRef.current });
         return;
       }
 
-      console.log('[BOT] getBotMove result', result);
+      debugBotMove('[BOT] getBotMove result', result);
 
-      if (!result?.move) {
-        console.warn('[BOT] no move returned');
+      let moveToPlay = getLegalMoveFromUci(currentGame, result?.move);
+      let moveSource = result?.source || 'none';
+
+      if (!moveToPlay) {
+        if (result?.move && lastIllegalWarnFenRef.current !== fen) {
+          warnBotMove('[BOT] engine move illegal on snapshot, using heuristic fallback', {
+            move: result.move,
+            source: result.source,
+            fen,
+            turn: currentGame.turn(),
+          });
+          lastIllegalWarnFenRef.current = fen;
+        }
+
+        const fallbackUci = getSafeFallbackMove(fen, botElo);
+        moveToPlay = getLegalMoveFromUci(currentGame, fallbackUci);
+        moveSource = fallbackUci ? getFallbackSource(botElo) : 'none';
+      }
+
+      if (!moveToPlay) {
+        warnBotMove('[BOT] no legal bot move available', { fen });
         return;
       }
 
-      setBotMoveSource(result.source);
-
-      const moveObj = uciToMoveObject(result.move);
-      console.log('[BOT] moveObj', moveObj);
-
-      if (!moveObj) {
-        console.warn('[BOT] invalid moveObj from UCI', result.move);
-        return;
-      }
-
-      // Kiểm tra lại game chưa kết thúc và request vẫn valid
       if (currentGame.isGameOver()) {
-        console.log('[BOT] game ended before bot could move');
+        debugBotMove('[BOT] game ended before bot could move');
         return;
       }
       if (currentRequestId !== botRequestIdRef.current) {
-        console.log('[BOT] request invalidated before applying move');
+        debugBotMove('[BOT] request invalidated before applying move');
         return;
       }
 
-      // Apply bot move với byBot = true để bypass guards
+      setBotMoveSource(moveSource);
+
       const moveResult = makeMove(
-        moveObj.from,
-        moveObj.to,
-        moveObj.promotion || 'q',
-        { byBot: true }
+        moveToPlay.from,
+        moveToPlay.to,
+        moveToPlay.promotion || 'q',
+        { byBot: true, sourceFen: fen }
       );
 
-      console.log('[BOT] makeMove result', moveResult);
-
-      if (moveResult && moveResult.move) {
-        moveResult.move.captured ? playCaptureSound() : playMoveSound();
-      } else {
-        console.warn('[BOT] makeMove returned false – move may be illegal', moveObj);
+      if (moveResult?.move) {
+        debugBotMove('[BOT] applied move', {
+          move: moveToUci(moveToPlay),
+          source: moveSource,
+          fen,
+        });
+        playMoveAudio(moveResult);
+        return;
       }
+
+      warnBotMove('[BOT] makeMove rejected; bot move skipped', { moveToPlay, sourceFen: fen });
     } catch (error) {
-      if (currentRequestId !== botRequestIdRef.current) return; // newGame already called
+      if (currentRequestId !== botRequestIdRef.current) return;
+
       if (error.message === 'BOT_TIMEOUT') {
-        console.warn('[BOT] timeout – falling back to random move');
-        // Fallback: random legal move
-        const moves = currentGame.moves({ verbose: true });
-        if (moves.length > 0 && currentRequestId === botRequestIdRef.current) {
-          const rnd = moves[Math.floor(Math.random() * moves.length)];
-          const fallbackResult = makeMove(rnd.from, rnd.to, rnd.promotion || 'q', { byBot: true });
-          if (fallbackResult?.move) {
-            fallbackResult.move.captured ? playCaptureSound() : playMoveSound();
-          }
+        warnBotMove('[BOT] timeout; using heuristic fallback', { fen, botElo });
+        const fallbackUci = getSafeFallbackMove(fen, botElo);
+        const fallbackMove = getLegalMoveFromUci(currentGame, fallbackUci);
+        if (!fallbackMove) {
+          warnBotMove('[BOT] no legal timeout fallback move available', { fen });
+          return;
+        }
+
+        const moveSource = fallbackUci ? getFallbackSource(botElo) : 'none';
+
+        const fallbackResult = makeMove(
+          fallbackMove.from,
+          fallbackMove.to,
+          fallbackMove.promotion || 'q',
+          { byBot: true, sourceFen: fen }
+        );
+
+        if (fallbackResult?.move) {
+          setBotMoveSource(moveSource);
+          debugBotMove('[BOT] applied move', {
+            move: moveToUci(fallbackMove),
+            source: moveSource,
+            fen,
+          });
+          playMoveAudio(fallbackResult);
+        } else {
+          warnBotMove('[BOT] timeout fallback move rejected; bot move skipped', { fallbackMove, sourceFen: fen });
         }
       } else {
         console.error('[BOT] error', error);
       }
     } finally {
-      // Luôn reset, kể cả khi có lỗi – tránh kẹt isBotThinking = true
+      isProcessingRef.current = false;
       if (currentRequestId === botRequestIdRef.current) {
-        isProcessingRef.current = false;
         setIsBotThinking(false);
-      } else {
-        // newGame đã clear, chỉ reset local flag
-        isProcessingRef.current = false;
       }
     }
   }
