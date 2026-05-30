@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promotion Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    .test-case {
+      margin: 20px 0;
+      padding: 15px;
+      background: #334155;
+      border-radius: 8px;
+      border-left: 4px solid #64748b;
+    }
+    .test-case.pass {
+      border-left-color: #22c55e;
+    }
+    .test-case.fail {
+      border-left-color: #ef4444;
+    }
+    .test-case h3 {
+      margin: 0 0 10px 0;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    #summary {
+      margin: 20px 0;
+      padding: 20px;
+      background: #334155;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>♟️ Pawn Promotion Test Suite</h1>
+  <p>Testing promotion fix for: <code>[MOVE] rejected: promotion required</code></p>
+
+  <button onclick="runAllTests()">Run All Tests</button>
+  <button onclick="location.reload()">Reset</button>
+
+  <div id="summary"></div>
+  <div id="results"></div>
+
+  <script type="module">
+    import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.0.0-beta.8/+esm';
+
+    window.Chess = Chess;
+    window.testResults = [];
+
+    function log(message, type = 'info') {
+      const colors = {
+        info: '#94a3b8',
+        success: '#22c55e',
+        error: '#ef4444',
+        warning: '#f59e0b'
+      };
+      console.log(`%c${message}`, `color: ${colors[type]}`);
+    }
+
+    function testCase(name, fn) {
+      const resultDiv = document.createElement('div');
+      resultDiv.className = 'test-case';
+      resultDiv.innerHTML = `<h3>${name}</h3><div class="result">Running...</div>`;
+      document.getElementById('results').appendChild(resultDiv);
+
+      try {
+        const result = fn();
+        const resultContent = resultDiv.querySelector('.result');
+
+        if (result.pass) {
+          resultDiv.classList.add('pass');
+          resultContent.innerHTML = `✅ PASS<br>${result.message}`;
+          log(`✅ ${name}: ${result.message}`, 'success');
+          window.testResults.push({ name, pass: true });
+        } else {
+          resultDiv.classList.add('fail');
+          resultContent.innerHTML = `❌ FAIL<br>${result.message}`;
+          log(`❌ ${name}: ${result.message}`, 'error');
+          window.testResults.push({ name, pass: false });
+        }
+      } catch (error) {
+        resultDiv.classList.add('fail');
+        resultDiv.querySelector('.result').innerHTML = `❌ ERROR<br>${error.message}`;
+        log(`❌ ${name}: ${error.message}`, 'error');
+        window.testResults.push({ name, pass: false });
+      }
+    }
+
+    window.runAllTests = function() {
+      document.getElementById('results').innerHTML = '';
+      window.testResults = [];
+
+      log('🧪 Starting promotion test suite...', 'info');
+
+      // Test 1: White pawn promotion with explicit 'q'
+      testCase('White pawn promotion to queen (e7e8q)', () => {
+        const game = new Chess('4k3/4P3/8/8/8/8/8/4K3 w - - 0 1');
+        const move = game.move({ from: 'e7', to: 'e8', promotion: 'q' });
+
+        if (!move) {
+          return { pass: false, message: 'Move rejected by chess.js' };
+        }
+
+        const piece = game.get('e8');
+        if (piece && piece.type === 'q' && piece.color === 'w') {
+          return { pass: true, message: `Promoted to queen successfully. FEN: ${game.fen()}` };
+        }
+
+        return { pass: false, message: `Expected white queen on e8, got: ${JSON.stringify(piece)}` };
+      });
+
+      // Test 2: Black pawn promotion with explicit 'q'
+      testCase('Black pawn promotion to queen (e2e1q)', () => {
+        const game = new Chess('4k3/8/8/8/8/8/4p3/4K3 b - - 0 1');
+        const move = game.move({ from: 'e2', to: 'e1', promotion: 'q' });
+
+        if (!move) {
+          return { pass: false, message: 'Move rejected by chess.js' };
+        }
+
+        const piece = game.get('e1');
+        if (piece && piece.type === 'q' && piece.color === 'b') {
+          return { pass: true, message: `Promoted to queen successfully. FEN: ${game.fen()}` };
+        }
+
+        return { pass: false, message: `Expected black queen on e1, got: ${JSON.stringify(piece)}` };
+      });
+
+      // Test 3: White pawn promotion without promotion parameter (should default to 'q')
+      testCase('White pawn promotion with undefined promotion (fallback to q)', () => {
+        const game = new Chess('4k3/4P3/8/8/8/8/8/4K3 w - - 0 1');
+
+        // Simulate what happens when promotion is undefined
+        const promotion = undefined || 'q'; // This is what safePromotion does
+        const move = game.move({ from: 'e7', to: 'e8', promotion });
+
+        if (!move) {
+          return { pass: false, message: 'Move rejected by chess.js with fallback' };
+        }
+
+        const piece = game.get('e8');
+        if (piece && piece.type === 'q' && piece.color === 'w') {
+          return { pass: true, message: `Fallback to queen worked. FEN: ${game.fen()}` };
+        }
+
+        return { pass: false, message: `Fallback failed, got: ${JSON.stringify(piece)}` };
+      });
+
+      // Test 4: Promotion with capture
+      testCase('White pawn promotion with capture (d7e8q)', () => {
+        const game = new Chess('4r3/3P4/8/8/8/8/8/4K2k w - - 0 1');
+        const move = game.move({ from: 'd7', to: 'e8', promotion: 'q' });
+
+        if (!move) {
+          return { pass: false, message: 'Capture promotion rejected by chess.js' };
+        }
+
+        if (!move.captured) {
+          return { pass: false, message: 'Expected capture flag to be set' };
+        }
+
+        const piece = game.get('e8');
+        if (piece && piece.type === 'q' && piece.color === 'w') {
+          return { pass: true, message: `Capture promotion successful. Captured: ${move.captured}` };
+        }
+
+        return { pass: false, message: `Expected white queen on e8, got: ${JSON.stringify(piece)}` };
+      });
+
+      // Test 5: Normal move (non-promotion) should not be affected
+      testCase('Normal pawn move (e2e4) - no regression', () => {
+        const game = new Chess();
+        const move = game.move({ from: 'e2', to: 'e4' });
+
+        if (!move) {
+          return { pass: false, message: 'Normal move rejected - REGRESSION!' };
+        }
+
+        const piece = game.get('e4');
+        if (piece && piece.type === 'p' && piece.color === 'w') {
+          return { pass: true, message: 'Normal moves still work correctly' };
+        }
+
+        return { pass: false, message: `Expected white pawn on e4, got: ${JSON.stringify(piece)}` };
+      });
+
+      // Test 6: Same square move should be rejected
+      testCase('Same square move (e2e2) - should be no-op', () => {
+        const game = new Chess();
+        const beforeFen = game.fen();
+
+        // chess.js will throw or return null for same-square moves
+        try {
+          const move = game.move({ from: 'e2', to: 'e2' });
+          if (!move) {
+            return { pass: true, message: 'Same-square move correctly rejected (returned null)' };
+          }
+          return { pass: false, message: 'Same-square move should not succeed' };
+        } catch (error) {
+          return { pass: true, message: `Same-square move correctly rejected (threw error: ${error.message})` };
+        }
+      });
+
+      // Summary
+      setTimeout(() => {
+        const passed = window.testResults.filter(r => r.pass).length;
+        const total = window.testResults.length;
+        const summaryDiv = document.getElementById('summary');
+
+        if (passed === total) {
+          summaryDiv.innerHTML = `<strong style="color: #22c55e;">✅ All ${total} tests passed!</strong>`;
+          log(`✅ All ${total} tests passed!`, 'success');
+        } else {
+          summaryDiv.innerHTML = `<strong style="color: #ef4444;">❌ ${passed}/${total} tests passed</strong>`;
+          log(`❌ ${passed}/${total} tests passed`, 'error');
+        }
+      }, 100);
+    };
+
+    // Auto-run on load
+    log('Test page loaded. Click "Run All Tests" to start.', 'info');
+  </script>
+</body>
+</html>

@@ -123,8 +123,11 @@ export function ChessGameProvider({ children }) {
     const { byBot = false, sourceFen = null } = options;
     const gameToUse = activeGame;
 
-    if (!from || !to || from === to) {
+    if (!from || !to) {
       return failMove('invalid from/to', { from, to });
+    }
+    if (from === to) {
+      return false;
     }
     if (isGameOver) {
       return failMove('game over', { from, to });
@@ -155,30 +158,27 @@ export function ChessGameProvider({ children }) {
     const piece = gameToUse.get(from);
     const isPromotion = piece?.type === 'p' && ((piece.color === 'w' && to[1] === '8') || (piece.color === 'b' && to[1] === '1'));
 
-    // If promotion and no promotion piece specified, show modal
-    if (isPromotion && !promotion) {
-      setPendingPromotion({ from, to, color: piece.color });
-      return failMove('promotion required', { from, to });
-    }
+    // Default promotion to queen if not specified
+    const safePromotion = isPromotion ? (promotion || 'q') : promotion;
 
     const beforeFen = gameToUse.fen();
     const nextGame = cloneGame(gameToUse);
 
     let move = null;
     try {
-      move = nextGame.move({ from, to, promotion });
+      move = nextGame.move({ from, to, promotion: safePromotion });
     } catch (error) {
       return failMove('chess.js threw move error', {
         from,
         to,
-        promotion,
+        promotion: safePromotion,
         fen: gameToUse.fen(),
         error: error instanceof Error ? error.message : String(error),
       });
     }
 
     if (!move) {
-      return failMove('chess.js rejected move', { from, to, promotion, fen: gameToUse.fen() });
+      return failMove('chess.js rejected move', { from, to, promotion: safePromotion, fen: gameToUse.fen() });
     }
 
     // Clear UI state
