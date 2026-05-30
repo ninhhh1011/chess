@@ -6,7 +6,7 @@ export const BOT_ELO_LEVELS = [
     depth: 1,
     movetime: 100,
     skillLevel: 0,
-    randomChance: 0.25
+    randomChance: 0
   },
   {
     elo: 800,
@@ -15,7 +15,7 @@ export const BOT_ELO_LEVELS = [
     depth: 2,
     movetime: 200,
     skillLevel: 2,
-    randomChance: 0.12
+    randomChance: 0
   },
   {
     elo: 1200,

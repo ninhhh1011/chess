@@ -281,15 +281,17 @@ export async function configureEngineForElo({ elo, skillLevel }) {
   if (!isEngineReady()) return false;
 
   try {
-    if (skillLevel !== undefined) {
-      worker.postMessage(`setoption name Skill Level value ${skillLevel}`);
-      debugStockfish(`[Stockfish] Set Skill Level to ${skillLevel}`);
-    }
-
+    // Use UCI_Elo for more accurate ELO-based weakening
+    // Don't mix Skill Level and UCI_Elo as they may conflict
     if (elo) {
       worker.postMessage('setoption name UCI_LimitStrength value true');
       worker.postMessage(`setoption name UCI_Elo value ${elo}`);
       debugStockfish(`[Stockfish] Set UCI_Elo to ${elo}`);
+    } else if (skillLevel !== undefined) {
+      // Only use Skill Level if no ELO is specified
+      worker.postMessage('setoption name UCI_LimitStrength value false');
+      worker.postMessage(`setoption name Skill Level value ${skillLevel}`);
+      debugStockfish(`[Stockfish] Set Skill Level to ${skillLevel}`);
     }
 
     return true;

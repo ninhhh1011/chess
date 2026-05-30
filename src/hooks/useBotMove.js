@@ -98,6 +98,10 @@ export function useBotMove() {
     const fen = currentGame.fen();
     debugBotMove('[BOT] triggerBotMove called', { fen, turn: currentGame.turn(), botColor, botElo });
 
+    // Add artificial thinking delay for human-like feel (400-1200ms)
+    const minThinkingTime = Math.random() * 800 + 400;
+    const thinkingStartTime = Date.now();
+
     try {
       const result = await Promise.race([
         getBotMove({ fen, botElo }),
@@ -105,6 +109,12 @@ export function useBotMove() {
           setTimeout(() => reject(new Error('BOT_TIMEOUT')), BOT_TIMEOUT_MS)
         ),
       ]);
+
+      // Ensure minimum thinking time has elapsed
+      const elapsedTime = Date.now() - thinkingStartTime;
+      if (elapsedTime < minThinkingTime) {
+        await new Promise(resolve => setTimeout(resolve, minThinkingTime - elapsedTime));
+      }
 
       if (currentRequestId !== botRequestIdRef.current) {
         debugBotMove('[BOT] stale request, abort', { currentRequestId, latest: botRequestIdRef.current });
