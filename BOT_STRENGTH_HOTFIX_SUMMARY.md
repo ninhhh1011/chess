@@ -26,6 +26,7 @@
 - Validated Stockfish bestmove and timeout partial PV before returning success.
 - Added sequential analysis queue, request IDs, and worker crash cooldown.
 - Added exponential worker crash cooldown and suppressed repetitive raw worker crash logs.
+- Cache-busted the Stockfish worker URL and made Stockfish fallback warnings opt-in via `localStorage.debugStockfish = "1"`.
 - Hardened `useBotMove()` so illegal/stale engine moves never reach `makeMove()`.
 - Gated bot move debug logs behind `localStorage.debugBotMoves = "1"` in development.
 - Removed auto-cancel from `useEngineAnalysis()` cleanup so hint/review does not cancel bot analysis.

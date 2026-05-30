@@ -2,6 +2,7 @@ import { analyzeFenFallback, getBestMoveFallback } from './fallbackChessEngine';
 import { isLegalUciMove } from '../utils/chessMoveValidation';
 
 const STOCKFISH_DEBUG = false;
+const STOCKFISH_WORKER_VERSION = '2026-05-30-silent-fallback';
 const ENGINE_CRASH_BASE_COOLDOWN_MS = 60000;
 const ENGINE_CRASH_MAX_COOLDOWN_MS = 300000;
 const ENGINE_WARNING_THROTTLE_MS = 5000;
@@ -19,8 +20,19 @@ let lastEngineWarningAt = 0;
 let engineFailureCount = 0;
 let hasLoggedWorkerUnavailable = false;
 
+function isStockfishDebugEnabled() {
+  if (STOCKFISH_DEBUG) return true;
+  if (typeof window === 'undefined' || !import.meta.env.DEV) return false;
+
+  try {
+    return window.localStorage?.getItem('debugStockfish') === '1';
+  } catch {
+    return false;
+  }
+}
+
 function debugStockfish(...args) {
-  if (STOCKFISH_DEBUG) {
+  if (isStockfishDebugEnabled()) {
     console.log(...args);
   }
 }
@@ -35,8 +47,10 @@ function serializeEngineError(error) {
 }
 
 function warnStockfish(message, data = null) {
+  if (!isStockfishDebugEnabled()) return;
+
   const now = Date.now();
-  if (STOCKFISH_DEBUG || now - lastEngineWarningAt > ENGINE_WARNING_THROTTLE_MS) {
+  if (now - lastEngineWarningAt > ENGINE_WARNING_THROTTLE_MS) {
     if (data) console.warn(message, data);
     else console.warn(message);
     lastEngineWarningAt = now;
@@ -64,7 +78,7 @@ function disableEngineForCooldown(error) {
 
   worker = null;
 
-  if (!hasLoggedWorkerUnavailable || STOCKFISH_DEBUG) {
+  if (!hasLoggedWorkerUnavailable || isStockfishDebugEnabled()) {
     warnStockfish('[Stockfish] Worker unavailable; using fallback temporarily', {
       error: serializeEngineError(error),
       cooldownMs,
@@ -151,7 +165,7 @@ export async function initEngine() {
       worker = null;
     }
 
-    worker = new Worker('/stockfish-worker.js');
+    worker = new Worker(`/stockfish-worker.js?v=${STOCKFISH_WORKER_VERSION}`);
 
     const initPromise = new Promise((resolve) => {
       const timeout = setTimeout(() => {

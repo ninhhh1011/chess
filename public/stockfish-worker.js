@@ -15,6 +15,15 @@ let initReject = null;
 let initTimer = null;
 let sawUciOk = false;
 
+function normalizeError(error) {
+  if (!error) return 'Stockfish worker error';
+  if (typeof error === 'string') return error;
+  if (error.message) return error.message;
+  if (error.error?.message) return error.error.message;
+  if (error.reason?.message) return error.reason.message;
+  return 'Stockfish worker error';
+}
+
 function normalizeEngineMessage(event) {
   return typeof event.data === 'string' ? event.data : event.data?.data ?? event.data;
 }
@@ -58,11 +67,31 @@ function finishInit() {
 }
 
 function failInit(error) {
-  const initError = error instanceof Error ? error : new Error(String(error));
+  const initError = error instanceof Error ? error : new Error(normalizeError(error));
   const reject = initReject;
   disposeStockfish();
   reject?.(initError);
 }
+
+self.addEventListener('error', (event) => {
+  event.preventDefault();
+
+  if (!isReady) {
+    failInit(event.error || event.message);
+  } else {
+    self.postMessage({ type: 'error', message: normalizeError(event.error || event.message) });
+  }
+});
+
+self.addEventListener('unhandledrejection', (event) => {
+  event.preventDefault();
+
+  if (!isReady) {
+    failInit(event.reason);
+  } else {
+    self.postMessage({ type: 'error', message: normalizeError(event.reason) });
+  }
+});
 
 async function initStockfish() {
   if (isReady && stockfish) {
@@ -104,9 +133,9 @@ async function initStockfish() {
     stockfish.onerror = (error) => {
       error?.preventDefault?.();
       if (!isReady) {
-        failInit(error.message || 'Stockfish worker failed to load');
+        failInit(error);
       } else {
-        self.postMessage({ type: 'error', message: error.message || 'Stockfish worker error' });
+        self.postMessage({ type: 'error', message: normalizeError(error) });
       }
     };
 
@@ -128,7 +157,7 @@ self.onmessage = async (event) => {
       await initStockfish();
       self.postMessage({ type: 'ready', success: true });
     } catch (error) {
-      self.postMessage({ type: 'ready', success: false, error: error.message });
+      self.postMessage({ type: 'ready', success: false, error: normalizeError(error) });
     }
     return;
   }
