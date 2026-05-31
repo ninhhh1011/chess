@@ -3,14 +3,14 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { signOutUser } from '../services/authService';
 import logoImg from '../assets/avatarcoach.webp';
-import { brandName } from '../config/brand';
+import { BRAND_NAMES, brandName } from '../config/brand';
 
 const links = [
   { to: '/', label: 'Trang chủ' },
   { to: '/learn', label: 'Học cờ' },
   { to: '/play', label: 'Chơi cờ' },
   { to: '/exercises', label: 'Bài tập' },
-  { to: '/openings', label: 'Khai cuộc' },
+  { to: '/openings', label: BRAND_NAMES.openingTrainer },
   { to: '/training', label: 'Huấn luyện' },
 ];
 

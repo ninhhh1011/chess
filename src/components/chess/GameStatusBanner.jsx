@@ -1,6 +1,7 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import StatusBadge from '../StatusBadge';
 import { getChessStatus, getTurnLabel } from '../../utils/chessStatus';
+import { UI_COPY } from '../../config/brand';
 
 export default function GameStatusBanner() {
   const { activeGame, isBotThinking } = useChessGame();
@@ -23,7 +24,7 @@ function BotThinkingDot() {
   return (
     <span
       className="ml-1 inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-400"
-      title="Bot đang tính..."
+      title={UI_COPY.botThinking}
     />
   );
 }

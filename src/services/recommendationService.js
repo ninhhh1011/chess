@@ -172,7 +172,7 @@ export function generateDailyTrainingPlan(profile) {
   const exercises = getRecommendedExercises(p).slice(0, 5);
   const challenge = p.gamesPlayed < 3
     ? 'Chơi 1 ván và tập không mất quân miễn phí.'
-    : 'Chơi 1 ván, sau đó bấm Review ván với ninh lốp trưởng.';
+    : 'Chơi 1 ván, sau đó vào Phòng mổ ván cờ với Ninh Lốp Trưởng.';
 
   return {
     generatedAt: new Date().toISOString(),
@@ -192,7 +192,7 @@ export function getTrainingMessage(profile) {
   }
 
   if (p.currentLevel === 'advanced') {
-    return 'Bạn đã ở mức nâng cao. Để luyện chuyên sâu cần Stockfish và AI Coach thật trong các phase sau.';
+    return 'Bạn đã ở mức nâng cao. Để luyện chuyên sâu cần engine và Quân sư Ninh thật chắc tay hơn.';
   }
 
   if (shouldLevelUp(p)) {

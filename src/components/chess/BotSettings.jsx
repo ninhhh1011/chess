@@ -1,7 +1,8 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BOT_ELO_LEVELS } from '../../data/botLevels';
+import { BRAND_NAMES } from '../../config/brand';
 
-const BOT_NAME = 'ngoại lệ của cô ấy';
+const BOT_NAME = BRAND_NAMES.bot;
 
 export default function BotSettings() {
   const {

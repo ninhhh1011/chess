@@ -7,7 +7,20 @@
       "Bash(git push *)",
       "Bash(npm list *)",
       "Bash(node *)",
-      "Bash(npm info *)"
+      "Bash(npm info *)",
+      "Bash(xargs grep -l \"analytics\\\\|gtag\\\\|google\\\\|facebook\\\\|pixel\")",
+      "Bash(npm start *)",
+      "Bash(Start-Sleep *)",
+      "PowerShell(Start-Process chrome \"http://localhost:5173\")",
+      "PowerShell(Start-Process chrome \"http://localhost:5173/play\" -ArgumentList \"--auto-open-devtools-for-tabs\")",
+      "PowerShell(Start-Process chrome -ArgumentList \"http://localhost:5173/play\")",
+      "PowerShell(Start-Process chrome -ArgumentList \"E:\\\\chess\\\\test-promotion.html\")",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git pull *)",
+      "Bash(gh repo *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)"
     ]
   }
 }

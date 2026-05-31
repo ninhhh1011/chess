@@ -1,4 +1,5 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
+import { BRAND_NAMES } from '../../config/brand';
 
 function annotationClassName(tone) {
   const tones = {
@@ -46,7 +47,7 @@ export default function MoveHistory() {
       {/* Header gọn */}
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-bold text-slate-300">
-          {moveHistory.length} nước đi
+          {BRAND_NAMES.moveHistory} · {moveHistory.length} nước
         </h3>
         {moveHistory.length > 0 && (
           <button
@@ -54,7 +55,7 @@ export default function MoveHistory() {
             className="rounded bg-slate-800 px-2 py-1 text-xs font-medium text-slate-300 transition hover:bg-slate-700"
             title="Sao chép PGN"
           >
-            📋 Sao chép
+            Sao chép
           </button>
         )}
       </div>
@@ -95,7 +96,7 @@ export default function MoveHistory() {
             })}
           </div>
         ) : (
-          <p className="py-8 text-center text-sm text-slate-400">Chưa có nước đi nào</p>
+          <p className="py-8 text-center text-sm text-slate-400">Chưa có nước nào để gáy.</p>
         )}
       </div>
     </div>

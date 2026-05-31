@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
-import { brandName, BRAND_DESCRIPTION } from '../../config/brand';
+import { BRAND_NAMES, UI_COPY, brandName, BRAND_DESCRIPTION } from '../../config/brand';
 import coachAvatar from '../../assets/avatarcoach.webp';
 import { BOT_ELO_LEVELS } from '../../data/botLevels';
 
@@ -35,7 +35,7 @@ export default function PreGameLobby() {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Opponent Selection */}
           <div className="space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">Đối thủ</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">Đối thủ: {BRAND_NAMES.bot}</h3>
             <div className="grid gap-2">
               {BOT_ELO_LEVELS.slice(0, 4).map((bot) => (
                 <button
@@ -113,7 +113,7 @@ export default function PreGameLobby() {
             onClick={handleStart}
             className="ui-button-primary w-full max-w-sm py-4 text-lg font-bold shadow-lg transition hover:-translate-y-0.5"
           >
-            Bắt đầu ván
+            {UI_COPY.startGame}
           </button>
         </div>
 

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { askAICoach } from '../services/aiCoachApiService';
 import { getUserProfile } from '../services/userProfileService';
 import coachAvatar from '../assets/avatarcoach.webp';
-import { brandName } from '../config/brand';
+import { BRAND_NAMES, UI_COPY } from '../config/brand';
 import { isInstagramIntent, NINH_INSTAGRAM_URL } from '../utils/socialIntent';
 
-const COACH_NAME = 'Ninh lốp trưởng';
+const COACH_NAME = BRAND_NAMES.coach;
 
 const COACH_PROMPTS = {
   quick: `Bạn là HLV cờ vua cá nhân của người mới học.
-Trả lời bằng tiếng Việt.
+Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
 Chỉ trả lời đúng format:
 Nhận xét nhanh
 <1 câu chính>
@@ -22,7 +22,7 @@ Không marketing.
 Không nói lan man.
 Không dùng markdown phức tạp.`,
   focus: `Bạn là HLV cờ vua cá nhân của người mới học.
-Trả lời bằng tiếng Việt.
+Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
 Chỉ trả lời đúng format:
 Nên chú ý
 1. <rủi ro quan trọng nhất>
@@ -33,9 +33,9 @@ Không quá 2 ý.
 Không marketing.
 Không nói lan man.`,
   hint: `Bạn là HLV cờ vua cá nhân của người mới học.
-Trả lời bằng tiếng Việt.
+Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
 Chỉ trả lời đúng format:
-Gợi ý nước đi
+Ninh mách nước
 Nên cân nhắc: <nước đi hoặc ý tưởng>
 
 Vì sao:
@@ -106,7 +106,7 @@ function renderCoachAdvice(advice) {
   // Hint
   if (advice.type === 'hint') {
     const parts = rawText.split(/Vì sao:/i);
-    const mainText = parts[0].replace(/Gợi ý nước đi/i, '').trim();
+    const mainText = parts[0].replace(/Gợi ý nước đi|Ninh mách nước/i, '').trim();
     const reason = parts[1] ? parts[1].trim() : '';
 
     return (
@@ -197,7 +197,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
         />
         <div>
           <h3 className="text-sm font-bold text-slate-100">{COACH_NAME}</h3>
-          <p className="text-xs text-slate-400">HLV cá nhân của bạn</p>
+          <p className="text-xs text-slate-400">Mổ thế cờ, gáy vừa đủ</p>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           disabled={isLoading}
           className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50"
         >
-          Gợi ý nước đi
+          {UI_COPY.hint}
         </button>
       </div>
 
@@ -233,7 +233,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           value={customMessage}
           onChange={(e) => setCustomMessage(e.target.value)}
           disabled={isLoading}
-          placeholder="Hỏi về ván cờ, hoặc xin Instagram của Ninh..."
+          placeholder="Hỏi Quân sư Ninh về thế cờ..."
           className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
         />
         <button
@@ -249,14 +249,14 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
       <div className="min-h-[120px] rounded-xl border border-slate-800 bg-slate-950 p-4">
         {isLoading ? (
           <div className="flex h-full items-center justify-center text-emerald-500 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:overflow-hidden [&>span]:rounded-full [&>span]:bg-emerald-400 [&>span]:text-transparent">
-            <span className="text-sm font-medium animate-pulse">Ninh đang xem thế cờ...</span>
+            <span className="text-sm font-medium animate-pulse">{UI_COPY.botThinking}</span>
           </div>
         ) : advice ? (
           <div className="animate-in fade-in slide-in-from-bottom-2">
             <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
               {advice.type === 'quick' && 'Nhận xét nhanh'}
               {advice.type === 'focus' && 'Nên chú ý'}
-              {advice.type === 'hint' && 'Gợi ý nước đi'}
+              {advice.type === 'hint' && UI_COPY.hint}
               {advice.type === 'social' && 'Social'}
               {advice.type === 'custom' && 'Trả lời'}
             </div>
@@ -265,7 +265,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           </div>
         ) : (
           <div className="flex h-full flex-col items-center justify-center text-center text-slate-500">
-            <p className="text-sm">Hỏi hoặc bấm vào các nút ở trên để nhận lời khuyên từ {COACH_NAME}.</p>
+            <p className="text-sm">Hỏi hoặc bấm nút ở trên để nhận lời khuyên từ {COACH_NAME}.</p>
           </div>
         )}
       </div>

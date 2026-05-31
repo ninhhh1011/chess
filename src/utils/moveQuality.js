@@ -1,4 +1,5 @@
 import { getSanFromUci } from './chessMoveUtils';
+import { COACH_TONE } from '../config/brand';
 
 export const MOVE_QUALITY = {
   brilliant: {
@@ -21,26 +22,26 @@ export const MOVE_QUALITY = {
   },
   good: {
     symbol: '',
-    label: 'Tốt',
-    shortLabel: 'Tốt',
+    label: COACH_TONE.good,
+    shortLabel: 'Ổn',
     tone: 'good',
   },
   inaccuracy: {
     symbol: '?!',
-    label: 'Không chính xác',
-    shortLabel: 'Lệch',
+    label: COACH_TONE.inaccuracy,
+    shortLabel: 'Thiếu lực',
     tone: 'inaccuracy',
   },
   mistake: {
     symbol: '?',
-    label: 'Sai lầm',
-    shortLabel: 'Sai',
+    label: COACH_TONE.mistake,
+    shortLabel: 'Tự hủy',
     tone: 'mistake',
   },
   blunder: {
     symbol: '??',
-    label: 'Ngu ngốc',
-    shortLabel: 'Blunder',
+    label: COACH_TONE.blunder,
+    shortLabel: 'Mất quá nhiều',
     tone: 'blunder',
   },
   pending: {

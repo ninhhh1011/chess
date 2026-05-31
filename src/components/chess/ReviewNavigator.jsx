@@ -1,4 +1,5 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
+import { BRAND_NAMES, UI_COPY } from '../../config/brand';
 
 export default function ReviewNavigator() {
   const {
@@ -35,13 +36,13 @@ export default function ReviewNavigator() {
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-3 shadow-lg">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Xem lại ván cờ</h4>
+        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">{BRAND_NAMES.analysis}</h4>
         {playState === 'analysis' && (
           <button 
             onClick={handleExitReview}
             className="text-xs font-medium text-slate-400 hover:text-slate-200"
           >
-            Đóng X
+            Đóng
           </button>
         )}
       </div>
@@ -98,7 +99,7 @@ export default function ReviewNavigator() {
           }}
           className="ui-button-primary py-2 text-xs"
         >
-          Chơi lại
+          {UI_COPY.newGame}
         </button>
       </div>
     </div>

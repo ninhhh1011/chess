@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { analyzeFen, isEngineReady, stopEngine } from '../../services/stockfishService';
 import { formatEvaluation, getSanFromUci } from '../../utils/chessMoveUtils';
 import GameReviewPanel from './GameReviewPanel';
+import { BRAND_NAMES, UI_COPY } from '../../config/brand';
 
 function getEvalPercent(evaluation) {
   if (!evaluation) return 50;
@@ -41,7 +42,7 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
         onBestMove?.({ bestMove: result.bestMove, fen: result.fen, evaluation: result.evaluation });
       }
       if (showHint && result.bestMove) {
-        setError(`Gợi ý: ${getSanFromUci(result.fen, result.bestMove)}`);
+        setError(`${UI_COPY.hint}: ${getSanFromUci(result.fen, result.bestMove)}`);
       }
     } catch (err) {
       setStatus('Lỗi');
@@ -61,7 +62,7 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
     <div>
       {/* Header gọn */}
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-300">Stockfish</h3>
+        <h3 className="text-sm font-bold text-slate-300">{BRAND_NAMES.analysis}</h3>
         <span className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-emerald-300">{status}</span>
       </div>
 
@@ -109,10 +110,10 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
       {/* Actions */}
       <div className="grid grid-cols-2 gap-2 mb-3">
         <button className="btn-primary px-3 py-2 text-xs" onClick={() => runAnalysis(false)} disabled={isAnalyzing}>
-          {isAnalyzing ? 'Đang phân tích...' : 'Phân tích'}
+          {isAnalyzing ? 'Đang mổ ván...' : BRAND_NAMES.analysis}
         </button>
         <button className="btn-secondary px-3 py-2 text-xs" onClick={() => runAnalysis(true)} disabled={isAnalyzing}>
-          Gợi ý
+          {UI_COPY.hint}
         </button>
       </div>
       <button className="btn-secondary w-full px-3 py-2 text-xs" onClick={handleStop}>Dừng</button>

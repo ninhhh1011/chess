@@ -1,8 +1,9 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BOT_ELO_LEVELS } from '../../data/botLevels';
 import coachAvatar from '../../assets/avatarcoach.webp';
+import { BRAND_NAMES } from '../../config/brand';
 
-const BOT_NAME = 'ninh lốp trưởng';
+const BOT_NAME = BRAND_NAMES.bot;
 
 export default function BotInfoPanel() {
   const { gameMode, playerColor, botElo, GAME_MODES, PLAYER_COLORS } = useChessGame();
