@@ -21,7 +21,7 @@ const stableSquareStyle = {
   border: '0',
   outline: '0',
   boxShadow: 'none',
-  transition: 'background 160ms ease, box-shadow 160ms ease, transform 160ms ease',
+  transition: 'background 120ms ease, box-shadow 120ms ease',
 };
 
 function parseUciMove(uci) {
@@ -110,7 +110,7 @@ export default function ChessBoardPanel({ engineHint }) {
           styles[hoveredSquare] = {
             ...styles[hoveredSquare],
             cursor: 'grab',
-            transform: 'scale(1.05)',
+            boxShadow: styles[hoveredSquare]?.boxShadow || 'inset 0 0 0 2px rgba(16,185,129,0.35)',
           };
         }
       }
@@ -141,9 +141,9 @@ export default function ChessBoardPanel({ engineHint }) {
 
   // NEW: Handle drag end - clear selection after drop
   function handlePieceDragEnd() {
-    // Clear selection after drag completes
-    // Note: onPieceDrop will handle the move if valid
-    clearSelection();
+    window.setTimeout(() => {
+      clearSelection();
+    }, 0);
   }
 
   function onPieceDrop({ piece, sourceSquare, targetSquare }) {
@@ -268,7 +268,7 @@ export default function ChessBoardPanel({ engineHint }) {
           darkSquareStyle: { backgroundColor: 'var(--color-board-dark)', ...stableSquareStyle },
           lightSquareStyle: { backgroundColor: 'var(--color-board-light)', ...stableSquareStyle },
           dropSquareStyle: { boxShadow: 'inset 0 0 0 3px var(--color-board-last-move)' },
-          draggingPieceStyle: { filter: 'drop-shadow(0 20px 24px rgba(0,0,0,.5))', transform: 'scale(1.08)' },
+          draggingPieceStyle: { filter: 'drop-shadow(0 10px 12px rgba(0,0,0,.35))', transform: 'scale(1.03)' },
           darkSquareNotationStyle: { color: 'var(--color-board-light)', opacity: 0.58, fontWeight: 800 },
           lightSquareNotationStyle: { color: 'var(--color-board-dark)', opacity: 0.58, fontWeight: 800 },
           ariaLabel: 'Bàn cờ vua',

@@ -347,6 +347,10 @@ export function ChessGameProvider({ children }) {
     setIsBotThinking(false);
     setBotRequestId(botRequestIdRef.current);
     setEngineHint(null);
+    setResultNotice(null);
+    setRecordedGamePgn(null);
+    setShouldShowGameOverModal(false);
+    setPlayState('playing');
 
     const lastMove = nextGame.history({ verbose: true }).at(-1);
     setLastMoveSquares(lastMove ? { from: lastMove.from, to: lastMove.to } : null);
@@ -382,7 +386,6 @@ export function ChessGameProvider({ children }) {
     setAnalysisMainline(mainline);
     setAnalysisGame(analysisCopy);
     setAnalysisPly(mainline.length);
-    setResultNotice(null);
     setShouldShowGameOverModal(false);
     setIsBotThinking(false);
     setEngineHint(null);

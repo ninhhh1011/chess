@@ -1,16 +1,15 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 
 /**
- * GameInfoBar - Compact game status bar
- * Shows only: current game state · whose turn
+ * GameInfoBar - compact game status and turn indicator.
+ * Check is intentionally represented on the king square instead of as text.
  */
-export default function GameInfoBar({ botElo = 1200 }) {
-  const { activeGame, playerColor, gameMode, isBotThinking, isGameOver, isCheck, GAME_MODES } = useChessGame();
+export default function GameInfoBar() {
+  const { activeGame, playerColor, gameMode, isBotThinking, isGameOver, GAME_MODES } = useChessGame();
 
   const currentTurn = activeGame.turn();
   const isPlayerTurn = currentTurn === playerColor;
 
-  // Game status
   let statusText = 'Đang chơi';
   let statusColor = 'text-blue-400';
 
@@ -23,22 +22,12 @@ export default function GameInfoBar({ botElo = 1200 }) {
       statusText = 'Hòa';
       statusColor = 'text-slate-400';
     }
-  } else if (isCheck) {
-    statusText = 'Chiếu';
-    statusColor = 'text-orange-400';
   }
 
-  // Turn indicator
   let turnText = '';
   if (!isGameOver) {
     if (gameMode === GAME_MODES.BOT) {
-      if (isBotThinking) {
-        turnText = 'Bot đang nghĩ';
-      } else if (isPlayerTurn) {
-        turnText = 'Lượt của bạn';
-      } else {
-        turnText = 'Lượt của ngoại lệ của cô ấy';
-      }
+      turnText = isPlayerTurn ? 'Lượt của bạn' : 'Lượt đối thủ';
     } else {
       turnText = currentTurn === 'w' ? 'Lượt trắng' : 'Lượt đen';
     }
@@ -46,14 +35,12 @@ export default function GameInfoBar({ botElo = 1200 }) {
 
   return (
     <div className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2">
-      {/* Left: Game status */}
       <span className={`text-sm font-bold ${statusColor}`}>{statusText}</span>
 
-      {/* Right: Turn indicator */}
       {turnText && (
         <div className="flex items-center gap-1.5">
           {!isGameOver && (
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+            <span className={`h-1.5 w-1.5 rounded-full bg-emerald-400 ${isBotThinking ? 'animate-pulse' : ''}`} />
           )}
           <span className="text-sm font-bold text-emerald-300">{turnText}</span>
         </div>

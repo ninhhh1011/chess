@@ -248,7 +248,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
       {/* Advice Display */}
       <div className="min-h-[120px] rounded-xl border border-slate-800 bg-slate-950 p-4">
         {isLoading ? (
-          <div className="flex h-full items-center justify-center space-x-2 text-emerald-500">
+          <div className="flex h-full items-center justify-center text-emerald-500 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:overflow-hidden [&>span]:rounded-full [&>span]:bg-emerald-400 [&>span]:text-transparent">
             <span className="text-sm font-medium animate-pulse">Ninh đang xem thế cờ...</span>
           </div>
         ) : advice ? (

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 // Empty square legal move - small dot
 const moveDotStyle = {
-  backgroundImage: 'radial-gradient(circle, var(--color-board-legal-hint) 0 18%, transparent 20%)',
+  backgroundImage: 'radial-gradient(circle, var(--color-board-legal-hint) 0 11%, transparent 12%)',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
   backgroundSize: '100% 100%',
@@ -10,13 +10,13 @@ const moveDotStyle = {
 
 // Capture legal move - ring outline
 const captureRingStyle = {
-  boxShadow: 'inset 0 0 0 4px var(--color-board-legal-hint)',
+  boxShadow: 'inset 0 0 0 2px var(--color-board-legal-hint)',
 };
 
 // Selected square - amber border
 const selectedSquareStyle = {
   backgroundColor: 'var(--color-board-selected)',
-  boxShadow: 'inset 0 0 0 3px var(--color-board-selected)',
+  boxShadow: 'inset 0 0 0 2px rgba(56,189,248,0.72)',
 };
 
 // Last move - very light yellow background
@@ -33,13 +33,17 @@ const checkedKingSquareStyle = {
 
 // Engine hint squares
 const engineFromSquareStyle = {
-  boxShadow: 'inset 0 0 0 3px rgba(245,158,11,0.78), 0 0 20px rgba(245,158,11,0.26)',
+  boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.62)',
 };
 
 const engineToSquareStyle = {
-  boxShadow: 'inset 0 0 0 3px rgba(245,158,11,0.78), 0 0 20px rgba(245,158,11,0.26)',
-  backgroundImage: 'radial-gradient(circle, rgba(245,158,11,0.34) 0 16%, transparent 17%)',
+  boxShadow: 'inset 0 0 0 2px rgba(245,158,11,0.62)',
+  backgroundImage: 'radial-gradient(circle, rgba(245,158,11,0.28) 0 10%, transparent 11%)',
 };
+
+function getLegalMoveHintStyle(hintStyle) {
+  return hintStyle?.boxShadow ? captureRingStyle : moveDotStyle;
+}
 
 export function useMoveHighlights({
   selectedSquare,
@@ -62,7 +66,7 @@ export function useMoveHighlights({
     // Priority 2: Legal move hints (from moveHints prop - selected or hover)
     Object.keys(moveHints).forEach((square) => {
       if (square !== checkedKingSquare && square !== selectedSquare) {
-        styles[square] = moveHints[square];
+        styles[square] = getLegalMoveHintStyle(moveHints[square]);
       }
     });
 
