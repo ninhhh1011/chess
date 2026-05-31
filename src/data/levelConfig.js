@@ -23,7 +23,7 @@ export const LEVEL_CONFIG = {
     label: 'Nâng cao',
     description: 'Tập kế hoạch dài hạn, cấu trúc tốt, endgame và khai cuộc.',
     badgeClass: 'bg-fuchsia-400/15 text-fuchsia-100 border-fuchsia-300/30',
-    mainGoal: 'Chuẩn bị tích hợp Stockfish/AI Coach thật cho phân tích sâu.',
+    mainGoal: 'Chuẩn bị dùng engine và Quân sư Ninh cho phân tích sâu.',
   },
 };
 

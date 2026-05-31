@@ -18,6 +18,7 @@ import ReviewNavigator from './ReviewNavigator';
 import EngineAnalysisPanel from '../analysis/EngineAnalysisPanel';
 import AICoachPanel from '../AICoachPanel';
 import coachAvatar from '../../assets/avatarcoach.webp';
+import { BRAND_NAMES } from '../../config/brand';
 
 /**
  * GameLayout - Production-quality chess app layout
@@ -46,10 +47,10 @@ export default function GameLayout({
   const [activeTab, setActiveTab] = useState('moves');
 
   const tabs = [
-    { id: 'moves', label: 'Nước đi', icon: '📜' },
-    { id: 'analysis', label: 'Phân tích', icon: '📊' },
-    { id: 'coach', label: 'AI Coach', iconType: 'avatar', iconSrc: coachAvatar },
-    { id: 'settings', label: 'Cài đặt', icon: '⚙️' },
+    { id: 'moves', label: BRAND_NAMES.moveHistory },
+    { id: 'analysis', label: BRAND_NAMES.analysis },
+    { id: 'coach', label: BRAND_NAMES.coach, iconType: 'avatar', iconSrc: coachAvatar },
+    { id: 'settings', label: 'Cài đặt' },
   ];
 
   return (
@@ -105,8 +106,7 @@ export default function GameLayout({
 
         {/* RIGHT COLUMN: Sidebar */}
         <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-20 lg:self-start">
-          
-          <GameControls />
+          <GameControls onHint={() => setActiveTab('coach')} />
           <ReviewNavigator />
 
           <div className="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden shadow-sm">
@@ -128,9 +128,9 @@ export default function GameLayout({
                       alt={tab.label}
                       className="mx-auto mb-1 h-5 w-5 rounded-full object-cover"
                     />
-                  ) : (
+                  ) : tab.icon ? (
                     <span className="block text-sm mb-0.5">{tab.icon}</span>
-                  )}
+                  ) : null}
                   {tab.label}
                 </button>
               ))}
@@ -177,7 +177,7 @@ export default function GameLayout({
                       : null
                   }
                   turn={activeGame.turn()}
-                  status={isGameOver ? 'Game Over' : isCheck ? 'Check' : 'Playing'}
+                  status={isGameOver ? 'Kết thúc' : isCheck ? 'Chiếu' : 'Đang chơi'}
                 />
               )}
 

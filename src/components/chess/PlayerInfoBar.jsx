@@ -14,11 +14,11 @@ export default function PlayerInfoBar({ botElo = 1200, botDifficulty = 'Medium' 
 
   // Determine player info based on game mode
   const whitePlayer = gameMode === GAME_MODES.BOT && playerColor === 'b'
-    ? { name: 'Stockfish Bot', elo: botElo, isBot: true, difficulty: botDifficulty }
+    ? { name: 'Ninh Lốp Trưởng', elo: botElo, isBot: true, difficulty: botDifficulty }
     : { name: 'Bạn', elo: '?', isBot: false };
 
   const blackPlayer = gameMode === GAME_MODES.BOT && playerColor === 'w'
-    ? { name: 'Stockfish Bot', elo: botElo, isBot: true, difficulty: botDifficulty }
+    ? { name: 'Ninh Lốp Trưởng', elo: botElo, isBot: true, difficulty: botDifficulty }
     : { name: 'Bạn', elo: '?', isBot: false };
 
   const PlayerCard = ({ player, color, isActive }) => (

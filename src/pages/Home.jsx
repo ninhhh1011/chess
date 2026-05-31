@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile } from '../services/userProfileService';
 import logoImg from '../assets/avatarcoach.webp';
-import { brandName, BRAND_TAGLINE, BRAND_DESCRIPTION } from '../config/brand';
+import { BRAND_NAMES, brandName, BRAND_TAGLINE, BRAND_DESCRIPTION } from '../config/brand';
 import { createGame } from '../services/onlineGameService';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,14 +22,14 @@ const features = [
   },
   {
     icon: '♟️',
-    title: 'Chơi với Bot',
-    description: 'Thực hành với bot AI từ dễ đến khó.',
+    title: `Đấu với ${BRAND_NAMES.bot}`,
+    description: 'Thực hành với bot AI từ dễ đến khó, gáy vừa đủ.',
     link: '/play',
   },
   {
     icon: '📖',
-    title: 'Học khai cuộc',
-    description: 'Nắm vững các khai cuộc phổ biến và chiến lược.',
+    title: BRAND_NAMES.openingTrainer,
+    description: 'Nắm vững khai cuộc phổ biến và ý tưởng chính.',
     link: '/openings',
   },
   {
@@ -40,8 +40,8 @@ const features = [
   },
   {
     icon: '🤖',
-    title: 'AI Coach',
-    description: 'Trợ lý AI giúp bạn phân tích và cải thiện.',
+    title: BRAND_NAMES.coach,
+    description: 'Trợ lý AI giúp bạn phân tích và sửa nước thiếu lực.',
     link: '/play',
   },
 ];

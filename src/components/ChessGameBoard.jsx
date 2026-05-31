@@ -7,6 +7,7 @@ import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
 import { classifyMoveAnnotation } from '../utils/moveQuality';
 import { addMistake, updateAfterGame } from '../services/userProfileService';
 import { playCheckSound } from '../utils/sound';
+import { BRAND_NAMES, UI_COPY } from '../config/brand';
 
 import GameLayout from './chess/GameLayout';
 
@@ -67,7 +68,7 @@ export default function ChessGameBoard() {
   // Live analysis
   useEffect(() => {
     if (!analysisMode && isBotThinking) {
-      setLiveEvalStatus('Bot đang nghĩ');
+      setLiveEvalStatus(UI_COPY.botThinking);
       return undefined;
     }
 
@@ -108,7 +109,7 @@ export default function ChessGameBoard() {
 
     if (game.isCheckmate()) {
       const winner = game.turn() === 'w' ? 'Đen' : 'Trắng';
-      setResultNotice(`${winner} thắng bằng chiếu hết!`);
+      setResultNotice(`${winner} thắng trước ${BRAND_NAMES.bot}.`);
       setPlayState('review');
       return;
     }
@@ -146,9 +147,9 @@ export default function ChessGameBoard() {
 
         const bestSan = before.bestMove ? getSanFromUci(lastMoveFenPair.beforeFen, before.bestMove) : 'không rõ';
         if (annotation.symbol === '!!' || annotation.symbol === '!') {
-          setAutoComment(`${annotation.symbol} ${annotation.label}. Nước ${lastMoveFenPair.san} giữ thế rất ổn.`);
+          setAutoComment(`${annotation.symbol} Ninh duyệt ${lastMoveFenPair.san}. Nước này giữ thế ổn.`);
         } else {
-          setAutoComment(`${annotation.symbol} ${annotation.label}. Engine thích ${bestSan} hơn.`);
+          setAutoComment(`${annotation.symbol} ${annotation.label} Ninh mách ${bestSan} ngon hơn.`);
         }
       } catch {
         if (!cancelled) {
@@ -156,7 +157,7 @@ export default function ChessGameBoard() {
             ...current,
             [lastMoveFenPair.moveIndex]: { symbol: '...', label: 'Chưa phân tích được', tone: 'pending' },
           }));
-          if (autoAnalyze) setAutoComment('Engine chưa sẵn sàng, vui lòng thử lại.');
+          if (autoAnalyze) setAutoComment('Ninh chưa mổ được thế này. Thử lại sau vài giây.');
         }
       }
     }

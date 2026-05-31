@@ -18,7 +18,7 @@ export default function StartNotice() {
 
   return (
     <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-xl border border-emerald-400/40 bg-slate-950/95 px-6 py-3 text-center font-bold text-emerald-300 shadow-sm ">
-      ♔ Bắt đầu ván cờ!
+      Bắt đầu ván cờ.
     </div>
   );
 }

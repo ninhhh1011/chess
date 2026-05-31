@@ -135,7 +135,7 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
       <p className="mt-3 rounded-xl bg-slate-900 p-4 font-bold text-emerald-500">{message}</p>
       <p className="mt-4 text-slate-400">Nước cần luyện: <b>{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b></p>
       <div className="mt-6 flex flex-wrap gap-3">
-        <button className="btn-secondary" onClick={() => setMessage(expectedMove?.explanation || 'Đã hết line.')}>Gợi ý</button>
+        <button className="btn-secondary" onClick={() => setMessage(expectedMove?.explanation || 'Đã hết line.')}>Ninh mách nước</button>
         <button className="btn-secondary" onClick={showCorrect}>Hiện nước đúng</button>
         <button className="btn-secondary" onClick={reset}>Làm lại</button>
       </div>

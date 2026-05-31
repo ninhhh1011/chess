@@ -1,5 +1,6 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import coachAvatar from '../../assets/avatarcoach.webp';
+import { BRAND_NAMES, UI_COPY } from '../../config/brand';
 
 /**
  * PlayerBar - compact player/opponent identity strip.
@@ -25,7 +26,7 @@ export default function PlayerBar({ position = 'top' }) {
     avatarSrc = null;
     isActive = currentTurn === playerColor;
   } else if (gameMode === GAME_MODES.BOT) {
-    displayName = 'Ninh lốp trưởng';
+    displayName = BRAND_NAMES.bot;
     displayBadge = botElo;
     avatarSrc = coachAvatar;
     isActive = currentTurn !== playerColor;
@@ -70,8 +71,11 @@ export default function PlayerBar({ position = 'top' }) {
         <div className="flex items-center gap-1.5">
           <span
             className={`h-2 w-2 rounded-full bg-emerald-400 ${!isPlayer && isBotThinking ? 'animate-pulse' : ''}`}
-            title={!isPlayer && isBotThinking ? 'Bot đang nghĩ' : undefined}
+            title={!isPlayer && isBotThinking ? UI_COPY.botThinking : undefined}
           />
+          {!isPlayer && isBotThinking && (
+            <span className="hidden text-xs font-medium text-slate-400 sm:inline">{UI_COPY.botThinking}</span>
+          )}
         </div>
       )}
     </div>

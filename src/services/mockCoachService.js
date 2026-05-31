@@ -125,7 +125,7 @@ export function getMockHint({ fen, history = [], level = 'beginner' }) {
 
   return `${baseDisclaimer()}
 
-**Gợi ý nước đi**
+**Ninh mách nước**
 - ${getFenSummary(fen)}
 - ${getMoveSummary(history)}
 - Với level ${guide.label}: ${guide.tone}
@@ -171,7 +171,7 @@ export function reviewMockGame({ history = [], level = 'beginner' }) {
   if (!Array.isArray(history) || history.length === 0) {
     return `${baseDisclaimer()}
 
-**Review ván**
+**Phòng mổ ván cờ**
 Ván cờ chưa có nước đi để review. Với level ${guide.label}, mục tiêu đầu ván là:
 - Kiểm soát trung tâm.
 - Phát triển mã và tượng.
@@ -187,7 +187,7 @@ ${getProfileCoaching()}`;
 
   return `${baseDisclaimer()}
 
-**Review ván cơ bản**
+**Phòng mổ ván cờ cơ bản**
 - Khai cuộc / giai đoạn đầu: ${opening}
 - Các nước gần đây: ${recent}
 - Level ${guide.label}: ${guide.tone}

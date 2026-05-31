@@ -13,6 +13,6 @@ export default function OpeningCard({ opening, progress }) {
     <p className="mt-1 font-bold text-emerald-500">{opening.vietnameseName}</p>
     <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">{opening.description}</p>
     <div className="mt-5"><OpeningProgress progress={progress} /></div>
-    <Link to={`/openings/${opening.id}`} className="btn-primary mt-5 w-full">Học khai cuộc</Link>
+    <Link to={`/openings/${opening.id}`} className="btn-primary mt-5 w-full">Vào lò luyện</Link>
   </article>;
 }

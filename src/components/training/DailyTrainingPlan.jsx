@@ -34,7 +34,7 @@ export default function DailyTrainingPlan({ plan, onRegenerate, onStartLesson, o
     <div className="mt-6 flex flex-wrap gap-3">
       <button className="btn-primary" onClick={onStartLesson}>Bắt đầu bài học đề xuất</button>
       <button className="btn-secondary" onClick={onStartExercises}>Làm bài tập đề xuất</button>
-      <button className="btn-secondary" onClick={onStartOpening}>Luyện khai cuộc</button>
+      <button className="btn-secondary" onClick={onStartOpening}>Lò luyện khai cuộc</button>
     </div>
   </article>;
 }

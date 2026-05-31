@@ -1,4 +1,5 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
+import { UI_COPY } from '../../config/brand';
 
 const PIECE_LABELS = {
   p: 'Tốt',
@@ -24,7 +25,7 @@ export default function MoveHintDisplay({ engineMove }) {
     return (
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-400/25 bg-emerald-500/10 px-4 py-3 text-sm text-slate-100">
         <p>
-          <b className="text-emerald-300">Gợi ý:</b> {engineMove.pieceLabel} từ{' '}
+          <b className="text-emerald-300">{UI_COPY.hint}:</b> {engineMove.pieceLabel} từ{' '}
           <b className="text-emerald-300">{engineMove.from}</b> đến <b className="text-emerald-300">{engineMove.to}</b>
           {engineMove.san && <span className="text-slate-400"> ({engineMove.san})</span>}
         </p>
@@ -40,7 +41,7 @@ export default function MoveHintDisplay({ engineMove }) {
           <b className="text-emerald-300">{selectedSquare}</b>. Chọn ô sáng để di chuyển.
         </span>
       ) : (
-        <span>Chọn quân để xem nước hợp lệ. Bật gợi ý để thấy nước tốt nhất.</span>
+        <span>Chọn quân để xem nước hợp lệ. Bật {UI_COPY.hint.toLowerCase()} để thấy nước tốt nhất.</span>
       )}
     </div>
   );

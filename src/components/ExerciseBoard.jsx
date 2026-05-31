@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { sameMove } from '../utils/chessStatus';
+import { UI_COPY } from '../config/brand';
 
 export default function ExerciseBoard({ exercise, onResult }) {
   const [game, setGame] = useState(() => new Chess(exercise.fen));
@@ -52,9 +53,9 @@ export default function ExerciseBoard({ exercise, onResult }) {
       <h2 className="text-2xl font-bold">{exercise.title}</h2>
       <p className="mt-3 leading-7 text-slate-300">{exercise.description}</p>
       <div className={`mt-5 rounded-xl p-4 font-bold ${message === 'Chính xác!' ? 'bg-emerald-400/15 text-emerald-100' : 'bg-emerald-400/15 text-emerald-100'}`}>{message}</div>
-      {showHint && <p className="mt-4 rounded-xl bg-slate-900 p-4 text-slate-300">Gợi ý: {exercise.hint}</p>}
+      {showHint && <p className="mt-4 rounded-xl bg-slate-900 p-4 text-slate-300">{UI_COPY.hint}: {exercise.hint}</p>}
       <div className="mt-6 flex flex-wrap gap-3">
-        <button className="btn-secondary" onClick={() => setShowHint(true)}>Gợi ý</button>
+        <button className="btn-secondary" onClick={() => setShowHint(true)}>{UI_COPY.hint}</button>
         <button className="btn-secondary" onClick={reset}>Làm lại</button>
       </div>
       <p className="mt-5 break-all text-xs text-slate-400">FEN: {exercise.fen}</p>
