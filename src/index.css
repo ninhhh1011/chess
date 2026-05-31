@@ -15,10 +15,10 @@
   
   --color-board-light: #f1f5f9;
   --color-board-dark: #64748b;
-  --color-board-legal-hint: rgba(0, 0, 0, 0.2);
-  --color-board-last-move: rgba(250, 204, 21, 0.5); /* yellow-400 */
+  --color-board-legal-hint: rgba(15, 23, 42, 0.34);
+  --color-board-last-move: rgba(250, 204, 21, 0.32); /* yellow-400 */
   --color-board-check: rgba(239, 68, 68, 0.5); /* red-500 */
-  --color-board-selected: rgba(56, 189, 248, 0.4); /* sky-400 */
+  --color-board-selected: rgba(56, 189, 248, 0.22); /* sky-400 */
   
   --color-surface-100: #f1f5f9;
   --color-surface-200: #e2e8f0;
@@ -71,22 +71,28 @@ img, svg, canvas, iframe { max-width: 100%; }
   .panel { @apply ui-panel; }
   .card { @apply ui-card; }
 
-  /* Optimized board sizing for 100% zoom desktop viewport */
   .chess-board-container {
     width: 100%;
-    max-width: clamp(360px, 58vh, 580px);
+    max-width: min(100%, max(18rem, calc(100svh - 15rem)), 540px);
     aspect-ratio: 1 / 1;
+    min-width: 0;
   }
 
   @media (min-width: 1024px) {
     .chess-board-container {
-      max-width: clamp(420px, 60vh, 620px);
+      max-width: min(100%, max(26rem, calc(100svh - 17rem)), 560px);
     }
   }
 
   @media (min-width: 1280px) and (min-height: 900px) {
     .chess-board-container {
-      max-width: clamp(480px, 62vh, 640px);
+      max-width: min(100%, calc(100svh - 18rem), 580px);
+    }
+  }
+
+  @media (min-width: 1536px) and (min-height: 950px) {
+    .chess-board-container {
+      max-width: min(100%, calc(100svh - 18rem), 600px);
     }
   }
 }

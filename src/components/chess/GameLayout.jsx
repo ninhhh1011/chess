@@ -67,8 +67,8 @@ export default function GameLayout({
           {showStartNotice && playState === 'playing' && <StartNotice />}
           <PromotionModal />
 
-          {/* Main layout: 2 columns, controlled sizing */}
-          <div className="mx-auto flex max-w-[1400px] gap-4 px-3 py-3 lg:flex-row flex-col">
+          {/* Main layout: board first, sidebar secondary */}
+          <div className="mx-auto grid w-full max-w-[1320px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_340px]">
 
         {/* LEFT COLUMN: Board area */}
         <section className="flex-1 min-w-0">
@@ -83,9 +83,9 @@ export default function GameLayout({
           </div>
 
           {/* Board with evaluation bar */}
-          <div className="flex items-start gap-2">
+          <div className="flex items-start justify-center gap-2">
             <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
-            <div className="flex-1 flex justify-center">
+            <div className="flex min-w-0 flex-1 justify-center">
               <ChessBoardPanel engineHint={engineHint} />
             </div>
           </div>
@@ -103,8 +103,8 @@ export default function GameLayout({
           )}
         </section>
 
-        {/* RIGHT COLUMN: Sidebar - fixed width */}
-        <aside className="w-full lg:w-[360px] lg:sticky lg:top-20 lg:self-start flex flex-col gap-3">
+        {/* RIGHT COLUMN: Sidebar */}
+        <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-20 lg:self-start">
           
           <GameControls />
           <ReviewNavigator />
@@ -137,7 +137,7 @@ export default function GameLayout({
             </nav>
 
             {/* Tab content - reduced padding */}
-            <div className="p-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 10rem)' }}>
+            <div className="overflow-y-auto p-3" style={{ maxHeight: 'calc(100svh - 10rem)' }}>
               {activeTab === 'moves' && <MoveHistory />}
 
               {activeTab === 'analysis' && (
