@@ -1,102 +1,152 @@
-# Ninh Lốp Trưởng Chess ♟️🔥
+# Ninh Lốp Trưởng Chess
 
 ## Overview
 
-Chào mừng bạn đến với **Ninh Lốp Trưởng Chess** — ứng dụng chơi cờ vua "gáy vừa đủ, học cũng sâu". Đây không phải là nền tảng thay thế Chess.com, mà là nơi bạn có thể thư giãn, mổ xẻ những nước cờ lỗi ngớ ngẩn (blunder) cùng Quân sư AI Ninh với phong cách phân tích cực mặn. Vừa giải trí, vừa lên trình!
+Ninh Lốp Trưởng Chess is a React/Vite chess web app focused on fast local play, bot practice, move review, and lightweight training tools.
 
-Dự án hiện vẫn đang trong quá trình nâng cấp và hoàn thiện liên tục, nên đôi khi Ninh có thể hơi "ngáo" hoặc nước đi chưa phải là thần sầu nhất. Nhưng yên tâm, "lốp trưởng" sẽ luôn bám sát bạn trên bàn cờ.
+The brand is intentionally a little meme-flavored, but the product direction is still a clean chess app: the board stays central, the controls stay practical, and Ninh only gáy vừa đủ.
 
----
+This project is still being improved. Some areas, especially online play, AI coach responses, and automated test coverage, should be treated as in-progress rather than production-complete.
 
 ## Features
 
-- **Chơi với Bot (Ninh):** Các mức độ từ Dễ đến Khó, thi thoảng bot sẽ nhả vài câu nhận xét cực gắt.
-- **Phân tích ván cờ (Engine Analysis):** Tích hợp Stockfish 16+ để chỉ ra nước đi tốt nhất, phát hiện lỗi sai, và đánh giá lợi thế.
-- **Quân sư AI (AI Coach):** Nhận xét nhanh, mách nước, và phân tích tình huống với phong cách riêng biệt.
-- **Luyện tập Khai cuộc (Opening Trainer):** Luyện tay các đường khai cuộc cơ bản để không bị "bắt nạt" từ những nước đầu tiên.
-- **Giải bài tập (Tactics):** Các bài tập chiến thuật từ cơ bản đến nâng cao.
-
----
+- Play chess locally or against the Ninh Lốp Trưởng bot.
+- Responsive chessboard with click-to-move, drag-to-move, legal move hints, last-move highlight, and king-in-check highlight.
+- Bot difficulty settings and compact bot thinking feedback.
+- Move history, undo, resign, board flip, and new game controls.
+- Stockfish-backed analysis and best-move hints with fallback behavior when the engine is unavailable.
+- Quân sư Ninh AI Coach panel for short position advice and hints.
+- Lò luyện khai cuộc for opening practice with progress stored locally.
+- Tactics/exercise pages and a training dashboard based on local user profile data.
+- Supabase-backed login/register flow when Supabase environment variables are configured.
+- Experimental online play route using Supabase tables/realtime.
 
 ## Tech Stack
 
-- **Frontend:** React 19, Vite, TailwindCSS (styling).
-- **Chess Engine & Logic:** `chess.js` (luật cờ), `react-chessboard` (bàn cờ), `stockfish` (engine WASM cho trình duyệt).
-- **Backend/Database:** Supabase (Xác thực người dùng & Cơ sở dữ liệu).
-- **AI Coach:** Tích hợp API AI (mô phỏng huấn luyện viên).
-- **Deployment:** Vercel.
-
----
+- React 19
+- Vite 8
+- Tailwind CSS
+- React Router
+- `chess.js` for chess rules and move validation
+- `react-chessboard` for board rendering and interaction
+- Stockfish integration for engine analysis and bot move selection
+- Supabase for authentication, cloud profile data, and experimental online games
+- Vitest and Testing Library for automated tests
 
 ## Getting Started
 
-Làm theo các bước sau để chạy dự án tại máy tính của bạn (Local Development):
+Install dependencies:
 
-### Yêu cầu hệ thống
-- Node.js (phiên bản >= 18)
-- npm (hoặc yarn/pnpm)
+```bash
+npm install
+```
 
-### Cài đặt và Chạy
+Run the Vite dev server:
 
-1. **Clone kho lưu trữ:**
-   ```bash
-   git clone https://github.com/ninhhh1011/chess.git
-   cd chess
-   ```
+```bash
+npm run dev
+```
 
-2. **Cài đặt thư viện:**
-   ```bash
-   npm install
-   ```
+Run the optional local AI Coach server:
 
-3. **Chạy server phát triển:**
-   ```bash
-   npm run dev
-   ```
-   Ứng dụng sẽ chạy tại `http://localhost:5173`.
+```bash
+npm run dev:server
+```
 
----
+Run both frontend and local server:
+
+```bash
+npm run dev:all
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+Run tests:
+
+```bash
+npm test
+```
 
 ## Environment Variables
 
-Tạo một tệp `.env.local` ở thư mục gốc và cung cấp các biến môi trường sau (dựa theo `.env.example`):
+Copy `.env.example` to `.env.local` and fill in the values you need.
+
+Frontend Supabase configuration:
 
 ```env
-# Supabase
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# AI Coach API (Nếu có)
-VITE_AI_API_KEY=your_ai_api_key
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
----
+Optional local AI Coach server configuration:
+
+```env
+AI_API_KEY=your-provider-api-key
+AI_MODEL=gpt-4o-mini
+```
+
+Some Vercel/serverless AI paths also reference Claude-style variables:
+
+```env
+CLAUDE_API_KEY=your-claude-api-key
+VITE_CLAUDE_API_KEY=your-claude-api-key
+```
+
+Supabase is optional for local board/bot practice. Login, cloud sync, and online play need Supabase configuration and the expected database tables.
 
 ## Project Structure
 
-- `src/components/` - Các component React giao diện chính (Bàn cờ, Navbar, Panel phân tích, v.v.)
-- `src/pages/` - Các trang chính (Home, Play, Learn, Openings, Exercises)
-- `src/services/` - Xử lý logic API, tương tác với Supabase, AI Coach và Stockfish
-- `src/contexts/` - Quản lý State toàn cục (Auth, ChessGame)
-- `src/utils/` - Hàm tiện ích hỗ trợ phân tích nước cờ và di chuyển
-- `docs/` - Chứa tài liệu thiết kế hệ thống và ghi chú (bao gồm `docs/archive/` cho các tệp cũ)
-- `supabase/` - Cấu hình và migration cho Supabase
+```text
+api/                 Vercel/serverless coach endpoints and prompt helpers
+docs/                Architecture notes, audit notes, and archived implementation notes
+public/              Static assets and Stockfish worker files
+server/              Optional local Express AI Coach server
+src/assets/          Images and app assets
+src/components/      Shared UI, chess UI, analysis panels, openings, and training components
+src/contexts/        Auth and chess game providers
+src/data/            Exercises, openings, levels, and training rules
+src/hooks/           Engine, bot, and move-highlight hooks
+src/lib/             Supabase client setup
+src/pages/           Route-level pages
+src/services/        Stockfish, bot, coach, auth, profile, online game, and progress services
+src/utils/           Chess move helpers, sound helpers, and social-intent utilities
+supabase/            Supabase schema and migration files
+```
 
----
+Important gameplay files:
+
+- `src/contexts/ChessGameContext.tsx`
+- `src/components/ChessGameBoard.jsx`
+- `src/components/chess/ChessBoardPanel.jsx`
+- `src/components/chess/GameLayout.jsx`
+- `src/hooks/useBotMove.js`
+- `src/services/stockfishService.js`
 
 ## Known Issues
 
-Dự án vẫn đang trong giai đoạn phát triển, vì vậy hãy "giơ cao đánh khẽ" nếu bạn gặp phải:
-- **Tải Engine chậm:** Đôi khi Stockfish khởi tạo lần đầu hơi lâu trên các trình duyệt cũ.
-- **AI Coach chưa ổn định:** Một số thế cờ quá phức tạp có thể khiến Ninh "im lặng" hoặc đưa ra lời khuyên chung chung.
-- **Trải nghiệm Mobile:** Một số giao diện phân tích sâu trên màn hình điện thoại nhỏ vẫn cần tối ưu thêm.
-
----
+- The automated test suite currently has stale expectations around FEN formatting, move highlight styling, engine hook mocks, and evaluation formatting. `npm run build` is the stronger verification signal right now.
+- `ChessGameContext.tsx` still carries several responsibilities. It should be split carefully later, but a broad rewrite would be risky.
+- Online play is experimental and depends on Supabase setup, realtime behavior, and table policies.
+- AI Coach can fall back to mock or generic responses when the API/server is unavailable.
+- Some older internal storage keys and archived notes still reference the previous project name.
+- Deep analysis and coach panels are intentionally secondary to the board, but mobile polish can still improve.
 
 ## Roadmap
 
-- [ ] Cải thiện tốc độ tải ban đầu của Stockfish.
-- [ ] Thêm tính năng đấu Online (Multiplayer thời gian thực).
-- [ ] Hoàn thiện hệ thống theo dõi tiến độ học tập (Tracking & Stats).
-- [ ] Bổ sung thêm nhiều bài tập chiến thuật và khai cuộc phong phú hơn.
-- [ ] Mở rộng kho "văn mẫu" của AI Coach Ninh.
+- Update stale automated tests to match current board highlighting and engine behavior.
+- Continue simplifying chess state architecture in small, testable steps.
+- Improve promotion UX beyond automatic queen promotion.
+- Harden online play validation and Supabase setup documentation.
+- Make AI Coach source/fallback status clearer to users.
+- Add real screenshots once the UI stabilizes.
+- Keep the meme copy controlled while improving the serious chess experience.
