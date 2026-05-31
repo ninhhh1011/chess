@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { UI_COPY } from '../../config/brand';
 
-export default function GameControls() {
+export default function GameControls({ onHint }) {
   const { newGame, undoMove, flipBoard, resignGame, playState, setPlayState } = useChessGame();
   const [confirmAction, setConfirmAction] = useState(null);
 
@@ -89,6 +89,13 @@ export default function GameControls() {
           </div>
 
           <div className="flex gap-1.5">
+            <button
+              onClick={onHint}
+              className="rounded-lg bg-slate-800 px-3 py-2 text-xs font-medium text-emerald-400 hover:bg-slate-700 hover:text-emerald-300"
+              title={UI_COPY.hint}
+            >
+              {UI_COPY.hint}
+            </button>
             <button
               onClick={undoMove}
               className="rounded-lg bg-slate-800 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-700"

@@ -106,8 +106,7 @@ export default function GameLayout({
 
         {/* RIGHT COLUMN: Sidebar */}
         <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-20 lg:self-start">
-          
-          <GameControls />
+          <GameControls onHint={() => setActiveTab('coach')} />
           <ReviewNavigator />
 
           <div className="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden shadow-sm">
