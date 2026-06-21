@@ -7,6 +7,12 @@ import { isInstagramIntent, NINH_INSTAGRAM_URL } from '../utils/socialIntent';
 
 const COACH_NAME = BRAND_NAMES.coach;
 
+const SOURCE_LABELS = {
+  ai: 'AI live',
+  mock: 'Fallback mock',
+  fallback: 'Fallback',
+};
+
 const COACH_PROMPTS = {
   quick: `Bạn là HLV cờ vua cá nhân của người mới học.
 Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
@@ -57,7 +63,7 @@ function renderCoachAdvice(advice) {
             href={advice.instagramUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-flex rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-500/20"
+            className="mt-3 inline-flex rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-400/15"
           >
             Mở Instagram
           </a>
@@ -88,7 +94,7 @@ function renderCoachAdvice(advice) {
       <div>
         <p className="text-sm leading-6 text-slate-200">{mainText}</p>
         {bullet && (
-          <div className="mt-3 rounded-lg bg-slate-900 p-3 text-sm text-slate-300">
+          <div className="mt-3 rounded-md border border-slate-800 bg-slate-950 p-3 text-sm text-slate-300">
             <span className="font-medium text-slate-100">Điểm cần nhớ: </span>
             {bullet}
           </div>
@@ -113,7 +119,7 @@ function renderCoachAdvice(advice) {
       <div>
         <p className="text-sm leading-6 text-slate-200">{mainText}</p>
         {reason && (
-          <div className="mt-3 rounded-lg bg-slate-900 p-3 text-sm text-slate-300">
+          <div className="mt-3 rounded-md border border-slate-800 bg-slate-950 p-3 text-sm text-slate-300">
             <span className="font-medium text-slate-100">Vì sao: </span>
             {reason}
           </div>
@@ -171,7 +177,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
 
     try {
       const result = await askAICoach(payload);
-      setAdvice({ type, text: result.reply });
+      setAdvice({ type, text: result.reply, source: result.source || 'ai' });
     } catch (error) {
       setAdvice({ type: type === prompt ? 'custom' : type, text: 'Ninh chưa phân tích được thế này. Thử lại sau vài giây.' });
     } finally {
@@ -195,9 +201,17 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           alt={COACH_NAME}
           className="h-10 w-10 rounded-md border border-slate-700 object-cover shadow-sm"
         />
-        <div>
+        <div className="min-w-0 flex-1">
           <h3 className="text-sm font-bold text-slate-100">{COACH_NAME}</h3>
           <p className="text-xs text-slate-400">Mổ thế cờ, gáy vừa đủ</p>
+        </div>
+        <div className="flex flex-col items-end gap-1">
+          <span className="rounded border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
+            {stockfish ? 'Stockfish on' : 'No engine context'}
+          </span>
+          <span className="rounded border border-slate-700 bg-slate-900 px-2 py-0.5 text-[11px] font-medium text-slate-400">
+            Source shown
+          </span>
         </div>
       </div>
 
@@ -206,21 +220,21 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
         <button
           onClick={() => getAdvice('quick')}
           disabled={isLoading}
-          className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50"
+          className="rounded-md border border-slate-700 bg-slate-900 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-800 disabled:opacity-50"
         >
           Nhận xét nhanh
         </button>
         <button
           onClick={() => getAdvice('focus')}
           disabled={isLoading}
-          className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50"
+          className="rounded-md border border-slate-700 bg-slate-900 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-800 disabled:opacity-50"
         >
           Nên chú ý
         </button>
         <button
           onClick={() => getAdvice('hint')}
           disabled={isLoading}
-          className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:opacity-50"
+          className="rounded-md border border-emerald-400/25 bg-emerald-400/10 px-2 py-2.5 text-xs font-medium text-emerald-300 transition hover:bg-emerald-400/15 disabled:opacity-50"
         >
           {UI_COPY.hint}
         </button>
@@ -234,19 +248,19 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           onChange={(e) => setCustomMessage(e.target.value)}
           disabled={isLoading}
           placeholder="Hỏi Quân sư Ninh về thế cờ..."
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+          className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:border-emerald-400 focus:outline-none"
         />
         <button
           type="submit"
           disabled={isLoading || !customMessage.trim()}
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:opacity-50"
+          className="rounded-md bg-emerald-400 px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-emerald-300 disabled:opacity-50"
         >
           Gửi
         </button>
       </form>
 
       {/* Advice Display */}
-      <div className="min-h-[120px] rounded-xl border border-slate-800 bg-slate-950 p-4">
+      <div className="min-h-[120px] rounded-lg border border-slate-800 bg-slate-950 p-4">
         {isLoading ? (
           <div className="flex h-full items-center justify-center text-emerald-500 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:overflow-hidden [&>span]:rounded-full [&>span]:bg-emerald-400 [&>span]:text-transparent">
             <span className="text-sm font-medium animate-pulse">{UI_COPY.botThinking}</span>
@@ -259,6 +273,17 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
               {advice.type === 'hint' && UI_COPY.hint}
               {advice.type === 'social' && 'Social'}
               {advice.type === 'custom' && 'Trả lời'}
+            </div>
+            <div className="mb-3">
+              <span
+                className={`rounded border px-2 py-0.5 text-[11px] font-medium ${
+                  advice.source === 'ai'
+                    ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-300'
+                    : 'border-amber-400/25 bg-amber-400/10 text-amber-200'
+                }`}
+              >
+                Source: {SOURCE_LABELS[advice.source] || advice.source || 'Unknown'}
+              </span>
             </div>
             {renderCoachAdvice(advice)}
 

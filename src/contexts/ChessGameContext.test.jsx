@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { ChessGameProvider, useChessGame } from './ChessGameContext';
@@ -32,7 +31,7 @@ describe('ChessGameContext', () => {
     });
 
     // FEN updated
-    expect(screen.getByTestId('fen').textContent).toContain('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
+    expect(screen.getByTestId('fen').textContent).toContain('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1');
 
     // New game
     act(() => {

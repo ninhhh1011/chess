@@ -11,13 +11,13 @@ export default function GameInfoBar() {
   const isPlayerTurn = currentTurn === playerColor;
 
   let statusText = 'Đang chơi';
-  let statusColor = 'text-blue-400';
+  let statusColor = 'text-slate-300';
 
   if (isGameOver) {
     if (activeGame.isCheckmate()) {
       const winner = currentTurn === 'w' ? 'Đen thắng' : 'Trắng thắng';
       statusText = winner;
-      statusColor = currentTurn === playerColor ? 'text-red-400' : 'text-green-400';
+      statusColor = currentTurn === playerColor ? 'text-rose-300' : 'text-emerald-300';
     } else {
       statusText = 'Hòa';
       statusColor = 'text-slate-400';
@@ -34,15 +34,15 @@ export default function GameInfoBar() {
   }
 
   return (
-    <div className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2">
-      <span className={`text-sm font-bold ${statusColor}`}>{statusText}</span>
+    <div className="flex items-center justify-between rounded-lg border border-slate-700/70 bg-slate-950/80 px-3 py-2">
+      <span className={`text-sm font-semibold ${statusColor}`}>{statusText}</span>
 
       {turnText && (
         <div className="flex items-center gap-1.5">
           {!isGameOver && (
             <span className={`h-1.5 w-1.5 rounded-full bg-emerald-400 ${isBotThinking ? 'animate-pulse' : ''}`} />
           )}
-          <span className="text-sm font-bold text-emerald-300">{turnText}</span>
+          <span className="text-sm font-semibold text-emerald-300">{turnText}</span>
         </div>
       )}
     </div>

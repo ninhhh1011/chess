@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useChessGame } from '../contexts/ChessGameContext';
 import { useAuth } from '../contexts/AuthContext';
 import ChessGameBoard from '../components/ChessGameBoard';
-import GameLayout from '../components/chess/GameLayout';
 import { joinGame, subscribeToGame, fetchGameState, pushMove, updateGameStatus } from '../services/onlineGameService';
 
 export default function OnlinePlay() {
@@ -87,7 +86,6 @@ export default function OnlinePlay() {
       });
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId, user, navigate]);
 
   // Intercept local moves to broadcast them
@@ -106,36 +104,45 @@ export default function OnlinePlay() {
 
   if (status === 'joining') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
-        <p className="text-emerald-500 animate-pulse">Joining game...</p>
+      <div className="flex min-h-[60svh] items-center justify-center p-4">
+        <p className="animate-pulse rounded-md border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 text-sm font-medium text-emerald-300">
+          Joining beta game...
+        </p>
       </div>
     );
   }
 
   if (status === 'error') {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 p-4 text-center">
-        <p className="text-red-500 mb-4">{error}</p>
-        <button onClick={() => navigate('/')} className="rounded-lg bg-slate-800 px-4 py-2 text-slate-200">Go Home</button>
+      <div className="flex min-h-[60svh] flex-col items-center justify-center p-4 text-center">
+        <p className="mb-4 rounded-md border border-rose-500/25 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">{error}</p>
+        <button onClick={() => navigate('/')} className="btn-secondary">Go Home</button>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-950">
+    <div className="flex flex-col gap-2">
+      <div className="mx-auto flex w-full max-w-[1320px] items-center justify-between gap-3 rounded-lg border border-slate-700/70 bg-slate-950/80 px-3 py-2 text-sm">
+        <div className="flex items-center gap-2 text-slate-300">
+          <span className="rounded border border-amber-300/25 bg-amber-300/10 px-2 py-0.5 text-[11px] font-semibold uppercase text-amber-200">
+            Beta
+          </span>
+          <span>Online Play</span>
+        </div>
+        <span className="text-xs text-slate-500">Realtime sync can still vary by network.</span>
+      </div>
       {status === 'waiting' && (
-        <div className="bg-amber-500/20 text-amber-300 p-2 text-center text-sm">
+        <div className="mx-auto w-full max-w-[1320px] rounded-md border border-amber-300/25 bg-amber-300/10 p-2 text-center text-sm text-amber-200">
           Waiting for opponent to join... Share this link: {window.location.href}
         </div>
       )}
       {status === 'abandoned' && (
-        <div className="bg-red-500/20 text-red-300 p-2 text-center text-sm">
+        <div className="mx-auto w-full max-w-[1320px] rounded-md border border-rose-500/25 bg-rose-500/10 p-2 text-center text-sm text-rose-200">
           Game abandoned due to inactivity.
         </div>
       )}
-      <GameLayout>
-        <ChessGameBoard />
-      </GameLayout>
+      <ChessGameBoard />
     </div>
   );
 }
