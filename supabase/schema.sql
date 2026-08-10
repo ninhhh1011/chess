@@ -198,3 +198,45 @@ CREATE POLICY "Service role insert chess_knowledge" ON chess_knowledge
 
 CREATE POLICY "Service role insert chat_embeddings" ON chat_embeddings
   FOR INSERT WITH CHECK (auth.role() = 'service_role');
+
+-- ===========================================
+-- RAG: Vector search RPC function
+-- ===========================================
+
+-- Drop existing function if updating signature
+DROP FUNCTION IF EXISTS match_chess_knowledge(vector, text, integer, float);
+
+CREATE OR REPLACE FUNCTION match_chess_knowledge(
+  query_embedding vector(1536),
+  match_category text,
+  match_count integer DEFAULT 5,
+  match_threshold float DEFAULT 0.5
+)
+RETURNS TABLE (
+  id uuid,
+  category text,
+  subcategory text,
+  chunk_text text,
+  metadata jsonb,
+  similarity float
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    ck.id,
+    ck.category,
+    ck.subcategory,
+    ck.chunk_text,
+    ck.metadata,
+    1 - (ck.embedding <=> query_embedding) AS similarity
+  FROM chess_knowledge ck
+  WHERE
+    ck.category = match_category
+    AND ck.embedding IS NOT NULL
+    AND 1 - (ck.embedding <=> query_embedding) > match_threshold
+  ORDER BY ck.embedding <=> query_embedding
+  LIMIT match_count;
+END;
+$$;
