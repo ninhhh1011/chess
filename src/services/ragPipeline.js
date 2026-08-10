@@ -71,7 +71,7 @@ export async function queryRAG(params) {
   if (!aiResult?.reply) {
     // AI failed — fall back to mock
     return {
-      reply: askMockCoach(params),
+      reply: await askMockCoach(params),
       source: 'mock_fallback',
       citations,
     };
