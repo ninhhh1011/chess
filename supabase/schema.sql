@@ -148,3 +148,53 @@ create policy "Users can insert own messages" on coach_messages
 
 create policy "Users can delete own messages" on coach_messages
   for delete using (auth.uid() = user_id);
+
+-- ===========================================
+-- RAG: Chess Knowledge Base
+-- ===========================================
+
+-- Enable pgvector extension
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Chunked chess knowledge base
+CREATE TABLE IF NOT EXISTS chess_knowledge (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  category text NOT NULL CHECK (category IN ('opening', 'tactic', 'principle', 'endgame')),
+  subcategory text,
+  chunk_text text NOT NULL,
+  embedding vector(1536),
+  metadata jsonb DEFAULT '{}',
+  created_at timestamptz DEFAULT now()
+);
+
+-- IVFFlat index for fast similarity search
+CREATE INDEX IF NOT EXISTS chess_knowledge_embedding_idx
+  ON chess_knowledge USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+
+-- User query embedding cache (anonymous use allowed - cache by query hash alone)
+CREATE TABLE IF NOT EXISTS chat_embeddings (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  query_hash text NOT NULL,
+  embedding vector(1536),
+  created_at timestamptz DEFAULT now(),
+  UNIQUE(query_hash)
+);
+
+-- Enable RLS
+ALTER TABLE chess_knowledge ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chat_embeddings ENABLE ROW LEVEL SECURITY;
+
+-- Public read for chess_knowledge (anonymous app users need to search)
+CREATE POLICY "Public read chess_knowledge" ON chess_knowledge
+  FOR SELECT USING (true);
+
+-- Public read for chat_embeddings (deduplication)
+CREATE POLICY "Public read chat_embeddings" ON chat_embeddings
+  FOR SELECT USING (true);
+
+-- Only service role can insert/update (seed script uses service role key)
+CREATE POLICY "Service role insert chess_knowledge" ON chess_knowledge
+  FOR INSERT WITH CHECK (auth.role() = 'service_role');
+
+CREATE POLICY "Service role insert chat_embeddings" ON chat_embeddings
+  FOR INSERT WITH CHECK (auth.role() = 'service_role');
