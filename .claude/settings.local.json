@@ -64,7 +64,9 @@
       "Bash(node -c src/services/aiCoachApiService.js)",
       "Bash(git commit -m 'feat: integrate RAG pipeline into askAICoach *)",
       "Bash(bash \"C:/Users/nguye/.claude/plugins/cache/claude-plugins-official/superpowers/6.2.0/skills/subagent-driven-development/scripts/review-package\" docs/superpowers/plans/2026-08-10-rag-chess-coach-plan.md 021a101fb9dc7e1646fe961b4d3a211f59e55c53 HEAD)",
-      "Bash(git commit -m 'test: run full suite, linter, build after RAG integration *)"
+      "Bash(git commit -m 'test: run full suite, linter, build after RAG integration *)",
+      "Bash(timeout 10 npm run dev)",
+      "Bash(git commit -m 'docs: add smoke test instructions for RAG pipeline *)"
     ]
   }
 }
