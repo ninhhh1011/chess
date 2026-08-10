@@ -75,79 +75,63 @@ create table if not exists coach_messages (
   created_at timestamptz default now()
 );
 
--- Bật RLS
-alter table profiles enable row level security;
-alter table user_progress enable row level security;
-alter table training_events enable row level security;
-alter table opening_progress enable row level security;
-alter table game_reviews enable row level security;
-alter table coach_messages enable row level security;
+-- Bật RLS (chỉ chạy nếu chưa bật)
+DO $$ BEGIN
+  ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
+DO $$ BEGIN
+  ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
+DO $$ BEGIN
+  ALTER TABLE training_events ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
+DO $$ BEGIN
+  ALTER TABLE opening_progress ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
+DO $$ BEGIN
+  ALTER TABLE game_reviews ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
+DO $$ BEGIN
+  ALTER TABLE coach_messages ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
 
--- Policies cho profiles
-create policy "Users can view own profile" on profiles
-  for select using (auth.uid() = id);
-
-create policy "Users can update own profile" on profiles
-  for update using (auth.uid() = id);
-
-create policy "Users can insert own profile" on profiles
-  for insert with check (auth.uid() = id);
+-- Policies cho profiles (chỉ tạo nếu chưa có)
+CREATE POLICY IF NOT EXISTS "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
+CREATE POLICY IF NOT EXISTS "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY IF NOT EXISTS "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
 
 -- Policies cho user_progress
-create policy "Users can view own progress" on user_progress
-  for select using (auth.uid() = user_id);
-
-create policy "Users can update own progress" on user_progress
-  for update using (auth.uid() = user_id);
-
-create policy "Users can insert own progress" on user_progress
-  for insert with check (auth.uid() = user_id);
-
-create policy "Users can delete own progress" on user_progress
-  for delete using (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can view own progress" ON user_progress FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can update own progress" ON user_progress FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can insert own progress" ON user_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can delete own progress" ON user_progress FOR DELETE USING (auth.uid() = user_id);
 
 -- Policies cho training_events
-create policy "Users can view own events" on training_events
-  for select using (auth.uid() = user_id);
-
-create policy "Users can insert own events" on training_events
-  for insert with check (auth.uid() = user_id);
-
-create policy "Users can delete own events" on training_events
-  for delete using (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can view own events" ON training_events FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can insert own events" ON training_events FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can delete own events" ON training_events FOR DELETE USING (auth.uid() = user_id);
 
 -- Policies cho opening_progress
-create policy "Users can view own opening progress" on opening_progress
-  for select using (auth.uid() = user_id);
-
-create policy "Users can update own opening progress" on opening_progress
-  for update using (auth.uid() = user_id);
-
-create policy "Users can insert own opening progress" on opening_progress
-  for insert with check (auth.uid() = user_id);
-
-create policy "Users can delete own opening progress" on opening_progress
-  for delete using (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can view own opening progress" ON opening_progress FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can update own opening progress" ON opening_progress FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can insert own opening progress" ON opening_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can delete own opening progress" ON opening_progress FOR DELETE USING (auth.uid() = user_id);
 
 -- Policies cho game_reviews
-create policy "Users can view own reviews" on game_reviews
-  for select using (auth.uid() = user_id);
-
-create policy "Users can insert own reviews" on game_reviews
-  for insert with check (auth.uid() = user_id);
-
-create policy "Users can delete own reviews" on game_reviews
-  for delete using (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can view own reviews" ON game_reviews FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can insert own reviews" ON game_reviews FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can delete own reviews" ON game_reviews FOR DELETE USING (auth.uid() = user_id);
 
 -- Policies cho coach_messages
-create policy "Users can view own messages" on coach_messages
-  for select using (auth.uid() = user_id);
-
-create policy "Users can insert own messages" on coach_messages
-  for insert with check (auth.uid() = user_id);
-
-create policy "Users can delete own messages" on coach_messages
-  for delete using (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can view own messages" ON coach_messages FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can insert own messages" ON coach_messages FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can delete own messages" ON coach_messages FOR DELETE USING (auth.uid() = user_id);
 
 -- ===========================================
 -- RAG: Chess Knowledge Base
@@ -180,24 +164,25 @@ CREATE TABLE IF NOT EXISTS chat_embeddings (
   UNIQUE(query_hash)
 );
 
--- Enable RLS
-ALTER TABLE chess_knowledge ENABLE ROW LEVEL SECURITY;
-ALTER TABLE chat_embeddings ENABLE ROW LEVEL SECURITY;
+-- Enable RLS cho RAG tables (chỉ chạy nếu chưa bật)
+DO $$ BEGIN
+  ALTER TABLE chess_knowledge ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
+DO $$ BEGIN
+  ALTER TABLE chat_embeddings ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN others THEN NULL;
+END $$;
 
 -- Public read for chess_knowledge (anonymous app users need to search)
-CREATE POLICY "Public read chess_knowledge" ON chess_knowledge
-  FOR SELECT USING (true);
+CREATE POLICY IF NOT EXISTS "Public read chess_knowledge" ON chess_knowledge FOR SELECT USING (true);
 
 -- Public read for chat_embeddings (deduplication)
-CREATE POLICY "Public read chat_embeddings" ON chat_embeddings
-  FOR SELECT USING (true);
+CREATE POLICY IF NOT EXISTS "Public read chat_embeddings" ON chat_embeddings FOR SELECT USING (true);
 
 -- Only service role can insert/update (seed script uses service role key)
-CREATE POLICY "Service role insert chess_knowledge" ON chess_knowledge
-  FOR INSERT WITH CHECK (auth.role() = 'service_role');
-
-CREATE POLICY "Service role insert chat_embeddings" ON chat_embeddings
-  FOR INSERT WITH CHECK (auth.role() = 'service_role');
+CREATE POLICY IF NOT EXISTS "Service role insert chess_knowledge" ON chess_knowledge FOR INSERT WITH CHECK (auth.role() = 'service_role');
+CREATE POLICY IF NOT EXISTS "Service role insert chat_embeddings" ON chat_embeddings FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
 -- ===========================================
 -- RAG: Vector search RPC function
