@@ -101,37 +101,97 @@ DO $$ BEGIN
 EXCEPTION WHEN others THEN NULL;
 END $$;
 
--- Policies cho profiles (chỉ tạo nếu chưa có)
-CREATE POLICY IF NOT EXISTS "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
-CREATE POLICY IF NOT EXISTS "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
-CREATE POLICY IF NOT EXISTS "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+-- Policies cho profiles (dùng DO block để tránh lỗi nếu đã tồn tại)
+DO $$ BEGIN
+  CREATE POLICY "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Policies cho user_progress
-CREATE POLICY IF NOT EXISTS "Users can view own progress" ON user_progress FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can update own progress" ON user_progress FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own progress" ON user_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can delete own progress" ON user_progress FOR DELETE USING (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can view own progress" ON user_progress FOR SELECT USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can update own progress" ON user_progress FOR UPDATE USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can insert own progress" ON user_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can delete own progress" ON user_progress FOR DELETE USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Policies cho training_events
-CREATE POLICY IF NOT EXISTS "Users can view own events" ON training_events FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own events" ON training_events FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can delete own events" ON training_events FOR DELETE USING (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can view own events" ON training_events FOR SELECT USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can insert own events" ON training_events FOR INSERT WITH CHECK (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can delete own events" ON training_events FOR DELETE USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Policies cho opening_progress
-CREATE POLICY IF NOT EXISTS "Users can view own opening progress" ON opening_progress FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can update own opening progress" ON opening_progress FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own opening progress" ON opening_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can delete own opening progress" ON opening_progress FOR DELETE USING (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can view own opening progress" ON opening_progress FOR SELECT USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can update own opening progress" ON opening_progress FOR UPDATE USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can insert own opening progress" ON opening_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can delete own opening progress" ON opening_progress FOR DELETE USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Policies cho game_reviews
-CREATE POLICY IF NOT EXISTS "Users can view own reviews" ON game_reviews FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own reviews" ON game_reviews FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can delete own reviews" ON game_reviews FOR DELETE USING (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can view own reviews" ON game_reviews FOR SELECT USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can insert own reviews" ON game_reviews FOR INSERT WITH CHECK (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can delete own reviews" ON game_reviews FOR DELETE USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Policies cho coach_messages
-CREATE POLICY IF NOT EXISTS "Users can view own messages" ON coach_messages FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert own messages" ON coach_messages FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can delete own messages" ON coach_messages FOR DELETE USING (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can view own messages" ON coach_messages FOR SELECT USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can insert own messages" ON coach_messages FOR INSERT WITH CHECK (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Users can delete own messages" ON coach_messages FOR DELETE USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- ===========================================
 -- RAG: Chess Knowledge Base
@@ -175,14 +235,26 @@ EXCEPTION WHEN others THEN NULL;
 END $$;
 
 -- Public read for chess_knowledge (anonymous app users need to search)
-CREATE POLICY IF NOT EXISTS "Public read chess_knowledge" ON chess_knowledge FOR SELECT USING (true);
+DO $$ BEGIN
+  CREATE POLICY "Public read chess_knowledge" ON chess_knowledge FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Public read for chat_embeddings (deduplication)
-CREATE POLICY IF NOT EXISTS "Public read chat_embeddings" ON chat_embeddings FOR SELECT USING (true);
+DO $$ BEGIN
+  CREATE POLICY "Public read chat_embeddings" ON chat_embeddings FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Only service role can insert/update (seed script uses service role key)
-CREATE POLICY IF NOT EXISTS "Service role insert chess_knowledge" ON chess_knowledge FOR INSERT WITH CHECK (auth.role() = 'service_role');
-CREATE POLICY IF NOT EXISTS "Service role insert chat_embeddings" ON chat_embeddings FOR INSERT WITH CHECK (auth.role() = 'service_role');
+DO $$ BEGIN
+  CREATE POLICY "Service role insert chess_knowledge" ON chess_knowledge FOR INSERT WITH CHECK (auth.role() = 'service_role');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE POLICY "Service role insert chat_embeddings" ON chat_embeddings FOR INSERT WITH CHECK (auth.role() = 'service_role');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- ===========================================
 -- RAG: Vector search RPC function
