@@ -69,7 +69,10 @@
       "Bash(git commit -m 'docs: add smoke test instructions for RAG pipeline *)",
       "Bash(bash \"C:/Users/nguye/.claude/plugins/cache/claude-plugins-official/superpowers/6.2.0/skills/subagent-driven-development/scripts/review-package\" docs/superpowers/plans/2026-08-10-rag-chess-coach-plan.md 72621af80228ca365fedc83403456e8d84d3cb58 HEAD)",
       "Bash(rm src/services/ragPipeline.js)",
-      "Bash(git commit -m 'refactor: remove dead ragPipeline.js *)"
+      "Bash(git commit -m 'refactor: remove dead ragPipeline.js *)",
+      "Bash(git commit -m 'fix: use DO blocks for idempotent policy creation *)",
+      "Bash(git commit -m 'chore: add OPENAI_API_KEY to .env.example for RAG pipeline *)",
+      "Bash(git reset *)"
     ]
   }
 }

@@ -2,8 +2,9 @@ import { getLevelConfig } from '../data/levelConfig';
 import { openings } from '../data/openings';
 import { calculateNextLevel, getRecommendedExercises, getRecommendedLessons, getRecommendedOpenings, getTrainingMessage, getWeaknesses, shouldLevelUp } from './recommendationService';
 import { getUserProfile } from './userProfileService';
+import type { CoachLevel } from '../types/ChessTypes';
 
-const LEVEL_GUIDES = {
+const LEVEL_GUIDES: Record<string, { label: string; tone: string }> = {
   noob: {
     label: 'noob',
     tone: 'Mình sẽ nói thật đơn giản: ưu tiên giữ vua an toàn, không để mất quân miễn phí và phát triển quân nhẹ trước.',
@@ -22,11 +23,13 @@ const LEVEL_GUIDES = {
   },
 };
 
-function normalizeLevel(level) {
-  return LEVEL_GUIDES[level] ? level : 'beginner';
+type CoachLevelKey = 'noob' | 'beginner' | 'intermediate' | 'advanced';
+
+function normalizeLevel(level: string): CoachLevelKey {
+  return (LEVEL_GUIDES[level] ? level : 'beginner') as CoachLevelKey;
 }
 
-function getMoveSummary(history = []) {
+function getMoveSummary(history?: string[]): string {
   if (!Array.isArray(history) || history.length === 0) {
     return 'Ván cờ chưa có nước đi nào, nên hãy bắt đầu bằng các nước phát triển quân và kiểm soát trung tâm.';
   }
@@ -35,7 +38,7 @@ function getMoveSummary(history = []) {
   return `Các nước gần đây: ${recentMoves}. Hãy kiểm tra xem nước cuối có tạo đe dọa, chiếu, bắt quân hoặc làm yếu vua không.`;
 }
 
-function getFenSummary(fen) {
+function getFenSummary(fen?: string): string {
   if (!fen) {
     return 'Mình chưa nhận được FEN, nên chỉ đưa lời khuyên theo nguyên tắc chung.';
   }
@@ -47,12 +50,27 @@ function getFenSummary(fen) {
   return `FEN hiện tại cho biết lượt đi là ${sideLabel}. ${castlingLabel} Mình dùng thông tin này để đưa coaching cơ bản, chưa phải phân tích engine.`;
 }
 
-function baseDisclaimer() {
+function baseDisclaimer(): string {
   return 'Lưu ý: Đây là bản huấn luyện cơ bản dạng mock, chưa có engine/AI thật. Để đánh giá nước đi chính xác tuyệt đối cần tích hợp Stockfish hoặc AI provider sau này.';
 }
 
-function getProfileCoaching(profile = getUserProfile()) {
-  const tips = [];
+interface MockProfile {
+  currentLevel?: CoachLevel;
+  gamesPlayed?: number;
+  exerciseStats?: { total?: number; accuracy?: number };
+  commonMistakes?: string[];
+  weaknesses?: string[];
+  strengths?: string[];
+  openingStats?: { weakOpenings?: string[] };
+  dailyTrainingPlan?: {
+    lesson?: { title: string };
+    exercises?: Array<{ title: string }>;
+    challenge?: string;
+  };
+}
+
+function getProfileCoaching(profile: MockProfile = getUserProfile() as MockProfile): string {
+  const tips: string[] = [];
   const safeProfile = profile || {};
   const stats = safeProfile.exerciseStats || {};
 
@@ -68,16 +86,16 @@ function getProfileCoaching(profile = getUserProfile()) {
   return tips.map((tip) => `- ${tip}`).join('\n');
 }
 
-function getRecommendationAnswer() {
-  const profile = getUserProfile();
-  const level = getLevelConfig(profile.currentLevel);
+function getRecommendationAnswer(): string {
+  const profile = getUserProfile() as MockProfile;
+  const level = getLevelConfig(profile.currentLevel || 'beginner');
   const lessons = getRecommendedLessons(profile);
   const exercises = getRecommendedExercises(profile);
   const weaknesses = getWeaknesses(profile);
   const plan = profile.dailyTrainingPlan;
   const nextLevel = calculateNextLevel(profile);
 
-  if (profile.exerciseStats.total < 3 && profile.gamesPlayed < 1) {
+  if ((profile.exerciseStats?.total || 0) < 3 && (profile.gamesPlayed || 0) < 1) {
     return `${baseDisclaimer()}\n\nMình chưa có đủ dữ liệu từ ván chơi và bài tập. Bạn hãy hoàn thành ít nhất 3 bài tập và chơi 1 ván để mình cá nhân hóa tốt hơn.\n\nHiện tại bạn đang ở mức **${level.label}**. Gợi ý an toàn nhất là học luật đi quân cơ bản và làm vài bài tập dễ.`;
   }
 
@@ -89,37 +107,43 @@ function getRecommendationAnswer() {
 - Điểm yếu ưu tiên: ${weaknesses.length ? weaknesses.slice(0, 3).join(', ') : 'chưa đủ dữ liệu'}
 
 **Bạn nên học gì tiếp theo**
-${lessons.slice(0, 3).map((lesson, index) => `${index + 1}. ${lesson.title} — ${lesson.reason}`).join('\n') || 'Chưa có bài học đề xuất.'}
+${lessons.slice(0, 3).map((lesson: { title: string; reason: string }, index: number) => `${index + 1}. ${lesson.title} — ${lesson.reason}`).join('\n') || 'Chưa có bài học đề xuất.'}
 
 **Hôm nay luyện gì**
 1. Học: ${plan?.lesson?.title || lessons[0]?.title || 'Ôn kiến thức cơ bản'}
-2. Làm: ${(plan?.exercises || exercises).slice(0, 5).map((item) => item.title).join(', ') || '3 bài tập cơ bản'}
+2. Làm: ${(plan?.exercises || exercises).slice(0, 5).map((item: { title: string }) => item.title).join(', ') || '3 bài tập cơ bản'}
 3. Chơi: ${plan?.challenge || '1 ván và cố gắng không mất quân miễn phí'}
 
 **Lên level**
 ${shouldLevelUp(profile) && nextLevel ? `Bạn có vẻ đã sẵn sàng lên cấp ${getLevelConfig(nextLevel).label}. Hãy vào trang Huấn luyện và bấm “Nâng cấp level”.` : 'Chưa cần vội lên level. Hãy hoàn thành thêm mục tiêu trong lộ trình hôm nay.'}`;
 }
 
-function getOpeningAnswer(question = '') {
-  const profile = getUserProfile();
+function getOpeningAnswer(question = ''): string {
+  const profile = getUserProfile() as MockProfile;
   const recommended = getRecommendedOpenings(profile);
   const weakIds = profile.openingStats?.weakOpenings || [];
-  const weakOpenings = weakIds.map((id) => openings.find((opening) => opening.id === id)).filter(Boolean);
+  const weakOpenings = weakIds.map((id) => openings.find((opening: { id: string }) => opening.id === id)).filter(Boolean);
   const lower = question.toLowerCase();
-  const mentioned = openings.find((opening) => lower.includes(opening.id) || lower.includes(opening.name.toLowerCase()) || lower.includes(opening.vietnameseName.toLowerCase()));
+  const mentioned = openings.find((opening: { id: string; name: string; vietnameseName: string }) => lower.includes(opening.id) || lower.includes(opening.name.toLowerCase()) || lower.includes(opening.vietnameseName.toLowerCase()));
 
   if (mentioned) {
     return `${baseDisclaimer()}\n\n**${mentioned.vietnameseName} (${mentioned.name})**\n${mentioned.description}\n\nÝ tưởng chính:\n${mentioned.mainIdeas.map((idea) => `- ${idea}`).join('\n')}\n\nLỗi thường gặp:\n${mentioned.commonMistakes.map((mistake) => `- ${mistake}`).join('\n')}\n\nBạn có thể vào /openings/${mentioned.id} để học từng nước và luyện Practice Mode.`;
   }
 
   if (weakOpenings.length) {
-    return `${baseDisclaimer()}\n\nBạn đang sai nhiều trong: ${weakOpenings.map((o) => o.vietnameseName).join(', ')}. Hãy luyện lại 3-5 nước đầu, tập trung hiểu ý tưởng thay vì học vẹt. Ưu tiên hôm nay: ${weakOpenings[0].vietnameseName}.`;
+    return `${baseDisclaimer()}\n\nBạn đang sai nhiều trong: ${weakOpenings.map((o) => o?.vietnameseName).join(', ')}. Hãy luyện lại 3-5 nước đầu, tập trung hiểu ý tưởng thay vì học vẹt. Ưu tiên hôm nay: ${weakOpenings[0]?.vietnameseName}.`;
   }
 
-  return `${baseDisclaimer()}\n\nBạn nên bắt đầu với: ${recommended.slice(0, 3).map((opening) => opening.vietnameseName).join(', ')}.\n\n${profile.currentLevel === 'beginner' || profile.currentLevel === 'noob' ? 'Beginner nên học Italian Game hoặc London System vì dễ hiểu, phát triển quân nhanh và nhập thành sớm.' : 'Nếu đã khá hơn, hãy thử Ruy Lopez, Sicilian Defense hoặc King\'s Indian Defense để hiểu các cấu trúc phong phú hơn.'}\n\nNếu muốn luyện cho Trắng: chọn Italian Game/London. Nếu muốn luyện cho Đen: chọn Caro-Kann hoặc French trước khi học Sicilian.`;
+  return `${baseDisclaimer()}\n\nBạn nên bắt đầu với: ${recommended.slice(0, 3).map((opening: { vietnameseName: string }) => opening.vietnameseName).join(', ')}.\n\n${profile.currentLevel === 'beginner' || profile.currentLevel === 'noob' ? 'Beginner nên học Italian Game hoặc London System vì dễ hiểu, phát triển quân nhanh và nhập thành sớm.' : 'Nếu đã khá hơn, hãy thử Ruy Lopez, Sicilian Defense hoặc King\'s Indian Defense để hiểu các cấu trúc phong phú hơn.'}\n\nNếu muốn luyện cho Trắng: chọn Italian Game/London. Nếu muốn luyện cho Đen: chọn Caro-Kann hoặc French trước khi học Sicilian.`;
 }
 
-export function getMockHint({ fen, history = [], level = 'beginner' }) {
+interface MockHintParams {
+  fen?: string;
+  history?: string[];
+  level?: string;
+}
+
+export function getMockHint({ fen, history = [], level = 'beginner' }: MockHintParams): string {
   const currentLevel = normalizeLevel(level);
   const guide = LEVEL_GUIDES[currentLevel];
 
@@ -141,7 +165,7 @@ ${getProfileCoaching()}
 Mình chưa khẳng định đây là best move vì mock mode không tính toán như engine.`;
 }
 
-export function explainMockPosition({ fen, history = [], level = 'beginner' }) {
+export function explainMockPosition({ fen, history = [], level = 'beginner' }: MockHintParams): string {
   const currentLevel = normalizeLevel(level);
   const guide = LEVEL_GUIDES[currentLevel];
 
@@ -164,7 +188,7 @@ ${getProfileCoaching()}
 Kết luận mock: hãy ưu tiên nước vừa cải thiện quân, vừa không tạo điểm yếu mới.`;
 }
 
-export function reviewMockGame({ history = [], level = 'beginner' }) {
+export function reviewMockGame({ history = [], level = 'beginner' }: { history?: string[]; level?: string }): string {
   const currentLevel = normalizeLevel(level);
   const guide = LEVEL_GUIDES[currentLevel];
 
@@ -203,14 +227,21 @@ ${getProfileCoaching()}
 Mock mode chỉ review theo nguyên tắc; chưa phát hiện blunder chính xác như engine.`;
 }
 
-export function askMockCoach({ question = '', fen, history = [], level = 'beginner' }) {
+interface AskMockCoachParams {
+  question?: string;
+  fen?: string;
+  history?: string[];
+  level?: string;
+}
+
+export function askMockCoach({ question = '', fen, history = [], level = 'beginner' }: AskMockCoachParams): string {
   const lowerQuestion = question.toLowerCase();
 
   if (
     lowerQuestion.includes('khai cuộc') ||
     lowerQuestion.includes('opening') ||
     lowerQuestion.includes('trắng hay đen') ||
-    openings.some((opening) => lowerQuestion.includes(opening.name.toLowerCase()) || lowerQuestion.includes(opening.vietnameseName.toLowerCase()))
+    openings.some((opening: { name: string; vietnameseName: string }) => lowerQuestion.includes(opening.name.toLowerCase()) || lowerQuestion.includes(opening.vietnameseName.toLowerCase()))
   ) {
     return getOpeningAnswer(question);
   }

@@ -1,19 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { askAICoach } from '../services/aiCoachApiService';
 import { getUserProfile } from '../services/userProfileService';
 import coachAvatar from '../assets/avatarcoach.webp';
 import { BRAND_NAMES, UI_COPY } from '../config/brand';
 import { isInstagramIntent, NINH_INSTAGRAM_URL } from '../utils/socialIntent';
+import type { CoachPayload, CoachResponse, CoachLevel, Evaluation } from '../types/ChessTypes';
 
 const COACH_NAME = BRAND_NAMES.coach;
 
-const SOURCE_LABELS = {
+const SOURCE_LABELS: Record<string, string> = {
   ai: 'AI live',
   mock: 'Fallback mock',
   fallback: 'Fallback',
 };
 
-const COACH_PROMPTS = {
+const COACH_PROMPTS: Record<string, string> = {
   quick: `Bạn là HLV cờ vua cá nhân của người mới học.
 Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
 Chỉ trả lời đúng format:
@@ -53,7 +54,30 @@ Không marketing.
 Không nói lan man.`
 };
 
-function renderCoachAdvice(advice) {
+type AdviceType = 'quick' | 'focus' | 'hint' | 'social' | 'custom';
+type AdviceSource = 'ai' | 'fallback' | 'mock' | string;
+
+interface CoachAdvice {
+  type: AdviceType;
+  text: string;
+  source?: AdviceSource;
+  instagramUrl?: string;
+}
+
+interface AICoachPanelProps {
+  fen?: string;
+  history?: string[];
+  pgn?: string;
+  turn?: string;
+  status?: string;
+  stockfish?: {
+    evaluation: Evaluation | null;
+    bestMove: string | null;
+  } | undefined;
+  openingContext?: unknown;
+}
+
+function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
   if (advice.type === 'social') {
     return (
       <div>
@@ -131,12 +155,12 @@ function renderCoachAdvice(advice) {
   return <p className="text-sm leading-6 text-slate-200">{rawText}</p>;
 }
 
-export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish = null, openingContext = null }) {
-  const [advice, setAdvice] = useState(null);
+export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish, openingContext }: AICoachPanelProps) {
+  const [advice, setAdvice] = useState<CoachAdvice | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
 
-  async function getAdvice(type) {
+  async function getAdvice(type: string): Promise<void> {
     if (isLoading) return;
     setIsLoading(true);
     setAdvice(null);
@@ -152,6 +176,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
       setAdvice({
         type: 'social',
         text: 'Instagram của Ninh ở đây:',
+        source: 'mock',
         instagramUrl: NINH_INSTAGRAM_URL,
       });
       setIsLoading(false);
@@ -159,33 +184,28 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
     }
 
     const userProfile = getUserProfile();
-    const payload = {
+    const payload: CoachPayload = {
       message: prompt,
       mode: 'chat',
       fen,
       history,
       pgn,
-      playerColor: 'white',
-      level: userProfile.currentLevel || 'beginner',
+      level: (userProfile.currentLevel || 'beginner') as CoachLevel,
       userProfile,
-      responseStyle: 'structured_short',
       stockfish,
-      openingContext,
-      turn,
-      status,
     };
 
     try {
-      const result = await askAICoach(payload);
-      setAdvice({ type, text: result.reply, source: result.source || 'ai' });
-    } catch (error) {
-      setAdvice({ type: type === prompt ? 'custom' : type, text: 'Ninh chưa phân tích được thế này. Thử lại sau vài giây.' });
+      const result: CoachResponse = await askAICoach(payload);
+      setAdvice({ type: type as AdviceType, text: result.reply, source: result.source });
+    } catch {
+      setAdvice({ type: type === prompt ? 'custom' : type as AdviceType, text: 'Ninh chưa phân tích được thế này. Thử lại sau vài giây.' });
     } finally {
       setIsLoading(false);
     }
   }
 
-  const handleCustomSubmit = (e) => {
+  const handleCustomSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (!customMessage.trim()) return;
     getAdvice(customMessage);
@@ -282,7 +302,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
                     : 'border-amber-400/25 bg-amber-400/10 text-amber-200'
                 }`}
               >
-                Source: {SOURCE_LABELS[advice.source] || advice.source || 'Unknown'}
+                Source: {SOURCE_LABELS[advice.source || ''] || advice.source || 'Unknown'}
               </span>
             </div>
             {renderCoachAdvice(advice)}
