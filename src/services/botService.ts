@@ -76,7 +76,7 @@ export async function getBotMove(fen: string, botElo: number = 1200): Promise<Bo
         depth: analysis.depth,
         movetime: config.movetime,
         skillLevel: config.skillLevel,
-        evaluation: analysis.evaluation,
+        evaluation: analysis.evaluation ?? undefined,
       };
     }
 

@@ -217,17 +217,19 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
     throw new Error('FEN is required');
   }
 
+  const effectiveElo = elo ?? 1200;
+
   // Init engine if needed
   if (!isEngineReady()) {
     const initialized = await initEngine();
     if (!initialized) {
-      return await fallbackAnalysis(fen, depth, elo);
+      return await fallbackAnalysis(fen, depth, effectiveElo);
     }
   }
 
   // Configure ELO
-  if (elo || skillLevel !== null) {
-    await configureEngine(elo);
+  if (effectiveElo || skillLevel !== null) {
+    await configureEngine(effectiveElo);
   }
 
   const requestId = ++currentRequestId;
@@ -241,7 +243,7 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
       if (partial) {
         resolve({ ...partial, source: 'stockfish_wasm_partial' });
       } else {
-        resolve(await fallbackAnalysis(fen, depth, elo, 'Stockfish timeout'));
+        resolve(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish timeout'));
       }
     }, timeoutMs);
 
@@ -270,7 +272,7 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
 
       if (message.type === 'error') {
         disableEngine(message.error);
-        finish(await fallbackAnalysis(fen, depth, elo, 'Stockfish error'));
+        finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish error'));
         return;
       }
 
@@ -323,14 +325,14 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
           });
         } else {
           const partial = getPartialResult(fen);
-          finish(partial || await fallbackAnalysis(fen, depth, elo, 'Invalid bestmove'));
+          finish(partial || await fallbackAnalysis(fen, depth, effectiveElo, 'Invalid bestmove'));
         }
       }
     };
 
     worker!.onerror = async () => {
       disableEngine('Worker error');
-      finish(await fallbackAnalysis(fen, depth, elo, 'Worker error'));
+      finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Worker error'));
     };
 
     try {
@@ -341,7 +343,7 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
     } catch {
       disableEngine('Command error');
       // Use synchronous fallback since we're in a sync context
-      fallbackAnalysis(fen, depth, elo, 'Command error').then(finish);
+      fallbackAnalysis(fen, depth, effectiveElo, 'Command error').then(finish);
     }
   });
 }
@@ -359,6 +361,6 @@ export async function getBestMove(config: Omit<EngineConfig, 'purpose'>): Promis
     const result = await analyzeFen(config);
     return result.bestMove;
   } catch {
-    return getBestMoveFallback(config);
+    return getBestMoveFallback({ elo: config.elo ?? 1200 });
   }
 }

@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "ignoreDeprecations": "6.0",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowJs": true,
     "checkJs": false,
-    "strict": false,
+    "strict": true,
     "noImplicitAny": true,
     "jsx": "react-jsx",
     "baseUrl": ".",

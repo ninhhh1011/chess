@@ -1,7 +1,95 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { Chess } from 'chess.js';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Chess, type Move, type Square, type Color } from 'chess.js';
 
-const ChessGameContext = createContext(null);
+interface ChessGameState {
+  game: Chess;
+  activeGame: Chess;
+  currentFen: string;
+  currentPgn: string;
+  currentTurn: Color;
+  moveHistory: string[];
+  isCheck: boolean;
+  isCheckmate: boolean;
+  isDraw: boolean;
+  isGameOver: boolean;
+  boardKey: number;
+  gameMode: string;
+  playerColor: Color;
+  botElo: number;
+  gameGoal: string;
+  setGameGoal: (goal: string) => void;
+  timeControl: string;
+  setTimeControl: (tc: string) => void;
+  GAME_MODES: Record<string, string>;
+  PLAYER_COLORS: Record<string, Color>;
+  isBotThinking: boolean;
+  setIsBotThinking: (thinking: boolean) => void;
+  botMoveSource: { from: string; to: string } | null;
+  setBotMoveSource: (source: { from: string; to: string } | null) => void;
+  botRequestId: number;
+  setBotRequestId: (id: number) => void;
+  botRequestIdRef: React.MutableRefObject<number>;
+  selectedSquare: Square | null;
+  moveHints: Record<string, React.CSSProperties>;
+  lastMoveSquares: { from: string; to: string } | null;
+  setLastMoveSquares: (squares: { from: string; to: string } | null) => void;
+  boardOrientation: 'white' | 'black';
+  setBoardOrientation: (orientation: 'white' | 'black') => void;
+  engineHint: { bestMove: string; evaluation: string } | null;
+  setEngineHint: (hint: { bestMove: string; evaluation: string } | null) => void;
+  resultNotice: string | null;
+  setResultNotice: (notice: string | null) => void;
+  recordedGamePgn: string | null;
+  setRecordedGamePgn: (pgn: string | null) => void;
+  shouldShowGameOverModal: boolean;
+  setShouldShowGameOverModal: (show: boolean) => void;
+  playState: string;
+  setPlayState: (state: string) => void;
+  moveAnnotations: Record<number, { symbol: string; label: string; tone: string }>;
+  setMoveAnnotations: (annotations: Record<number, { symbol: string; label: string; tone: string }>) => void;
+  lastMoveFenPair: {
+    beforeFen: string;
+    afterFen: string;
+    playedUci: string;
+    moveIndex: number;
+    color: Color;
+    san: string;
+  } | null;
+  setLastMoveFenPair: (pair: {
+    beforeFen: string;
+    afterFen: string;
+    playedUci: string;
+    moveIndex: number;
+    color: Color;
+    san: string;
+  } | null) => void;
+  pendingPromotion: { from: Square; to: Square } | null;
+  setPendingPromotion: (promotion: { from: Square; to: Square } | null) => void;
+  analysisMode: boolean;
+  analysisGame: Chess;
+  analysisMainline: string[];
+  analysisPly: number;
+  makeMove: (from: string, to: string, promotion?: string, options?: { byBot?: boolean; sourceFen?: string | null }) => { move: Move; nextGame: Chess } | false;
+  selectSquare: (square: Square) => void;
+  clearSelection: () => void;
+  getLegalMoves: (square: Square) => Move[];
+  getKingSquare: (color: Color) => Square | null;
+  newGame: () => Chess;
+  startGame: (options: { elo?: number; color?: Color; mode?: string; gameGoal?: string; timeControl?: string }) => void;
+  undoMove: () => Chess | null;
+  changeGameMode: (mode: string) => void;
+  changePlayerColor: (color: Color) => void;
+  changeBotElo: (elo: number) => void;
+  enterAnalysisMode: () => void;
+  exitAnalysisMode: () => void;
+  goToAnalysisPly: (ply: number) => void;
+  cloneGame: (sourceGame?: Chess) => Chess;
+  flipBoard: () => void;
+  resignGame: () => void;
+  restartGameWithCurrentSettings: () => void;
+}
+
+const ChessGameContext = createContext<ChessGameState | null>(null);
 
 export function useChessGame() {
   const context = useContext(ChessGameContext);
@@ -16,21 +104,25 @@ const GAME_MODES = {
   BOT: 'bot',
 };
 
-const PLAYER_COLORS = {
-  WHITE: 'w',
-  BLACK: 'b',
+const PLAYER_COLORS: Record<string, Color> = {
+  WHITE: 'w' as Color,
+  BLACK: 'b' as Color,
 };
 
 const DEBUG_MOVES = import.meta.env.DEV;
 
-function failMove(reason, data = {}) {
+function failMove(reason: string, data: Record<string, unknown> = {}): false {
   if (DEBUG_MOVES) {
     console.warn('[MOVE] rejected:', reason, data);
   }
   return false;
 }
 
-export function ChessGameProvider({ children }) {
+interface ChessGameProviderProps {
+  children: ReactNode;
+}
+
+export function ChessGameProvider({ children }: ChessGameProviderProps) {
   // Core game state
   const [game, setGame] = useState(() => new Chess());
   const [boardKey, setBoardKey] = useState(0);
@@ -47,35 +139,42 @@ export function ChessGameProvider({ children }) {
 
   // Bot state
   const [isBotThinking, setIsBotThinking] = useState(false);
-  const [botMoveSource, setBotMoveSource] = useState(null);
+  const [botMoveSource, setBotMoveSource] = useState<{ from: string; to: string } | null>(null);
   const [botRequestId, setBotRequestId] = useState(0);
   const botRequestIdRef = useRef(0);
 
   // UI state
-  const [selectedSquare, setSelectedSquare] = useState(null);
-  const [moveHints, setMoveHints] = useState({});
-  const [lastMoveSquares, setLastMoveSquares] = useState(null);
-  const [boardOrientation, setBoardOrientation] = useState('white');
+  const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
+  const [moveHints, setMoveHints] = useState<Record<string, React.CSSProperties>>({});
+  const [lastMoveSquares, setLastMoveSquares] = useState<{ from: string; to: string } | null>(null);
+  const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
 
   // Engine state
-  const [engineHint, setEngineHint] = useState(null);
+  const [engineHint, setEngineHint] = useState<{ bestMove: string; evaluation: string } | null>(null);
 
   // Game status
-  const [resultNotice, setResultNotice] = useState(null);
-  const [recordedGamePgn, setRecordedGamePgn] = useState(null);
+  const [resultNotice, setResultNotice] = useState<string | null>(null);
+  const [recordedGamePgn, setRecordedGamePgn] = useState<string | null>(null);
   const [shouldShowGameOverModal, setShouldShowGameOverModal] = useState(false);
 
   // Move annotations
-  const [moveAnnotations, setMoveAnnotations] = useState({});
-  const [lastMoveFenPair, setLastMoveFenPair] = useState(null);
+  const [moveAnnotations, setMoveAnnotations] = useState<Record<number, { symbol: string; label: string; tone: string }>>({});
+  const [lastMoveFenPair, setLastMoveFenPair] = useState<{
+    beforeFen: string;
+    afterFen: string;
+    playedUci: string;
+    moveIndex: number;
+    color: Color;
+    san: string;
+  } | null>(null);
 
   // Promotion state
-  const [pendingPromotion, setPendingPromotion] = useState(null);
+  const [pendingPromotion, setPendingPromotion] = useState<{ from: Square; to: Square } | null>(null);
 
   // Analysis mode
   const [analysisMode, setAnalysisMode] = useState(false);
   const [analysisGame, setAnalysisGame] = useState(() => new Chess());
-  const [analysisMainline, setAnalysisMainline] = useState([]);
+  const [analysisMainline, setAnalysisMainline] = useState<string[]>([]);
   const [analysisPly, setAnalysisPly] = useState(0);
 
   // Derived state
@@ -97,12 +196,12 @@ export function ChessGameProvider({ children }) {
     return copy;
   }
 
-  function getLegalMoves(square) {
+  function getLegalMoves(square: Square): Move[] {
     if (!square) return [];
     return activeGame.moves({ square, verbose: true });
   }
 
-  function getKingSquare(color) {
+  function getKingSquare(color: Color): Square | null {
     const files = 'abcdefgh';
     const board = activeGame.board();
 
@@ -110,7 +209,7 @@ export function ChessGameProvider({ children }) {
       for (let columnIndex = 0; columnIndex < board[rowIndex].length; columnIndex += 1) {
         const piece = board[rowIndex][columnIndex];
         if (piece?.type === 'k' && piece.color === color) {
-          return `${files[columnIndex]}${8 - rowIndex}`;
+          return `${files[columnIndex]}${8 - rowIndex}` as Square;
         }
       }
     }
@@ -119,7 +218,7 @@ export function ChessGameProvider({ children }) {
 
   // Actions
   // options.byBot = true  → được phép đi dù isBotThinking, dù không phải lượt playerColor
-  function makeMove(from, to, promotion = 'q', options = {}) {
+  function makeMove(from: string, to: string, promotion = 'q', options: { byBot?: boolean; sourceFen?: string | null } = {}): { move: Move; nextGame: Chess } | false {
     const { byBot = false, sourceFen = null } = options;
     const gameToUse = activeGame;
 
@@ -155,7 +254,7 @@ export function ChessGameProvider({ children }) {
     }
 
     // Check if this is a promotion move
-    const piece = gameToUse.get(from);
+    const piece = gameToUse.get(from as Square);
     const isPromotion = piece?.type === 'p' && ((piece.color === 'w' && to[1] === '8') || (piece.color === 'b' && to[1] === '1'));
 
     // Default promotion to queen if not specified
@@ -185,7 +284,7 @@ export function ChessGameProvider({ children }) {
     setSelectedSquare(null);
     setMoveHints({});
     setEngineHint(null);
-    setLastMoveSquares({ from: move.from, to: move.to });
+    setLastMoveSquares({ from: move.from as string, to: move.to as string });
 
     // Update game state
     if (analysisMode) {
@@ -207,6 +306,13 @@ export function ChessGameProvider({ children }) {
         moveIndex,
         color: move.color,
         san: move.san,
+      } as {
+        beforeFen: string;
+        afterFen: string;
+        playedUci: string;
+        moveIndex: number;
+        color: Color;
+        san: string;
       });
 
       // Check if game just ended from this live move
@@ -218,7 +324,7 @@ export function ChessGameProvider({ children }) {
     return { move, nextGame };
   }
 
-  function selectSquare(square) {
+  function selectSquare(square: Square) {
     if (!square) {
       setSelectedSquare(null);
       setMoveHints({});
@@ -243,7 +349,7 @@ export function ChessGameProvider({ children }) {
 
     const moves = getLegalMoves(square);
 
-    const hints = moves.reduce((acc, move) => {
+    const hints = moves.reduce<Record<string, React.CSSProperties>>((acc, move) => {
       // Check if target square has opponent piece (capture)
       const targetPiece = activeGame.get(move.to);
       const isCapture = targetPiece && targetPiece.color !== piece.color;
@@ -256,7 +362,7 @@ export function ChessGameProvider({ children }) {
             backgroundPosition: 'center',
             backgroundSize: '100% 100%',
           };
-      acc[move.to] = style;
+      acc[move.to as string] = style;
       return acc;
     }, {});
 
@@ -294,13 +400,13 @@ export function ChessGameProvider({ children }) {
     return freshGame;
   }
 
-  function startGame({ elo = 1200, color = PLAYER_COLORS.WHITE, mode = GAME_MODES.BOT, gameGoal = 'fun', timeControl = 'unlimited' }) {
-    setBotElo(elo);
-    setPlayerColor(color);
+  function startGame({ elo = 1200, color = PLAYER_COLORS.WHITE, mode = GAME_MODES.BOT, gameGoal = 'fun', timeControl = 'unlimited' }: { elo?: number; color?: Color; mode?: string; gameGoal?: string; timeControl?: string }) {
+    setBotElo(elo ?? 1200);
+    setPlayerColor(color ?? PLAYER_COLORS.WHITE);
     setBoardOrientation(color === PLAYER_COLORS.BLACK ? 'black' : 'white');
-    setGameMode(mode);
-    setGameGoal(gameGoal);
-    setTimeControl(timeControl);
+    setGameMode(mode ?? GAME_MODES.BOT);
+    setGameGoal(gameGoal ?? 'fun');
+    setTimeControl(timeControl ?? 'unlimited');
     newGame();
     setPlayState('playing');
   }
@@ -319,8 +425,8 @@ export function ChessGameProvider({ children }) {
       setAnalysisPly(nextGame.history().length);
       setEngineHint(null);
 
-      const lastMove = nextGame.history({ verbose: true }).at(-1);
-      setLastMoveSquares(lastMove ? { from: lastMove.from, to: lastMove.to } : null);
+      const lastMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
+      setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
       clearSelection();
       return nextGame;
     }
@@ -330,12 +436,12 @@ export function ChessGameProvider({ children }) {
     if (gameMode === GAME_MODES.BOT) {
       botRequestIdRef.current += 1;
 
-      const lastMove = nextGame.history({ verbose: true }).at(-1);
+      const lastMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
       if (lastMove?.color !== playerColor) {
         nextGame.undo();
       }
 
-      const previousMove = nextGame.history({ verbose: true }).at(-1);
+      const previousMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
       if (previousMove?.color === playerColor) {
         nextGame.undo();
       }
@@ -352,8 +458,8 @@ export function ChessGameProvider({ children }) {
     setShouldShowGameOverModal(false);
     setPlayState('playing');
 
-    const lastMove = nextGame.history({ verbose: true }).at(-1);
-    setLastMoveSquares(lastMove ? { from: lastMove.from, to: lastMove.to } : null);
+    const lastMoveAfterSet = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
+    setLastMoveSquares(lastMoveAfterSet ? { from: lastMoveAfterSet.from as string, to: lastMoveAfterSet.to as string } : null);
 
     setMoveAnnotations((current) =>
       Object.fromEntries(
@@ -365,17 +471,17 @@ export function ChessGameProvider({ children }) {
     return nextGame;
   }
 
-  function changeGameMode(mode) {
+  function changeGameMode(mode: string) {
     setGameMode(mode);
     newGame();
   }
 
-  function changePlayerColor(color) {
+  function changePlayerColor(color: Color) {
     setPlayerColor(color);
     newGame();
   }
 
-  function changeBotElo(elo) {
+  function changeBotElo(elo: number) {
     setBotElo(elo);
   }
 
@@ -392,8 +498,8 @@ export function ChessGameProvider({ children }) {
     setMoveHints({});
     setSelectedSquare(null);
 
-    const lastMove = analysisCopy.history({ verbose: true }).at(-1);
-    setLastMoveSquares(lastMove ? { from: lastMove.from, to: lastMove.to } : null);
+    const lastMove = analysisCopy.history({ verbose: true }).at(-1) as Move | undefined;
+    setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
   }
 
   function exitAnalysisMode() {
@@ -406,11 +512,11 @@ export function ChessGameProvider({ children }) {
     setMoveHints({});
     setSelectedSquare(null);
 
-    const lastMove = game.history({ verbose: true }).at(-1);
-    setLastMoveSquares(lastMove ? { from: lastMove.from, to: lastMove.to } : null);
+    const lastMove = game.history({ verbose: true }).at(-1) as Move | undefined;
+    setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
   }
 
-  function goToAnalysisPly(ply) {
+  function goToAnalysisPly(ply: number) {
     const boundedPly = Math.max(0, Math.min(ply, analysisMainline.length));
     const replay = new Chess();
 
@@ -428,8 +534,8 @@ export function ChessGameProvider({ children }) {
     setMoveHints({});
     setSelectedSquare(null);
 
-    const lastMove = replay.history({ verbose: true }).at(-1);
-    setLastMoveSquares(lastMove ? { from: lastMove.from, to: lastMove.to } : null);
+    const lastMove = replay.history({ verbose: true }).at(-1) as Move | undefined;
+    setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
   }
 
   function flipBoard() {

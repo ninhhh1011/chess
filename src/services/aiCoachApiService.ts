@@ -7,7 +7,12 @@ import type { CoachPayload, CoachResponse, CoachLevel } from '../types/ChessType
  * Fallback to mock coach when AI is unavailable
  */
 function fallbackMock(payload: CoachPayload): string {
-  const mockPayload = {
+  const mockPayload: {
+    question: string;
+    fen?: string;
+    history?: string[];
+    level?: string;
+  } = {
     question: payload.message,
     fen: payload.fen,
     history: payload.history,

@@ -73,7 +73,7 @@ interface AICoachPanelProps {
   stockfish?: {
     evaluation: Evaluation | null;
     bestMove: string | null;
-  } | null;
+  } | undefined;
   openingContext?: unknown;
 }
 
@@ -155,7 +155,7 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
   return <p className="text-sm leading-6 text-slate-200">{rawText}</p>;
 }
 
-export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish = null, openingContext = null }: AICoachPanelProps) {
+export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish, openingContext }: AICoachPanelProps) {
   const [advice, setAdvice] = useState<CoachAdvice | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
