@@ -12,7 +12,7 @@ export default function GameControls({ onHint }) {
     if (confirmAction === 'resign') {
       return (
         <div className="flex w-full items-center justify-between rounded-md border border-rose-500/25 bg-rose-500/10 px-3 py-2">
-          <span className="text-sm font-medium text-rose-300">Chắc chắn đầu hàng?</span>
+          <span className="text-sm font-medium text-rose-300">Xác nhận đầu hàng?</span>
           <div className="flex gap-2">
             <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-slate-400 hover:text-slate-200">
               Hủy
@@ -34,7 +34,7 @@ export default function GameControls({ onHint }) {
     if (confirmAction === 'new') {
       return (
         <div className="flex w-full flex-col gap-2 rounded-md border border-slate-700/70 bg-slate-900 px-3 py-2">
-          <span className="text-sm font-medium text-slate-300">Ván này chưa xong. Làm ván mới hay đổi thiết lập?</span>
+          <span className="text-sm font-medium text-slate-300">Bắt đầu ván mới?</span>
           <div className="flex flex-wrap gap-2">
             <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-slate-400 hover:text-slate-200">
               Hủy
@@ -47,7 +47,7 @@ export default function GameControls({ onHint }) {
               }}
               className="rounded-md border border-slate-600 px-2 py-1 text-xs text-slate-300 hover:bg-slate-800"
             >
-              Đổi thiết lập
+              Đổi cấp độ
             </button>
             <button
               onClick={() => {
@@ -106,7 +106,7 @@ export default function GameControls({ onHint }) {
             <button
               onClick={flipBoard}
               className="rounded-md border border-slate-700 bg-slate-900 p-2 text-slate-300 hover:bg-slate-800"
-              title="Xoay bàn cờ"
+              title="Lật bàn"
             >
               ↕
             </button>

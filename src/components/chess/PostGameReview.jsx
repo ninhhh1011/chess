@@ -1,5 +1,6 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BRAND_NAMES, RESULT_COPY } from '../../config/brand';
+import coachAvatar from '../../assets/avatarcoach.webp';
 
 function getResultKind({ game, playerColor, resultNotice }) {
   if (game.isDraw() || resultNotice?.toLowerCase().includes('hòa')) return 'draw';
@@ -62,22 +63,40 @@ export default function PostGameReview() {
     if (annotation.tone === 'brilliant') brilliant += 1;
   });
 
-  const goalAdvice = {
-    fun: 'Ván này cứ giữ nhịp chắc trước. Ninh khuyên kiểm tra quân treo trước khi gáy.',
-    opening: 'Mục tiêu là khai cuộc: phát triển quân nhẹ, giữ trung tâm, nhập thành sớm.',
-    noblunder: 'Mục tiêu là hạn chế tự hủy: trước mỗi nước, nhìn lại quân nào đang bị tấn công.',
-    checkmate: 'Mục tiêu là chiếu hết: phối hợp quân tấn công vua thay vì đi một mình.',
+  // Coach advice based on game analysis
+  const getCoachAdvice = () => {
+    const goalAdvice = {
+      fun: 'Chơi tiếp để cải thiện nhé.',
+      opening: 'Tập trung vào phát triển quân và kiểm soát trung tâm.',
+      noblunder: 'Hãy chú ý đến các quân đang bị tấn công trước mỗi nước đi.',
+      checkmate: 'Tập phối hợp tấn công và xử lý chiếu hết.',
+    };
+
+    let advice = goalAdvice[gameGoal] || goalAdvice.fun;
+
+    if (blunders > 0) {
+      advice = `Có ${blunders} nước mắc sai lầm nghiêm trọng. Đây là điểm cần luyện tập trước.`;
+    } else if (mistakes > 2) {
+      advice = 'Một vài nước cần cải thiện. Hãy chậm lại và suy nghĩ kỹ hơn.';
+    } else if (inaccuracies > 5) {
+      advice = 'Còn nhiều chỗ cải thiện. Luyện thêm để có những nước chính xác hơn.';
+    } else if (resultKind === 'win') {
+      advice = 'Ván chơi tốt! Hãy tiếp tục phát huy và thử thách bản thân với cấp độ cao hơn.';
+    }
+
+    return advice;
   };
 
-  let ninhAdvice = goalAdvice[gameGoal] || goalAdvice.fun;
+  // Practice recommendation based on weakness
+  const getPracticeRecommendation = () => {
+    if (blunders > 0) return { type: 'tactics', label: 'Bài tập chiến thuật', hint: 'Luyện tập các bài chiến thuật cơ bản' };
+    if (mistakes > 2) return { type: 'endgame', label: 'Tàn cuộc', hint: 'Học cách kết thúc ván cờ hiệu quả' };
+    if (inaccuracies > 3) return { type: 'opening', label: 'Khai cuộc', hint: 'Ôn lại các nguyên tắc khai cuộc' };
+    return { type: 'general', label: 'Luyện tập', hint: 'Chơi thêm để cải thiện' };
+  };
 
-  if (blunders > 0) {
-    ninhAdvice = 'Có pha mất quá nhiều mà không có bù đắp. Mổ lại đoạn đó trước khi phục thù.';
-  } else if (mistakes > 2) {
-    ninhAdvice = 'Thế trận có ý tưởng, nhưng vài nước hơi thiếu lực. Chậm lại một nhịp là ổn hơn.';
-  } else if (resultKind === 'win') {
-    ninhAdvice = 'Ninh duyệt ván này. Bạn tận dụng cơ hội tốt, nhưng gáy vừa đủ thôi.';
-  }
+  const coachAdvice = getCoachAdvice();
+  const recommendation = getPracticeRecommendation();
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4">
@@ -89,16 +108,16 @@ export default function PostGameReview() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-lg bg-slate-950 p-4 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Tổng số nước</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Tổng nước đi</div>
             <div className="mt-1 text-2xl font-bold text-slate-200">{moveHistory.length}</div>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="flex flex-col justify-center rounded-lg bg-slate-950 p-2 text-center">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Sáng nước</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Xuất sắc</div>
               <div className="font-bold text-cyan-300">{brilliant}</div>
             </div>
             <div className="flex flex-col justify-center rounded-lg bg-slate-950 p-2 text-center">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Ổn</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Tốt</div>
               <div className="font-bold text-emerald-300">{great + bestMoves}</div>
             </div>
           </div>
@@ -114,31 +133,49 @@ export default function PostGameReview() {
             <div className="mt-1 font-bold text-yellow-500">{inaccuracies}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Tự hủy</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Sai lầm</div>
             <div className="mt-1 font-bold text-orange-500">{mistakes}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Blunder</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Nghiêm trọng</div>
             <div className="mt-1 font-bold text-red-500">{blunders}</div>
           </div>
         </div>
 
         {largestLoss > 0 && (
           <div className="rounded-lg bg-slate-950 p-4 text-center text-sm">
-            <span className="text-slate-400">Pha đau nhất: </span>
-            <span className="font-bold text-rose-400">cần mổ lại</span>
-            <br />
-            <span className="text-slate-400">Ninh mách: </span>
-            <span className="font-bold text-emerald-400">{suggestedBestSan || 'chưa có'}</span>
+            <span className="text-slate-400">Nước sai nghiêm trọng nhất: </span>
+            <span className="font-bold text-rose-400">{suggestedBestSan || 'chưa có'}</span>
           </div>
         )}
 
+        {/* Coach advice */}
         <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-5">
           <div className="mb-2 flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-xs font-bold text-slate-900">N</span>
-            <h3 className="font-bold text-emerald-400">Ghi chú từ {BRAND_NAMES.coach}</h3>
+            <img src={coachAvatar} alt="Coach" className="h-6 w-6 rounded-full" />
+            <h3 className="font-bold text-emerald-400">{BRAND_NAMES.coach}</h3>
           </div>
-          <p className="text-sm leading-relaxed text-emerald-100/90">{ninhAdvice}</p>
+          <p className="text-sm leading-relaxed text-emerald-100/90">{coachAdvice}</p>
+        </div>
+
+        {/* Practice recommendation */}
+        <div className="rounded-lg border border-slate-700/70 bg-slate-900/50 p-4">
+          <div className="text-xs font-medium text-slate-400 mb-2">Gợi ý luyện tập tiếp theo</div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-medium text-slate-200">{recommendation.label}</div>
+              <div className="text-xs text-slate-500">{recommendation.hint}</div>
+            </div>
+            <button
+              onClick={() => {
+                // Navigate to practice - could be /exercises, /openings, etc.
+                // For now, just close and let user choose
+              }}
+              className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:bg-emerald-500/10"
+            >
+              Luyện ngay
+            </button>
+          </div>
         </div>
 
         <div className="flex flex-col gap-3 pt-2">
@@ -156,7 +193,7 @@ export default function PostGameReview() {
               }}
               className="ui-button-secondary w-full py-2"
             >
-              Đổi thiết lập
+              Đổi cấp độ
             </button>
           </div>
         </div>

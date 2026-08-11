@@ -6,25 +6,23 @@ import { BOT_ELO_LEVELS } from '../../data/botLevels';
 
 export default function PreGameLobby() {
   const { GAME_MODES, PLAYER_COLORS, startGame } = useChessGame();
-  
+
   // Local state for the form
   const [selectedElo, setSelectedElo] = useState(BOT_ELO_LEVELS[2].elo); // Default 1200
   const [selectedColor, setSelectedColor] = useState('random');
-  const [selectedTime, setSelectedTime] = useState('unlimited');
-  const [selectedGoal, setSelectedGoal] = useState('fun');
 
   function handleStart() {
     let color = selectedColor;
     if (color === 'random') {
       color = Math.random() > 0.5 ? PLAYER_COLORS.WHITE : PLAYER_COLORS.BLACK;
     }
-    startGame({ elo: selectedElo, color, mode: GAME_MODES.BOT, gameGoal: selectedGoal, timeControl: selectedTime });
+    startGame({ elo: selectedElo, color, mode: GAME_MODES.BOT, gameGoal: 'fun', timeControl: 'unlimited' });
   }
 
   return (
     <div className="flex w-full items-center justify-center p-4 min-h-[80vh]">
       <div className="ui-card w-full max-w-2xl space-y-8 p-6 md:p-8">
-        
+
         {/* Header */}
         <div className="text-center">
           <img src={coachAvatar} alt={brandName} className="mx-auto mb-4 h-20 w-20 rounded-full border-2 border-emerald-500/30 object-cover shadow-sm" />
@@ -42,8 +40,8 @@ export default function PreGameLobby() {
                   key={bot.elo}
                   onClick={() => setSelectedElo(bot.elo)}
                   className={`flex items-center justify-between rounded-lg border px-4 py-3 transition ${
-                    selectedElo === bot.elo 
-                      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-100' 
+                    selectedElo === bot.elo
+                      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-100'
                       : 'border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300'
                   }`}
                 >
@@ -59,13 +57,13 @@ export default function PreGameLobby() {
             <div className="space-y-3">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">Màu quân</h3>
               <div className="flex gap-2">
-                {[{id: PLAYER_COLORS.WHITE, label: 'Trắng', icon: '♔'}, {id: PLAYER_COLORS.BLACK, label: 'Đen', icon: '♚'}, {id: 'random', label: 'Ngẫu nhiên', icon: '❓'}].map(c => (
+                {[{ id: PLAYER_COLORS.WHITE, label: 'Trắng', icon: '♔' }, { id: PLAYER_COLORS.BLACK, label: 'Đen', icon: '♚' }, { id: 'random', label: 'Ngẫu nhiên', icon: '❓' }].map(c => (
                   <button
                     key={c.id}
                     onClick={() => setSelectedColor(c.id)}
                     className={`flex-1 rounded-lg border px-2 py-3 text-center transition ${
-                      selectedColor === c.id 
-                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-100' 
+                      selectedColor === c.id
+                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-100'
                         : 'border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300'
                     }`}
                   >
@@ -76,40 +74,20 @@ export default function PreGameLobby() {
               </div>
             </div>
 
-            {/* Mock Settings */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Thời gian</label>
-                <select 
-                  value={selectedTime} 
-                  onChange={(e) => setSelectedTime(e.target.value)}
-                  className="ui-select w-full"
-                >
-                  <option value="unlimited">Không giới hạn</option>
-                  <option value="10" disabled>10 phút — Sắp có</option>
-                  <option value="5+3" disabled>5 + 3 — Sắp có</option>
-                  <option value="3+2" disabled>3 + 2 — Sắp có</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Mục tiêu</label>
-                <select 
-                  value={selectedGoal} 
-                  onChange={(e) => setSelectedGoal(e.target.value)}
-                  className="ui-select w-full"
-                >
-                  <option value="fun">Chơi vui</option>
-                  <option value="opening">Tập khai cuộc</option>
-                  <option value="noblunder">Hạn chế blunder</option>
-                </select>
-              </div>
+            {/* Bot Info */}
+            <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">Về {BRAND_NAMES.bot}</h3>
+              <p className="text-xs text-slate-500">
+                {BRAND_NAMES.bot} sử dụng Stockfish engine với mức Elo tương ứng.
+                Càng cao càng khó đánh bại.
+              </p>
             </div>
           </div>
         </div>
 
         {/* CTA */}
         <div className="pt-4 text-center">
-          <button 
+          <button
             onClick={handleStart}
             className="ui-button-primary w-full max-w-sm py-4 text-lg font-bold shadow-lg transition hover:-translate-y-0.5"
           >

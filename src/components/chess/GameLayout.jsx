@@ -24,9 +24,9 @@ import { BRAND_NAMES } from '../../config/brand';
  * GameLayout - Production-quality chess app layout
  *
  * Optimized for 100% desktop zoom:
- * - Controlled board sizing (max 620px)
+ * - Board is the visual centerpiece
  * - Compact player strips
- * - Balanced sidebar (360px)
+ * - Sidebar with collapsible coach panel
  * - No wasted vertical space
  */
 export default function GameLayout({
@@ -45,6 +45,7 @@ export default function GameLayout({
 }) {
   const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState } = useChessGame();
   const [activeTab, setActiveTab] = useState('moves');
+  const [coachExpanded, setCoachExpanded] = useState(false);
 
   const tabs = [
     { id: 'moves', label: BRAND_NAMES.moveHistory },
@@ -106,7 +107,7 @@ export default function GameLayout({
 
         {/* RIGHT COLUMN: Sidebar */}
         <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-20 lg:self-start">
-          <GameControls onHint={() => setActiveTab('coach')} />
+          <GameControls onHint={() => { setActiveTab('coach'); setCoachExpanded(true); }} />
           <ReviewNavigator />
 
           <div className="overflow-hidden rounded-lg border border-slate-700/70 bg-slate-950/80 shadow-[0_1px_0_rgba(255,255,255,0.03)]">
@@ -154,18 +155,42 @@ export default function GameLayout({
               )}
 
               {activeTab === 'coach' && (
-                <AICoachPanel
-                  fen={currentFen}
-                  pgn={currentPgn}
-                  history={moveHistory}
-                  stockfish={
-                    liveAnalysis
-                      ? {
-                          bestMove: liveAnalysis.bestMove,
-                          bestMoveSan: liveAnalysis.bestMove
-                            ? (() => {
-                                try {
-                                  return getSanFromUci(liveAnalysis.fen, liveAnalysis.bestMove);
+                <div className="space-y-3">
+                  {/* Coach header with collapse button */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-medium text-slate-300">{BRAND_NAMES.coach}</h3>
+                    <button
+                      onClick={() => setCoachExpanded(!coachExpanded)}
+                      className="text-xs text-slate-500 hover:text-slate-300"
+                    >
+                      {coachExpanded ? 'Thu gọn' : 'Mở rộng'}
+                    </button>
+                  </div>
+
+                  {/* Collapsed view - just avatar and brief hint */}
+                  {!coachExpanded && (
+                    <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/50 p-3">
+                      <img src={coachAvatar} alt={BRAND_NAMES.coach} className="h-8 w-8 rounded-full" />
+                      <p className="text-xs text-slate-500">
+                        Nhấn "Mở rộng" để xem gợi ý từ AI Coach
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Expanded view - full coach panel */}
+                  {coachExpanded && (
+                    <AICoachPanel
+                      fen={currentFen}
+                      pgn={currentPgn}
+                      history={moveHistory}
+                      stockfish={
+                        liveAnalysis
+                          ? {
+                              bestMove: liveAnalysis.bestMove,
+                              bestMoveSan: liveAnalysis.bestMove
+                                ? (() => {
+                                    try {
+                                      return getSanFromUci(liveAnalysis.fen, liveAnalysis.bestMove);
                                 } catch {
                                   return null;
                                 }
@@ -176,9 +201,11 @@ export default function GameLayout({
                         }
                       : null
                   }
-                  turn={activeGame.turn()}
-                  status={isGameOver ? 'Kết thúc' : isCheck ? 'Chiếu' : 'Đang chơi'}
-                />
+                      turn={activeGame.turn()}
+                      status={isGameOver ? 'Kết thúc' : isCheck ? 'Chiếu' : 'Đang chơi'}
+                    />
+                  )}
+                </div>
               )}
 
               {activeTab === 'settings' && (
