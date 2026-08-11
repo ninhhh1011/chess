@@ -1,8 +1,10 @@
 # Chess App /play Route Redesign Plan
 
-> **Status:** Draft for Review
+> **Status:** ✅ COMPLETED
 > **Date:** 2026-08-11
 > **Scope:** `/play` route UX redesign, no backend changes
+> **Branch:** `codex/ux-playability-cleanup`
+> **Commits:** 8 total (security fix, cleanup, lobby, naming, review, polish)
 
 ---
 
