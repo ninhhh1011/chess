@@ -13,16 +13,27 @@ export default async function handler(req) {
   }
 
   try {
-    const { message, history, fen, pgn, stockfish, turn, status } = await req.json();
+    const { message, history, fen, pgn, stockfish, turn, status, contextPrompt } = await req.json();
 
-    const systemPrompt = `You are a chess coach. 
-Current FEN: ${fen}
-Current PGN: ${pgn}
-Stockfish Evaluation: ${stockfish ? JSON.stringify(stockfish) : 'None'}
-Status: ${status}
-Turn: ${turn}
+    const systemPrompt = `Bạn là AI Chess Coach cho app "Vua Cờ".
 
-Keep responses short, clear, and focused on chess improvement. Use Vietnamese.`;
+Nhiệm vụ:
+- Huấn luyện người chơi cờ vua từ noob đến advanced.
+- Trả lời bằng tiếng Việt.
+- Giải thích ngắn gọn, dễ hiểu, đúng trình độ.
+- Không chỉ đưa đáp án, phải dạy tư duy.
+- Không bịa luật cờ.
+- Nếu có context từ RAG, dùng nó như nguồn tham khảo chính.
+- Không trích dẫn trực tiếp - hãy tích hợp tự nhiên.
+
+Format: Tối đa 3 dòng, mỗi dòng 1 ý. Không disclaimer.${contextPrompt ? `\n\n${contextPrompt}` : ''}
+
+Dữ liệu ván:
+- FEN: ${fen || 'N/A'}
+- PGN: ${pgn || 'N/A'}
+- Stockfish: ${stockfish ? JSON.stringify(stockfish) : 'N/A'}
+- Trạng thái: ${status || 'N/A'}
+- Lượt: ${turn || 'N/A'}`;
 
     const claudePayload = {
       model: 'claude-3-haiku-20240307',

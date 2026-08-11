@@ -31,7 +31,7 @@ describe('useMoveHighlights', () => {
 
     expect(result.current.boardSquareStyles).toHaveProperty('e2');
     expect(result.current.boardSquareStyles.e2).toMatchObject({
-      backgroundColor: 'rgba(56, 189, 248, 0.4)',
+      backgroundColor: 'var(--color-board-selected)',
     });
   });
 
@@ -62,7 +62,11 @@ describe('useMoveHighlights', () => {
     );
 
     expect(result.current.engineArrows).toEqual([
-      ['e2', 'e4', 'rgba(16, 185, 129, 0.6)'],
+      {
+        startSquare: 'e2',
+        endSquare: 'e4',
+        color: 'rgba(245,158,11,0.88)',
+      },
     ]);
   });
 });

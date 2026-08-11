@@ -9,10 +9,10 @@ const fixedBoardStyle = {
   width: '100%',
   height: '100%',
   aspectRatio: '1 / 1',
-  border: '1px solid #334155',
-  borderRadius: 'clamp(0.5rem, 2vw, 0.75rem)',
+  border: '1px solid rgba(148, 163, 184, 0.28)',
+  borderRadius: '8px',
   overflow: 'hidden',
-  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+  boxShadow: '0 18px 50px rgba(2, 6, 23, 0.38), 0 1px 0 rgba(255,255,255,0.04)',
   touchAction: 'none',
 };
 

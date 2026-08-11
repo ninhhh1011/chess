@@ -19,21 +19,27 @@ describe('useEngineAnalysis', () => {
       pv: ['e2e4'],
     });
 
-    const { result } = renderHook(() => useEngineAnalysis('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', true));
+    const { result } = renderHook(() => useEngineAnalysis({
+      fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      enabled: true,
+    }));
 
     await waitFor(() => {
-      expect(result.current.liveAnalysis).toMatchObject({
+      expect(result.current.analysis).toMatchObject({
         bestMove: 'e2e4',
         evaluation: { type: 'cp', value: 30 },
       });
-      expect(result.current.liveEvalStatus).toBe('ready');
+      expect(result.current.isAnalyzing).toBe(false);
     });
 
     expect(stockfishService.analyzeFen).toHaveBeenCalled();
   });
 
   it('does not analyze when autoAnalyze is false', () => {
-    renderHook(() => useEngineAnalysis('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', false));
+    renderHook(() => useEngineAnalysis({
+      fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      enabled: false,
+    }));
 
     expect(stockfishService.analyzeFen).not.toHaveBeenCalled();
   });

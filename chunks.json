@@ -1,0 +1,688 @@
+[
+  {
+    "category": "opening",
+    "subcategory": "italian-game",
+    "chunk_text": "Khai cuộc: Khai cuộc Ý (Italian Game)\nSide: Trắng\nLevel: beginner\n\nMô tả: Khai cuộc giúp Trắng phát triển quân nhanh, kiểm soát trung tâm và chuẩn bị nhập thành.\n\nCác nước chính: e4 e5 Nf3 Nc6 Bc4\n\nÝ tưởng chính:\n- Kiểm soát trung tâm bằng e4\n- Phát triển mã lên f3\n- Đưa tượng lên c4 nhắm vào f7\n- Nhập thành sớm\n\nLỗi thường gặp:\n- Đưa hậu ra quá sớm\n- Không nhập thành\n- Di chuyển một quân quá nhiều lần",
+    "metadata": {
+      "elo_range": [
+        400,
+        1000
+      ],
+      "color": "white",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "opening",
+    "subcategory": "ruy-lopez",
+    "chunk_text": "Khai cuộc: Khai cuộc Tây Ban Nha (Ruy Lopez)\nSide: Trắng\nLevel: intermediate\n\nMô tả: Trắng gây áp lực lên mã c6 để gián tiếp tấn công tốt e5.\n\nCác nước chính: e4 e5 Nf3 Nc6 Bb5\n\nÝ tưởng chính:\n- Kiểm soát trung tâm\n- Gây áp lực lên e5\n- Nhập thành sớm\n- Chuẩn bị c3 và d4\n\nLỗi thường gặp:\n- Ăn mã quá sớm không hiểu ý tưởng\n- Quên nhập thành",
+    "metadata": {
+      "elo_range": [
+        1000,
+        1600
+      ],
+      "color": "white",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "opening",
+    "subcategory": "queens-gambit",
+    "chunk_text": "Khai cuộc: Gambit Hậu (Queen's Gambit)\nSide: Trắng\nLevel: beginner\n\nMô tả: Trắng dùng tốt c để tranh trung tâm và mở đường phát triển.\n\nCác nước chính: d4 d5 c4\n\nÝ tưởng chính:\n- Kiểm soát d4/c4\n- Dụ tốt đen lệch khỏi trung tâm\n- Phát triển quân hài hòa\n\nLỗi thường gặp:\n- Cố giữ lại tốt gambit bằng mọi giá\n- Phát triển chậm",
+    "metadata": {
+      "elo_range": [
+        400,
+        1000
+      ],
+      "color": "white",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "opening",
+    "subcategory": "london-system",
+    "chunk_text": "Khai cuộc: Hệ thống London (London System)\nSide: Trắng\nLevel: beginner\n\nMô tả: Khai cuộc dễ học với cấu trúc ổn định và kế hoạch rõ ràng.\n\nCác nước chính: d4 d5 Bf4 Nf6 e3\n\nÝ tưởng chính:\n- Đưa tượng ra f4\n- Chơi e3/c3 chắc chắn\n- Phát triển mã tự nhiên\n- Nhập thành an toàn\n\nLỗi thường gặp:\n- Chơi quá thụ động\n- Không phát triển mã",
+    "metadata": {
+      "elo_range": [
+        400,
+        1000
+      ],
+      "color": "white",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "opening",
+    "subcategory": "sicilian-defense",
+    "chunk_text": "Khai cuộc: Phòng thủ Sicilian (Sicilian Defense)\nSide: Đen\nLevel: intermediate\n\nMô tả: Đen đáp trả e4 bằng c5, tạo thế bất đối xứng và phản công trung tâm từ xa.\n\nCác nước chính: e4 c5 Nf3 d6\n\nÝ tưởng chính:\n- Kiểm soát d4 bằng tốt c\n- Tạo thế phản công\n- Không đối xứng trung tâm\n\nLỗi thường gặp:\n- Không phát triển quân\n- Đẩy tốt quá nhiều",
+    "metadata": {
+      "elo_range": [
+        1000,
+        1600
+      ],
+      "color": "black",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "opening",
+    "subcategory": "french-defense",
+    "chunk_text": "Khai cuộc: Phòng thủ Pháp (French Defense)\nSide: Đen\nLevel: beginner\n\nMô tả: Đen xây trung tâm chắc với e6 và d5, chấp nhận tượng c8 hơi bị kẹt.\n\nCác nước chính: e4 e6 d4 d5\n\nÝ tưởng chính:\n- Tấn công trung tâm bằng d5\n- Cấu trúc tốt chắc\n- Phản công trung tâm\n\nLỗi thường gặp:\n- Tượng c8 bị kẹt quá lâu\n- Không phản công trung tâm",
+    "metadata": {
+      "elo_range": [
+        400,
+        1000
+      ],
+      "color": "black",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "opening",
+    "subcategory": "caro-kann-defense",
+    "chunk_text": "Khai cuộc: Phòng thủ Caro-Kann (Caro-Kann Defense)\nSide: Đen\nLevel: beginner\n\nMô tả: Đen chơi chắc chắn với c6 và d5, phát triển an toàn.\n\nCác nước chính: e4 c6 d4 d5\n\nÝ tưởng chính:\n- Chuẩn bị d5 chắc chắn\n- Cấu trúc tốt khỏe\n- Phát triển tượng c8 dễ hơn French\n\nLỗi thường gặp:\n- Chơi quá thụ động\n- Không phát triển quân nhẹ",
+    "metadata": {
+      "elo_range": [
+        400,
+        1000
+      ],
+      "color": "black",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "opening",
+    "subcategory": "kings-indian-defense",
+    "chunk_text": "Khai cuộc: Phòng thủ Ấn Độ Vua (King's Indian Defense)\nSide: Đen\nLevel: advanced\n\nMô tả: Đen cho Trắng trung tâm lớn rồi phản công bằng quân và tốt cánh vua/cánh hậu.\n\nCác nước chính: d4 Nf6 c4 g6 Nc3 Bg7\n\nÝ tưởng chính:\n- Fianchetto tượng g7\n- Nhập thành nhanh\n- Phản công trung tâm sau\n\nLỗi thường gặp:\n- Phản công quá muộn\n- Không hiểu cấu trúc trung tâm",
+    "metadata": {
+      "elo_range": [
+        1600,
+        2400
+      ],
+      "color": "black",
+      "game_phase": "opening"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "board",
+    "chunk_text": "Bài học: Bàn cờ và tọa độ\n\nBàn cờ vua có 64 ô, gồm 8 hàng ngang và 8 cột dọc. Cột được ký hiệu a đến h, hàng được ký hiệu 1 đến 8.\n\nVí dụ: Ô e4 nghĩa là cột e, hàng 4. Khi ghi nước đi, tọa độ giúp bạn biết quân cờ xuất phát và đi tới đâu.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "king",
+    "chunk_text": "Bài học: Quân vua\n\nVua là quân quan trọng nhất. Mỗi lượt vua đi một ô theo mọi hướng, nhưng không được đi vào ô đang bị đối phương kiểm soát.\n\nVí dụ: Vua trắng ở e4 có thể đi sang các ô xung quanh nếu các ô đó an toàn.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "queen",
+    "chunk_text": "Bài học: Quân hậu\n\nHậu là quân mạnh nhất, đi theo hàng ngang, cột dọc và đường chéo bao nhiêu ô tùy ý nếu không bị cản.\n\nVí dụ: Hậu ở e4 có thể tấn công trên hàng 4, cột e và các đường chéo.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "rook",
+    "chunk_text": "Bài học: Quân xe\n\nXe đi theo hàng ngang hoặc cột dọc bao nhiêu ô tùy ý nếu đường đi không bị chặn.\n\nVí dụ: Xe ở e4 có thể đi lên e8, xuống e1, sang a4 hoặc h4 nếu trống đường.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "bishop",
+    "chunk_text": "Bài học: Quân tượng\n\nTượng đi theo đường chéo. Mỗi tượng luôn ở trên các ô cùng màu trong suốt ván cờ.\n\nVí dụ: Tượng ở e4 có thể đi tới h7, b7, h1 hoặc b1 nếu không bị cản.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "knight",
+    "chunk_text": "Bài học: Quân mã\n\nMã đi hình chữ L: hai ô theo một hướng rồi một ô vuông góc. Mã có thể nhảy qua quân khác.\n\nVí dụ: Mã ở e4 có thể đi tới c3, c5, d2, f2, g3, g5, d6, f6.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "pawn",
+    "chunk_text": "Bài học: Quân tốt\n\nTốt đi thẳng một ô, từ vị trí ban đầu có thể đi hai ô. Tốt ăn chéo một ô về phía trước.\n\nVí dụ: Tốt trắng ở e5 có thể ăn quân đen ở d6 hoặc f6 nếu có quân đối phương.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "check",
+    "chunk_text": "Bài học: Chiếu\n\nChiếu xảy ra khi vua đang bị một quân đối phương tấn công. Bên bị chiếu phải thoát chiếu ngay.\n\nVí dụ: Xe trắng trên e4 đang chiếu vua đen trên e8 theo cùng cột.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "mate",
+    "chunk_text": "Bài học: Chiếu hết\n\nChiếu hết là khi vua bị chiếu và không còn nước đi hợp lệ nào để thoát. Ván cờ kết thúc.\n\nVí dụ: Hậu và vua phối hợp có thể khóa mọi ô thoát của vua đối phương.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "castle",
+    "chunk_text": "Bài học: Nhập thành\n\nNhập thành là nước đi đặc biệt giữa vua và xe để đưa vua vào nơi an toàn hơn.\n\nVí dụ: Nếu chưa di chuyển vua/xe, không bị chiếu và đường giữa trống, vua có thể nhập thành gần hoặc xa.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "promotion",
+    "chunk_text": "Bài học: Phong cấp tốt\n\nKhi tốt đi tới hàng cuối, nó được phong cấp thành hậu, xe, tượng hoặc mã. Thường người chơi chọn hậu.\n\nVí dụ: Tốt trắng ở a7 đi tới a8 và có thể trở thành hậu.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "draw",
+    "chunk_text": "Bài học: Hòa cờ\n\nHòa có thể xảy ra do hết nước đi hợp lệ nhưng không bị chiếu, lặp lại thế cờ, luật 50 nước hoặc không đủ lực chiếu hết.\n\nVí dụ: Vua chống vua là ví dụ không đủ quân để chiếu hết.",
+    "metadata": {
+      "elo_range": [
+        400,
+        2400
+      ],
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "fork",
+    "chunk_text": "Trắng dùng xe ở e2 chiếu hậu ở a6 và tấn công mã ở c7 cùng lúc — đây là fork cổ điển. Fork xảy ra khi một quân tấn công hai quân trở lên cùng lúc.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "white",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "fork",
+    "chunk_text": "Đen dùng xe ở e2 chiếu hậu ở a6 và tấn công mã ở c7 cùng lúc — đây là fork cổ điển. Fork xảy ra khi một quân tấn công hai quân trở lên cùng lúc.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "black",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "pin",
+    "chunk_text": "Pin xảy ra khi quân giá trị cao hơn đứng phía sau quân giá trị thấp hơn. Ví dụ: tượng trắng ghim xe không cho di chuyển vì sau xe là vua.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "white",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "pin",
+    "chunk_text": "Pin xảy ra khi quân giá trị cao hơn đứng phía sau quân giá trị thấp hơn. Ví dụ: tượng đen ghim xe không cho di chuyển vì sau xe là vua.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "black",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "skewer",
+    "chunk_text": "Skewer ngược với pin: quân giá trị cao hơn ở phía trước. Ví dụ: xe trắng tấn công hậu, hậu phải di chuyển thì xe ăn quân phía sau.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "white",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "skewer",
+    "chunk_text": "Skewer ngược với pin: quân giá trị cao hơn ở phía trước. Ví dụ: xe đen tấn công hậu, hậu phải di chuyển thì xe ăn quân phía sau.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "black",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "discovered_attack",
+    "chunk_text": "Tấn công giáng chiêu: di chuyển một quân ra khỏi đường tấn công của quân khác. Ví dụ: mã trắng nhảy ra, để hậu tấn công vua đối phương.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "white",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "discovered_attack",
+    "chunk_text": "Tấn công giáng chiêu: di chuyển một quân ra khỏi đường tấn công của quân khác. Ví dụ: mã đen nhảy ra, để hậu tấn công vua đối phương.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "black",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "checkmate_patterns",
+    "chunk_text": "Mẫu chiếu hết phổ biến: back rank mate (chiếu hết hàng cuối), scholar's mate (học giả), smothered mate (ngạt thở). Nhận diện sớm để tránh hoặc khai thác.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "white",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "tactic",
+    "subcategory": "checkmate_patterns",
+    "chunk_text": "Mẫu chiếu hết phổ biến: back rank mate (chiếu hết hàng cuối), scholar's mate (học giả), smothered mate (ngạt thở). Nhận diện sớm để tránh hoặc khai thác.",
+    "metadata": {
+      "elo_range": [
+        800,
+        2400
+      ],
+      "color": "black",
+      "game_phase": "middlegame"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "king_safety",
+    "chunk_text": "An toàn vua (level noob): Nhập thành càng sớm càng tốt trong khai cuộc. Tránh để vua ở trung tâm khi chưa cần thiết. Xây tường tốt trước vua.",
+    "metadata": {
+      "elo_range": [
+        400,
+        800
+      ],
+      "level": "noob",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "king_safety",
+    "chunk_text": "An toàn vua (level beginner): Nhập thành càng sớm càng tốt trong khai cuộc. Tránh để vua ở trung tâm khi chưa cần thiết. Xây tường tốt trước vua.",
+    "metadata": {
+      "elo_range": [
+        800,
+        1200
+      ],
+      "level": "beginner",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "king_safety",
+    "chunk_text": "An toàn vua (level intermediate): Nhập thành càng sớm càng tốt trong khai cuộc. Tránh để vua ở trung tâm khi chưa cần thiết. Xây tường tốt trước vua.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        1800
+      ],
+      "level": "intermediate",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "king_safety",
+    "chunk_text": "An toàn vua (level advanced): Nhập thành càng sớm càng tốt trong khai cuộc. Tránh để vua ở trung tâm khi chưa cần thiết. Xây tường tốt trước vua.",
+    "metadata": {
+      "elo_range": [
+        1800,
+        2400
+      ],
+      "level": "advanced",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "center_control",
+    "chunk_text": "Kiểm soát trung tâm (level noob): Chiếm e4, d4, e5, d5 bằng tốt hoặc tấn công các ô này bằng quân. Quân kiểm soát trung tâm có phạm vi hoạt động rộng hơn.",
+    "metadata": {
+      "elo_range": [
+        400,
+        800
+      ],
+      "level": "noob",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "center_control",
+    "chunk_text": "Kiểm soát trung tâm (level beginner): Chiếm e4, d4, e5, d5 bằng tốt hoặc tấn công các ô này bằng quân. Quân kiểm soát trung tâm có phạm vi hoạt động rộng hơn.",
+    "metadata": {
+      "elo_range": [
+        800,
+        1200
+      ],
+      "level": "beginner",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "center_control",
+    "chunk_text": "Kiểm soát trung tâm (level intermediate): Chiếm e4, d4, e5, d5 bằng tốt hoặc tấn công các ô này bằng quân. Quân kiểm soát trung tâm có phạm vi hoạt động rộng hơn.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        1800
+      ],
+      "level": "intermediate",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "center_control",
+    "chunk_text": "Kiểm soát trung tâm (level advanced): Chiếm e4, d4, e5, d5 bằng tốt hoặc tấn công các ô này bằng quân. Quân kiểm soát trung tâm có phạm vi hoạt động rộng hơn.",
+    "metadata": {
+      "elo_range": [
+        1800,
+        2400
+      ],
+      "level": "advanced",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "development",
+    "chunk_text": "Phát triển quân (level noob): Đưa mã và tượng ra ngoài trong 8-10 nước đầu. Tránh di chuyển một quân nhiều lần. Nhập thành và kết nối xe.",
+    "metadata": {
+      "elo_range": [
+        400,
+        800
+      ],
+      "level": "noob",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "development",
+    "chunk_text": "Phát triển quân (level beginner): Đưa mã và tượng ra ngoài trong 8-10 nước đầu. Tránh di chuyển một quân nhiều lần. Nhập thành và kết nối xe.",
+    "metadata": {
+      "elo_range": [
+        800,
+        1200
+      ],
+      "level": "beginner",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "development",
+    "chunk_text": "Phát triển quân (level intermediate): Đưa mã và tượng ra ngoài trong 8-10 nước đầu. Tránh di chuyển một quân nhiều lần. Nhập thành và kết nối xe.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        1800
+      ],
+      "level": "intermediate",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "development",
+    "chunk_text": "Phát triển quân (level advanced): Đưa mã và tượng ra ngoài trong 8-10 nước đầu. Tránh di chuyển một quân nhiều lần. Nhập thành và kết nối xe.",
+    "metadata": {
+      "elo_range": [
+        1800,
+        2400
+      ],
+      "level": "advanced",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "piece_activity",
+    "chunk_text": "Hoạt động quân (level noob): Quân bị kẹt là quân yếu. Tìm cách đưa quân vào vị trí hoạt động. Đổi quân bị động lấy quân hoạt động tốt của đối phương.",
+    "metadata": {
+      "elo_range": [
+        400,
+        800
+      ],
+      "level": "noob",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "piece_activity",
+    "chunk_text": "Hoạt động quân (level beginner): Quân bị kẹt là quân yếu. Tìm cách đưa quân vào vị trí hoạt động. Đổi quân bị động lấy quân hoạt động tốt của đối phương.",
+    "metadata": {
+      "elo_range": [
+        800,
+        1200
+      ],
+      "level": "beginner",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "piece_activity",
+    "chunk_text": "Hoạt động quân (level intermediate): Quân bị kẹt là quân yếu. Tìm cách đưa quân vào vị trí hoạt động. Đổi quân bị động lấy quân hoạt động tốt của đối phương.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        1800
+      ],
+      "level": "intermediate",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "piece_activity",
+    "chunk_text": "Hoạt động quân (level advanced): Quân bị kẹt là quân yếu. Tìm cách đưa quân vào vị trí hoạt động. Đổi quân bị động lấy quân hoạt động tốt của đối phương.",
+    "metadata": {
+      "elo_range": [
+        1800,
+        2400
+      ],
+      "level": "advanced",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "pawn_structure",
+    "chunk_text": "Cấu trúc tốt (level noob): Tốt cô lập yếu. Tốt thông suốt có thể tạo quân thông. Tránh tạo tốt yếu hoặc tốt đôi.",
+    "metadata": {
+      "elo_range": [
+        400,
+        800
+      ],
+      "level": "noob",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "pawn_structure",
+    "chunk_text": "Cấu trúc tốt (level beginner): Tốt cô lập yếu. Tốt thông suốt có thể tạo quân thông. Tránh tạo tốt yếu hoặc tốt đôi.",
+    "metadata": {
+      "elo_range": [
+        800,
+        1200
+      ],
+      "level": "beginner",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "pawn_structure",
+    "chunk_text": "Cấu trúc tốt (level intermediate): Tốt cô lập yếu. Tốt thông suốt có thể tạo quân thông. Tránh tạo tốt yếu hoặc tốt đôi.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        1800
+      ],
+      "level": "intermediate",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "principle",
+    "subcategory": "pawn_structure",
+    "chunk_text": "Cấu trúc tốt (level advanced): Tốt cô lập yếu. Tốt thông suốt có thể tạo quân thông. Tránh tạo tốt yếu hoặc tốt đôi.",
+    "metadata": {
+      "elo_range": [
+        1800,
+        2400
+      ],
+      "level": "advanced",
+      "game_phase": "all"
+    }
+  },
+  {
+    "category": "endgame",
+    "subcategory": "king_pawn_ending",
+    "chunk_text": "Tàn cuộc vua và tốt: Vua phải hoạt động tích cực. Opposition (đối diện) là kỹ thuật quan trọng. Tốt thông suốt thắng trừ khi vua đối phương kịp chặn.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        2400
+      ],
+      "game_phase": "endgame"
+    }
+  },
+  {
+    "category": "endgame",
+    "subcategory": "rook_endgame",
+    "chunk_text": "Tàn cuộc xe: Xe hoạt động sau tốt thông là chìa khóa. Tránh để xe bị động. Vua trong tàn cuộc xe rất quan trọng — phải đưa vua vào trung tâm.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        2400
+      ],
+      "game_phase": "endgame"
+    }
+  },
+  {
+    "category": "endgame",
+    "subcategory": "minor_piece_endgame",
+    "chunk_text": "Tàn cuộc quân nhẹ: Tượng tốt cho tốt thông suốt (mỗi màu), mã tốt cho tốt cô lập hoặc tốt cụm. Hoạt động vua quyết định thắng thua.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        2400
+      ],
+      "game_phase": "endgame"
+    }
+  },
+  {
+    "category": "endgame",
+    "subcategory": "queen_endgame",
+    "chunk_text": "Tàn cuộc hậu: Hậu mạnh nhưng dễ bị chiếu vĩnh viễn. Tránh để hậu đối phương chiếu liên tục khi không có lý do. Dùng hậu để tấn công tốt yếu.",
+    "metadata": {
+      "elo_range": [
+        1200,
+        2400
+      ],
+      "game_phase": "endgame"
+    }
+  }
+]

@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { getSanFromUci, formatEvaluation } from './chessMoveUtils';
-import { Chess } from 'chess.js';
 
 describe('chessMoveUtils', () => {
   describe('getSanFromUci', () => {
@@ -34,11 +33,11 @@ describe('chessMoveUtils', () => {
     });
 
     it('formats mate for White', () => {
-      expect(formatEvaluation({ type: 'mate', value: 3 })).toBe('M3');
+      expect(formatEvaluation({ type: 'mate', value: 3 })).toBe('Mate in 3');
     });
 
     it('formats mate for Black', () => {
-      expect(formatEvaluation({ type: 'mate', value: -3 })).toBe('-M3');
+      expect(formatEvaluation({ type: 'mate', value: -3 })).toBe('Mate in -3');
     });
   });
 });

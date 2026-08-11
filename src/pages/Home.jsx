@@ -73,11 +73,11 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-16 py-8">
+    <div className="space-y-14 py-6">
       {/* Hero Section */}
       <section className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_.9fr]">
         <div>
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-sm font-medium text-emerald-500">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-slate-700/80 bg-slate-950 px-3 py-2 text-sm font-medium text-emerald-300">
             <img src={logoImg} alt={brandName} className="h-5 w-5 rounded object-cover" />
             {BRAND_TAGLINE}
           </div>
@@ -91,7 +91,7 @@ export default function Home() {
           </p>
 
           {isAuthenticated && profile && (
-            <div className="mt-8 rounded-xl border border-slate-800 bg-slate-900/50 p-5">
+            <div className="mt-8 rounded-lg border border-slate-700/70 bg-slate-950/60 p-5">
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Tiến độ của bạn</p>
               <div className="mt-3 flex items-center gap-8">
                 <div>
@@ -118,11 +118,14 @@ export default function Home() {
               Chơi ngay
             </Link>
             <button 
-              className="btn-secondary text-base" 
+              className="btn-secondary gap-2 text-base"
               onClick={handleCreateOnlineGame}
               disabled={isCreatingGame}
             >
               {isCreatingGame ? 'Đang tạo ván...' : 'Chơi Online'}
+              <span className="rounded border border-amber-300/25 bg-amber-300/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase text-amber-200">
+                Beta
+              </span>
             </button>
             <Link className="btn-secondary text-base hidden sm:inline-block" to="/training">
               Huấn luyện
@@ -132,8 +135,8 @@ export default function Home() {
 
         {/* Chess board preview */}
         <div className="relative">
-          <div className="relative rounded-xl border border-slate-800 bg-slate-900 p-4 shadow-xl">
-            <div className="grid grid-cols-8 overflow-hidden rounded-lg border border-slate-700">
+          <div className="relative rounded-lg border border-slate-700/70 bg-slate-950/70 p-3 shadow-[0_18px_50px_rgba(2,6,23,0.36)]">
+            <div className="grid grid-cols-8 overflow-hidden rounded-lg border border-slate-700/80">
               {Array.from({ length: 64 }).map((_, i) => {
                 const row = Math.floor(i / 8);
                 const col = i % 8;
@@ -181,9 +184,9 @@ export default function Home() {
             <Link
               key={index}
               to={feature.link}
-              className="group rounded-xl border border-slate-800 bg-slate-900 p-6 transition-all hover:border-slate-600 hover:bg-slate-800/80"
+              className="group rounded-lg border border-slate-800 bg-slate-950/70 p-5 transition-all hover:border-slate-600 hover:bg-slate-900"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-slate-800 text-2xl group-hover:bg-slate-700">
+              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-md border border-slate-700/70 bg-slate-900 text-2xl group-hover:bg-slate-800">
                 {feature.icon}
               </div>
               
@@ -200,7 +203,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="rounded-xl border border-slate-800 bg-slate-900 p-12 text-center">
+      <section className="rounded-lg border border-slate-800 bg-slate-950/70 p-8 text-center sm:p-10">
         <h2 className="text-3xl font-bold text-slate-100 md:text-4xl">Sẵn sàng bắt đầu?</h2>
         <p className="mx-auto mt-6 max-w-2xl text-xl text-slate-300">
           Chơi một ván, nhận nhận xét ngắn gọn, rồi luyện lại điểm yếu quan trọng nhất cùng Ninh.

@@ -35,11 +35,11 @@ export default function Navbar() {
   const accountInitial = user?.email?.[0]?.toUpperCase() || 'U';
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-900 bg-slate-950">
+    <nav className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:px-4">
-        <NavLink to="/" className="flex min-w-0 items-center gap-3 text-lg font-bold text-slate-100 sm:text-xl">
-          <img src={logoImg} alt={brandName} className="h-9 w-9 flex-none rounded-md object-cover shadow-sm" />
-          <span className="truncate">{brandName}</span>
+        <NavLink to="/" className="flex min-w-0 items-center gap-3 text-base font-semibold text-slate-100 sm:text-lg">
+          <img src={logoImg} alt={brandName} className="h-8 w-8 flex-none rounded-md border border-slate-700/80 object-cover" />
+          <span className="truncate tracking-normal">{brandName}</span>
         </NavLink>
 
         <div className="hidden flex-wrap gap-2 md:flex">
@@ -49,7 +49,7 @@ export default function Navbar() {
               to={link.to}
               className={({ isActive }) =>
                 `rounded-md px-3 py-1.5 text-sm font-medium transition ${
-                  isActive ? 'bg-slate-800 text-emerald-500' : 'text-slate-400 hover:text-slate-200'
+                  isActive ? 'bg-slate-800 text-emerald-300 ring-1 ring-slate-700/70' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
                 }`
               }
             >
@@ -61,7 +61,7 @@ export default function Navbar() {
         <div className="flex flex-none items-center gap-2">
           {isAuthenticated ? (
             <div className="hidden items-center gap-2 md:flex">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-sm font-bold text-emerald-300">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-700 bg-slate-900 text-sm font-semibold text-emerald-300">
                 {accountInitial}
               </div>
               <span className="max-w-44 truncate text-sm font-medium text-slate-200">{user?.email}</span>
@@ -81,7 +81,7 @@ export default function Navbar() {
           )}
 
           <button
-            className="rounded-md border border-slate-800 px-3 py-2 text-sm font-bold text-slate-100 md:hidden"
+            className="rounded-md border border-slate-700/80 bg-slate-900 px-3 py-2 text-sm font-semibold text-slate-100 md:hidden"
             onClick={() => setIsMenuOpen((open) => !open)}
             aria-label="Mo menu"
             aria-expanded={isMenuOpen}
@@ -92,7 +92,7 @@ export default function Navbar() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t border-slate-900 bg-slate-950 md:hidden">
+        <div className="border-t border-slate-800 bg-slate-950 md:hidden">
           <div className="mx-auto max-w-7xl px-4 py-4">
             <div className="flex flex-col gap-2">
               {links.map((link) => (
@@ -102,7 +102,7 @@ export default function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                   className={({ isActive }) =>
                     `rounded-md px-4 py-2 text-sm font-medium transition ${
-                      isActive ? 'bg-slate-800 text-emerald-500' : 'text-slate-400 hover:bg-slate-900'
+                      isActive ? 'bg-slate-800 text-emerald-300' : 'text-slate-400 hover:bg-slate-900'
                     }`
                   }
                 >
@@ -115,7 +115,7 @@ export default function Navbar() {
               {isAuthenticated ? (
                 <>
                   <div className="flex items-center gap-3 px-4 py-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-xs font-bold text-emerald-300">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-700 bg-slate-900 text-xs font-semibold text-emerald-300">
                       {accountInitial}
                     </div>
                     <span className="min-w-0 truncate text-sm text-slate-300">{user?.email}</span>

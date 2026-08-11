@@ -67,7 +67,6 @@ export function useBotMove() {
     if (game.isGameOver()) return;
 
     triggerBotMove(game);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, gameMode, playerColor, isGameOver, pendingPromotion]);
 
   async function triggerBotMove(currentGame) {

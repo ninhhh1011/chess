@@ -1,0 +1,105 @@
+<style>
+  .ds { background:#f4f5f2; color:#17201a; border:1px solid #d9ded8; border-radius:20px; overflow:hidden; font-family:Inter,system-ui,sans-serif; }
+  .ds-head { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 24px; background:#fff; border-bottom:1px solid #d9ded8; }
+  .ds-brand { display:flex; align-items:center; gap:12px; font-size:18px; font-weight:750; }
+  .ds-avatar { width:40px; height:40px; display:grid; place-items:center; border-radius:12px; background:#263246; color:#fff; }
+  .ds-note { color:#69726c; font-size:13px; }
+  .ds-body { padding:24px; display:grid; gap:22px; }
+  .token-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; }
+  .swatch { min-height:104px; border-radius:14px; padding:12px; display:flex; flex-direction:column; justify-content:flex-end; border:1px solid rgba(23,32,26,.12); font-size:12px; }
+  .swatch b { font-size:13px; }
+  .swatch small { opacity:.72; }
+  .canvas { background:#f4f5f2; }
+  .surface { background:#fff; }
+  .ink { background:#17201a; color:#fff; }
+  .primary { background:#284b3b; color:#fff; }
+  .muted { background:#d9ded8; }
+  .warning { background:#c58b37; color:#20170a; }
+  .section-card { padding:18px; border-radius:16px; background:#fff; border:1px solid #d9ded8; box-shadow:0 1px 0 rgba(255,255,255,.8) inset; }
+  .section-card h3 { margin:0 0 14px; font-size:15px; }
+  .type-display { font-size:38px; line-height:1.05; letter-spacing:-.035em; font-weight:750; }
+  .type-heading { margin-top:16px; font-size:22px; line-height:1.2; font-weight:700; }
+  .type-body { margin-top:8px; max-width:620px; color:#59635c; line-height:1.6; }
+  .component-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
+  .button-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:0 16px; border-radius:10px; font-size:14px; font-weight:700; }
+  .btn-main { background:#284b3b; color:#fff; }
+  .btn-alt { background:#fff; color:#284b3b; border:1px solid #bfc8c1; }
+  .btn-off { background:#e7eae7; color:#929a94; }
+  .sample-card { padding:16px; border-radius:14px; border:1px solid #d9ded8; background:#fff; }
+  .sample-card .meta { color:#6a736d; font-size:12px; }
+  .sample-card b { display:block; margin:7px 0 5px; }
+  .progress { height:8px; margin-top:12px; border-radius:8px; background:#e6e9e6; overflow:hidden; }
+  .progress span { display:block; width:46%; height:100%; background:#284b3b; }
+  .states { display:grid; gap:8px; }
+  .state { padding:11px 12px; border-radius:10px; border:1px solid; font-size:13px; }
+  .success-state { background:#e8f2ec; border-color:#a7c4b1; color:#204c32; }
+  .warning-state { background:#fbf1df; border-color:#ddbf88; color:#66450f; }
+  .error-state { background:#f7e8e8; border-color:#d9aaaa; color:#742d2d; }
+  .board-grid { display:grid; grid-template-columns:minmax(180px,260px) 1fr; gap:20px; align-items:center; }
+  .board-shell { display:flex; gap:8px; }
+  .eval { width:18px; border:1px solid #68706a; border-radius:6px; background:linear-gradient(to top,#fafafa 58%,#202521 58%); }
+  .board { flex:1; aspect-ratio:1; border-radius:10px; background-color:#ede4d4; background-image:conic-gradient(#71805b 25%,#ede4d4 0 50%,#71805b 0 75%,#ede4d4 0); background-size:25% 25%; box-shadow:0 8px 22px rgba(23,32,26,.12); }
+  .quality { display:flex; flex-wrap:wrap; gap:8px; }
+  .badge { border-radius:8px; padding:6px 9px; font-size:12px; font-weight:700; border:1px solid; }
+  .best { background:#e7f2ec; color:#24563a; border-color:#a9c9b5; }
+  .inaccuracy { background:#fff6dc; color:#715313; border-color:#e4ca7b; }
+  .mistake { background:#fbe9da; color:#824819; border-color:#e0ad82; }
+  .blunder { background:#f7dfdf; color:#7e2b2b; border-color:#d8a0a0; }
+  @media(max-width:640px){ .ds-body{padding:14px}.ds-head{padding:14px}.type-display{font-size:30px}.board-grid{grid-template-columns:1fr}.token-grid{grid-template-columns:repeat(2,1fr)} }
+</style>
+
+<h2>Visual system đề xuất</h2>
+<p class="subtitle">Không sao chép Lab029s: chỉ kế thừa tính rõ ràng, khoảng thở, card có chiều sâu nhẹ và trạng thái component đầy đủ.</p>
+
+<div class="ds">
+  <div class="ds-head">
+    <div class="ds-brand"><span class="ds-avatar">N</span><span>Ninh Lốp Trưởng Chess</span></div>
+    <div class="ds-note">Nền tảng học và luyện cờ vua cá nhân</div>
+  </div>
+  <div class="ds-body">
+    <div class="section-card">
+      <h3>Bảng màu</h3>
+      <div class="token-grid">
+        <div class="swatch canvas"><b>Canvas</b><small>#F4F5F2</small></div>
+        <div class="swatch surface"><b>Surface</b><small>#FFFFFF</small></div>
+        <div class="swatch ink"><b>Ink</b><small>#17201A</small></div>
+        <div class="swatch primary"><b>Primary</b><small>#284B3B</small></div>
+        <div class="swatch muted"><b>Border</b><small>#D9DED8</small></div>
+        <div class="swatch warning"><b>Attention</b><small>#C58B37</small></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3>Typography</h3>
+      <div class="type-display">Tiến bộ qua từng ván cờ.</div>
+      <div class="type-heading">Phân tích rõ ràng, luyện tập có mục tiêu</div>
+      <div class="type-body">Inter được giữ lại để không thêm font hoặc dependency. Cỡ chữ giảm vừa đủ trên mobile; nội dung ưu tiên câu ngắn và thuật ngữ cờ vua tiếng Việt nhất quán.</div>
+    </div>
+
+    <div class="component-grid">
+      <div class="section-card">
+        <h3>Nút và điều khiển</h3>
+        <div class="button-row"><span class="btn btn-main">Chơi với Ninh Bot</span><span class="btn btn-alt">Luyện bài tập</span><span class="btn btn-off">Đang xử lý</span></div>
+        <p class="ds-note" style="margin:12px 0 0">Touch target tối thiểu 44px; focus ring rõ; không dùng emoji trang trí.</p>
+      </div>
+      <div class="section-card">
+        <h3>Card và tiến độ thật</h3>
+        <div class="sample-card"><span class="meta">Khai cuộc · Cơ bản</span><b>Italian Game</b><span class="meta">Đã hoàn thành 46%</span><div class="progress"><span></span></div></div>
+      </div>
+      <div class="section-card">
+        <h3>Trạng thái</h3>
+        <div class="states"><div class="state success-state">Stockfish đang hoạt động</div><div class="state warning-state">Đang dùng phân tích dự phòng</div><div class="state error-state">Không thể tải dữ liệu. Thử lại.</div></div>
+      </div>
+    </div>
+
+    <div class="section-card board-grid">
+      <div class="board-shell"><div class="eval"></div><div class="board"></div></div>
+      <div>
+        <h3>Bàn cờ và đánh giá</h3>
+        <p class="type-body" style="margin-top:0">Ô sáng màu ngà, ô tối xanh olive; evaluation bar đen/trắng đặt sát bàn cờ. Highlight nước đi dùng hình dạng và viền, không chỉ dựa vào màu.</p>
+        <div class="quality"><span class="badge best">Tốt nhất</span><span class="badge inaccuracy">Thiếu chính xác</span><span class="badge mistake">Sai lầm</span><span class="badge blunder">Blunder</span></div>
+      </div>
+    </div>
+  </div>
+</div>

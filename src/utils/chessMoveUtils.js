@@ -8,9 +8,9 @@ export function getSanFromUci(fen, uci) {
   try {
     const game = new Chess(fen);
     const move = game.move(uciToMoveObject(uci));
-    return move?.san || uci;
+    return move?.san || null;
   } catch {
-    return uci || 'không rõ';
+    return null;
   }
 }
 

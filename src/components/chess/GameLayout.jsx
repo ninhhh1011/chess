@@ -69,10 +69,10 @@ export default function GameLayout({
           <PromotionModal />
 
           {/* Main layout: board first, sidebar secondary */}
-          <div className="mx-auto grid w-full max-w-[1320px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="mx-auto grid w-full max-w-[1320px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_348px]">
 
         {/* LEFT COLUMN: Board area */}
-        <section className="flex-1 min-w-0">
+        <section className="min-w-0 rounded-lg border border-slate-800/80 bg-slate-950/35 p-2 sm:p-3">
           {/* Game status bar - compact */}
           <div className="mb-2">
             <GameInfoBar botElo={botElo} />
@@ -84,7 +84,7 @@ export default function GameLayout({
           </div>
 
           {/* Board with evaluation bar */}
-          <div className="flex items-start justify-center gap-2">
+          <div className="flex items-start justify-center gap-2 rounded-lg border border-slate-800/80 bg-slate-900/45 p-2">
             <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
             <div className="flex min-w-0 flex-1 justify-center">
               <ChessBoardPanel engineHint={engineHint} />
@@ -109,24 +109,24 @@ export default function GameLayout({
           <GameControls onHint={() => setActiveTab('coach')} />
           <ReviewNavigator />
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden shadow-sm">
+          <div className="overflow-hidden rounded-lg border border-slate-700/70 bg-slate-950/80 shadow-[0_1px_0_rgba(255,255,255,0.03)]">
             {/* Tabs - compact */}
-            <nav className="flex border-b border-slate-800 bg-slate-900">
+            <nav className="flex border-b border-slate-800 bg-slate-950">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 px-2 py-3 text-xs font-medium transition ${
                     activeTab === tab.id
-                      ? 'text-emerald-500 border-b-2 border-emerald-500 bg-slate-800/50'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                      ? 'border-b-2 border-emerald-400 bg-slate-900 text-emerald-300'
+                      : 'text-slate-500 hover:bg-slate-900 hover:text-slate-200'
                   }`}
                 >
                   {tab.iconType === 'avatar' ? (
                     <img
                       src={tab.iconSrc}
                       alt={tab.label}
-                      className="mx-auto mb-1 h-5 w-5 rounded-full object-cover"
+                      className="mx-auto mb-1 h-5 w-5 rounded-md border border-slate-700 object-cover"
                     />
                   ) : tab.icon ? (
                     <span className="block text-sm mb-0.5">{tab.icon}</span>
