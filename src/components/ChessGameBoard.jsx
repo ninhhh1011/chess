@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useChessGame } from '../contexts/ChessGameContext';
-import { useBotMove } from '../hooks/useBotMove';
 import { useEngineAnalysis } from '../hooks/useEngineAnalysis';
 import { analyzeFen } from '../services/stockfishService';
 import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
@@ -37,8 +36,6 @@ export default function ChessGameBoard() {
     setShouldShowGameOverModal,
     setPlayState,
   } = useChessGame();
-
-  const { triggerBotMove } = useBotMove();
 
   const [autoAnalyze, setAutoAnalyze] = useState(false);
   const [autoComment, setAutoComment] = useState('');
