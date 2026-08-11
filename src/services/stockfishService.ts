@@ -238,13 +238,8 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
   return new Promise((resolve) => {
     const timeout = setTimeout(async () => {
       if (currentAnalysis?.stopped || !currentAnalysis) return;
-      // Timeout - use partial result or fallback
-      const partial = getPartialResult(fen);
-      if (partial) {
-        resolve({ ...partial, source: 'stockfish_wasm_partial' });
-      } else {
-        resolve(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish timeout'));
-      }
+      // Timeout - use fallback directly
+      resolve(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish timeout'));
     }, timeoutMs);
 
     currentAnalysis = { stopped: false, fen };
@@ -324,8 +319,7 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
             raw: [],
           });
         } else {
-          const partial = getPartialResult(fen);
-          finish(partial || await fallbackAnalysis(fen, depth, effectiveElo, 'Invalid bestmove'));
+          finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Invalid bestmove'));
         }
       }
     };
@@ -346,11 +340,6 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
       fallbackAnalysis(fen, depth, effectiveElo, 'Command error').then(finish);
     }
   });
-}
-
-function getPartialResult(_fen: string): AnalysisResult | null {
-  // Return null - simplified, no partial results
-  return null;
 }
 
 /**
