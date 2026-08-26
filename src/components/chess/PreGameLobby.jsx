@@ -57,17 +57,17 @@ export default function PreGameLobby() {
 
         {/* Header - Simple and clear */}
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-text-100 md:text-3xl">
+          <h1 className="text-2xl font-bold text-text-primary md:text-3xl">
             Chơi với máy
           </h1>
-          <p className="text-sm text-text-400">
+          <p className="text-sm text-text-tertiary">
             Chọn mức độ và bắt đầu ván cờ
           </p>
         </div>
 
         {/* Level Selection - Primary focus */}
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-text-300">Mức độ</h2>
+          <h2 className="text-sm font-semibold text-text-secondary">Mức độ</h2>
           <div className="grid gap-2">
             {LEVEL_CONFIG.map((level) => (
               <button
@@ -76,20 +76,20 @@ export default function PreGameLobby() {
                 className={`flex flex-col items-start rounded-lg border px-4 py-3 text-left transition-all duration-200 ${
                   selectedElo === level.elo
                     ? 'border-primary-500 bg-primary-500/10 ring-1 ring-primary-500/30'
-                    : 'border-border bg-bg-900/50 hover:border-border/80 hover:bg-bg-900'
+                    : 'border-border bg-bg-surface/50 hover:border-border-strong hover:bg-bg-surface'
                 }`}
               >
                 <div className="flex w-full items-center justify-between">
                   <span className={`font-semibold ${
-                    selectedElo === level.elo ? 'text-primary-300' : 'text-text-200'
+                    selectedElo === level.elo ? 'text-primary-300' : 'text-text-primary'
                   }`}>
                     {level.label}
                   </span>
-                  <span className="text-xs text-text-500">
+                  <span className="text-xs text-text-disabled">
                     ~{level.elo} Elo
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-text-400">
+                <p className="mt-1 text-xs text-text-tertiary">
                   {level.description}
                 </p>
               </button>
@@ -99,7 +99,7 @@ export default function PreGameLobby() {
 
         {/* Color Selection - Simple with explanation */}
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-text-300">Màu quân</h2>
+          <h2 className="text-sm font-semibold text-text-secondary">Màu quân</h2>
           <div className="flex gap-3">
             {COLOR_OPTIONS.map(c => (
               <button
@@ -108,16 +108,16 @@ export default function PreGameLobby() {
                 className={`flex-1 flex flex-col items-center rounded-lg border px-3 py-4 transition-all duration-200 ${
                   selectedColor === c.id
                     ? 'border-primary-500 bg-primary-500/10 ring-1 ring-primary-500/30'
-                    : 'border-border bg-bg-900/50 hover:border-border/80'
+                    : 'border-border bg-bg-surface/50 hover:border-border-strong'
                 }`}
               >
                 <span className="text-3xl mb-1">{c.icon}</span>
                 <span className={`text-sm font-medium ${
-                  selectedColor === c.id ? 'text-primary-300' : 'text-text-300'
+                  selectedColor === c.id ? 'text-primary-300' : 'text-text-secondary'
                 }`}>
                   {c.label}
                 </span>
-                <span className="text-xs text-text-500 mt-1">
+                <span className="text-xs text-text-disabled mt-1">
                   {c.hint}
                 </span>
               </button>

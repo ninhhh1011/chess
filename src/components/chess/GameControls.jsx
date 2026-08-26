@@ -15,7 +15,7 @@ export default function GameControls({ onHint, requestHint }) {
         <div className="flex w-full items-center justify-between rounded-md border border-rose-500/25 bg-rose-500/10 px-3 py-2">
           <span className="text-sm font-medium text-rose-300">Xác nhận đầu hàng?</span>
           <div className="flex gap-2">
-            <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-text-400 hover:text-text-200 transition-colors">
+            <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors">
               Hủy
             </button>
             <button
@@ -34,10 +34,10 @@ export default function GameControls({ onHint, requestHint }) {
 
     if (confirmAction === 'new') {
       return (
-        <div className="flex w-full flex-col gap-2 rounded-md border border-border/70 bg-bg-950 px-3 py-2">
-          <span className="text-sm font-medium text-text-300">Bắt đầu ván mới?</span>
+        <div className="flex w-full flex-col gap-2 rounded-md border border-border bg-bg-base px-3 py-2">
+          <span className="text-sm font-medium text-text-secondary">Bắt đầu ván mới?</span>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-text-400 hover:text-text-200 transition-colors">
+            <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors">
               Hủy
             </button>
             <button
@@ -46,7 +46,7 @@ export default function GameControls({ onHint, requestHint }) {
                 setPlayState('lobby');
                 setConfirmAction(null);
               }}
-              className="rounded-md border border-border/60 px-2 py-1 text-xs text-text-300 hover:bg-bg-800 transition-colors"
+              className="rounded-md border border-border px-2 py-1 text-xs text-text-secondary hover:bg-bg-elevated transition-colors"
             >
               Đổi cấp độ
             </button>
@@ -55,7 +55,7 @@ export default function GameControls({ onHint, requestHint }) {
                 newGame();
                 setConfirmAction(null);
               }}
-              className="rounded-md bg-primary-400 px-2 py-1 text-xs font-semibold text-bg-950 hover:bg-primary-300 transition-colors"
+              className="rounded-md bg-primary-400 px-2 py-1 text-xs font-semibold text-bg-base hover:bg-primary-300 transition-colors"
             >
               {UI_COPY.newGame}
             </button>
@@ -68,7 +68,7 @@ export default function GameControls({ onHint, requestHint }) {
   };
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-border/70 bg-bg-950/80 p-2 shadow-sm">
+    <div className="flex flex-col gap-2 rounded-lg border border-border bg-bg-base/80 p-2 shadow-sm">
       {confirmAction ? (
         renderConfirm()
       ) : (
@@ -88,14 +88,14 @@ export default function GameControls({ onHint, requestHint }) {
               </button>
               <button
                 onClick={undoMove}
-                className="rounded-md border border-border bg-bg-900 px-3 py-2 text-xs font-medium text-text-300 hover:bg-bg-800 transition-colors"
+                className="rounded-md border border-border bg-bg-surface px-3 py-2 text-xs font-medium text-text-secondary hover:bg-bg-elevated transition-colors"
                 title={UI_COPY.undo}
               >
                 {UI_COPY.undo}
               </button>
               <button
                 onClick={() => setConfirmAction('new')}
-                className="rounded-md border border-border bg-bg-900 px-3 py-2 text-xs font-medium text-text-300 hover:bg-bg-800 transition-colors"
+                className="rounded-md border border-border bg-bg-surface px-3 py-2 text-xs font-medium text-text-secondary hover:bg-bg-elevated transition-colors"
               >
                 {UI_COPY.newGame}
               </button>
@@ -104,7 +104,7 @@ export default function GameControls({ onHint, requestHint }) {
             {/* Secondary menu toggle */}
             <button
               onClick={() => setShowMore(!showMore)}
-              className="rounded-md border border-border bg-bg-900 px-2 py-2 text-text-400 hover:bg-bg-800 hover:text-text-300 transition-colors"
+              className="rounded-md border border-border bg-bg-surface px-2 py-2 text-text-tertiary hover:bg-bg-elevated hover:text-text-secondary transition-colors"
               title="Thêm tùy chọn"
             >
               <span className="text-sm">•••</span>
@@ -113,13 +113,13 @@ export default function GameControls({ onHint, requestHint }) {
 
           {/* Secondary menu */}
           {showMore && (
-            <div className="flex flex-wrap gap-2 rounded-md border border-border/50 bg-bg-900/50 p-2 transition-all duration-200">
+            <div className="flex flex-wrap gap-2 rounded-md border border-border bg-bg-surface/50 p-2 transition-all duration-200">
               <button
                 onClick={() => {
                   flipBoard();
                   setShowMore(false);
                 }}
-                className="rounded-md border border-border bg-bg-900 px-3 py-2 text-xs text-text-300 hover:bg-bg-800 transition-colors"
+                className="rounded-md border border-border bg-bg-surface px-3 py-2 text-xs text-text-secondary hover:bg-bg-elevated transition-colors"
               >
                 ↕ Lật bàn
               </button>
