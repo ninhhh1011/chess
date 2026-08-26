@@ -42,6 +42,10 @@ export default function GameLayout({
   reviewGameWithEngine,
   engineMove,
   showStartNotice,
+  engineError,
+  showRetryHint,
+  onRetryBotMove,
+  onRequestHint,
 }) {
   const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState } = useChessGame();
   const [activeTab, setActiveTab] = useState('moves');
@@ -74,6 +78,21 @@ export default function GameLayout({
 
         {/* LEFT COLUMN: Board area */}
         <section className="min-w-0 rounded-lg border border-slate-800/80 bg-slate-950/35 p-2 sm:p-3">
+          {/* Engine error state */}
+          {engineError && (
+            <div className="mb-2 rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 flex items-center justify-between gap-2">
+              <span className="text-sm text-rose-400">{engineError}</span>
+              {showRetryHint && (
+                <button
+                  onClick={onRetryBotMove}
+                  className="rounded bg-rose-500/20 px-3 py-1 text-xs font-medium text-rose-300 hover:bg-rose-500/30"
+                >
+                  Thử lại
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Game status bar - compact */}
           <div className="mb-2">
             <GameInfoBar botElo={botElo} />
@@ -84,9 +103,13 @@ export default function GameLayout({
             <PlayerBar position="top" />
           </div>
 
-          {/* Board with evaluation bar */}
+          {/* Board with evaluation bar - hidden during gameplay, shown in review/analysis */}
           <div className="flex items-start justify-center gap-2 rounded-lg border border-slate-800/80 bg-slate-900/45 p-2">
-            <LiveEvaluationBar analysis={liveAnalysis} status={liveEvalStatus} />
+            <LiveEvaluationBar
+              analysis={liveAnalysis}
+              status={liveEvalStatus}
+              hidden={playState === 'playing' && !isReviewing}
+            />
             <div className="flex min-w-0 flex-1 justify-center">
               <ChessBoardPanel engineHint={engineHint} />
             </div>
@@ -107,7 +130,7 @@ export default function GameLayout({
 
         {/* RIGHT COLUMN: Sidebar */}
         <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-20 lg:self-start">
-          <GameControls onHint={() => { setActiveTab('coach'); setCoachExpanded(true); }} />
+          <GameControls onHint={() => { setActiveTab('coach'); setCoachExpanded(true); }} requestHint={onRequestHint} />
           <ReviewNavigator />
 
           <div className="overflow-hidden rounded-lg border border-slate-700/70 bg-slate-950/80 shadow-[0_1px_0_rgba(255,255,255,0.03)]">

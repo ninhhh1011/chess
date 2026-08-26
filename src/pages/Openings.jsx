@@ -14,8 +14,8 @@ export default function Openings(){
   const progress = useMemo(() => getOpeningProgress(), []);
   const visible = openings.filter(o => filter === 'all' || o.side === filter || o.level === filter);
   return <section>
-    <h1 className="text-4xl font-bold md:text-5xl">{BRAND_NAMES.openingTrainer}</h1>
-    <p className="mt-4 max-w-3xl text-slate-300">Học ý tưởng khai cuộc và luyện các nước đầu tiên cho chắc tay.</p>
+    <h1 className="text-4xl font-bold text-text-primary md:text-5xl">{BRAND_NAMES.openingTrainer}</h1>
+    <p className="mt-4 max-w-3xl text-text-secondary">Học ý tưởng khai cuộc và luyện các nước đầu tiên cho chắc tay.</p>
     <div className="mt-6 flex flex-wrap gap-2">{filters.map(f=><button key={f.id} className={filter===f.id?'btn-primary':'btn-secondary'} onClick={()=>setFilter(f.id)}>{f.label}</button>)}</div>
     <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{visible.map(opening => <OpeningCard key={opening.id} opening={opening} progress={progress[opening.id]} />)}</div>
   </section>;

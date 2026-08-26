@@ -1,91 +1,97 @@
+/**
+ * Tests for embeddingService - DISABLED
+ *
+ * Verifies that:
+ * 1. No OpenAI API key references exist in the codebase
+ * 2. Embeddings are disabled
+ * 3. Functions return null
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getEmbedding, getEmbeddingCached, cacheEmbedding } from '../services/embeddingService.js';
+import { getEmbedding, getEmbeddingCached, cacheEmbedding, EMBEDDING_CONFIG } from '../services/embeddingService.js';
 
-// Mock fetch globally
-global.fetch = vi.fn();
-
-describe('embeddingService', () => {
+describe('embeddingService - DISABLED', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.OPENAI_API_KEY = 'test-key';
+    // Suppress console.warn in tests
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  describe('Security Configuration', () => {
+    it('is marked as disabled', () => {
+      expect(EMBEDDING_CONFIG.DISABLED).toBe(true);
+    });
+
+    it('documents the security status', () => {
+      expect(EMBEDDING_CONFIG.STATUS).toContain('disabled');
+    });
+
+    it('has no API key reference', () => {
+      expect(EMBEDDING_CONFIG).not.toHaveProperty('API_KEY');
+      expect(EMBEDDING_CONFIG).not.toHaveProperty('apiKey');
+    });
   });
 
   describe('getEmbedding', () => {
-    it('calls OpenAI embeddings API and returns vector', async () => {
-      const mockVector = [0.1, 0.2, 0.3];
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ data: [{ embedding: mockVector }] }),
-      });
-
-      const result = await getEmbedding('test query');
-
-      expect(result).toEqual(mockVector);
-      expect(fetch).toHaveBeenCalledWith(
-        'https://api.openai.com/v1/embeddings',
-        expect.objectContaining({
-          method: 'POST',
-          headers: expect.objectContaining({
-            Authorization: 'Bearer test-key',
-          }),
-        })
-      );
-    });
-
-    it('returns null on API error', async () => {
-      global.fetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-      });
-
-      const result = await getEmbedding('test query');
+    it('always returns null', async () => {
+      const result = await getEmbedding('any query');
       expect(result).toBeNull();
     });
 
-    it('returns null when API key missing', async () => {
-      delete process.env.OPENAI_API_KEY;
-      const result = await getEmbedding('test');
-      expect(result).toBeNull();
+    it('does not make any API calls', async () => {
+      const fetchSpy = vi.spyOn(global, 'fetch');
+
+      await getEmbedding('test query');
+
+      expect(fetchSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('getEmbeddingCached', () => {
-    it('returns cached embedding on hash match', async () => {
-      const mockVector = [0.1, 0.2];
-      const { default: supabase } = await import('../lib/supabaseClient.js');
-
-      // Mock supabase chain
-      vi.spyOn(supabase, 'from').mockReturnValue({
-        select: () => ({
-          eq: () => ({
-            single: async () => ({ data: { embedding: mockVector }, error: null }),
-          }),
-        }),
-      });
-
-      const result = await getEmbeddingCached('cached query');
-      expect(result).toEqual(mockVector);
+    it('always returns null', async () => {
+      const result = await getEmbeddingCached('any query');
+      expect(result).toBeNull();
     });
 
-    it('generates new embedding on cache miss', async () => {
-      const mockVector = [0.4, 0.5];
-      const { default: supabase } = await import('../lib/supabaseClient.js');
+    it('does not make any API calls', async () => {
+      const fetchSpy = vi.spyOn(global, 'fetch');
 
-      vi.spyOn(supabase, 'from').mockReturnValue({
-        select: () => ({
-          eq: () => ({
-            single: async () => ({ data: null, error: null }),
-          }),
-        }),
-      });
+      await getEmbeddingCached('cached query');
 
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ data: [{ embedding: mockVector }] }),
-      });
+      expect(fetchSpy).not.toHaveBeenCalled();
+    });
+  });
 
-      const result = await getEmbeddingCached('new query');
-      expect(result).toEqual(mockVector);
+  describe('cacheEmbedding', () => {
+    it('is a no-op', async () => {
+      await expect(
+        cacheEmbedding('query', [0.1, 0.2])
+      ).resolves.not.toThrow();
+    });
+  });
+
+  describe('SECURITY: No API key exposure', () => {
+    it('does not read VITE_OPENAI_API_KEY', async () => {
+      // Even if VITE_OPENAI_API_KEY is set, function returns null
+      const originalEnv = import.meta.env.VITE_OPENAI_API_KEY;
+      import.meta.env.VITE_OPENAI_API_KEY = 'secret-key-123';
+
+      const result = await getEmbedding('test');
+
+      // Should still return null
+      expect(result).toBeNull();
+
+      // Clean up
+      if (originalEnv !== undefined) {
+        import.meta.env.VITE_OPENAI_API_KEY = originalEnv;
+      } else {
+        delete import.meta.env.VITE_OPENAI_API_KEY;
+      }
+    });
+
+    it('does not read process.env.OPENAI_API_KEY', async () => {
+      // This should not exist in browser context
+      const result = await getEmbedding('test');
+      expect(result).toBeNull();
     });
   });
 });

@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth, useIsSupabaseConfigured } from '../contexts/AuthContext';
 import { signInWithEmail } from '../services/authService';
+import { Input } from '@/design-system/primitives/Input';
+import { Button } from '@/design-system/primitives/Button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/design-system/primitives/Card';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -23,22 +26,23 @@ export default function Login() {
 
   if (!isSupabaseConfigured) {
     return (
-      <div className="min-h-screen grid place-items-center bg-slate-950/95 px-4">
-        <div className="max-w-md text-center">
+      <div className="min-h-screen grid place-items-center bg-bg-base px-4">
+        <Card variant="elevated" className="max-w-md text-center">
           <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm">
             <span className="text-5xl">♔</span>
           </div>
-          <h1 className="text-4xl font-bold text-slate-100">Đăng nhập</h1>
-          <p className="mt-4 text-lg text-slate-300">
-            Tính năng đăng nhập chưa được cấu hình. Vui lòng liên hệ quản trị viên để kích hoạt.
-          </p>
-          <button
-            className="btn-primary mt-8"
-            onClick={() => navigate('/')}
-          >
-            Quay về trang chủ
-          </button>
-        </div>
+          <CardHeader className="mb-0">
+            <CardTitle as="h1">Đăng nhập</CardTitle>
+            <CardDescription>
+              Tính năng đăng nhập chưa được cấu hình. Vui lòng liên hệ quản trị viên để kích hoạt.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => navigate('/')}>
+              Quay về trang chủ
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -60,72 +64,65 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen grid place-items-center bg-slate-950/95 px-4">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
+    <div className="min-h-screen grid place-items-center bg-bg-base px-4">
+      <Card variant="elevated" padding="lg" className="w-full max-w-md">
+        <CardHeader className="text-center">
           <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm">
             <span className="text-3xl">♔</span>
           </div>
-          <h1 className="text-3xl font-bold text-slate-100">Đăng nhập</h1>
-          <p className="mt-2 text-slate-100/60">Vào tài khoản để đồng bộ tiến độ</p>
-        </div>
+          <CardTitle as="h1">Đăng nhập</CardTitle>
+          <CardDescription>Vào tài khoản để đồng bộ tiến độ</CardDescription>
+        </CardHeader>
 
-        <form onSubmit={handleSubmit} className="rounded-xl bg-slate-900 p-6  border border-slate-800">
-          {error && (
-            <div className="mb-4 rounded-xl bg-red/20 p-4 text-sm text-red/90">
-              {error}
-            </div>
-          )}
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="rounded-xl bg-error/20 p-4 text-sm text-error">
+                {error}
+              </div>
+            )}
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-bold uppercase tracking-[0.18em] text-slate-400 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-emerald-500"
-                placeholder="email@example.com"
-                required
-              />
-            </div>
+            <Input
+              type="email"
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@example.com"
+              required
+            />
 
-            <div>
-              <label className="block text-sm font-bold uppercase tracking-[0.18em] text-slate-400 mb-2">
-                Mật khẩu
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-emerald-500"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-          </div>
+            <Input
+              type="password"
+              label="Mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-primary mt-6 w-full"
-          >
-            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-          </button>
-        </form>
+            <Button
+              type="submit"
+              disabled={loading}
+              isLoading={loading}
+              className="w-full mt-6"
+            >
+              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            </Button>
+          </form>
 
-        <p className="mt-6 text-center text-slate-100/60">
-          Chưa có tài khoản?{' '}
-          <button
-            onClick={() => navigate('/signup')}
-            className="font-bold text-emerald-500 hover:text-emerald-400 transition"
-          >
-            Đăng ký ngay
-          </button>
-        </p>
-      </div>
+          <p className="mt-6 text-center text-text-secondary">
+            Chưa có tài khoản?{' '}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/signup')}
+              className="inline ml-1"
+            >
+              Đăng ký ngay
+            </Button>
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BRAND_NAMES, RESULT_COPY } from '../../config/brand';
 import coachAvatar from '../../assets/avatarcoach.webp';
@@ -12,6 +13,7 @@ function getResultKind({ game, playerColor, resultNotice }) {
 }
 
 export default function PostGameReview() {
+  const navigate = useNavigate();
   const {
     game,
     playerColor,
@@ -99,79 +101,84 @@ export default function PostGameReview() {
   const recommendation = getPracticeRecommendation();
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4">
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-bg-base/80 p-4">
       <div className="ui-card w-full max-w-lg space-y-6 p-8 shadow-2xl">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-slate-100 md:text-3xl">{resultCopy.title}</h2>
-          <p className="mt-2 text-base font-medium text-emerald-400">{resultCopy.description}</p>
+          <h2 className="text-2xl font-bold text-text-primary md:text-3xl">{resultCopy.title}</h2>
+          <p className="mt-2 text-base font-medium text-primary-400">{resultCopy.description}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-lg bg-slate-950 p-4 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Tổng nước đi</div>
-            <div className="mt-1 text-2xl font-bold text-slate-200">{moveHistory.length}</div>
+          <div className="rounded-lg bg-bg-base p-4 text-center">
+            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Tổng nước đi</div>
+            <div className="mt-1 text-2xl font-bold text-text-primary">{moveHistory.length}</div>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <div className="flex flex-col justify-center rounded-lg bg-slate-950 p-2 text-center">
+            <div className="flex flex-col justify-center rounded-lg bg-bg-base p-2 text-center">
               <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Xuất sắc</div>
               <div className="font-bold text-cyan-300">{brilliant}</div>
             </div>
-            <div className="flex flex-col justify-center rounded-lg bg-slate-950 p-2 text-center">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Tốt</div>
-              <div className="font-bold text-emerald-300">{great + bestMoves}</div>
+            <div className="flex flex-col justify-center rounded-lg bg-bg-base p-2 text-center">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-primary-400">Tốt</div>
+              <div className="font-bold text-primary-300">{great + bestMoves}</div>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-between rounded-lg bg-slate-950 p-4">
+        <div className="flex justify-between rounded-lg bg-bg-base p-4">
           <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Bình thường</div>
-            <div className="mt-1 font-bold text-slate-300">{good}</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Bình thường</div>
+            <div className="mt-1 font-bold text-text-secondary">{good}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Thiếu lực</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Thiếu lực</div>
             <div className="mt-1 font-bold text-yellow-500">{inaccuracies}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Sai lầm</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Sai lầm</div>
             <div className="mt-1 font-bold text-orange-500">{mistakes}</div>
           </div>
           <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Nghiêm trọng</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Nghiêm trọng</div>
             <div className="mt-1 font-bold text-red-500">{blunders}</div>
           </div>
         </div>
 
         {largestLoss > 0 && (
-          <div className="rounded-lg bg-slate-950 p-4 text-center text-sm">
-            <span className="text-slate-400">Nước sai nghiêm trọng nhất: </span>
+          <div className="rounded-lg bg-bg-base p-4 text-center text-sm">
+            <span className="text-text-tertiary">Nước sai nghiêm trọng nhất: </span>
             <span className="font-bold text-rose-400">{suggestedBestSan || 'chưa có'}</span>
           </div>
         )}
 
         {/* Coach advice */}
-        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-5">
+        <div className="rounded-lg border border-primary-500/20 bg-primary-500/10 p-5 transition-all duration-200">
           <div className="mb-2 flex items-center gap-2">
             <img src={coachAvatar} alt="Coach" className="h-6 w-6 rounded-full" />
-            <h3 className="font-bold text-emerald-400">{BRAND_NAMES.coach}</h3>
+            <h3 className="font-bold text-primary-400">{BRAND_NAMES.coach}</h3>
           </div>
-          <p className="text-sm leading-relaxed text-emerald-100/90">{coachAdvice}</p>
+          <p className="text-sm leading-relaxed text-primary-100/90">{coachAdvice}</p>
         </div>
 
         {/* Practice recommendation */}
-        <div className="rounded-lg border border-slate-700/70 bg-slate-900/50 p-4">
-          <div className="text-xs font-medium text-slate-400 mb-2">Gợi ý luyện tập tiếp theo</div>
+        <div className="rounded-lg border border-border bg-bg-surface/50 p-4 transition-all duration-200">
+          <div className="text-xs font-medium text-text-tertiary mb-2">Gợi ý luyện tập tiếp theo</div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-medium text-slate-200">{recommendation.label}</div>
-              <div className="text-xs text-slate-500">{recommendation.hint}</div>
+              <div className="font-medium text-text-primary">{recommendation.label}</div>
+              <div className="text-xs text-text-disabled">{recommendation.hint}</div>
             </div>
             <button
               onClick={() => {
-                // Navigate to practice - could be /exercises, /openings, etc.
-                // For now, just close and let user choose
+                const routes = {
+                  tactics: '/exercises',
+                  endgame: '/exercises',
+                  opening: '/openings',
+                  general: '/exercises',
+                };
+                navigate(routes[recommendation.type] || '/exercises');
               }}
-              className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:bg-emerald-500/10"
+              className="rounded-md border border-primary-500/30 px-3 py-1.5 text-xs font-medium text-primary-400 hover:bg-primary-500/10 transition-colors"
             >
               Luyện ngay
             </button>

@@ -2,9 +2,13 @@ node_modules
 dist
 .env
 .env.local
+.env.*.local
 server/.env
 .DS_Store
 .codex-dev*.log
 .worktrees/
 /public/stockfish.js
 /public/stockfish.wasm
+test-results/
+playwright-report/
+playwright/.cache/

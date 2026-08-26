@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useChessGame } from '../contexts/ChessGameContext';
-import { useEngineAnalysis } from '../hooks/useEngineAnalysis';
+import { useBotMove } from '../hooks/useBotMove';
 import { analyzeFen } from '../services/stockfishService';
 import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
 import { classifyMoveAnnotation } from '../utils/moveQuality';
@@ -23,6 +23,10 @@ export default function ChessGameBoard() {
     isGameOver,
     analysisMode,
     isBotThinking,
+    setIsBotThinking,
+    botElo,
+    playerColor,
+    gameMode,
     engineHint,
     setEngineHint,
     lastMoveFenPair,
@@ -35,6 +39,10 @@ export default function ChessGameBoard() {
     setRecordedGamePgn,
     setShouldShowGameOverModal,
     setPlayState,
+    GAME_MODES,
+    makeMove,
+    currentTurn,
+    playState,
   } = useChessGame();
 
   const [autoAnalyze, setAutoAnalyze] = useState(false);
@@ -44,9 +52,149 @@ export default function ChessGameBoard() {
   const [liveAnalysis, setLiveAnalysis] = useState(null);
   const [liveEvalStatus, setLiveEvalStatus] = useState('Đang tải');
   const [showStartNotice, setShowStartNotice] = useState(true);
+  const [engineError, setEngineError] = useState(null);
+  const [showRetryHint, setShowRetryHint] = useState(false);
 
+  // Game generation ID - incremented on new game to invalidate old requests
+  const [gameGenId, setGameGenId] = useState(0);
+  const gameGenIdRef = useRef(0);
+
+  // Refs
   const liveAnalysisRequestRef = useRef(0);
   const lastCheckFenRef = useRef(null);
+  const gameStartFenRef = useRef(null);
+  const isBotTurnRef = useRef(false);
+  const lastMoveCountRef = useRef(0);
+
+  // Track playState changes to detect new game
+  const prevPlayStateRef = useRef(playState);
+
+  // Bot move handler
+  const handleBotMoveStart = useCallback(() => {
+    setIsBotThinking(true);
+    setEngineError(null);
+    setShowRetryHint(false);
+  }, [setIsBotThinking]);
+
+  const handleBotMoveComplete = useCallback(
+    async (result, responseGameGenId) => {
+      setIsBotThinking(false);
+
+      // Check if this response is from the current game
+      if (responseGameGenId !== gameGenIdRef.current) {
+        // This is a stale response from an old game - ignore it
+        return;
+      }
+
+      if (!result?.move) {
+        // Bot failed to get a move - show error state
+        setEngineError('Không thể nhận nước đi từ máy');
+        setShowRetryHint(true);
+        return;
+      }
+
+      // Cancel if game ended while bot was thinking
+      if (activeGame.isGameOver()) {
+        return;
+      }
+
+      // Make the bot's move
+      const moveResult = makeMove(result.move.slice(0, 2), result.move.slice(2, 4), result.move[4] || 'q', {
+        byBot: true,
+        sourceFen: gameStartFenRef.current,
+      });
+
+      if (!moveResult) {
+        setEngineError('Nước đi không hợp lệ');
+        setShowRetryHint(true);
+      }
+    },
+    [activeGame, makeMove, setIsBotThinking]
+  );
+
+  // Bot move hook
+  const { getMove, cancelMove } = useBotMove({
+    botElo,
+    onMoveStart: handleBotMoveStart,
+    onMoveComplete: handleBotMoveComplete,
+  });
+
+  // Detect new game - increment game generation ID
+  useEffect(() => {
+    if (prevPlayStateRef.current === 'playing' && playState !== 'playing') {
+      // Game ended or left
+    }
+    if (prevPlayStateRef.current !== 'lobby' && playState === 'lobby') {
+      // Returned to lobby - increment gen ID
+      gameGenIdRef.current += 1;
+      setGameGenId(gameGenIdRef.current);
+    }
+    prevPlayStateRef.current = playState;
+  }, [playState]);
+
+  // Also increment on newGame
+  useEffect(() => {
+    if (moveHistory.length === 0 && lastMoveCountRef.current > 0) {
+      // Move count went back to 0 (new game started)
+      gameGenIdRef.current += 1;
+      setGameGenId(gameGenIdRef.current);
+    }
+    lastMoveCountRef.current = moveHistory.length;
+  }, [moveHistory.length]);
+
+  // Retry bot move after error
+  const handleRetryBotMove = useCallback(() => {
+    if (engineError && !isGameOver && gameMode === GAME_MODES.BOT) {
+      setEngineError(null);
+      setShowRetryHint(false);
+      isBotTurnRef.current = true;
+      gameStartFenRef.current = currentFen;
+      getMove(currentFen, gameGenIdRef.current);
+    }
+  }, [engineError, isGameOver, gameMode, GAME_MODES.BOT, currentFen, getMove]);
+
+  // Trigger bot move when it's bot's turn
+  useEffect(() => {
+    // Skip in analysis mode, when game is over, or if not bot mode
+    if (analysisMode || isGameOver || gameMode !== GAME_MODES.BOT) {
+      return;
+    }
+
+    // It's bot's turn if the current turn doesn't match player's color
+    const isBotTurn = currentTurn !== playerColor;
+
+    // Check if this is a new turn (player just moved) by comparing move count
+    const didPlayerJustMove = moveHistory.length > lastMoveCountRef.current;
+
+    // If it's bot's turn and not already thinking
+    if (isBotTurn && !isBotThinking) {
+      // Check if this is a valid trigger (player moved, or initial position)
+      const isInitialPosition = moveHistory.length === 0 && !isBotTurnRef.current;
+
+      if (didPlayerJustMove || isInitialPosition) {
+        isBotTurnRef.current = true;
+        gameStartFenRef.current = currentFen;
+        // Pass current gameGenId so callback can validate
+        getMove(currentFen, gameGenIdRef.current);
+      }
+    } else if (!isBotTurn) {
+      isBotTurnRef.current = false;
+    }
+  }, [currentTurn, playerColor, isGameOver, analysisMode, gameMode, GAME_MODES.BOT, isBotThinking, currentFen, moveHistory.length, getMove]);
+
+  // Cancel bot move on game state changes
+  useEffect(() => {
+    if (isBotThinking && (isGameOver || analysisMode)) {
+      cancelMove();
+    }
+  }, [isGameOver, analysisMode, isBotThinking, cancelMove]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cancelMove();
+    };
+  }, [cancelMove]);
 
   // Check sound effect
   useEffect(() => {
@@ -215,6 +363,21 @@ export default function ChessGameBoard() {
     };
   }
 
+  // Request hint - analyzes position and sets engine hint
+  async function requestHint() {
+    try {
+      const result = await analyzeFen({ fen: currentFen, depth: 10, movetime: 600, purpose: 'hint' });
+      if (result?.bestMove) {
+        setEngineHint({
+          bestMove: result.bestMove,
+          evaluation: result.evaluation?.display || null,
+        });
+      }
+    } catch {
+      // Silent fail - hint is optional
+    }
+  }
+
   const engineMove = parseEngineMove(engineHint);
 
   return (
@@ -231,6 +394,10 @@ export default function ChessGameBoard() {
       reviewGameWithEngine={reviewGameWithEngine}
       engineMove={engineMove}
       showStartNotice={showStartNotice}
+      engineError={engineError}
+      showRetryHint={showRetryHint}
+      onRetryBotMove={handleRetryBotMove}
+      onRequestHint={requestHint}
     />
   );
 }
