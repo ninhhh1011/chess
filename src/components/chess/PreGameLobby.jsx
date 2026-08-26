@@ -1,97 +1,137 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
-import { BRAND_NAMES, UI_COPY, brandName, BRAND_DESCRIPTION } from '../../config/brand';
-import coachAvatar from '../../assets/avatarcoach.webp';
+import { BRAND_NAMES, UI_COPY } from '../../config/brand';
 import { BOT_ELO_LEVELS } from '../../data/botLevels';
+
+// Friendly level names and descriptions
+const LEVEL_CONFIG = [
+  {
+    elo: 400,
+    label: 'Người mới',
+    description: 'Dành cho người chưa biết chơi hoặc mới bắt đầu.',
+  },
+  {
+    elo: 800,
+    label: 'Cơ bản',
+    description: 'Hiểu luật cơ bản, muốn thực hành.',
+  },
+  {
+    elo: 1200,
+    label: 'Trung bình',
+    description: 'Đã có kinh nghiệm, muốn cải thiện.',
+  },
+  {
+    elo: 1600,
+    label: 'Nâng cao',
+    description: 'Chơi tốt, muốn thử thách bản thân.',
+  },
+];
+
+const COLOR_OPTIONS = [
+  { id: 'w', label: 'Trắng', icon: '♔', hint: 'Đi trước' },
+  { id: 'b', label: 'Đen', icon: '♚', hint: 'Máy đi trước' },
+];
 
 export default function PreGameLobby() {
   const { GAME_MODES, PLAYER_COLORS, startGame } = useChessGame();
 
-  // Local state for the form
-  const [selectedElo, setSelectedElo] = useState(BOT_ELO_LEVELS[2].elo); // Default 1200
-  const [selectedColor, setSelectedColor] = useState('random');
+  // Default: Người mới (400) + Trắng
+  const [selectedElo, setSelectedElo] = useState(400);
+  const [selectedColor, setSelectedColor] = useState('w');
 
   function handleStart() {
-    let color = selectedColor;
-    if (color === 'random') {
-      color = Math.random() > 0.5 ? PLAYER_COLORS.WHITE : PLAYER_COLORS.BLACK;
-    }
-    startGame({ elo: selectedElo, color, mode: GAME_MODES.BOT, gameGoal: 'fun', timeControl: 'unlimited' });
+    startGame({
+      elo: selectedElo,
+      color: selectedColor,
+      mode: GAME_MODES.BOT,
+      gameGoal: 'fun',
+      timeControl: 'unlimited'
+    });
   }
+
+  const selectedLevel = LEVEL_CONFIG.find(l => l.elo === selectedElo) || LEVEL_CONFIG[0];
 
   return (
     <div className="flex w-full items-center justify-center p-4 min-h-[80vh]">
-      <div className="ui-card w-full max-w-2xl space-y-8 p-6 md:p-8">
+      <div className="ui-card w-full max-w-lg space-y-8 p-6 md:p-8">
 
-        {/* Header */}
-        <div className="text-center">
-          <img src={coachAvatar} alt={brandName} className="mx-auto mb-4 h-20 w-20 rounded-full border-2 border-emerald-500/30 object-cover shadow-sm" />
-          <h1 className="text-3xl font-bold text-slate-100 md:text-4xl">{brandName}</h1>
-          <p className="mt-3 text-slate-400 max-w-lg mx-auto">{BRAND_DESCRIPTION}</p>
+        {/* Header - Simple and clear */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold text-text-100 md:text-3xl">
+            Chơi với máy
+          </h1>
+          <p className="text-sm text-text-400">
+            Chọn mức độ và bắt đầu ván cờ
+          </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Opponent Selection */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">Đối thủ: {BRAND_NAMES.bot}</h3>
-            <div className="grid gap-2">
-              {BOT_ELO_LEVELS.slice(0, 4).map((bot) => (
-                <button
-                  key={bot.elo}
-                  onClick={() => setSelectedElo(bot.elo)}
-                  className={`flex items-center justify-between rounded-lg border px-4 py-3 transition ${
-                    selectedElo === bot.elo
-                      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-100'
-                      : 'border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300'
-                  }`}
-                >
-                  <span className="font-medium">{bot.label}</span>
-                  <span className="text-xs opacity-60">Elo {bot.elo}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            {/* Color Selection */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">Màu quân</h3>
-              <div className="flex gap-2">
-                {[{ id: PLAYER_COLORS.WHITE, label: 'Trắng', icon: '♔' }, { id: PLAYER_COLORS.BLACK, label: 'Đen', icon: '♚' }, { id: 'random', label: 'Ngẫu nhiên', icon: '❓' }].map(c => (
-                  <button
-                    key={c.id}
-                    onClick={() => setSelectedColor(c.id)}
-                    className={`flex-1 rounded-lg border px-2 py-3 text-center transition ${
-                      selectedColor === c.id
-                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-100'
-                        : 'border-slate-800 bg-slate-900 hover:border-slate-700 text-slate-300'
-                    }`}
-                  >
-                    <div className="text-2xl mb-1">{c.icon}</div>
-                    <div className="text-xs font-medium">{c.label}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Bot Info */}
-            <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
-              <h3 className="text-sm font-medium text-slate-300 mb-2">Về {BRAND_NAMES.bot}</h3>
-              <p className="text-xs text-slate-500">
-                {BRAND_NAMES.bot} sử dụng Stockfish engine với mức Elo tương ứng.
-                Càng cao càng khó đánh bại.
-              </p>
-            </div>
+        {/* Level Selection - Primary focus */}
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-text-300">Mức độ</h2>
+          <div className="grid gap-2">
+            {LEVEL_CONFIG.map((level) => (
+              <button
+                key={level.elo}
+                onClick={() => setSelectedElo(level.elo)}
+                className={`flex flex-col items-start rounded-lg border px-4 py-3 text-left transition-all duration-200 ${
+                  selectedElo === level.elo
+                    ? 'border-primary-500 bg-primary-500/10 ring-1 ring-primary-500/30'
+                    : 'border-border bg-bg-900/50 hover:border-border/80 hover:bg-bg-900'
+                }`}
+              >
+                <div className="flex w-full items-center justify-between">
+                  <span className={`font-semibold ${
+                    selectedElo === level.elo ? 'text-primary-300' : 'text-text-200'
+                  }`}>
+                    {level.label}
+                  </span>
+                  <span className="text-xs text-text-500">
+                    ~{level.elo} Elo
+                  </span>
+                </div>
+                <p className="mt-1 text-xs text-text-400">
+                  {level.description}
+                </p>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="pt-4 text-center">
+        {/* Color Selection - Simple with explanation */}
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-text-300">Màu quân</h2>
+          <div className="flex gap-3">
+            {COLOR_OPTIONS.map(c => (
+              <button
+                key={c.id}
+                onClick={() => setSelectedColor(c.id)}
+                className={`flex-1 flex flex-col items-center rounded-lg border px-3 py-4 transition-all duration-200 ${
+                  selectedColor === c.id
+                    ? 'border-primary-500 bg-primary-500/10 ring-1 ring-primary-500/30'
+                    : 'border-border bg-bg-900/50 hover:border-border/80'
+                }`}
+              >
+                <span className="text-3xl mb-1">{c.icon}</span>
+                <span className={`text-sm font-medium ${
+                  selectedColor === c.id ? 'text-primary-300' : 'text-text-300'
+                }`}>
+                  {c.label}
+                </span>
+                <span className="text-xs text-text-500 mt-1">
+                  {c.hint}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Start Button - Single CTA */}
+        <div className="pt-2">
           <button
             onClick={handleStart}
-            className="ui-button-primary w-full max-w-sm py-4 text-lg font-bold shadow-lg transition hover:-translate-y-0.5"
+            className="ui-button-primary w-full py-4 text-lg font-bold shadow-lg transition hover:-translate-y-0.5"
           >
-            {UI_COPY.startGame}
+            Bắt đầu ván
           </button>
         </div>
 
