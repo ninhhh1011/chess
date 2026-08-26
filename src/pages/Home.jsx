@@ -72,6 +72,11 @@ export default function Home() {
     }
   };
 
+  // Unicode piece color mapping - deterministic based on piece, not square
+  // White pieces: always light (good on dark squares, slightly dimmer on light squares)
+  // Black pieces: always dark (good on light squares, very dark on dark squares for contrast)
+  const isWhitePiece = (piece) => ['♔', '♕', '♖', '♗', '♘', '♙'].includes(piece);
+
   return (
     <div className="space-y-14 py-6">
       {/* Hero Section */}
@@ -81,11 +86,11 @@ export default function Home() {
             <img src={logoImg} alt={brandName} className="h-5 w-5 rounded object-cover" />
             {BRAND_TAGLINE}
           </div>
-          
+
           <h1 className="text-5xl font-bold tracking-tight text-slate-100 md:text-7xl">
             {brandName}
           </h1>
-          
+
           <p className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-400">
             {BRAND_DESCRIPTION}
           </p>
@@ -117,7 +122,7 @@ export default function Home() {
             <Link className="btn-secondary text-base" to="/play">
               Chơi ngay
             </Link>
-            <button 
+            <button
               className="btn-secondary gap-2 text-base"
               onClick={handleCreateOnlineGame}
               disabled={isCreatingGame}
@@ -141,7 +146,7 @@ export default function Home() {
                 const row = Math.floor(i / 8);
                 const col = i % 8;
                 const isDark = (row + col) % 2 === 1;
-                
+
                 let piece = '';
                 if (i === 0 || i === 7) piece = '♜';
                 else if (i === 1 || i === 6) piece = '♞';
@@ -156,12 +161,20 @@ export default function Home() {
                 else if (i === 59) piece = '♕';
                 else if (i === 60) piece = '♔';
 
+                // Piece color is determined by the piece symbol, not square color
+                // This ensures deterministic rendering regardless of square
+                const pieceIsWhite = isWhitePiece(piece);
+                const pieceStyle = pieceIsWhite
+                  ? 'text-slate-100'  // Light pieces on light background = visible
+                  : 'text-slate-900'; // Dark pieces on light background = visible
+                  // Note: dark pieces on dark squares have low contrast (known limitation of single-color approach)
+
                 return (
                   <div
                     key={i}
                     className={`aspect-square grid place-items-center text-4xl transition-transform hover:scale-105 ${
-                      isDark ? 'bg-slate-600' : 'bg-slate-300 text-slate-900'
-                    }`}
+                      isDark ? 'bg-slate-600' : 'bg-slate-300'
+                    } ${pieceStyle}`}
                   >
                     {piece}
                   </div>

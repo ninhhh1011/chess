@@ -12,6 +12,7 @@ const SOURCE_LABELS: Record<string, string> = {
   ai: 'AI live',
   mock: 'Fallback mock',
   fallback: 'Fallback',
+  error: 'Lỗi kết nối',
 };
 
 const COACH_PROMPTS: Record<string, string> = {
@@ -199,7 +200,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
       const result: CoachResponse = await askAICoach(payload);
       setAdvice({ type: type as AdviceType, text: result.reply, source: result.source });
     } catch {
-      setAdvice({ type: type === prompt ? 'custom' : type as AdviceType, text: 'Ninh chưa phân tích được thế này. Thử lại sau vài giây.' });
+      setAdvice({ type: 'custom', text: 'Không thể tải nhận xét AI. Vui lòng thử lại.', source: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -299,10 +300,12 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
                 className={`rounded border px-2 py-0.5 text-[11px] font-medium ${
                   advice.source === 'ai'
                     ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-300'
+                    : advice.source === 'error'
+                    ? 'border-rose-400/25 bg-rose-400/10 text-rose-300'
                     : 'border-amber-400/25 bg-amber-400/10 text-amber-200'
                 }`}
               >
-                Source: {SOURCE_LABELS[advice.source || ''] || advice.source || 'Unknown'}
+                {SOURCE_LABELS[advice.source || ''] || advice.source || 'Unknown'}
               </span>
             </div>
             {renderCoachAdvice(advice)}
