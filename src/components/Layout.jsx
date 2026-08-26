@@ -1,4 +1,4 @@
-import Navbar from './Navbar';
+import Navbar from './ui/Navbar';
 import { useLocation } from 'react-router-dom';
 
 export default function Layout({ children }) {
