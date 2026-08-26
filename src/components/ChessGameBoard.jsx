@@ -5,7 +5,7 @@ import { analyzeFen } from '../services/stockfishService';
 import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
 import { classifyMoveAnnotation } from '../utils/moveQuality';
 import { addMistake, updateAfterGame } from '../services/userProfileService';
-import { playCheckSound } from '../utils/sound';
+import { playCheckSound, playVictorySound, playDefeatSound, playDrawSound, playCaptureSound } from '../utils/sound';
 import { BRAND_NAMES, UI_COPY } from '../config/brand';
 
 import GameLayout from './chess/GameLayout';
@@ -246,10 +246,25 @@ export default function ChessGameBoard() {
 
     const currentPgn = game.pgn();
     if (recordedGamePgn !== currentPgn) {
-      const result = game.isCheckmate() ? (game.turn() === 'w' ? 'black_win' : 'white_win') : 'draw';
+      const isCheckmate = game.isCheckmate();
+      const result = isCheckmate ? (game.turn() === 'w' ? 'black_win' : 'white_win') : 'draw';
       const mistakes = moveHistory.length < 12 ? ['opening_development'] : [];
       updateAfterGame({ result, movesCount: moveHistory.length, mistakes });
       setRecordedGamePgn(currentPgn);
+
+      // Play appropriate sound
+      if (isCheckmate) {
+        // Determine if player won
+        const winner = game.turn() === 'w' ? 'black' : 'white';
+        const playerSide = playerColor === 'white' ? 'white' : 'black';
+        if (winner === playerSide) {
+          playVictorySound();
+        } else {
+          playDefeatSound();
+        }
+      } else {
+        playDrawSound();
+      }
     }
 
     if (game.isCheckmate()) {
@@ -261,7 +276,7 @@ export default function ChessGameBoard() {
 
     setResultNotice('Ván cờ hòa!');
     setPlayState('review');
-  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn, setPlayState]);
+  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn, setPlayState, playerColor]);
 
   // Move annotation
   useEffect(() => {

@@ -71,3 +71,27 @@ export function playCheckSound() {
     { frequency: 740, start: 0.09, duration: 0.08, type: 'triangle', gain: 0.032 },
   ]);
 }
+
+export function playVictorySound() {
+  playToneSequence([
+    { frequency: 523.25, duration: 0.12, type: 'sine', gain: 0.04 },
+    { frequency: 659.25, start: 0.1, duration: 0.12, type: 'sine', gain: 0.04 },
+    { frequency: 783.99, start: 0.2, duration: 0.15, type: 'sine', gain: 0.04 },
+    { frequency: 1046.5, start: 0.32, duration: 0.25, type: 'triangle', gain: 0.035 },
+  ]);
+}
+
+export function playDefeatSound() {
+  playToneSequence([
+    { frequency: 392, duration: 0.2, type: 'triangle', gain: 0.04 },
+    { frequency: 349.23, start: 0.15, duration: 0.25, type: 'triangle', gain: 0.035 },
+    { frequency: 293.66, start: 0.35, duration: 0.3, type: 'triangle', gain: 0.03 },
+  ]);
+}
+
+export function playDrawSound() {
+  playToneSequence([
+    { frequency: 440, duration: 0.15, type: 'sine', gain: 0.035 },
+    { frequency: 440, start: 0.2, duration: 0.15, type: 'sine', gain: 0.035 },
+  ]);
+}

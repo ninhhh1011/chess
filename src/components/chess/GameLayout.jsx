@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { getSanFromUci } from '../../utils/chessMoveUtils';
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 
 import ChessBoardPanel from './ChessBoardPanel';
 import GameInfoBar from './GameInfoBar';
@@ -47,9 +48,16 @@ export default function GameLayout({
   onRetryBotMove,
   onRequestHint,
 }) {
-  const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState } = useChessGame();
+  const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState, resignGame } = useChessGame();
   const [activeTab, setActiveTab] = useState('moves');
   const [coachExpanded, setCoachExpanded] = useState(false);
+  const [showResignConfirm, setShowResignConfirm] = useState(false);
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts({
+    onHint: () => { setActiveTab('coach'); setCoachExpanded(true); },
+    onResign: () => setShowResignConfirm(true),
+  });
 
   const tabs = [
     { id: 'moves', label: BRAND_NAMES.moveHistory },
@@ -69,6 +77,35 @@ export default function GameLayout({
           {/* Post-Game Review Modal */}
           {playState === 'review' && <PostGameReview />}
 
+          {/* Resign Confirmation Modal */}
+          {showResignConfirm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+              <div className="w-full max-w-sm rounded-lg border border-border bg-bg-elevated p-6 shadow-xl">
+                <h2 className="mb-2 text-lg font-bold text-text-primary">Xác nhận đầu hàng?</h2>
+                <p className="mb-4 text-sm text-text-secondary">
+                  Bạn sẽ thua ván cờ này. Bạn có chắc không?
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowResignConfirm(false)}
+                    className="flex-1 rounded-md border border-border bg-bg-surface px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-base transition-colors"
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    onClick={() => {
+                      resignGame();
+                      setShowResignConfirm(false);
+                    }}
+                    className="flex-1 rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-500 transition-colors"
+                  >
+                    Đầu hàng
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Modals */}
           {showStartNotice && playState === 'playing' && <StartNotice />}
           <PromotionModal />
@@ -77,7 +114,7 @@ export default function GameLayout({
           <div className="mx-auto grid w-full max-w-[1320px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_348px]">
 
         {/* LEFT COLUMN: Board area */}
-        <section className="min-w-0 rounded-lg border border-slate-800/80 bg-slate-950/35 p-2 sm:p-3">
+        <section className="min-w-0 rounded-lg border border-border bg-bg-base/35 p-2 sm:p-3">
           {/* Engine error state */}
           {engineError && (
             <div className="mb-2 rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 flex items-center justify-between gap-2">
@@ -104,7 +141,7 @@ export default function GameLayout({
           </div>
 
           {/* Board with evaluation bar - hidden during gameplay, shown in review/analysis */}
-          <div className="flex items-start justify-center gap-2 rounded-lg border border-slate-800/80 bg-slate-900/45 p-2">
+          <div className="flex items-start justify-center gap-2 rounded-lg border border-border bg-bg-surface/45 p-2">
             <LiveEvaluationBar
               analysis={liveAnalysis}
               status={liveEvalStatus}
@@ -133,24 +170,24 @@ export default function GameLayout({
           <GameControls onHint={() => { setActiveTab('coach'); setCoachExpanded(true); }} requestHint={onRequestHint} />
           <ReviewNavigator />
 
-          <div className="overflow-hidden rounded-lg border border-slate-700/70 bg-slate-950/80 shadow-[0_1px_0_rgba(255,255,255,0.03)]">
+          <div className="overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-[0_1px_0_rgba(255,255,255,0.03)]">
             {/* Tabs - compact */}
-            <nav className="flex border-b border-slate-800 bg-slate-950">
+            <nav className="flex border-b border-border bg-bg-base">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 px-2 py-3 text-xs font-medium transition ${
                     activeTab === tab.id
-                      ? 'border-b-2 border-emerald-400 bg-slate-900 text-emerald-300'
-                      : 'text-slate-500 hover:bg-slate-900 hover:text-slate-200'
+                      ? 'border-b-2 border-primary-500 bg-bg-surface text-primary-300'
+                      : 'text-text-tertiary hover:bg-bg-surface hover:text-text-secondary'
                   }`}
                 >
                   {tab.iconType === 'avatar' ? (
                     <img
                       src={tab.iconSrc}
                       alt={tab.label}
-                      className="mx-auto mb-1 h-5 w-5 rounded-md border border-slate-700 object-cover"
+                      className="mx-auto mb-1 h-5 w-5 rounded-md border border-border object-cover"
                     />
                   ) : tab.icon ? (
                     <span className="block text-sm mb-0.5">{tab.icon}</span>
@@ -181,10 +218,10 @@ export default function GameLayout({
                 <div className="space-y-3">
                   {/* Coach header with collapse button */}
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-slate-300">{BRAND_NAMES.coach}</h3>
+                    <h3 className="text-sm font-medium text-text-primary">{BRAND_NAMES.coach}</h3>
                     <button
                       onClick={() => setCoachExpanded(!coachExpanded)}
-                      className="text-xs text-slate-500 hover:text-slate-300"
+                      className="text-xs text-text-tertiary hover:text-text-secondary"
                     >
                       {coachExpanded ? 'Thu gọn' : 'Mở rộng'}
                     </button>
@@ -192,9 +229,9 @@ export default function GameLayout({
 
                   {/* Collapsed view - just avatar and brief hint */}
                   {!coachExpanded && (
-                    <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/50 p-3">
+                    <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-surface/50 p-3">
                       <img src={coachAvatar} alt={BRAND_NAMES.coach} className="h-8 w-8 rounded-full" />
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-text-tertiary">
                         Nhấn "Mở rộng" để xem gợi ý từ AI Coach
                       </p>
                     </div>

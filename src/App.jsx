@@ -2,6 +2,7 @@ import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import PageSkeleton from './components/PageSkeleton';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const Home = lazy(() => import('./pages/Home'));
 const Learn = lazy(() => import('./pages/Learn'));
@@ -33,7 +34,8 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <ChessGameProvider>
-          <Layout>
+          <ErrorBoundary>
+            <Layout>
             <Suspense fallback={<PageSkeleton />}>
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -49,6 +51,7 @@ export default function App() {
               </Routes>
             </Suspense>
           </Layout>
+          </ErrorBoundary>
         </ChessGameProvider>
       </AuthProvider>
     </BrowserRouter>
