@@ -89,6 +89,8 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 600,
+    sourcemap: false,
+    minify: 'terser',
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -100,6 +102,12 @@ export default defineConfig({
           }
           if (id.includes('node_modules/@supabase')) {
             return 'vendor-supabase';
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'vendor-animation';
+          }
+          if (id.includes('node_modules/lucide-react')) {
+            return 'vendor-icons';
           }
         },
       },
