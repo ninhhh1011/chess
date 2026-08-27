@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { getSanFromUci } from '../../utils/chessMoveUtils';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
+import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 
 import ChessBoardPanel from './ChessBoardPanel';
 import GameInfoBar from './GameInfoBar';
@@ -55,6 +56,9 @@ export default function GameLayout({
     onHint: () => { setActiveTab('coach'); setCoachExpanded(true); },
     onResign: () => setShowResignConfirm(true),
   });
+
+  // Board keyboard navigation
+  useKeyboardNavigation();
 
   const tabs = [
     { id: 'moves', label: BRAND_NAMES.moveHistory },
