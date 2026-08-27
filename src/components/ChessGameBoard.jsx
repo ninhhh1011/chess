@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useChessGame } from '../contexts/ChessGameContext';
 import { useBotMove } from '../hooks/useBotMove';
+import { useGameTimer } from '../hooks/useGameTimer';
 import { analyzeFen } from '../services/stockfishService';
 import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
 import { classifyMoveAnnotation } from '../utils/moveQuality';
 import { addMistake, updateAfterGame } from '../services/userProfileService';
 import { playCheckSound, playVictorySound, playDefeatSound, playDrawSound, playMoveSound, playCaptureSound } from '../utils/sound';
+import { recordGameResult } from '../hooks/useGameStats';
 import { BRAND_NAMES, UI_COPY } from '../config/brand';
 
 import GameLayout from './chess/GameLayout';
@@ -66,6 +68,9 @@ export default function ChessGameBoard() {
 
   // Track playState changes to detect new game
   const prevPlayStateRef = useRef(playState);
+
+  // Game timer
+  const { elapsed: gameTime } = useGameTimer(playState === 'playing');
 
   // Bot move handler
   const handleBotMoveStart = useCallback(() => {
@@ -234,17 +239,18 @@ export default function ChessGameBoard() {
     const currentPgn = game.pgn();
     if (recordedGamePgn !== currentPgn) {
       const isCheckmate = game.isCheckmate();
-      const result = isCheckmate ? (game.turn() === 'w' ? 'black_win' : 'white_win') : 'draw';
+      const isPlayerWin = isCheckmate && ((game.turn() === 'w' && playerColor === 'black') || (game.turn() === 'black' && playerColor === 'white'));
+      const result = isCheckmate ? (isPlayerWin ? 'win' : 'lose') : 'draw';
       const mistakes = moveHistory.length < 12 ? ['opening_development'] : [];
       updateAfterGame({ result, movesCount: moveHistory.length, mistakes });
       setRecordedGamePgn(currentPgn);
 
+      // Record game stats
+      recordGameResult(result, moveHistory.length, gameTime);
+
       // Play appropriate sound
       if (isCheckmate) {
-        // Determine if player won
-        const winner = game.turn() === 'w' ? 'black' : 'white';
-        const playerSide = playerColor === 'white' ? 'white' : 'black';
-        if (winner === playerSide) {
+        if (isPlayerWin) {
           playVictorySound();
         } else {
           playDefeatSound();
@@ -263,7 +269,7 @@ export default function ChessGameBoard() {
 
     setResultNotice('Ván cờ hòa!');
     setPlayState('review');
-  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn, setPlayState, playerColor]);
+  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn, setPlayState, playerColor, gameTime]);
 
   // Move annotation
   useEffect(() => {

@@ -5,6 +5,7 @@ import { BRAND_NAMES } from '../../config/brand';
 import BoardThemeSelector from '../BoardThemeSelector';
 import OpeningExplorer from '../OpeningExplorer';
 import PgnImport from '../PgnImport';
+import GameStats from '../GameStats';
 
 const BOT_NAME = BRAND_NAMES.bot;
 
@@ -24,8 +25,9 @@ export default function BotSettings() {
 
   const tabs = [
     { id: 'settings', label: 'Cài đặt' },
+    { id: 'stats', label: 'Thống kê' },
     { id: 'openings', label: 'Khai cuộc' },
-    { id: 'pgn', label: 'Import PGN' },
+    { id: 'pgn', label: 'PGN' },
   ];
 
   return (
@@ -98,6 +100,8 @@ export default function BotSettings() {
 
         <div className="p-4">
           {activeTab === 'settings' && <BoardThemeSelector />}
+
+          {activeTab === 'stats' && <GameStats />}
 
           {activeTab === 'openings' && (
             <OpeningExplorer />
