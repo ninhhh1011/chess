@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import PageSkeleton from './components/PageSkeleton';
 import ErrorBoundary from './components/ErrorBoundary';
 import OnboardingModal from './components/OnboardingModal';
+import MobileControls from './components/MobileControls';
 
 const Home = lazy(() => import('./pages/Home'));
 const Learn = lazy(() => import('./pages/Learn'));
@@ -54,6 +55,7 @@ export default function App() {
           </Layout>
           </ErrorBoundary>
           <OnboardingModal />
+          <MobileControls />
         </ChessGameProvider>
       </AuthProvider>
     </BrowserRouter>
