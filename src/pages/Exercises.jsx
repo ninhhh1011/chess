@@ -10,16 +10,11 @@ export default function Exercises() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log('[Exercises] Component mounted');
-    console.log('[Exercises] Exercises data:', exercises);
-    
     try {
       const userProfile = getUserProfile();
-      console.log('[Exercises] User profile:', userProfile);
       setProfile(userProfile);
       setLoading(false);
     } catch (err) {
-      console.error('[Exercises] Error loading profile:', err);
       setError('Không thể tải dữ liệu người dùng');
       setLoading(false);
     }
