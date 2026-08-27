@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BOT_ELO_LEVELS } from '../../data/botLevels';
 import { BRAND_NAMES } from '../../config/brand';
 import BoardThemeSelector from '../BoardThemeSelector';
+import OpeningExplorer from '../OpeningExplorer';
+import PgnImport from '../PgnImport';
 
 const BOT_NAME = BRAND_NAMES.bot;
 
@@ -16,6 +19,14 @@ export default function BotSettings() {
     GAME_MODES,
     PLAYER_COLORS,
   } = useChessGame();
+
+  const [activeTab, setActiveTab] = useState('settings');
+
+  const tabs = [
+    { id: 'settings', label: 'Cài đặt' },
+    { id: 'openings', label: 'Khai cuộc' },
+    { id: 'pgn', label: 'Import PGN' },
+  ];
 
   return (
     <section className="space-y-4">
@@ -67,9 +78,35 @@ export default function BotSettings() {
         <p className="mt-3 text-xs text-text-tertiary">Các thay đổi sẽ áp dụng từ ván mới.</p>
       </div>
 
-      {/* Board Theme */}
-      <div className="rounded-lg border border-border bg-bg-surface p-4">
-        <BoardThemeSelector />
+      {/* Tabs for additional features */}
+      <div className="rounded-lg border border-border bg-bg-surface">
+        <nav className="flex border-b border-border">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 px-3 py-2.5 text-xs font-medium transition ${
+                activeTab === tab.id
+                  ? 'border-b-2 border-primary-400 bg-bg-base text-primary-300'
+                  : 'text-text-tertiary hover:bg-bg-base hover:text-text-secondary'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-4">
+          {activeTab === 'settings' && <BoardThemeSelector />}
+
+          {activeTab === 'openings' && (
+            <OpeningExplorer />
+          )}
+
+          {activeTab === 'pgn' && (
+            <PgnImport />
+          )}
+        </div>
       </div>
     </section>
   );
