@@ -45,8 +45,13 @@ const tips = [
   },
   {
     title: 'Phím tắt',
-    content: 'U = đi lại | H = gợi ý | F = lật bàn | R = đầu hàng',
+    content: 'U = đi lại | H = gợi ý | F = lật bàn | R = đầu hàng | N = ván mới',
     icon: '⌨️',
+  },
+  {
+    title: 'Di chuyển bằng phím',
+    content: 'Dùng phím mũi tên để di chuyển con trỏ trên bàn cờ.',
+    icon: '🎮',
   },
   {
     title: 'AI Coach',
