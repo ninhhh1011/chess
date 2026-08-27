@@ -5,7 +5,7 @@ import { analyzeFen } from '../services/stockfishService';
 import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
 import { classifyMoveAnnotation } from '../utils/moveQuality';
 import { addMistake, updateAfterGame } from '../services/userProfileService';
-import { playCheckSound, playVictorySound, playDefeatSound, playDrawSound, playCaptureSound } from '../utils/sound';
+import { playCheckSound, playVictorySound, playDefeatSound, playDrawSound, playMoveSound, playCaptureSound } from '../utils/sound';
 import { BRAND_NAMES, UI_COPY } from '../config/brand';
 
 import GameLayout from './chess/GameLayout';
@@ -92,11 +92,20 @@ export default function ChessGameBoard() {
         return;
       }
 
-      // Make the bot's move
-      makeMove(result.move.slice(0, 2), result.move.slice(2, 4), result.move[4] || 'q', {
+      // Make the bot's move and play sound
+      const moveResult = makeMove(result.move.slice(0, 2), result.move.slice(2, 4), result.move[4] || 'q', {
         byBot: true,
         sourceFen: gameStartFenRef.current,
       });
+
+      // Play sound for bot's move
+      if (moveResult?.move) {
+        if (moveResult.move.captured) {
+          playCaptureSound();
+        } else {
+          playMoveSound();
+        }
+      }
     },
     [activeGame, makeMove, setIsBotThinking]
   );

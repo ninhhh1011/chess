@@ -95,3 +95,20 @@ export function playDrawSound() {
     { frequency: 440, start: 0.2, duration: 0.15, type: 'sine', gain: 0.035 },
   ]);
 }
+
+export function playCastlingSound() {
+  playToneSequence([
+    { frequency: 280, duration: 0.06, type: 'triangle', gain: 0.05 },
+    { frequency: 350, start: 0.05, duration: 0.08, type: 'triangle', gain: 0.045 },
+    { frequency: 420, start: 0.1, duration: 0.06, type: 'sine', gain: 0.035 },
+  ]);
+}
+
+export function playPromotionSound() {
+  playToneSequence([
+    { frequency: 523.25, duration: 0.1, type: 'sine', gain: 0.05 },
+    { frequency: 659.25, start: 0.08, duration: 0.1, type: 'sine', gain: 0.05 },
+    { frequency: 783.99, start: 0.16, duration: 0.12, type: 'sine', gain: 0.045 },
+    { frequency: 1046.5, start: 0.22, duration: 0.2, type: 'triangle', gain: 0.04 },
+  ]);
+}

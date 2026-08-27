@@ -3,7 +3,7 @@ import { useChessGame } from '../../contexts/ChessGameContext';
 import { Chessboard } from 'react-chessboard';
 import { standardPieces } from './standardPieces';
 import { useMoveHighlights } from '../../hooks/useMoveHighlights';
-import { playCaptureSound, playMoveSound } from '../../utils/sound';
+import { playCaptureSound, playMoveSound, playCastlingSound, playPromotionSound } from '../../utils/sound';
 
 const fixedBoardStyle = {
   width: '100%',
@@ -167,13 +167,29 @@ export default function ChessBoardPanel({ engineHint }) {
       : makeMove(sourceSquare, targetSquare);
 
     if (result && result.move) {
-      result.move.captured ? playCaptureSound() : playMoveSound();
+      // Play appropriate sound
+      if (result.move.captured) {
+        playCaptureSound();
+      } else if (isPromotion) {
+        playPromotionSound();
+      } else if (isCastling(sourceSquare, targetSquare)) {
+        playCastlingSound();
+      } else {
+        playMoveSound();
+      }
     }
 
     // Clear selection after drop attempt
     clearSelection();
 
     return !!result;
+  }
+
+  function isCastling(from, to) {
+    const piece = activeGame.get(from);
+    if (!piece || piece.type !== 'k') return false;
+    const filesDiff = Math.abs(to.charCodeAt(0) - from.charCodeAt(0));
+    return filesDiff === 2; // King moves 2 squares = castling
   }
 
   // FIX BUG 3: Click selects piece and shows hints
@@ -192,7 +208,15 @@ export default function ChessBoardPanel({ engineHint }) {
         : makeMove(selectedSquare, square);
 
       if (result && result.move) {
-        result.move.captured ? playCaptureSound() : playMoveSound();
+        if (result.move.captured) {
+          playCaptureSound();
+        } else if (isPromotion) {
+          playPromotionSound();
+        } else if (isCastling(selectedSquare, square)) {
+          playCastlingSound();
+        } else {
+          playMoveSound();
+        }
       }
       return;
     }
