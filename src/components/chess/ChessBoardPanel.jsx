@@ -266,22 +266,37 @@ export default function ChessBoardPanel({ engineHint }) {
     setHoveredSquare(null);
   }
 
+  // Determine if player can interact
+  const canInteract = !isBotThinking && !isGameOver &&
+    (gameMode !== GAME_MODES.BOT || activeGame.turn() === playerColor);
+
   return (
-    <div className="chess-board-container">
+    <div className="chess-board-container relative">
+      {/* Turn indicator overlay */}
+      {isBotThinking && (
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-bg-base/40 backdrop-blur-[1px]">
+          <div className="flex flex-col items-center gap-2 rounded-lg border border-border bg-bg-elevated/90 px-4 py-3 shadow-lg">
+            <div className="text-2xl animate-pulse">♟</div>
+            <span className="text-xs font-medium text-text-secondary">Đang tính nước...</span>
+          </div>
+        </div>
+      )}
+
       <Chessboard
         key={boardKey}
         options={{
           pieces: standardPieces,
           position: currentFen,
           boardOrientation,
-          onPieceDrop,
-          canDragPiece,
-          onPieceDragBegin: handlePieceDragBegin,
-          onPieceDragEnd: handlePieceDragEnd,
-          onPieceClick: handlePieceClick,
-          onSquareClick: handleSquareClick,
-          onMouseOverSquare: handleMouseOverSquare,
-          onMouseOutSquare: handleMouseOutSquare,
+          arePiecesDraggable: canInteract,
+          onPieceDrop: canInteract ? onPieceDrop : () => false,
+          canDragPiece: canInteract ? canDragPiece : () => false,
+          onPieceDragBegin: canInteract ? handlePieceDragBegin : undefined,
+          onPieceDragEnd: canInteract ? handlePieceDragEnd : undefined,
+          onPieceClick: canInteract ? handlePieceClick : undefined,
+          onSquareClick: canInteract ? handleSquareClick : undefined,
+          onMouseOverSquare: canInteract ? handleMouseOverSquare : undefined,
+          onMouseOutSquare: canInteract ? handleMouseOutSquare : undefined,
           squareStyles: customSquareStyles,
           arrows: engineArrows,
           boardStyle: fixedBoardStyle,

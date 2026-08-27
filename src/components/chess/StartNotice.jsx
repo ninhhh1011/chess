@@ -43,20 +43,20 @@ export default function StartNotice() {
     : 'Máy sẽ đi trước';
 
   return (
-    <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-xl border border-emerald-400/40 bg-slate-950/95 px-5 py-3 text-center shadow-sm">
-      <div className="font-bold text-emerald-300">
+    <div className="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 animate-[notice-pop_2.6s_ease-in-out_forwards] rounded-xl border border-primary-400/40 bg-bg-elevated/95 px-5 py-3 text-center shadow-sm">
+      <div className="font-bold text-primary-300">
         Bắt đầu ván cờ
       </div>
-      <div className="mt-1 text-sm text-slate-400">
-        Bạn cầm <span className="font-medium text-slate-300">{colorLabel}</span>. {firstMoveText}.
+      <div className="mt-1 text-sm text-text-secondary">
+        Bạn cầm <span className="font-medium text-text-primary">{colorLabel}</span>. {firstMoveText}.
       </div>
       {isWhite && (
-        <div className="mt-1 text-xs text-slate-500">
+        <div className="mt-1 text-xs text-text-tertiary">
           Chạm hoặc kéo quân; ô hợp lệ sẽ sáng
         </div>
       )}
       {!isWhite && (
-        <div className="mt-1 text-xs text-slate-500">
+        <div className="mt-1 text-xs text-text-tertiary">
           Đang đợi máy đi...
         </div>
       )}

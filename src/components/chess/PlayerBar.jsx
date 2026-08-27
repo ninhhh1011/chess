@@ -41,8 +41,8 @@ export default function PlayerBar({ position = 'top' }) {
     <div
       className={`flex items-center justify-between rounded-lg px-3 py-2 transition-all ${
         isActive
-          ? 'bg-slate-800 border border-slate-700'
-          : 'bg-slate-900 border border-slate-800'
+          ? 'bg-bg-surface border border-border'
+          : 'bg-bg-base border border-border/50'
       }`}
     >
       <div className="flex min-w-0 items-center gap-2">
@@ -50,19 +50,19 @@ export default function PlayerBar({ position = 'top' }) {
           <img
             src={avatarSrc}
             alt={displayName}
-            className="h-8 w-8 rounded-lg border border-slate-600/60 object-cover"
+            className="h-8 w-8 rounded-lg border border-border/60 object-cover"
           />
         ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-600/60 bg-slate-700/60 text-sm">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 bg-bg-surface text-sm">
             {isPlayer ? 'B' : 'AI'}
           </div>
         )}
 
-        <span className={`min-w-0 truncate text-sm font-semibold ${isActive ? 'text-emerald-500' : 'text-slate-300'}`}>
+        <span className={`min-w-0 truncate text-sm font-semibold ${isActive ? 'text-primary-400' : 'text-text-primary'}`}>
           {displayName}
         </span>
 
-        <span className="rounded border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400">
+        <span className="rounded border border-border bg-bg-surface px-2 py-0.5 text-xs font-medium text-text-secondary">
           {displayBadge}
         </span>
       </div>
@@ -70,11 +70,11 @@ export default function PlayerBar({ position = 'top' }) {
       {isActive && (
         <div className="flex items-center gap-1.5">
           <span
-            className={`h-2 w-2 rounded-full bg-emerald-400 ${!isPlayer && isBotThinking ? 'animate-pulse' : ''}`}
+            className={`h-2 w-2 rounded-full bg-primary-400 ${!isPlayer && isBotThinking ? 'animate-pulse' : ''}`}
             title={!isPlayer && isBotThinking ? UI_COPY.botThinking : undefined}
           />
           {!isPlayer && isBotThinking && (
-            <span className="hidden text-xs font-medium text-slate-400 sm:inline">{UI_COPY.botThinking}</span>
+            <span className="hidden text-xs font-medium text-text-secondary sm:inline">{UI_COPY.botThinking}</span>
           )}
         </div>
       )}
