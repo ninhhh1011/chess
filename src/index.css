@@ -54,15 +54,15 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid rgba(62, 207, 142, 0.82);
+  outline: 2px solid rgba(129, 140, 248, 0.82);
   outline-offset: 2px;
 }
 img, svg, canvas, iframe { max-width: 100%; }
-::selection { background: rgba(62,207,142,.32); color: #f8fafc; }
+::selection { background: rgba(129,140,248,.32); color: #f8fafc; }
 ::-webkit-scrollbar { width: .65rem; height: .65rem; }
 ::-webkit-scrollbar-track { background: rgba(2,6,23,.75); }
 ::-webkit-scrollbar-thumb { background: rgba(71,85,105,.9); border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(62,207,142,.75); }
+::-webkit-scrollbar-thumb:hover { background: rgba(129,140,248,.75); }
 
 
 
@@ -73,17 +73,17 @@ img, svg, canvas, iframe { max-width: 100%; }
   }
 }
 @layer components {
-  .ui-button-primary { @apply inline-flex items-center justify-center rounded-md border border-emerald-300/20 bg-emerald-400 px-4 py-2 font-medium text-slate-950 shadow-sm transition hover:bg-emerald-300 disabled:pointer-events-none disabled:opacity-60; }
-  .ui-button-secondary { @apply inline-flex items-center justify-center rounded-md border border-slate-700/80 bg-slate-900 px-4 py-2 font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800 disabled:pointer-events-none disabled:opacity-60; }
+  .ui-button-primary { @apply inline-flex items-center justify-center rounded-md border border-primary-400/20 bg-primary-400 px-4 py-2 font-medium text-bg-base shadow-sm transition hover:bg-primary-300 disabled:pointer-events-none disabled:opacity-60; }
+  .ui-button-secondary { @apply inline-flex items-center justify-center rounded-md border border-border bg-bg-surface px-4 py-2 font-medium text-text-secondary transition hover:border-primary-400/30 hover:bg-bg-elevated disabled:pointer-events-none disabled:opacity-60; }
   .ui-button-sm { @apply px-3 py-1.5 text-sm; }
-  .ui-panel { @apply rounded-lg border border-slate-700/60 bg-slate-950/60; }
-  .ui-card { @apply rounded-lg border border-slate-700/60 bg-slate-900/70 p-4; }
-  .ui-badge { @apply rounded border border-slate-700/70 bg-slate-900 px-2 py-0.5 text-xs font-medium text-slate-400; }
-  .ui-input { @apply rounded-md border border-slate-700/80 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500 transition focus:border-emerald-400; }
-  .ui-select { @apply rounded-md border border-slate-700/80 bg-slate-950 px-3 py-2 text-sm font-medium text-slate-100 outline-none transition focus:border-emerald-400; }
-  .ui-tab { @apply flex-1 px-2 py-3 text-sm font-medium text-slate-400 transition hover:bg-slate-800/80 hover:text-slate-200; }
-  .ui-tab-active { @apply flex-1 border-b-2 border-emerald-400 bg-slate-800/50 px-2 py-3 text-sm font-medium text-emerald-300 transition; }
-  
+  .ui-panel { @apply rounded-lg border border-border bg-bg-surface; }
+  .ui-card { @apply rounded-lg border border-border bg-bg-elevated p-4; }
+  .ui-badge { @apply rounded border border-border bg-bg-surface px-2 py-0.5 text-xs font-medium text-text-secondary; }
+  .ui-input { @apply rounded-md border border-border bg-bg-base px-3 py-2 text-sm text-text-primary outline-none placeholder:text-text-tertiary transition focus:border-primary-400; }
+  .ui-select { @apply rounded-md border border-border bg-bg-base px-3 py-2 text-sm font-medium text-text-primary outline-none transition focus:border-primary-400; }
+  .ui-tab { @apply flex-1 px-2 py-3 text-sm font-medium text-text-tertiary transition hover:bg-bg-surface hover:text-text-secondary; }
+  .ui-tab-active { @apply flex-1 border-b-2 border-primary-400 bg-bg-surface px-2 py-3 text-sm font-medium text-primary-300 transition; }
+
   /* Legacy classes to avoid breaking until full migration */
   .btn-primary { @apply ui-button-primary; }
   .btn-secondary { @apply ui-button-secondary; }
