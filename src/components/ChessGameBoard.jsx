@@ -52,8 +52,6 @@ export default function ChessGameBoard() {
   const [liveAnalysis, setLiveAnalysis] = useState(null);
   const [liveEvalStatus, setLiveEvalStatus] = useState('Đang tải');
   const [showStartNotice, setShowStartNotice] = useState(true);
-  const [engineError, setEngineError] = useState(null);
-  const [showRetryHint, setShowRetryHint] = useState(false);
 
   // Game generation ID - incremented on new game to invalidate old requests
   const [gameGenId, setGameGenId] = useState(0);
@@ -72,8 +70,6 @@ export default function ChessGameBoard() {
   // Bot move handler
   const handleBotMoveStart = useCallback(() => {
     setIsBotThinking(true);
-    setEngineError(null);
-    setShowRetryHint(false);
   }, [setIsBotThinking]);
 
   const handleBotMoveComplete = useCallback(
@@ -87,9 +83,7 @@ export default function ChessGameBoard() {
       }
 
       if (!result?.move) {
-        // Bot failed to get a move - show error state
-        setEngineError('Không thể nhận nước đi từ máy');
-        setShowRetryHint(true);
+        // Bot failed - skip silently
         return;
       }
 
@@ -99,15 +93,10 @@ export default function ChessGameBoard() {
       }
 
       // Make the bot's move
-      const moveResult = makeMove(result.move.slice(0, 2), result.move.slice(2, 4), result.move[4] || 'q', {
+      makeMove(result.move.slice(0, 2), result.move.slice(2, 4), result.move[4] || 'q', {
         byBot: true,
         sourceFen: gameStartFenRef.current,
       });
-
-      if (!moveResult) {
-        setEngineError('Nước đi không hợp lệ');
-        setShowRetryHint(true);
-      }
     },
     [activeGame, makeMove, setIsBotThinking]
   );
@@ -141,17 +130,6 @@ export default function ChessGameBoard() {
     }
     lastMoveCountRef.current = moveHistory.length;
   }, [moveHistory.length]);
-
-  // Retry bot move after error
-  const handleRetryBotMove = useCallback(() => {
-    if (engineError && !isGameOver && gameMode === GAME_MODES.BOT) {
-      setEngineError(null);
-      setShowRetryHint(false);
-      isBotTurnRef.current = true;
-      gameStartFenRef.current = currentFen;
-      getMove(currentFen, gameGenIdRef.current);
-    }
-  }, [engineError, isGameOver, gameMode, GAME_MODES.BOT, currentFen, getMove]);
 
   // Trigger bot move when it's bot's turn
   useEffect(() => {
@@ -409,9 +387,6 @@ export default function ChessGameBoard() {
       reviewGameWithEngine={reviewGameWithEngine}
       engineMove={engineMove}
       showStartNotice={showStartNotice}
-      engineError={engineError}
-      showRetryHint={showRetryHint}
-      onRetryBotMove={handleRetryBotMove}
       onRequestHint={requestHint}
     />
   );

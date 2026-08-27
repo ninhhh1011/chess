@@ -1,21 +1,17 @@
 import { useMemo } from 'react';
 
-function evaluationToWhitePawns(evaluation, fen, source = 'stockfish_wasm') {
+function evaluationToWhitePawns(evaluation, fen) {
   if (!evaluation) return 0;
 
   const rawValue =
     evaluation.type === 'mate' ? (evaluation.value > 0 ? 99 : -99) : (Number(evaluation.value) || 0) / 100;
-
-  if (source?.startsWith('fallback')) {
-    return rawValue;
-  }
 
   const turn = fen?.split(' ')[1] || 'w';
   return turn === 'b' ? -rawValue : rawValue;
 }
 
 function evaluationToPercent(analysis) {
-  const pawns = evaluationToWhitePawns(analysis?.evaluation, analysis?.fen, analysis?.source);
+  const pawns = evaluationToWhitePawns(analysis?.evaluation, analysis?.fen);
   return Math.max(4, Math.min(96, 50 + Math.tanh(pawns / 4) * 44));
 }
 
@@ -42,7 +38,7 @@ export default function LiveEvaluationBar({ analysis, status, hidden }) {
   const display = useMemo(() => formatEvaluation(analysis?.evaluation), [analysis]);
 
   const whitePawns = useMemo(
-    () => evaluationToWhitePawns(analysis?.evaluation, analysis?.fen, analysis?.source),
+    () => evaluationToWhitePawns(analysis?.evaluation, analysis?.fen),
     [analysis]
   );
 
@@ -51,38 +47,20 @@ export default function LiveEvaluationBar({ analysis, status, hidden }) {
     return whitePawns > 0 ? 'Trắng hơn' : 'Đen hơn';
   }, [whitePawns]);
 
-  // Determine display state
-  const isError = status === 'Lỗi engine' || status === 'Lỗi';
-  const showFallback = analysis?.source?.startsWith('fallback');
-
   return (
     <div className="flex w-10 shrink-0 flex-col items-center gap-2 sm:w-12" role="img" aria-label={`Đánh giá: ${leader}`}>
-      <div
-        className={`rounded-lg border px-1.5 py-1 text-[0.65rem] font-bold sm:text-xs ${
-          isError
-            ? 'border-rose-500/30 bg-rose-500/10 text-rose-400'
-            : showFallback
-            ? 'border-amber-500/30 bg-amber-500/10 text-amber-400'
-            : 'border-slate-700 bg-slate-900 text-emerald-300'
-        }`}
-      >
-        {isError ? '---' : (display || '---')}
+      <div className="rounded-lg border border-border bg-bg-surface px-1.5 py-1 text-[0.65rem] font-bold text-primary-300 sm:text-xs">
+        {display || '---'}
       </div>
-      <div className="relative min-h-[260px] flex-1 overflow-hidden rounded-full border border-slate-600 bg-slate-950 shadow-inner">
+      <div className="relative min-h-[260px] flex-1 overflow-hidden rounded-full border border-border bg-bg-base shadow-inner">
         <div
-          className={`absolute inset-x-0 bottom-0 transition-all duration-300 ${
-            isError ? 'bg-slate-700' : 'bg-slate-100'
-          }`}
+          className="absolute inset-x-0 bottom-0 bg-slate-100 transition-all duration-300"
           style={{ height: `${whitePercent}%` }}
         />
-        <div className="absolute inset-x-0 top-1/2 h-px bg-emerald-400/70" />
+        <div className="absolute inset-x-0 top-1/2 h-px bg-primary-400/70" />
       </div>
-      <div
-        className={`text-center text-[0.62rem] font-bold uppercase leading-3 tracking-[0.12em] ${
-          isError ? 'text-rose-400' : 'text-slate-400'
-        }`}
-      >
-        {isError ? 'Lỗi' : leader}
+      <div className="text-center text-[0.62rem] font-bold uppercase leading-3 tracking-[0.12em] text-text-tertiary">
+        {leader}
       </div>
     </div>
   );

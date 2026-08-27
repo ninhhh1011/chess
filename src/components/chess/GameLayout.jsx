@@ -43,9 +43,6 @@ export default function GameLayout({
   reviewGameWithEngine,
   engineMove,
   showStartNotice,
-  engineError,
-  showRetryHint,
-  onRetryBotMove,
   onRequestHint,
 }) {
   const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState, resignGame } = useChessGame();
@@ -115,21 +112,6 @@ export default function GameLayout({
 
         {/* LEFT COLUMN: Board area */}
         <section className="min-w-0 rounded-lg border border-border bg-bg-base/35 p-2 sm:p-3">
-          {/* Engine error state */}
-          {engineError && (
-            <div className="mb-2 rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 flex items-center justify-between gap-2">
-              <span className="text-sm text-rose-400">{engineError}</span>
-              {showRetryHint && (
-                <button
-                  onClick={onRetryBotMove}
-                  className="rounded bg-rose-500/20 px-3 py-1 text-xs font-medium text-rose-300 hover:bg-rose-500/30"
-                >
-                  Thử lại
-                </button>
-              )}
-            </div>
-          )}
-
           {/* Game status bar - compact */}
           <div className="mb-2">
             <GameInfoBar botElo={botElo} />

@@ -8,13 +8,6 @@ import type { CoachPayload, CoachResponse, CoachLevel, Evaluation } from '../typ
 
 const COACH_NAME = BRAND_NAMES.coach;
 
-const SOURCE_LABELS: Record<string, string> = {
-  ai: 'AI live',
-  mock: 'Fallback mock',
-  fallback: 'Fallback',
-  error: 'Lỗi kết nối',
-};
-
 const COACH_PROMPTS: Record<string, string> = {
   quick: `Bạn là HLV cờ vua cá nhân của người mới học.
 Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
@@ -56,12 +49,10 @@ Không nói lan man.`
 };
 
 type AdviceType = 'quick' | 'focus' | 'hint' | 'social' | 'custom';
-type AdviceSource = 'ai' | 'fallback' | 'mock' | string;
 
 interface CoachAdvice {
   type: AdviceType;
   text: string;
-  source?: AdviceSource;
   instagramUrl?: string;
 }
 
@@ -82,13 +73,13 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
   if (advice.type === 'social') {
     return (
       <div>
-        <p className="text-sm leading-6 text-slate-200">{advice.text}</p>
+        <p className="text-sm leading-6 text-text-primary">{advice.text}</p>
         {advice.instagramUrl && (
           <a
             href={advice.instagramUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-flex rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-400/15"
+            className="mt-3 inline-flex rounded-md border border-primary-400/30 bg-primary-400/10 px-3 py-2 text-sm font-medium text-primary-300 transition hover:bg-primary-400/15"
           >
             Mở Instagram
           </a>
@@ -100,7 +91,7 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
   // Fallback for custom / non-structured
   if (advice.type === 'custom') {
     const safeText = advice.text.length > 300 ? advice.text.substring(0, 300) + '...' : advice.text;
-    return <p className="text-sm leading-6 text-slate-200">{safeText}</p>;
+    return <p className="text-sm leading-6 text-text-primary">{safeText}</p>;
   }
 
   // Parsing structured responses
@@ -117,10 +108,10 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
 
     return (
       <div>
-        <p className="text-sm leading-6 text-slate-200">{mainText}</p>
+        <p className="text-sm leading-6 text-text-primary">{mainText}</p>
         {bullet && (
-          <div className="mt-3 rounded-md border border-slate-800 bg-slate-950 p-3 text-sm text-slate-300">
-            <span className="font-medium text-slate-100">Điểm cần nhớ: </span>
+          <div className="mt-3 rounded-md border border-border bg-bg-surface p-3 text-sm text-text-secondary">
+            <span className="font-medium text-text-primary">Điểm cần nhớ: </span>
             {bullet}
           </div>
         )}
@@ -131,7 +122,7 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
   // Focus
   if (advice.type === 'focus') {
     const mainText = rawText.replace(/Nên chú ý/i, '').trim();
-    return <p className="whitespace-pre-line text-sm leading-6 text-slate-200">{mainText}</p>;
+    return <p className="whitespace-pre-line text-sm leading-6 text-text-primary">{mainText}</p>;
   }
 
   // Hint
@@ -142,10 +133,10 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
 
     return (
       <div>
-        <p className="text-sm leading-6 text-slate-200">{mainText}</p>
+        <p className="text-sm leading-6 text-text-primary">{mainText}</p>
         {reason && (
-          <div className="mt-3 rounded-md border border-slate-800 bg-slate-950 p-3 text-sm text-slate-300">
-            <span className="font-medium text-slate-100">Vì sao: </span>
+          <div className="mt-3 rounded-md border border-border bg-bg-surface p-3 text-sm text-text-secondary">
+            <span className="font-medium text-text-primary">Vì sao: </span>
             {reason}
           </div>
         )}
@@ -153,10 +144,10 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
     );
   }
 
-  return <p className="text-sm leading-6 text-slate-200">{rawText}</p>;
+  return <p className="text-sm leading-6 text-text-primary">{rawText}</p>;
 }
 
-export default function AICoachPanel({ fen, history = [], pgn = '', turn, status, stockfish, openingContext }: AICoachPanelProps) {
+export default function AICoachPanel({ fen, history = [], pgn = '', status, stockfish }: AICoachPanelProps) {
   const [advice, setAdvice] = useState<CoachAdvice | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
@@ -170,14 +161,13 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
     if (type === 'quick') prompt = COACH_PROMPTS.quick;
     else if (type === 'focus') prompt = COACH_PROMPTS.focus;
     else if (type === 'hint') prompt = COACH_PROMPTS.hint;
-    else prompt = type; // Custom message
+    else prompt = type;
 
     // Check Instagram Intent
     if (isInstagramIntent(prompt)) {
       setAdvice({
         type: 'social',
         text: 'Instagram của Ninh ở đây:',
-        source: 'mock',
         instagramUrl: NINH_INSTAGRAM_URL,
       });
       setIsLoading(false);
@@ -198,9 +188,9 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
 
     try {
       const result: CoachResponse = await askAICoach(payload);
-      setAdvice({ type: type as AdviceType, text: result.reply, source: result.source });
+      setAdvice({ type: type as AdviceType, text: result.reply });
     } catch {
-      setAdvice({ type: 'custom', text: 'Không thể tải nhận xét AI. Vui lòng thử lại.', source: 'error' });
+      setAdvice({ type: 'custom', text: 'Không thể tải nhận xét AI. Vui lòng thử lại.' });
     } finally {
       setIsLoading(false);
     }
@@ -216,24 +206,21 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+      <div className="flex items-center gap-3 border-b border-border pb-3">
         <img
           src={coachAvatar}
           alt={COACH_NAME}
-          className="h-10 w-10 rounded-md border border-slate-700 object-cover shadow-sm"
+          className="h-10 w-10 rounded-md border border-border object-cover shadow-sm"
         />
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-bold text-slate-100">{COACH_NAME}</h3>
-          <p className="text-xs text-slate-400">Mổ thế cờ, gáy vừa đủ</p>
+          <h3 className="text-sm font-bold text-text-primary">{COACH_NAME}</h3>
+          <p className="text-xs text-text-tertiary">Mổ thế cờ, gáy vừa đủ</p>
         </div>
-        <div className="flex flex-col items-end gap-1">
-          <span className="rounded border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
-            {stockfish ? 'Stockfish on' : 'No engine context'}
+        {stockfish && (
+          <span className="rounded border border-primary-400/25 bg-primary-400/10 px-2 py-0.5 text-[11px] font-medium text-primary-300">
+            AI active
           </span>
-          <span className="rounded border border-slate-700 bg-slate-900 px-2 py-0.5 text-[11px] font-medium text-slate-400">
-            Source shown
-          </span>
-        </div>
+        )}
       </div>
 
       {/* Actions */}
@@ -241,21 +228,21 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
         <button
           onClick={() => getAdvice('quick')}
           disabled={isLoading}
-          className="rounded-md border border-slate-700 bg-slate-900 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-800 disabled:opacity-50"
+          className="rounded-md border border-border bg-bg-surface px-2 py-2.5 text-xs font-medium text-text-secondary transition hover:bg-bg-elevated disabled:opacity-50"
         >
           Nhận xét nhanh
         </button>
         <button
           onClick={() => getAdvice('focus')}
           disabled={isLoading}
-          className="rounded-md border border-slate-700 bg-slate-900 px-2 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-slate-800 disabled:opacity-50"
+          className="rounded-md border border-border bg-bg-surface px-2 py-2.5 text-xs font-medium text-text-secondary transition hover:bg-bg-elevated disabled:opacity-50"
         >
           Nên chú ý
         </button>
         <button
           onClick={() => getAdvice('hint')}
           disabled={isLoading}
-          className="rounded-md border border-emerald-400/25 bg-emerald-400/10 px-2 py-2.5 text-xs font-medium text-emerald-300 transition hover:bg-emerald-400/15 disabled:opacity-50"
+          className="rounded-md border border-primary-400/25 bg-primary-400/10 px-2 py-2.5 text-xs font-medium text-primary-300 transition hover:bg-primary-400/15 disabled:opacity-50"
         >
           {UI_COPY.hint}
         </button>
@@ -269,50 +256,36 @@ export default function AICoachPanel({ fen, history = [], pgn = '', turn, status
           onChange={(e) => setCustomMessage(e.target.value)}
           disabled={isLoading}
           placeholder="Hỏi Quân sư Ninh về thế cờ..."
-          className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:border-emerald-400 focus:outline-none"
+          className="w-full rounded-md border border-border bg-bg-surface px-3 py-2 text-sm text-text-primary placeholder-text-tertiary focus:border-primary-400 focus:outline-none"
         />
         <button
           type="submit"
           disabled={isLoading || !customMessage.trim()}
-          className="rounded-md bg-emerald-400 px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-emerald-300 disabled:opacity-50"
+          className="rounded-md bg-primary-400 px-4 py-2 text-sm font-medium text-bg-base transition hover:bg-primary-300 disabled:opacity-50"
         >
           Gửi
         </button>
       </form>
 
       {/* Advice Display */}
-      <div className="min-h-[120px] rounded-lg border border-slate-800 bg-slate-950 p-4">
+      <div className="min-h-[120px] rounded-lg border border-border bg-bg-surface p-4">
         {isLoading ? (
-          <div className="flex h-full items-center justify-center text-emerald-500 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:overflow-hidden [&>span]:rounded-full [&>span]:bg-emerald-400 [&>span]:text-transparent">
-            <span className="text-sm font-medium animate-pulse">{UI_COPY.botThinking}</span>
+          <div className="flex h-full items-center justify-center text-primary-400">
+            <span className="text-sm font-medium">{UI_COPY.botThinking}</span>
           </div>
         ) : advice ? (
           <div className="animate-in fade-in slide-in-from-bottom-2">
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-tertiary">
               {advice.type === 'quick' && 'Nhận xét nhanh'}
               {advice.type === 'focus' && 'Nên chú ý'}
               {advice.type === 'hint' && UI_COPY.hint}
               {advice.type === 'social' && 'Social'}
               {advice.type === 'custom' && 'Trả lời'}
             </div>
-            <div className="mb-3">
-              <span
-                className={`rounded border px-2 py-0.5 text-[11px] font-medium ${
-                  advice.source === 'ai'
-                    ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-300'
-                    : advice.source === 'error'
-                    ? 'border-rose-400/25 bg-rose-400/10 text-rose-300'
-                    : 'border-amber-400/25 bg-amber-400/10 text-amber-200'
-                }`}
-              >
-                {SOURCE_LABELS[advice.source || ''] || advice.source || 'Unknown'}
-              </span>
-            </div>
             {renderCoachAdvice(advice)}
-
           </div>
         ) : (
-          <div className="flex h-full flex-col items-center justify-center text-center text-slate-500">
+          <div className="flex h-full flex-col items-center justify-center text-center text-text-tertiary">
             <p className="text-sm">Hỏi hoặc bấm nút ở trên để nhận lời khuyên từ {COACH_NAME}.</p>
           </div>
         )}
