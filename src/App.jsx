@@ -5,6 +5,7 @@ import PageSkeleton from './components/PageSkeleton';
 import ErrorBoundary from './components/ErrorBoundary';
 import OnboardingModal from './components/OnboardingModal';
 import MobileControls from './components/MobileControls';
+import PerformanceOptimizer from './components/PerformanceOptimizer';
 
 const Home = lazy(() => import('./pages/Home'));
 const Learn = lazy(() => import('./pages/Learn'));
@@ -34,6 +35,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <PerformanceOptimizer />
       <AuthProvider>
         <ChessGameProvider>
           <ErrorBoundary>
