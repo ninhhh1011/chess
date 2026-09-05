@@ -29,7 +29,9 @@ export default function Navbar() {
     }
   }
 
-  const accountInitial = user?.email?.[0]?.toUpperCase() || 'U';
+  const accountInitial = (user && typeof user === 'object' && 'email' in user)
+    ? String((user as { email?: string }).email?.[0] || 'U').toUpperCase()
+    : 'U';
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-bg-base/95 backdrop-blur">
@@ -146,7 +148,7 @@ export default function Navbar() {
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-elevated text-sm font-semibold text-primary-500">
                         {accountInitial}
                       </div>
-                      <span className="text-sm text-text-secondary">{user?.email}</span>
+                      <span className="text-sm text-text-secondary">{(user && typeof user === 'object' && 'email' in user) ? (user as { email?: string }).email : ''}</span>
                     </div>
                     <Button variant="secondary" onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
                       Đăng xuất

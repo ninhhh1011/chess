@@ -38,7 +38,8 @@ function uniqueById(items) {
   });
 }
 
-function safeProfile(profile = {}) {
+function safeProfile(profile) {
+  if (!profile) profile = {};
   return {
     currentLevel: profile.currentLevel || 'noob',
     gamesPlayed: Number(profile.gamesPlayed) || 0,
@@ -166,20 +167,81 @@ export function shouldLevelUp(profile) {
   return false;
 }
 
+/**
+ * Generate daily training plan with canonical tasks format
+ *
+ * @typedef {Object} TrainingTask
+ * @property {'lesson'|'exercise'|'opening'|'challenge'} type
+ * @property {string} id
+ * @property {string} title
+ * @property {string} reason
+ * @property {string} [skillTag]
+ *
+ * @typedef {Object} DailyTrainingPlan
+ * @property {string} generatedAt
+ * @property {TrainingTask[]} tasks
+ */
 export function generateDailyTrainingPlan(profile) {
   const p = safeProfile(profile);
+  const tasks = [];
+
+  // 1. Lesson
   const lesson = getRecommendedLessons(p)[0] || { id: 'review', title: 'Ôn lại kiến thức đã học', reason: 'Duy trì nhịp luyện tập.' };
+  tasks.push({
+    type: 'lesson',
+    id: lesson.id,
+    title: lesson.title,
+    reason: lesson.reason || 'Nền tảng cờ vua.',
+  });
+
+  // 2. Exercises (at least 1)
   const exercises = getRecommendedExercises(p).slice(0, 5);
-  const challenge = p.gamesPlayed < 3
+  if (exercises.length > 0) {
+    exercises.forEach(ex => {
+      tasks.push({
+        type: 'exercise',
+        id: ex.id,
+        title: ex.title,
+        reason: ex.reason || 'Luyện kỹ năng.',
+        skillTag: ex.tag,
+      });
+    });
+  } else {
+    // Fallback: at least one exercise
+    tasks.push({
+      type: 'exercise',
+      id: 'mixed_basic',
+      title: '3 bài tập cơ bản tổng hợp',
+      reason: 'Chưa đủ dữ liệu nên luyện tổng hợp.',
+      skillTag: 'mixed',
+    });
+  }
+
+  // 3. Opening (optional)
+  const opening = getRecommendedOpenings(p)[0];
+  if (opening) {
+    tasks.push({
+      type: 'opening',
+      id: opening.id,
+      title: opening.vietnameseName || opening.title,
+      reason: opening.reason || 'Luyện khai cuộc.',
+    });
+  }
+
+  // 4. Challenge (always present)
+  const challengeText = p.gamesPlayed < 3
     ? 'Chơi 1 ván và tập không mất quân miễn phí.'
     : 'Chơi 1 ván, sau đó vào Phòng mổ ván cờ với Ninh Lốp Trưởng.';
+  tasks.push({
+    type: 'challenge',
+    id: 'daily_challenge',
+    title: 'Ván cờ thực hành',
+    reason: challengeText,
+  });
 
   return {
     generatedAt: new Date().toISOString(),
-    lesson,
-    exercises: exercises.length ? exercises : [{ id: 'mixed_basic', title: '3 bài tập cơ bản tổng hợp', tag: 'mixed', reason: 'Chưa đủ dữ liệu nên luyện tổng hợp.' }],
-    opening: getRecommendedOpenings(p)[0] || null,
-    challenge,
+    tasks,
   };
 }
 

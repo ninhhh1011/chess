@@ -154,11 +154,16 @@ describe('useBotMove', () => {
       expect(result.current.lastMove).toEqual({
         move: null,
         source: 'error',
+        elo: 1200,
+        depth: 0,
+        movetime: 0,
+        skillLevel: 0,
         warning: 'Engine crashed',
       });
       expect(onMoveComplete).toHaveBeenCalledWith(expect.objectContaining({
         move: null,
         source: 'error',
+        elo: 1200,
       }), expect.any(Number));
     });
 
@@ -275,9 +280,10 @@ describe('useBotMove', () => {
     });
 
     it('does not apply timeout result to subsequent valid request', async () => {
-      let resolveSlow;
-      const slowPromise = new Promise((resolve) => {
-        resolveSlow = resolve;
+      type MockResolveValue = { move: string; source: string; elo: number; depth: number; movetime: number; skillLevel: number };
+      let resolveSlow: ((value: void) => void) & ((value: MockResolveValue) => void);
+      const slowPromise = new Promise<MockResolveValue>((resolve) => {
+        resolveSlow = resolve as typeof resolveSlow;
       });
 
       // First never resolves (will timeout), second resolves normally
@@ -304,7 +310,7 @@ describe('useBotMove', () => {
       await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
         // Resolve the slow promise (should be ignored)
-        resolveSlow({ move: 'e7e5', source: 'stockfish' });
+        resolveSlow({ move: 'e7e5', source: 'stockfish', elo: 1200, depth: 8, movetime: 800, skillLevel: 6 });
       });
 
       // Only the second (valid) request should complete

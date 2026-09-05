@@ -4,40 +4,31 @@
  * Run with: npx playwright test e2e/chess.spec.js
  * Or: npm run test:e2e (if configured in package.json)
  *
- * These tests verify the complete game flow in a real browser.
+ * Note: playwright.config.js handles webServer setup.
+ * This test file relies on the configured server at localhost:5173.
  */
 import { test, expect } from '@playwright/test';
-import { spawn } from 'child_process';
 
-const BASE_URL = 'http://localhost:5174';
+const BASE_URL = 'http://127.0.0.1:5173';
 
-// Helper to start dev server
-async function startServer() {
-  const server = spawn('npm.cmd', ['run', 'dev'], {
-    cwd: process.cwd(),
-    stdio: 'pipe',
-    shell: true
-  });
-
-  // Wait for server to start
-  await new Promise(resolve => setTimeout(resolve, 4000));
-
-  return server;
+/**
+ * Dismiss onboarding modal that blocks game interactions.
+ * Only targets the "Chào mừng!" welcome dialog with specific buttons.
+ */
+async function dismissOnboarding(page) {
+  // Only look for the skip/dismiss button in the welcome modal
+  const skipBtn = page.getByRole('button', { name: /Bỏ qua/i });
+  if (await skipBtn.count() > 0) {
+    try {
+      await skipBtn.first().click();
+      await page.waitForTimeout(300);
+    } catch {
+      // Modal not present or already dismissed
+    }
+  }
 }
 
 test.describe('Chess Game E2E', () => {
-  let server;
-
-  test.beforeAll(async () => {
-    server = await startServer();
-  });
-
-  test.afterAll(async () => {
-    if (server) {
-      server.kill();
-    }
-  });
-
   test.describe('Responsive Layout', () => {
     const viewports = [
       { name: 'Mobile 360', width: 360, height: 640 },
@@ -68,15 +59,15 @@ test.describe('Chess Game E2E', () => {
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
 
       // Wait for game to start
       await page.waitForTimeout(2000);
-
-      // Take screenshot
-      await page.screenshot({ path: 'test-results/screenshot-375-play.png', fullPage: true });
 
       // Chessboard should be visible and not cut off
       const board = page.locator('.chess-board-container, [id*="chessboard"]').first();
@@ -92,6 +83,9 @@ test.describe('Chess Game E2E', () => {
   test.describe('Game Flow - White Player', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
 
       // Start game with white (default)
       await page.getByRole('button', { name: /Người mới/i }).click();
@@ -125,6 +119,9 @@ test.describe('Chess Game E2E', () => {
     test('Drag-and-drop performs e2-e4 move', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Start game first
       const newBtn = page.getByRole('button', { name: /Người mới/i });
       await newBtn.waitFor({ state: 'visible', timeout: 5000 });
@@ -157,6 +154,9 @@ test.describe('Chess Game E2E', () => {
     test('Black player - bot moves first', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Select black
       await page.getByRole('button', { name: /Đen/i }).click();
 
@@ -178,6 +178,9 @@ test.describe('Chess Game E2E', () => {
       await page.setViewportSize({ width: 1366, height: 768 });
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Start game with black
       await page.getByRole('button', { name: /Đen/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
@@ -191,6 +194,10 @@ test.describe('Chess Game E2E', () => {
   test.describe('Game Controls', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
@@ -239,6 +246,9 @@ test.describe('Chess Game E2E', () => {
 
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
@@ -263,6 +273,9 @@ test.describe('Chess Game E2E', () => {
 
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Play through a few moves
       await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
@@ -275,6 +288,9 @@ test.describe('Chess Game E2E', () => {
   test.describe('Game Over Flow', () => {
     test('Game over shows result and action buttons', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
 
       // Set up for a quick checkmate - play as black against weak opponent
       await page.getByRole('button', { name: /Đen/i }).click();
@@ -307,6 +323,9 @@ test.describe('Chess Game E2E', () => {
 
     test('Can start new game after game over', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
 
       // Start a game
       await page.getByRole('button', { name: /Người mới/i }).click();
@@ -362,6 +381,9 @@ test.describe('Chess Game E2E', () => {
     test('role="status" present in game view', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
@@ -376,6 +398,9 @@ test.describe('Chess Game E2E', () => {
 
     test('Chessboard squares have accessible names', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
 
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();
@@ -392,6 +417,9 @@ test.describe('Chess Game E2E', () => {
 
     test('Touch targets meet 44x44 minimum', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
 
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();
@@ -424,6 +452,9 @@ test.describe('Chess Game E2E', () => {
     test('Escape closes menu/dialog and restores focus', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
 
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
+
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
@@ -443,6 +474,9 @@ test.describe('Chess Game E2E', () => {
 
     test('Visual feedback is not color-only for selection', async ({ page }) => {
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
 
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();
@@ -500,7 +534,9 @@ test.describe('Chess Game E2E', () => {
       });
 
       await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
-      await page.waitForTimeout(2000);
+
+      // Dismiss any onboarding modal
+      await dismissOnboarding(page);
 
       // Start game
       await page.getByRole('button', { name: /Người mới/i }).click();

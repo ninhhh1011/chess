@@ -12,3 +12,4 @@ server/.env
 test-results/
 playwright-report/
 playwright/.cache/
+src/data/generated/

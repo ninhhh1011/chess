@@ -76,13 +76,11 @@ export default defineConfig({
     },
   },
   server: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-    },
-  },
-  preview: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
     },
   },
   build: {

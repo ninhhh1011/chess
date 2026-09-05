@@ -192,12 +192,12 @@ export function addMistake(mistakeTag) {
   });
 }
 
-export function updateExerciseResult({ exerciseId, isCorrect, tags = [] }) {
+export function updateExerciseResult({ exerciseId, isCorrect, tags = /** @type {string[]} */ ([]) }) {
+  const /** @type {string[]} */ nextTags = Array.isArray(tags) ? tags : [];
   const profile = getUserProfile();
   const total = profile.exerciseStats.total + 1;
   const correct = profile.exerciseStats.correct + (isCorrect ? 1 : 0);
   const wrong = profile.exerciseStats.wrong + (isCorrect ? 0 : 1);
-  const nextTags = Array.isArray(tags) ? tags : [];
 
   return saveUserProfile({
     ...profile,
@@ -216,9 +216,9 @@ export function updateExerciseResult({ exerciseId, isCorrect, tags = [] }) {
   });
 }
 
-export function updateAfterGame({ result = 'unknown', movesCount = 0, mistakes = [] }) {
+export function updateAfterGame({ result = 'unknown', movesCount = 0, mistakes = /** @type {string[]} */ ([]) }) {
   const profile = getUserProfile();
-  const mockMistakes = movesCount < 12 ? ['poor_development', 'weak_opening'] : [];
+  const /** @type {string[]} */ mockMistakes = movesCount < 12 ? ['poor_development', 'weak_opening'] : /** @type {string[]} */ ([]) ;
 
   return saveUserProfile({
     ...profile,

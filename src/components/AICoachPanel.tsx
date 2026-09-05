@@ -1,52 +1,13 @@
 import React, { useState } from 'react';
-import { askAICoach } from '../services/aiCoachApiService';
+import { askCoach, getCoachStatus, type CoachResponseV1 } from '../services/coachService';
 import { getUserProfile } from '../services/userProfileService';
+import { isEngineReady } from '../services/stockfishService';
 import coachAvatar from '../assets/avatarcoach.webp';
 import { BRAND_NAMES, UI_COPY } from '../config/brand';
 import { isInstagramIntent, NINH_INSTAGRAM_URL } from '../utils/socialIntent';
-import type { CoachPayload, CoachResponse, CoachLevel, Evaluation } from '../types/ChessTypes';
+import type { CoachLevel, Evaluation } from '../types/ChessTypes';
 
 const COACH_NAME = BRAND_NAMES.coach;
-
-const COACH_PROMPTS: Record<string, string> = {
-  quick: `Bạn là HLV cờ vua cá nhân của người mới học.
-Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
-Chỉ trả lời đúng format:
-Nhận xét nhanh
-<1 câu chính>
-
-Điểm cần nhớ:
-<1 bullet ngắn>
-
-Không quá 45 từ.
-Không marketing.
-Không nói lan man.
-Không dùng markdown phức tạp.`,
-  focus: `Bạn là HLV cờ vua cá nhân của người mới học.
-Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
-Chỉ trả lời đúng format:
-Nên chú ý
-1. <rủi ro quan trọng nhất>
-2. <rủi ro thứ hai nếu thật sự cần>
-
-Không quá 45 từ.
-Không quá 2 ý.
-Không marketing.
-Không nói lan man.`,
-  hint: `Bạn là HLV cờ vua cá nhân của người mới học.
-Trả lời bằng tiếng Việt, giọng chuyên môn nhưng có chút meme nhẹ kiểu Ninh.
-Chỉ trả lời đúng format:
-Ninh mách nước
-Nên cân nhắc: <nước đi hoặc ý tưởng>
-
-Vì sao:
-<1 câu ngắn>
-
-Không quá 45 từ.
-Nếu có best move từ engine, ưu tiên dùng.
-Không marketing.
-Không nói lan man.`
-};
 
 type AdviceType = 'quick' | 'focus' | 'hint' | 'social' | 'custom';
 
@@ -54,6 +15,50 @@ interface CoachAdvice {
   type: AdviceType;
   text: string;
   instagramUrl?: string;
+  source?: 'llm' | 'basic' | 'unavailable';
+}
+
+interface CoachStatusBadgeProps {
+  engineReady: boolean;
+  coachProvider: 'llm' | 'basic' | 'unavailable';
+  knowledgeReady: boolean;
+}
+
+function CoachStatusBadge({ engineReady, coachProvider, knowledgeReady }: CoachStatusBadgeProps) {
+  return (
+    <div className="flex flex-wrap gap-1">
+      {engineReady && (
+        <span className="rounded border border-green-500/30 bg-green-500/10 px-1.5 py-0.5 text-[10px] font-medium text-green-400">
+          Engine
+        </span>
+      )}
+      {!engineReady && (
+        <span className="rounded border border-yellow-500/30 bg-yellow-500/10 px-1.5 py-0.5 text-[10px] font-medium text-yellow-400">
+          Engine fallback
+        </span>
+      )}
+      {coachProvider === 'llm' && (
+        <span className="rounded border border-primary-400/30 bg-primary-400/10 px-1.5 py-0.5 text-[10px] font-medium text-primary-300">
+          AI
+        </span>
+      )}
+      {coachProvider === 'basic' && (
+        <span className="rounded border border-gray-500/30 bg-gray-500/10 px-1.5 py-0.5 text-[10px] font-medium text-gray-400">
+          Basic
+        </span>
+      )}
+      {coachProvider === 'unavailable' && (
+        <span className="rounded border border-red-500/30 bg-red-500/10 px-1.5 py-0.5 text-[10px] font-medium text-red-400">
+          Unavailable
+        </span>
+      )}
+      {!knowledgeReady && (
+        <span className="rounded border border-gray-500/30 bg-gray-500/10 px-1.5 py-0.5 text-[10px] font-medium text-gray-500">
+          Knowledge off
+        </span>
+      )}
+    </div>
+  );
 }
 
 interface AICoachPanelProps {
@@ -152,19 +157,19 @@ export default function AICoachPanel({ fen, history = [], pgn = '', status, stoc
   const [isLoading, setIsLoading] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
 
+  const engineReady = isEngineReady();
+  const coachStatus = getCoachStatus();
+
   async function getAdvice(type: string): Promise<void> {
     if (isLoading) return;
     setIsLoading(true);
     setAdvice(null);
 
-    let prompt = '';
-    if (type === 'quick') prompt = COACH_PROMPTS.quick;
-    else if (type === 'focus') prompt = COACH_PROMPTS.focus;
-    else if (type === 'hint') prompt = COACH_PROMPTS.hint;
-    else prompt = type;
+    const userProfile = getUserProfile();
+    const level = (userProfile.currentLevel || 'beginner') as CoachLevel;
 
     // Check Instagram Intent
-    if (isInstagramIntent(prompt)) {
+    if (isInstagramIntent(type)) {
       setAdvice({
         type: 'social',
         text: 'Instagram của Ninh ở đây:',
@@ -174,23 +179,23 @@ export default function AICoachPanel({ fen, history = [], pgn = '', status, stoc
       return;
     }
 
-    const userProfile = getUserProfile();
-    const payload: CoachPayload = {
-      message: prompt,
-      mode: 'chat',
-      fen,
-      history,
-      pgn,
-      level: (userProfile.currentLevel || 'beginner') as CoachLevel,
-      userProfile,
-      stockfish,
-    };
-
     try {
-      const result: CoachResponse = await askAICoach(payload);
-      setAdvice({ type: type as AdviceType, text: result.reply });
+      const result: CoachResponseV1 = await askCoach({
+        question: type,
+        fen,
+        history,
+        pgn,
+        playerLevel: level,
+        responseStyle: 'short',
+      });
+
+      setAdvice({
+        type: type as AdviceType,
+        text: result.reply,
+        source: result.source,
+      });
     } catch {
-      setAdvice({ type: 'custom', text: 'Không thể tải nhận xét AI. Vui lòng thử lại.' });
+      setAdvice({ type: 'custom', text: 'Không thể tải nhận xét. Vui lòng thử lại.' });
     } finally {
       setIsLoading(false);
     }
@@ -216,31 +221,31 @@ export default function AICoachPanel({ fen, history = [], pgn = '', status, stoc
           <h3 className="text-sm font-bold text-text-primary">{COACH_NAME}</h3>
           <p className="text-xs text-text-tertiary">Mổ thế cờ, gáy vừa đủ</p>
         </div>
-        {stockfish && (
-          <span className="rounded border border-primary-400/25 bg-primary-400/10 px-2 py-0.5 text-[11px] font-medium text-primary-300">
-            AI active
-          </span>
-        )}
+        <CoachStatusBadge
+          engineReady={engineReady}
+          coachProvider={coachStatus.provider}
+          knowledgeReady={false}
+        />
       </div>
 
       {/* Actions */}
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
         <button
-          onClick={() => getAdvice('quick')}
+          onClick={() => getAdvice('Nhận xét nhanh')}
           disabled={isLoading}
           className="rounded-md border border-border bg-bg-surface px-2 py-2.5 text-xs font-medium text-text-secondary transition hover:bg-bg-elevated disabled:opacity-50"
         >
           Nhận xét nhanh
         </button>
         <button
-          onClick={() => getAdvice('focus')}
+          onClick={() => getAdvice('Nên chú ý điều gì?')}
           disabled={isLoading}
           className="rounded-md border border-border bg-bg-surface px-2 py-2.5 text-xs font-medium text-text-secondary transition hover:bg-bg-elevated disabled:opacity-50"
         >
           Nên chú ý
         </button>
         <button
-          onClick={() => getAdvice('hint')}
+          onClick={() => getAdvice('Gợi ý nước đi tốt nhất')}
           disabled={isLoading}
           className="rounded-md border border-primary-400/25 bg-primary-400/10 px-2 py-2.5 text-xs font-medium text-primary-300 transition hover:bg-primary-400/15 disabled:opacity-50"
         >
@@ -275,12 +280,17 @@ export default function AICoachPanel({ fen, history = [], pgn = '', status, stoc
           </div>
         ) : advice ? (
           <div className="animate-in fade-in slide-in-from-bottom-2">
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-tertiary">
-              {advice.type === 'quick' && 'Nhận xét nhanh'}
-              {advice.type === 'focus' && 'Nên chú ý'}
-              {advice.type === 'hint' && UI_COPY.hint}
-              {advice.type === 'social' && 'Social'}
-              {advice.type === 'custom' && 'Trả lời'}
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-text-tertiary">
+                {advice.type === 'quick' && 'Nhận xét nhanh'}
+                {advice.type === 'focus' && 'Nên chú ý'}
+                {advice.type === 'hint' && UI_COPY.hint}
+                {advice.type === 'social' && 'Social'}
+                {advice.type === 'custom' && 'Trả lời'}
+              </span>
+              {advice.source && advice.source !== 'llm' && (
+                <span className="text-[10px] text-text-tertiary">({advice.source})</span>
+              )}
             </div>
             {renderCoachAdvice(advice)}
           </div>

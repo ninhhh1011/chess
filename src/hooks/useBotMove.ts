@@ -85,7 +85,7 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
         // Check if this response is still valid (request not cancelled/stale)
         if (currentGameGenIdRef.current !== genId) {
           console.debug('[useBotMove] Ignoring stale response', { genId, current: currentGameGenIdRef.current });
-          return lastMove || { move: null, source: 'stale', warning: 'Stale response ignored' };
+          return lastMove || { move: null, source: 'stale', elo: botElo, depth: 0, movetime: 0, skillLevel: 0, warning: 'Stale response ignored' };
         }
 
         setLastMove(result);
@@ -94,13 +94,17 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
       } catch (error) {
         // Check if this request is still current before handling error
         if (currentGameGenIdRef.current !== genId) {
-          return lastMove || { move: null, source: 'stale', warning: 'Stale response ignored' };
+          return lastMove || { move: null, source: 'stale', elo: botElo, depth: 0, movetime: 0, skillLevel: 0, warning: 'Stale response ignored' };
         }
 
         const isTimeout = error instanceof Error && error.message === 'TIMEOUT';
         const errorResult: BotMoveResult = {
           move: null,
           source: isTimeout ? 'timeout' : 'error',
+          elo: botElo,
+          depth: 0,
+          movetime: 0,
+          skillLevel: 0,
           warning: isTimeout ? 'Bot move timed out' : (error instanceof Error ? error.message : 'Unknown error'),
         };
 
