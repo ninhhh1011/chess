@@ -3,6 +3,7 @@ import { analyzeFen, isEngineReady, stopEngine } from '../../services/stockfishS
 import { formatEvaluation, getSanFromUci } from '../../utils/chessMoveUtils';
 import GameReviewPanel from './GameReviewPanel';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
+import { AppButton } from '../../ui';
 
 function getEvalPercent(evaluation) {
   if (!evaluation) return 50;
@@ -13,8 +14,7 @@ function getEvalPercent(evaluation) {
 }
 
 /**
- * EngineAnalysisPanel - Refactored gọn gàng
- * Bỏ header lớn, giảm padding, tối ưu layout
+ * EngineAnalysisPanel - Option C styling
  */
 export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
   const [status, setStatus] = useState(() => (isEngineReady() ? 'Sẵn sàng' : 'Chưa tải'));
@@ -59,67 +59,99 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
   }
 
   return (
-    <div>
-      {/* Header gọn */}
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-300">{BRAND_NAMES.analysis}</h3>
-        <span className="rounded bg-slate-700/60 px-2 py-1 text-xs font-bold text-emerald-300">{status}</span>
+    <div className="space-y-3">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-[var(--app-foreground)]">{BRAND_NAMES.analysis}</h3>
+        <span className="rounded px-2 py-0.5 text-xs font-medium bg-[var(--app-accent-soft)] text-[var(--app-accent)] border border-[var(--app-accent)]/20">
+          {status}
+        </span>
       </div>
 
+      {/* Single source disclosure line per Section 14 */}
+      <p className="text-[11px] text-[var(--app-subtle)]">
+        Nguồn: Stockfish 18 · Diễn giải cơ bản
+      </p>
+
       {/* Evaluation bar + info */}
-      <div className="mb-3 grid grid-cols-[1rem_1fr] gap-2">
+      <div className="grid grid-cols-[0.875rem_1fr] gap-2.5">
         {/* Vertical eval bar */}
-        <div className="relative h-32 overflow-hidden rounded-full border border-slate-600/60 bg-slate-950/50">
-          <div className="absolute bottom-0 left-0 right-0 bg-slate-50 transition-all duration-300" style={{ height: `${whiteEvalPercent}%` }} />
-          <div className="absolute inset-x-0 top-1/2 h-px bg-emerald-400/60" />
+        <div className="relative h-28 overflow-hidden rounded-full border border-[var(--app-border)] bg-[var(--app-surface-raised)]">
+          <div
+            className="absolute bottom-0 left-0 right-0 bg-[#DAD2BD] transition-all duration-300"
+            style={{ height: `${whiteEvalPercent}%` }}
+          />
+          <div className="absolute inset-x-0 top-1/2 h-px bg-[var(--app-copper)]/80" />
         </div>
 
         {/* Eval info */}
         <div className="space-y-2">
-          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs">
+          <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-xs">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Đánh giá</span>
-              <b className="text-emerald-300">{formatEvaluation(analysis?.evaluation)}</b>
+              <span className="text-[var(--app-muted)]">Đánh giá</span>
+              <b className="font-mono text-[var(--app-accent)]">{formatEvaluation(analysis?.evaluation)}</b>
             </div>
-            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-700/60">
-              <div className="h-full bg-emerald-500 transition-all duration-300" style={{ width: `${whiteEvalPercent}%` }} />
+            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-[var(--app-surface-raised)]">
+              <div
+                className="h-full bg-[var(--app-accent)] transition-all duration-300"
+                style={{ width: `${whiteEvalPercent}%` }}
+              />
             </div>
           </div>
 
-          <div className="rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs text-slate-300">
-            <p>Nước tốt nhất: <b className="text-emerald-300">{bestSan || '—'}</b></p>
+          <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-xs text-[var(--app-foreground)]">
+            <span className="text-[var(--app-muted)]">Nước tốt nhất: </span>
+            <b className="font-mono text-[var(--app-copper)]">{bestSan || '—'}</b>
           </div>
         </div>
       </div>
 
       {/* Auto analyze */}
-      <label className="mb-3 flex items-center gap-2 rounded-lg border border-slate-700/60 bg-slate-800/60 p-2 text-xs font-bold text-slate-300 cursor-pointer">
-        <input type="checkbox" checked={autoAnalyze} onChange={(e) => onAutoAnalyzeChange(e.target.checked)} className="rounded" />
+      <label className="flex items-center gap-2 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-xs font-medium text-[var(--app-foreground)] cursor-pointer">
+        <input
+          type="checkbox"
+          checked={autoAnalyze}
+          onChange={(e) => onAutoAnalyzeChange(e.target.checked)}
+          className="accent-[var(--app-accent)] rounded"
+        />
         Tự động phân tích
       </label>
 
       {/* Comments */}
-      {autoComment && <p className="mb-3 rounded-lg border border-emerald-400/20 bg-emerald-500/10 p-2 text-xs font-bold text-emerald-200">{autoComment}</p>}
-      {error && <p className="mb-3 rounded-lg border border-emerald-400/20 bg-emerald-500/10 p-2 text-xs font-bold text-emerald-200">{error}</p>}
+      {autoComment && (
+        <p className="rounded-md border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-2 text-xs text-[var(--app-accent-hover)]">
+          {autoComment}
+        </p>
+      )}
+      {error && (
+        <p className="rounded-md border border-[var(--app-copper)]/30 bg-[var(--app-copper-soft)] p-2 text-xs text-[var(--app-copper)]">
+          {error}
+        </p>
+      )}
 
       {/* PV */}
-      <p className="mb-3 rounded-lg border border-slate-700/60 bg-slate-950/30 p-2 text-xs leading-relaxed text-slate-400">
-        <span className="text-slate-500">PV:</span> <span className="text-slate-300">{analysis?.pv?.map((uci) => getSanFromUci(analysis.fen, uci)).join(' ') || '—'}</span>
-      </p>
+      <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-2 text-xs text-[var(--app-muted)]">
+        <span className="font-semibold text-[var(--app-foreground)]">PV: </span>
+        <span className="font-mono text-[11px]">
+          {analysis?.pv?.map((uci) => getSanFromUci(analysis.fen, uci)).join(' ') || '—'}
+        </span>
+      </div>
 
       {/* Actions */}
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <button className="btn-primary px-3 py-2 text-xs" onClick={() => runAnalysis(false)} disabled={isAnalyzing}>
-          {isAnalyzing ? 'Đang mổ ván...' : BRAND_NAMES.analysis}
-        </button>
-        <button className="btn-secondary px-3 py-2 text-xs" onClick={() => runAnalysis(true)} disabled={isAnalyzing}>
+      <div className="grid grid-cols-2 gap-2">
+        <AppButton size="sm" variant="primary" onClick={() => runAnalysis(false)} disabled={isAnalyzing}>
+          {isAnalyzing ? 'Đang mổ...' : BRAND_NAMES.analysis}
+        </AppButton>
+        <AppButton size="sm" variant="secondary" onClick={() => runAnalysis(true)} disabled={isAnalyzing}>
           {UI_COPY.hint}
-        </button>
+        </AppButton>
       </div>
-      <button className="btn-secondary w-full px-3 py-2 text-xs" onClick={handleStop}>Dừng</button>
+      <AppButton size="sm" variant="ghost" className="w-full" onClick={handleStop}>
+        Dừng
+      </AppButton>
 
       {/* Game review */}
-      <div className="mt-3">
+      <div className="pt-2">
         <GameReviewPanel review={review} isReviewing={isReviewing} onReview={onReview} />
       </div>
     </div>

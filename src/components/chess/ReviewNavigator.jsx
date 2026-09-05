@@ -1,5 +1,6 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
+import { AppButton } from '../../ui';
 
 export default function ReviewNavigator() {
   const {
@@ -34,24 +35,24 @@ export default function ReviewNavigator() {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-3 shadow-lg">
+    <div className="flex flex-col gap-2.5 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">{BRAND_NAMES.analysis}</h4>
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--app-muted)]">{BRAND_NAMES.analysis}</h4>
         {playState === 'analysis' && (
           <button 
             onClick={handleExitReview}
-            className="text-xs font-medium text-slate-400 hover:text-slate-200"
+            className="text-xs text-[var(--app-subtle)] hover:text-[var(--app-foreground)]"
           >
             Đóng
           </button>
         )}
       </div>
 
-      <div className="flex items-center justify-between rounded-lg bg-slate-950 p-2">
+      <div className="flex items-center justify-between rounded-md bg-[var(--app-surface-raised)] border border-[var(--app-border)] p-1.5">
         <button
           onClick={handleFirst}
           disabled={analysisPly === 0}
-          className="flex h-8 w-8 items-center justify-center rounded bg-slate-800 text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
+          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
           title="Về đầu ván"
         >
           |&lt;
@@ -59,18 +60,18 @@ export default function ReviewNavigator() {
         <button
           onClick={handlePrev}
           disabled={analysisPly === 0}
-          className="flex h-8 w-8 items-center justify-center rounded bg-slate-800 text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
+          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
           title="Lùi một nước"
         >
           &lt;
         </button>
-        <div className="px-3 text-xs font-bold text-slate-300">
+        <div className="px-3 font-mono text-xs text-[var(--app-foreground)]">
           {analysisPly} / {totalMoves}
         </div>
         <button
           onClick={handleNext}
           disabled={analysisPly === totalMoves}
-          className="flex h-8 w-8 items-center justify-center rounded bg-slate-800 text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
+          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
           title="Tiến một nước"
         >
           &gt;
@@ -78,7 +79,7 @@ export default function ReviewNavigator() {
         <button
           onClick={handleLast}
           disabled={analysisPly === totalMoves}
-          className="flex h-8 w-8 items-center justify-center rounded bg-slate-800 text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
+          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
           title="Về cuối ván"
         >
           &gt;|
@@ -86,21 +87,23 @@ export default function ReviewNavigator() {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <button 
+        <AppButton
+          size="sm"
+          variant="secondary"
           onClick={handleNewGame}
-          className="ui-button-secondary py-2 text-xs"
         >
           Đổi thiết lập
-        </button>
-        <button 
+        </AppButton>
+        <AppButton
+          size="sm"
+          variant="primary"
           onClick={() => {
             exitAnalysisMode();
             restartGameWithCurrentSettings();
           }}
-          className="ui-button-primary py-2 text-xs"
         >
           {UI_COPY.newGame}
-        </button>
+        </AppButton>
       </div>
     </div>
   );

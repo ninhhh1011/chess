@@ -3,16 +3,17 @@ import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { updateOpeningAttempt, updateOpeningProgressSM2 } from '../../services/openingProgressService';
 import { playCaptureSound, playMoveSound } from '../../utils/sound';
+import { AppButton } from '../../ui';
 
 const moveDotStyle = {
-  backgroundImage: 'radial-gradient(circle, rgba(23,18,13,0.34) 18%, transparent 20%)',
+  backgroundImage: 'radial-gradient(circle, rgba(16,24,20,0.38) 22%, transparent 24%)',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
   backgroundSize: '100% 100%',
 };
 
 const captureRingStyle = {
-  backgroundImage: 'radial-gradient(circle, transparent 52%, rgba(23,18,13,0.34) 54%, rgba(23,18,13,0.34) 66%, transparent 68%)',
+  backgroundImage: 'radial-gradient(circle, transparent 52%, rgba(16,24,20,0.54) 54%, rgba(16,24,20,0.54) 66%, transparent 68%)',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
   backgroundSize: '100% 100%',
@@ -126,34 +127,74 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
 
   function showCorrect(){ setMessage(`Nước đúng là ${expectedMove?.san || 'hết line'}: ${expectedMove?.explanation || ''}`); }
 
-  return <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
-    <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-xl border border-slate-800 bg-slate-800 p-3 shadow-sm ">
-      <Chessboard options={{ position: game.fen(), boardOrientation, onPieceDrop:onDrop, onPieceDrag:({ square })=>showLegalMoveHints(square, true), onPieceClick:({ square })=>showLegalMoveHints(square), onSquareClick:handleSquareClick, squareStyles:moveHints, showNotation:true, boardStyle:{ borderRadius:'1.25rem', overflow:'hidden' }, darkSquareStyle:{backgroundColor: '#334155'}, lightSquareStyle:{backgroundColor: '#94a3b8'} }} />
-    </div>
-    <aside className="rounded-xl border border-slate-800 bg-slate-800 p-6 ">
-      <h2 className="text-2xl font-bold">Practice Mode</h2>
-      <p className="mt-3 rounded-xl bg-slate-900 p-4 font-bold text-emerald-500">{message}</p>
-      <p className="mt-4 text-slate-400">Nước cần luyện: <b>{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b></p>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <button className="btn-secondary" onClick={() => setMessage(expectedMove?.explanation || 'Đã hết line.')}>Ninh mách nước</button>
-        <button className="btn-secondary" onClick={showCorrect}>Hiện nước đúng</button>
-        <button className="btn-secondary" onClick={reset}>Làm lại</button>
+  return (
+    <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
+      <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+        <Chessboard
+          options={{
+            position: game.fen(),
+            boardOrientation,
+            onPieceDrop: onDrop,
+            onPieceDrag: ({ square }) => showLegalMoveHints(square, true),
+            onPieceClick: ({ square }) => showLegalMoveHints(square),
+            onSquareClick: handleSquareClick,
+            squareStyles: moveHints,
+            showNotation: true,
+            boardStyle: { borderRadius: '8px', overflow: 'hidden' },
+            darkSquareStyle: { backgroundColor: '#66745C' },
+            lightSquareStyle: { backgroundColor: '#DAD2BD' },
+          }}
+        />
       </div>
-      <p className="mt-5 text-sm text-slate-400">Lỗi sai phiên này: {mistakes.length}</p>
-      
-      {showQualityRating && (
-        <div className="mt-6 rounded-xl border border-slate-700 bg-slate-900 p-4">
-          <h3 className="mb-3 font-bold text-slate-200">Đánh giá mức độ ghi nhớ (SM-2)</h3>
-          <div className="flex flex-col gap-2">
-            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(5)}>5 - Hoàn hảo, nhớ ngay lập tức</button>
-            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(4)}>4 - Đúng, nhưng có chút ngập ngừng</button>
-            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(3)}>3 - Đúng, nhưng phải suy nghĩ lâu</button>
-            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(2)}>2 - Sai, nhưng khi thấy nước đúng thì nhớ ra ngay</button>
-            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(1)}>1 - Sai, và chỉ mang máng nhớ</button>
-            <button className="btn-secondary text-left text-sm" onClick={() => handleRateQuality(0)}>0 - Hoàn toàn không nhớ gì</button>
-          </div>
+      <aside className="space-y-4 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-5">
+        <h2 className="text-xl font-bold text-[var(--app-foreground)]">Practice Mode</h2>
+        <div className="rounded-md border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-3 text-xs font-medium text-[var(--app-accent-hover)]">
+          {message}
         </div>
-      )}
-    </aside>
-  </div>;
+        <p className="text-xs text-[var(--app-muted)]">
+          Nước cần luyện: <b className="text-[var(--app-foreground)]">{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b>
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <AppButton size="sm" variant="secondary" onClick={() => setMessage(expectedMove?.explanation || 'Đã hết line.')}>
+            Ninh mách nước
+          </AppButton>
+          <AppButton size="sm" variant="secondary" onClick={showCorrect}>
+            Hiện nước đúng
+          </AppButton>
+          <AppButton size="sm" variant="secondary" onClick={reset}>
+            Làm lại
+          </AppButton>
+        </div>
+        <p className="text-xs text-[var(--app-subtle)]">Lỗi sai phiên này: {mistakes.length}</p>
+
+        {showQualityRating && (
+          <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4">
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--app-foreground)]">
+              Đánh giá mức độ ghi nhớ (SM-2)
+            </h3>
+            <div className="flex flex-col gap-1.5">
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(5)}>
+                5 - Hoàn hảo, nhớ ngay lập tức
+              </AppButton>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(4)}>
+                4 - Đúng, nhưng có chút ngập ngừng
+              </AppButton>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(3)}>
+                3 - Đúng, nhưng phải suy nghĩ lâu
+              </AppButton>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(2)}>
+                2 - Sai, nhưng khi thấy nước đúng thì nhớ ra ngay
+              </AppButton>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(1)}>
+                1 - Sai, và chỉ mang máng nhớ
+              </AppButton>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(0)}>
+                0 - Hoàn toàn không nhớ gì
+              </AppButton>
+            </div>
+          </div>
+        )}
+      </aside>
+    </div>
+  );
 }

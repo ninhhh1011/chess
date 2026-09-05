@@ -1,138 +1,152 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
-import { UI_COPY } from '../../config/brand';
+import { AppButton } from '@/ui/AppButton';
+import { AppTooltip } from '@/ui/AppTooltip';
+import { Lightbulb, RotateCcw, Plus, ArrowLeftRight, Flag } from 'lucide-react';
 
 export default function GameControls({ onHint, requestHint }) {
-  const { newGame, undoMove, flipBoard, resignGame, playState, setPlayState } = useChessGame();
+  const { newGame, undoMove, flipBoard, resignGame, playState, setPlayState, isBotThinking } = useChessGame();
   const [confirmAction, setConfirmAction] = useState(null);
-  const [showMore, setShowMore] = useState(false);
 
   if (playState !== 'playing') return null;
 
-  const renderConfirm = () => {
-    if (confirmAction === 'resign') {
-      return (
-        <div className="flex w-full items-center justify-between rounded-md border border-rose-500/25 bg-rose-500/10 px-3 py-2">
-          <span className="text-sm font-medium text-rose-300">Xác nhận đầu hàng?</span>
-          <div className="flex gap-2">
-            <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors">
-              Hủy
-            </button>
-            <button
-              onClick={() => {
-                resignGame();
-                setConfirmAction(null);
-              }}
-              className="rounded-md bg-rose-600 px-3 py-1 text-xs font-semibold text-white hover:bg-rose-500 transition-colors"
-            >
-              {UI_COPY.resign}
-            </button>
-          </div>
+  if (confirmAction === 'resign') {
+    return (
+      <div className="flex flex-col gap-2 rounded-[10px] border border-[var(--app-danger)]/40 bg-[var(--app-surface-raised)] p-3">
+        <span className="text-xs font-semibold text-[var(--app-danger)]">
+          Xác nhận đầu hàng ván này?
+        </span>
+        <div className="flex items-center gap-2">
+          <AppButton
+            size="sm"
+            variant="ghost"
+            onClick={() => setConfirmAction(null)}
+            className="flex-1"
+          >
+            Hủy
+          </AppButton>
+          <AppButton
+            size="sm"
+            variant="danger"
+            onClick={() => {
+              resignGame();
+              setConfirmAction(null);
+            }}
+            className="flex-1"
+          >
+            Đầu hàng
+          </AppButton>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 
-    if (confirmAction === 'new') {
-      return (
-        <div className="flex w-full flex-col gap-2 rounded-md border border-border bg-bg-base px-3 py-2">
-          <span className="text-sm font-medium text-text-secondary">Bắt đầu ván mới?</span>
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => setConfirmAction(null)} className="px-2 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors">
-              Hủy
-            </button>
-            <button
-              onClick={() => {
-                newGame();
-                setPlayState('lobby');
-                setConfirmAction(null);
-              }}
-              className="rounded-md border border-border px-2 py-1 text-xs text-text-secondary hover:bg-bg-elevated transition-colors"
-            >
-              Đổi cấp độ
-            </button>
-            <button
-              onClick={() => {
-                newGame();
-                setConfirmAction(null);
-              }}
-              className="rounded-md bg-primary-400 px-2 py-1 text-xs font-semibold text-bg-base hover:bg-primary-300 transition-colors"
-            >
-              {UI_COPY.newGame}
-            </button>
-          </div>
+  if (confirmAction === 'new') {
+    return (
+      <div className="flex flex-col gap-2 rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3">
+        <span className="text-xs font-semibold text-[var(--app-foreground)]">
+          Bắt đầu ván mới?
+        </span>
+        <div className="flex items-center gap-2">
+          <AppButton
+            size="sm"
+            variant="ghost"
+            onClick={() => setConfirmAction(null)}
+          >
+            Hủy
+          </AppButton>
+          <AppButton
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              newGame();
+              setPlayState('lobby');
+              setConfirmAction(null);
+            }}
+          >
+            Đổi cấp độ
+          </AppButton>
+          <AppButton
+            size="sm"
+            variant="primary"
+            onClick={() => {
+              newGame();
+              setConfirmAction(null);
+            }}
+          >
+            Ván mới
+          </AppButton>
         </div>
-      );
-    }
-
-    return null;
-  };
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-border bg-bg-base/80 p-2 shadow-sm">
-      {confirmAction ? (
-        renderConfirm()
-      ) : (
-        <>
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            {/* Primary controls - always visible */}
-            <div className="flex gap-1.5">
-              <button
-                onClick={() => {
-                  if (requestHint) requestHint();
-                  if (onHint) onHint();
-                }}
-                className="rounded-md border border-primary-400/25 bg-primary-400/10 px-3 py-2 text-xs font-medium text-primary-300 hover:bg-primary-400/15 transition-colors"
-                title={UI_COPY.hint}
-              >
-                {UI_COPY.hint}
-              </button>
-              <button
-                onClick={undoMove}
-                className="rounded-md border border-border bg-bg-surface px-3 py-2 text-xs font-medium text-text-secondary hover:bg-bg-elevated transition-colors"
-                title={UI_COPY.undo}
-              >
-                {UI_COPY.undo}
-              </button>
-              <button
-                onClick={() => setConfirmAction('new')}
-                className="rounded-md border border-border bg-bg-surface px-3 py-2 text-xs font-medium text-text-secondary hover:bg-bg-elevated transition-colors"
-              >
-                {UI_COPY.newGame}
-              </button>
-            </div>
+    <div className="flex items-center justify-between gap-1.5 rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2 shadow-xs">
+      {/* Primary / Contextual action: Gợi ý */}
+      <div className="flex items-center gap-1.5 flex-1">
+        <AppButton
+          size="sm"
+          variant="primary"
+          onClick={() => {
+            if (requestHint) requestHint();
+            if (onHint) onHint();
+          }}
+          disabled={isBotThinking}
+          leftIcon={<Lightbulb className="h-3.5 w-3.5" />}
+          aria-label="Gợi ý nước đi"
+        >
+          Gợi ý
+        </AppButton>
 
-            {/* Secondary menu toggle */}
-            <button
-              onClick={() => setShowMore(!showMore)}
-              className="rounded-md border border-border bg-bg-surface px-2 py-2 text-text-tertiary hover:bg-bg-elevated hover:text-text-secondary transition-colors"
-              title="Thêm tùy chọn"
-            >
-              <span className="text-sm">•••</span>
-            </button>
-          </div>
+        {/* Secondary action: Hoàn tác */}
+        <AppButton
+          size="sm"
+          variant="secondary"
+          onClick={undoMove}
+          disabled={isBotThinking}
+          leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
+          aria-label="Hoàn tác nước cờ"
+        >
+          Hoàn tác
+        </AppButton>
 
-          {/* Secondary menu */}
-          {showMore && (
-            <div className="flex flex-wrap gap-2 rounded-md border border-border bg-bg-surface/50 p-2 transition-all duration-200">
-              <button
-                onClick={() => {
-                  flipBoard();
-                  setShowMore(false);
-                }}
-                className="rounded-md border border-border bg-bg-surface px-3 py-2 text-xs text-text-secondary hover:bg-bg-elevated transition-colors"
-              >
-                ↕ Lật bàn
-              </button>
-              <button
-                onClick={() => setConfirmAction('resign')}
-                className="rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-medium text-rose-300 hover:bg-rose-500/15 transition-colors"
-              >
-                {UI_COPY.resign}
-              </button>
-            </div>
-          )}
-        </>
-      )}
+        {/* New Game */}
+        <AppButton
+          size="sm"
+          variant="secondary"
+          onClick={() => setConfirmAction('new')}
+          leftIcon={<Plus className="h-3.5 w-3.5" />}
+          aria-label="Ván mới"
+        >
+          Ván mới
+        </AppButton>
+      </div>
+
+      {/* Utility / Danger actions */}
+      <div className="flex items-center gap-1">
+        <AppTooltip content="Lật bàn cờ" placement="top">
+          <button
+            type="button"
+            onClick={flipBoard}
+            aria-label="Lật bàn cờ"
+            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] transition-colors cursor-pointer"
+          >
+            <ArrowLeftRight className="h-3.5 w-3.5" />
+          </button>
+        </AppTooltip>
+
+        <AppTooltip content="Đầu hàng ván đấu" placement="top">
+          <button
+            type="button"
+            onClick={() => setConfirmAction('resign')}
+            aria-label="Đầu hàng"
+            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[var(--app-danger)]/30 bg-[var(--app-danger)]/10 text-[var(--app-danger)] hover:bg-[var(--app-danger)]/20 transition-colors cursor-pointer"
+          >
+            <Flag className="h-3.5 w-3.5" />
+          </button>
+        </AppTooltip>
+      </div>
     </div>
   );
 }

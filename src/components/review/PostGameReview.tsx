@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { Chess } from 'chess.js';
 import type { GameAnalysis, AnalysisFactV1, AnalysisProgress } from '../../types/analysis';
 import type { ReviewItem } from '../../types/analysis';
+import { AppButton } from '../../ui';
 
 interface PostGameReviewProps {
   analysis: GameAnalysis | null;
@@ -44,9 +45,9 @@ export default function PostGameReview({
             <h3 className="text-lg font-bold text-red-400">Analysis Error</h3>
             <p className="mt-2 text-sm text-slate-300">{error}</p>
           </div>
-          <button className="btn-secondary" onClick={onRetry}>
-            Retry
-          </button>
+          <AppButton variant="secondary" onClick={onRetry}>
+            Thử lại
+          </AppButton>
         </div>
       </div>
     );
@@ -77,9 +78,9 @@ export default function PostGameReview({
           </div>
         )}
 
-        <button className="btn-secondary mt-4" onClick={onCancel}>
+        <AppButton variant="secondary" className="mt-4" onClick={onCancel}>
           Cancel
-        </button>
+        </AppButton>
       </div>
     );
   }
@@ -177,12 +178,13 @@ export default function PostGameReview({
             <h4 className="font-bold text-white">
               Move {selectedMistake.ply} Detail
             </h4>
-            <button
+            <AppButton
+              size="sm"
+              variant="primary"
               onClick={() => onSendToCoach(selectedMistake)}
-              className="btn-primary text-sm"
             >
               Ask Coach
-            </button>
+            </AppButton>
           </div>
 
           <div className="mt-3 grid grid-cols-2 gap-4 text-sm">

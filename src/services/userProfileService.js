@@ -91,11 +91,13 @@ function normalizeProfile(profile) {
 
 function withRecommendations(profile) {
   const normalized = normalizeProfile(profile);
+  const dailyTrainingPlan = normalized.dailyTrainingPlan || generateDailyTrainingPlan(normalized);
   return {
     ...normalized,
     recommendedLessons: getRecommendedLessons(normalized),
     recommendedExercises: getRecommendedExercises(normalized),
-    dailyTrainingPlan: normalized.dailyTrainingPlan || generateDailyTrainingPlan(normalized),
+    dailyTrainingPlan,
+    tasks: dailyTrainingPlan?.tasks || [],
   };
 }
 

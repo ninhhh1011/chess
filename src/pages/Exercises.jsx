@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import ExerciseBoard from '../components/ExerciseBoard';
 import { exercises } from '../data/exercises';
 import { getUserProfile, updateExerciseResult } from '../services/userProfileService';
+import { AppButton } from '@/ui/AppButton';
+import { ChevronRight } from 'lucide-react';
 
 export default function Exercises() {
   const [index, setIndex] = useState(0);
@@ -14,7 +16,7 @@ export default function Exercises() {
       const userProfile = getUserProfile();
       setProfile(userProfile);
       setLoading(false);
-    } catch (err) {
+    } catch {
       setError('Không thể tải dữ liệu người dùng');
       setLoading(false);
     }
@@ -31,20 +33,18 @@ export default function Exercises() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-text-primary">Đang tải...</h1>
-        </div>
+      <div className="mx-auto max-w-6xl py-12 text-center">
+        <p className="text-sm font-semibold text-[var(--app-muted)]">Đang tải bài tập...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-xl border border-error/30 bg-error/10 p-8 text-center">
-          <h1 className="text-4xl font-bold text-error">Lỗi</h1>
-          <p className="mt-4 text-text-secondary">{error}</p>
+      <div className="mx-auto max-w-6xl py-8">
+        <div className="rounded-[12px] border border-[var(--app-danger)]/30 bg-[var(--app-surface)] p-8 text-center space-y-3">
+          <h1 className="text-xl font-bold text-[var(--app-danger)]">Đã xảy ra lỗi</h1>
+          <p className="text-xs text-[var(--app-muted)]">{error}</p>
         </div>
       </div>
     );
@@ -52,10 +52,10 @@ export default function Exercises() {
 
   if (!exercises || exercises.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-xl border border-success/30 bg-success/10 p-8 text-center">
-          <h1 className="text-4xl font-bold text-success">Chưa có bài tập</h1>
-          <p className="mt-4 text-text-secondary">Hiện tại chưa có bài tập nào. Vui lòng quay lại sau.</p>
+      <div className="mx-auto max-w-6xl py-8">
+        <div className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-8 text-center space-y-3">
+          <h1 className="text-xl font-bold text-[var(--app-foreground)]">Chưa có bài tập</h1>
+          <p className="text-xs text-[var(--app-muted)]">Hiện tại chưa có bài tập nào khả dụng. Vui lòng quay lại sau.</p>
         </div>
       </div>
     );
@@ -65,38 +65,44 @@ export default function Exercises() {
 
   if (!exercise) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="rounded-xl border border-error/30 bg-error/10 p-8 text-center">
-          <h1 className="text-4xl font-bold text-error">Lỗi bài tập</h1>
-          <p className="mt-4 text-text-secondary">Không tìm thấy bài tập #{index + 1}</p>
-          <button
-            className="btn-primary mt-6"
+      <div className="mx-auto max-w-6xl py-8">
+        <div className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-8 text-center space-y-4">
+          <h1 className="text-xl font-bold text-[var(--app-foreground)]">Không tìm thấy bài tập</h1>
+          <p className="text-xs text-[var(--app-muted)]">Không tìm thấy bài tập số #{index + 1}</p>
+          <AppButton
+            variant="primary"
+            size="sm"
             onClick={() => setIndex(0)}
           >
             Quay về bài đầu
-          </button>
+          </AppButton>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold text-text-primary md:text-5xl">Bài tập cờ vua</h1>
-          <p className="mt-4 text-text-secondary">
-            Giải bài {index + 1}/{exercises.length}.
-            {profile?.exerciseStats && ` Độ chính xác hiện tại: ${profile.exerciseStats.accuracy}%.`}
+    <div className="mx-auto max-w-6xl space-y-6 py-2 sm:py-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--app-foreground)]">
+            Bài tập chiến thuật
+          </h1>
+          <p className="text-xs sm:text-sm text-[var(--app-muted)]">
+            Bài {index + 1}/{exercises.length}
+            {profile?.exerciseStats ? ` · Độ chính xác: ${profile.exerciseStats.accuracy}%` : ''}
           </p>
         </div>
-        <button
-          className="btn-primary"
+        <AppButton
+          variant="primary"
+          size="sm"
           onClick={() => setIndex((index + 1) % exercises.length)}
+          rightIcon={<ChevronRight className="h-4 w-4" />}
         >
           Bài tiếp theo
-        </button>
+        </AppButton>
       </div>
+
       <ExerciseBoard key={index} exercise={exercise} onResult={handleResult} />
     </div>
   );

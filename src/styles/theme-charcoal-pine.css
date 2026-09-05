@@ -1,0 +1,111 @@
+/* -------------------------------------------------------------------------------------------------
+ * OPTION C — CHARCOAL + PINE + COPPER (LOCKED PRODUCTION THEME)
+ * Single source of truth for design tokens in production.
+ * -----------------------------------------------------------------------------------------------*/
+
+:root {
+  color-scheme: dark;
+
+  /* Surface & Base */
+  --app-bg: #0C100E;
+  --app-surface: #141A17;
+  --app-surface-raised: #1A221E;
+  --app-surface-hover: #222C27;
+  --app-border: #2D3932;
+  --app-border-strong: #425047;
+
+  /* Typography Colors */
+  --app-foreground: #F1F4F2;
+  --app-muted: #9BA89F;
+  --app-subtle: #708078;
+  --app-disabled: #536159;
+
+  /* Primary Interaction: Pine Green */
+  --app-accent: #3FAD79;
+  --app-accent-hover: #52BD8A;
+  --app-accent-pressed: #328C63;
+  --app-accent-soft: #173628;
+
+  /* Chess-Specific Highlight & Last Move: Copper */
+  --app-copper: #C88954;
+  --app-copper-hover: #D69A67;
+  --app-copper-soft: #3B271C;
+
+  /* Semantic Roles (Distinct from Primary Accent) */
+  --app-success: #49A6A0; /* Teal for Semantic Success (NOT Pine Green) */
+  --app-warning: #C89B4F; /* Amber for Warning / Inaccuracy */
+  --app-danger: #D46666;  /* Coral Red for Error / Blunder / Check */
+  --app-info: #6B98C8;    /* Blue for Informational Status */
+
+  /* Chess Board Tokens */
+  --board-light: #DAD2BD;
+  --board-dark: #66745C;
+  --board-selected: rgba(63, 173, 121, 0.34);
+  --board-last-move: rgba(200, 137, 84, 0.42);
+  --board-check: rgba(212, 102, 102, 0.54);
+  --board-legal-dot: rgba(16, 24, 20, 0.38);
+  --board-capture-ring: rgba(16, 24, 20, 0.54);
+
+  /* Radius Rules */
+  --radius-button: 8px;
+  --radius-input: 8px;
+  --radius-panel: 10px;
+  --radius-card: 10px;
+  --radius-modal: 12px;
+  --radius-badge: 6px;
+  --app-radius-btn: 8px;
+  --app-radius-modal: 12px;
+  --app-radius-card: 10px;
+  --app-radius-badge: 6px;
+
+  /* Quiet Motion Timing */
+  --app-duration-fast: 120ms;
+  --app-duration-base: 180ms;
+  --app-duration-slow: 240ms;
+
+  /* HeroUI v3 CSS Variable Mappings */
+  --background: var(--app-bg);
+  --foreground: var(--app-foreground);
+  --surface: var(--app-surface);
+  --surface-foreground: var(--app-foreground);
+  --surface-secondary: var(--app-surface-raised);
+  --surface-hover: var(--app-surface-hover);
+  --overlay: var(--app-surface-raised);
+  --overlay-foreground: var(--app-foreground);
+  --border: var(--app-border);
+  --separator: var(--app-border);
+  --default: var(--app-surface-raised);
+  --default-foreground: var(--app-foreground);
+  --default-hover: var(--app-surface-hover);
+  --accent: var(--app-accent);
+  --accent-foreground: #0C100E;
+  --accent-hover: var(--app-accent-hover);
+  --accent-soft: var(--app-accent-soft);
+  --accent-soft-foreground: #81e2b5;
+  --focus: var(--app-accent);
+  --muted: var(--app-muted);
+  --success: var(--app-success);
+  --warning: var(--app-warning);
+  --danger: var(--app-danger);
+  --radius: 8px;
+  --field-radius: 8px;
+  --surface-shadow: none;
+  --overlay-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.55), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+
+  /* Backward Compatibility Token Aliases mapped cleanly to Option C */
+  --color-bg: var(--app-bg);
+  --color-surface: var(--app-surface);
+  --color-surface-raised: var(--app-surface-raised);
+  --color-border: var(--app-border);
+  --color-border-strong: var(--app-border-strong);
+  --color-primary: var(--app-accent);
+  --color-primary-hover: var(--app-accent-hover);
+  --color-text-main: var(--app-foreground);
+  --color-text-muted: var(--app-muted);
+  --color-board-light: var(--board-light);
+  --color-board-dark: var(--board-dark);
+  --color-board-legal-hint: var(--board-legal-dot);
+  --color-board-last-move: var(--board-last-move);
+  --color-board-check: var(--board-check);
+  --color-board-selected: var(--board-selected);
+}

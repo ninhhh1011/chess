@@ -1,0 +1,20 @@
+{
+  "scenarioA": {
+    "status": "PASS",
+    "screenshot": "E:\\chess\\artifacts\\ui-option-c\\self-play\\scenario-a.png",
+    "notes": "White, Dễ, >=10 plies played, hint & undo exercised"
+  },
+  "scenarioB": {
+    "status": "PASS",
+    "modalVisible": true,
+    "screenshot": "E:\\chess\\artifacts\\ui-option-c\\self-play\\scenario-b.png",
+    "notes": "Black, Vừa, bot moved first, >=10 plies, resign triggered review modal"
+  },
+  "scenarioC": {
+    "status": "PASS",
+    "screenshot": "E:\\chess\\artifacts\\ui-option-c\\self-play\\scenario-c.png",
+    "notes": "New game during processing handled cleanly with no stuck state"
+  },
+  "consoleErrors": [],
+  "pageErrors": []
+}

@@ -1,41 +1,51 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
-import { BRAND_NAMES, UI_COPY } from '../../config/brand';
-import { BOT_ELO_LEVELS } from '../../data/botLevels';
+import { AppButton } from '@/ui/AppButton';
+import { Shield, Sparkles, Swords, Flame, Check } from 'lucide-react';
 
-// Friendly level names and descriptions
-const LEVEL_CONFIG = [
+const DIFFICULTIES = [
   {
+    id: 'easy',
     elo: 400,
-    label: 'Người mới',
-    description: 'Dành cho người chưa biết chơi hoặc mới bắt đầu.',
+    label: 'Dễ',
+    ariaLabel: 'Dễ - Người mới',
+    description: 'Dành cho người mới làm quen luật cờ và muốn rèn phản xạ ăn quân an toàn.',
+    botNotes: 'Máy chơi nhẹ nhàng để bạn làm quen nhịp độ ván đấu.',
+    icon: Shield,
   },
   {
+    id: 'medium',
     elo: 800,
-    label: 'Cơ bản',
-    description: 'Hiểu luật cơ bản, muốn thực hành.',
+    label: 'Vừa',
+    ariaLabel: 'Vừa - Cơ bản',
+    description: 'Nắm vững nguyên tắc phát triển quân cơ bản, hạn chế các sai lầm thô sơ.',
+    botNotes: 'Máy bắt đầu kiểm soát trung tâm và nhập thành đều đặn.',
+    icon: Sparkles,
   },
   {
+    id: 'hard',
     elo: 1200,
-    label: 'Trung bình',
-    description: 'Đã có kinh nghiệm, muốn cải thiện.',
+    label: 'Khó',
+    ariaLabel: 'Khó - Trung bình',
+    description: 'Đã có kinh nghiệm chiến thuật, cần tính toán sâu từ 2-3 nước trước khi đi.',
+    botNotes: 'Máy trừng phạt nghiêm khắc các lỗi bỏ quân hoặc xuất Hậu vội.',
+    icon: Swords,
   },
   {
+    id: 'expert',
     elo: 1600,
-    label: 'Nâng cao',
-    description: 'Chơi tốt, muốn thử thách bản thân.',
+    label: 'Thử thách',
+    ariaLabel: 'Thử thách - Nâng cao',
+    description: 'Mức độ chơi chuẩn xác cao, kiểm tra khả năng duy trì thế cờ tàn cuộc.',
+    botNotes: 'Stockfish tính toán tối ưu theo chiều sâu thực tế.',
+    icon: Flame,
   },
-];
-
-const COLOR_OPTIONS = [
-  { id: 'w', label: 'Trắng', icon: '♔', hint: 'Đi trước' },
-  { id: 'b', label: 'Đen', icon: '♚', hint: 'Máy đi trước' },
 ];
 
 export default function PreGameLobby() {
-  const { GAME_MODES, PLAYER_COLORS, startGame } = useChessGame();
+  const { GAME_MODES, startGame } = useChessGame();
 
-  // Default: Người mới (400) + Trắng
+  // Default: Dễ (400) + Trắng ('w')
   const [selectedElo, setSelectedElo] = useState(400);
   const [selectedColor, setSelectedColor] = useState('w');
 
@@ -45,96 +55,142 @@ export default function PreGameLobby() {
       color: selectedColor,
       mode: GAME_MODES.BOT,
       gameGoal: 'fun',
-      timeControl: 'unlimited'
+      timeControl: 'unlimited',
     });
   }
 
-  const selectedLevel = LEVEL_CONFIG.find(l => l.elo === selectedElo) || LEVEL_CONFIG[0];
+  const currentDiff = DIFFICULTIES.find((d) => d.elo === selectedElo) || DIFFICULTIES[0];
 
   return (
-    <div className="flex w-full items-center justify-center p-4 min-h-[80vh]">
-      <div className="ui-card w-full max-w-lg space-y-8 p-6 md:p-8">
-
-        {/* Header - Simple and clear */}
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-text-primary md:text-3xl">
+    <div className="flex w-full items-center justify-center p-4 min-h-[75vh]">
+      <div
+        className="w-full max-w-lg rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8 space-y-6 shadow-sm"
+        style={{ borderRadius: '12px' }}
+      >
+        {/* Header */}
+        <div className="text-center space-y-1.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--app-foreground)]">
             Chơi với máy
           </h1>
-          <p className="text-sm text-text-tertiary">
-            Chọn mức độ và bắt đầu ván cờ
+          <p className="text-xs sm:text-sm text-[var(--app-muted)]">
+            Chọn mức độ thách thức và màu quân phù hợp với mục tiêu hôm nay
           </p>
         </div>
 
-        {/* Level Selection - Primary focus */}
-        <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-text-secondary">Mức độ</h2>
-          <div className="grid gap-2">
-            {LEVEL_CONFIG.map((level) => (
-              <button
-                key={level.elo}
-                onClick={() => setSelectedElo(level.elo)}
-                className={`flex flex-col items-start rounded-lg border px-4 py-3 text-left transition-all duration-200 ${
-                  selectedElo === level.elo
-                    ? 'border-primary-500 bg-primary-500/10 ring-1 ring-primary-500/30'
-                    : 'border-border bg-bg-surface/50 hover:border-border-strong hover:bg-bg-surface'
-                }`}
-              >
-                <div className="flex w-full items-center justify-between">
-                  <span className={`font-semibold ${
-                    selectedElo === level.elo ? 'text-primary-300' : 'text-text-primary'
-                  }`}>
-                    {level.label}
-                  </span>
-                  <span className="text-xs text-text-disabled">
-                    ~{level.elo} Elo
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-text-tertiary">
-                  {level.description}
-                </p>
-              </button>
-            ))}
+        {/* Difficulty Selection: 4 segmented buttons with NO Elo displayed */}
+        <div className="space-y-2.5">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">
+            Mức độ
+          </label>
+
+          <div
+            aria-label="Chọn mức độ"
+            className="grid grid-cols-4 gap-1.5 p-1 rounded-[8px] bg-[var(--app-bg)] border border-[var(--app-border)]"
+          >
+            {DIFFICULTIES.map((diff) => {
+              const isSelected = selectedElo === diff.elo;
+              const Icon = diff.icon;
+              return (
+                <button
+                  key={diff.id}
+                  type="button"
+                  aria-pressed={isSelected}
+                  aria-label={diff.ariaLabel}
+                  onClick={() => setSelectedElo(diff.elo)}
+                  className={`flex flex-col items-center justify-center py-2.5 px-2 rounded-[6px] text-xs font-bold transition-all duration-150 min-h-[44px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)] ${
+                    isSelected
+                      ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)] shadow-xs'
+                      : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                  }`}
+                >
+                  <Icon
+                    className={`h-4 w-4 mb-1 ${
+                      isSelected ? 'text-[var(--app-accent)]' : 'text-[var(--app-subtle)]'
+                    }`}
+                  />
+                  <span>{diff.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Dynamic description box */}
+          <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3.5 text-xs text-[var(--app-foreground)] space-y-1">
+            <p className="font-medium leading-relaxed">{currentDiff.description}</p>
+            <p className="text-[11px] text-[var(--app-muted)]">
+              <span className="font-semibold text-[var(--app-subtle)]">Đặc điểm Bot: </span>
+              {currentDiff.botNotes}
+            </p>
           </div>
         </div>
 
-        {/* Color Selection - Simple with explanation */}
-        <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-text-secondary">Màu quân</h2>
-          <div className="flex gap-3">
-            {COLOR_OPTIONS.map(c => (
-              <button
-                key={c.id}
-                onClick={() => setSelectedColor(c.id)}
-                className={`flex-1 flex flex-col items-center rounded-lg border px-3 py-4 transition-all duration-200 ${
-                  selectedColor === c.id
-                    ? 'border-primary-500 bg-primary-500/10 ring-1 ring-primary-500/30'
-                    : 'border-border bg-bg-surface/50 hover:border-border-strong'
-                }`}
-              >
-                <span className="text-3xl mb-1">{c.icon}</span>
-                <span className={`text-sm font-medium ${
-                  selectedColor === c.id ? 'text-primary-300' : 'text-text-secondary'
-                }`}>
-                  {c.label}
+        {/* Color Selection */}
+        <div className="space-y-2.5">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">
+            Màu quân
+          </label>
+
+          <div className="grid grid-cols-2 gap-3">
+            {/* White Option */}
+            <button
+              type="button"
+              aria-label="Trắng - Bạn được đi trước"
+              onClick={() => setSelectedColor('w')}
+              className={`flex items-center gap-3 p-3 rounded-[8px] border transition-all duration-150 min-h-[52px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)] text-left ${
+                selectedColor === 'w'
+                  ? 'border-[var(--app-accent)] bg-[var(--app-accent-soft)] text-[var(--app-foreground)] ring-1 ring-[var(--app-accent)]'
+                  : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)]'
+              }`}
+            >
+              <span className="text-2xl select-none">♔</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-[var(--app-foreground)]">Trắng</span>
+                  {selectedColor === 'w' && <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />}
+                </div>
+                <span className="text-[11px] text-[var(--app-muted)] block">
+                  Đi trước
                 </span>
-                <span className="text-xs text-text-disabled mt-1">
-                  {c.hint}
+              </div>
+            </button>
+
+            {/* Black Option */}
+            <button
+              type="button"
+              aria-label="Đen - Máy đi trước"
+              onClick={() => setSelectedColor('b')}
+              className={`flex items-center gap-3 p-3 rounded-[8px] border transition-all duration-150 min-h-[52px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)] text-left ${
+                selectedColor === 'b'
+                  ? 'border-[var(--app-accent)] bg-[var(--app-accent-soft)] text-[var(--app-foreground)] ring-1 ring-[var(--app-accent)]'
+                  : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)]'
+              }`}
+            >
+              <span className="text-2xl select-none">♚</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-[var(--app-foreground)]">Đen</span>
+                  {selectedColor === 'b' && <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />}
+                </div>
+                <span className="text-[11px] text-[var(--app-muted)] block">
+                  Máy đi trước
                 </span>
-              </button>
-            ))}
+              </div>
+            </button>
           </div>
         </div>
 
         {/* Start Button - Single CTA */}
         <div className="pt-2">
-          <button
+          <AppButton
+            variant="primary"
+            size="lg"
+            className="w-full h-12 text-base font-bold shadow-sm"
             onClick={handleStart}
-            className="ui-button-primary w-full py-4 text-lg font-bold shadow-lg transition hover:-translate-y-0.5"
+            leftIcon={<Swords className="h-4 w-4" />}
           >
             Bắt đầu ván
-          </button>
+          </AppButton>
         </div>
-
       </div>
     </div>
   );

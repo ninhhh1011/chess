@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth, useIsSupabaseConfigured } from '../contexts/AuthContext';
 import { signInWithEmail } from '../services/authService';
-import { Input } from '@/design-system/primitives/Input';
-import { Button } from '@/design-system/primitives/Button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/design-system/primitives/Card';
+import { AppButton } from '@/ui/AppButton';
+import { AppField } from '@/ui/AppField';
+import { ChessKnight } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ export default function Login() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, signIn } = useAuth();
+  const { isAuthenticated } = useAuth();
   const isSupabaseConfigured = useIsSupabaseConfigured();
 
   const from = location.state?.from?.pathname || '/training';
@@ -26,23 +26,21 @@ export default function Login() {
 
   if (!isSupabaseConfigured) {
     return (
-      <div className="min-h-screen grid place-items-center bg-bg-base px-4">
-        <Card variant="elevated" className="max-w-md text-center">
-          <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm">
-            <span className="text-5xl">♔</span>
+      <div className="grid place-items-center py-12 px-4 min-h-[70vh]">
+        <div className="w-full max-w-md rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-8 text-center space-y-6 shadow-sm">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[10px] bg-[var(--app-surface-raised)] border border-[var(--app-border)] text-[var(--app-accent)]">
+            <ChessKnight className="h-7 w-7" />
           </div>
-          <CardHeader className="mb-0">
-            <CardTitle as="h1">Đăng nhập</CardTitle>
-            <CardDescription>
-              Tính năng đăng nhập chưa được cấu hình. Vui lòng liên hệ quản trị viên để kích hoạt.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => navigate('/')}>
-              Quay về trang chủ
-            </Button>
-          </CardContent>
-        </Card>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-[var(--app-foreground)]">Đăng nhập</h1>
+            <p className="text-xs text-[var(--app-muted)] leading-relaxed">
+              Tính năng xác thực trực tuyến chưa được cấu hình trên môi trường này. Tiến độ của bạn vẫn được lưu trữ cục bộ trên trình duyệt.
+            </p>
+          </div>
+          <AppButton variant="secondary" onClick={() => navigate('/')} className="w-full">
+            Quay về trang chủ
+          </AppButton>
+        </div>
       </div>
     );
   }
@@ -57,72 +55,75 @@ export default function Login() {
     if (result.success) {
       navigate(from, { replace: true });
     } else {
-      setError(result.error || 'Đăng nhập thất bại. Vui lòng thử lại.');
+      setError(result.error || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
     }
 
     setLoading(false);
   }
 
   return (
-    <div className="min-h-screen grid place-items-center bg-bg-base px-4">
-      <Card variant="elevated" padding="lg" className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm">
-            <span className="text-3xl">♔</span>
+    <div className="grid place-items-center py-8 px-4 min-h-[75vh]">
+      <div className="w-full max-w-md rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="text-center space-y-2">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[10px] bg-[var(--app-accent)] text-[#0C100E] shadow-sm">
+            <ChessKnight className="h-6 w-6" />
           </div>
-          <CardTitle as="h1">Đăng nhập</CardTitle>
-          <CardDescription>Vào tài khoản để đồng bộ tiến độ</CardDescription>
-        </CardHeader>
+          <h1 className="text-2xl font-bold text-[var(--app-foreground)]">Đăng nhập</h1>
+          <p className="text-xs text-[var(--app-muted)]">Đăng nhập để đồng bộ tiến độ và bài tập</p>
+        </div>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="rounded-xl bg-error/20 p-4 text-sm text-error">
-                {error}
-              </div>
-            )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="rounded-[8px] border border-[var(--app-danger)]/30 bg-[var(--app-danger)]/10 p-3 text-xs text-[var(--app-danger)] font-medium">
+              {error}
+            </div>
+          )}
 
-            <Input
-              type="email"
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@example.com"
-              required
-            />
+          <AppField
+            type="email"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email@example.com"
+            required
+            disabled={loading}
+          />
 
-            <Input
-              type="password"
-              label="Mật khẩu"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
+          <AppField
+            type="password"
+            label="Mật khẩu"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            disabled={loading}
+          />
 
-            <Button
+          <div className="pt-2">
+            <AppButton
               type="submit"
+              variant="primary"
+              size="lg"
               disabled={loading}
               isLoading={loading}
-              className="w-full mt-6"
+              className="w-full font-bold"
             >
-              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-            </Button>
-          </form>
+              Đăng nhập
+            </AppButton>
+          </div>
+        </form>
 
-          <p className="mt-6 text-center text-text-secondary">
-            Chưa có tài khoản?{' '}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/signup')}
-              className="inline ml-1"
-            >
-              Đăng ký ngay
-            </Button>
-          </p>
-        </CardContent>
-      </Card>
+        <div className="pt-2 border-t border-[var(--app-border)] text-center text-xs text-[var(--app-muted)]">
+          <span>Chưa có tài khoản? </span>
+          <button
+            type="button"
+            onClick={() => navigate('/signup')}
+            className="text-[var(--app-accent)] font-semibold hover:underline ml-1 cursor-pointer"
+          >
+            Đăng ký ngay
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

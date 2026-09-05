@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import type { AnalysisFactV1, CoachResponse } from '../../types/analysis';
 import { generateCoachExplanation } from '../../services/analysis/coach';
+import { AppButton } from '../../ui';
 
 interface AnalysisCoachProps {
   facts: AnalysisFactV1[];
@@ -70,19 +71,20 @@ export default function AnalysisCoach({
   return (
     <div className="space-y-4">
       {/* Coach Button */}
-      <button
+      <AppButton
         onClick={handleAskCoach}
         disabled={isLoading}
-        className="btn-primary w-full"
+        variant="primary"
+        className="w-full"
       >
         {isLoading ? 'Đang phân tích...' : 'Hỏi Quân sư về ván này'}
-      </button>
+      </AppButton>
 
       {/* Coach Response */}
       {coachResponse && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+        <div className="rounded-lg border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-lg">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--app-accent-soft)] text-lg">
               🤖
             </div>
             <div className="flex-1">

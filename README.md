@@ -4,10 +4,11 @@
 
 ![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?logo=vite)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
-![Tailwind](https://img.shields.io/badge/Tailwind-Luxury-0A0A0F?logo=tailwind-css)
+![Tailwind](https://img.shields.io/badge/Tailwind-v4-0A0A0F?logo=tailwind-css)
+![HeroUI](https://img.shields.io/badge/HeroUI-v3.2.4-141A17)
 ![License](https://img.shields.io/badge/License-MIT-818CF8)
 
-**Chơi cờ vua với bot AI, học và cải thiện kỹ năng**
+**Học từ chính những nước cờ của bạn**
 
 </div>
 
@@ -16,7 +17,7 @@
 ## ✨ Features
 
 ### 🎮 Gameplay
-- **Local & Bot Play** - Đấu với Ninh Lốp Trưởng bot từ 400-2000 ELO
+- **Local & Bot Play** - Đấu với Ninh Lốp Trưởng bot phân tầng 4 cấp độ
 - **Interactive Board** - Click hoặc kéo quân, legal move hints, last-move highlight
 - **Sound Effects** - Move, capture, castling, promotion, victory/defeat sounds
 - **Keyboard Shortcuts** - U=undo, H=hint, F=flip, R=resign, N=new game
@@ -24,13 +25,13 @@
 
 ### 🤖 AI Features
 - **Stockfish Engine** - Phân tích thế cờ và gợi ý nước đi tốt nhất
-- **AI Coach** - Quân sư Ninh phân tích nước đi của bạn
+- **AI Coach** - Quân sư Ninh phân tích nước đi của bạn với nguồn minh bạch
 - **Move Annotations** - !!, !, !?, ?!, ?, ?? badges cho từng nước
 
 ### 🎨 Design
-- **Luxury Dark Theme** - Obsidian aesthetic với indigo accent
-- **6 Board Themes** - Classic, Wood, Marble, Minimal, Ocean Blue, Forest
-- **Smooth Animations** - Page transitions và piece animations
+- **Option C Theme** - Charcoal + Pine + Copper phong cách hiện đại
+- **HeroUI Wrapper** - Trải nghiệm UI nhất quán, chuẩn accessibility
+- **Quiet Motion** - Micro-animations tinh tế, hỗ trợ prefers-reduced-motion
 - **PWA Ready** - Install như native app, offline support
 
 ### 📚 Learning

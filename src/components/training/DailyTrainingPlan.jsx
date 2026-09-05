@@ -1,3 +1,5 @@
+import { AppButton } from '../../ui';
+
 /**
  * Daily Training Plan Component
  *
@@ -23,27 +25,29 @@ export default function DailyTrainingPlan({ plan, onRegenerate, onStartLesson, o
   const firstChallenge = challenges[0];
 
   return (
-    <article className="rounded-xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 via-white/[.07] to-white/[.04] p-6 shadow-sm">
+    <article className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.24em] text-emerald-500/80">Lộ trình hôm nay</p>
-          <h2 className="mt-2 text-3xl font-bold">Hôm nay bạn nên luyện</h2>
+          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--app-accent)]">Lộ trình hôm nay</p>
+          <h2 className="mt-1 text-2xl font-bold text-[var(--app-foreground)]">Hôm nay bạn nên luyện</h2>
         </div>
-        <button className="btn-secondary" onClick={onRegenerate}>Tạo lại lộ trình hôm nay</button>
+        <AppButton size="sm" variant="secondary" onClick={onRegenerate}>
+          Tạo lại lộ trình hôm nay
+        </AppButton>
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-4">
         {/* Lesson */}
-        <div className="rounded-xl bg-slate-900 p-5">
-          <p className="font-bold text-emerald-500">1. Học</p>
-          <h3 className="mt-2 text-xl font-extrabold">{firstLesson?.title || 'Ôn kiến thức cơ bản'}</h3>
-          <p className="mt-2 text-sm leading-6 text-slate-400">{firstLesson?.reason || 'Chưa đủ dữ liệu nên ôn lại bài cũ.'}</p>
+        <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4">
+          <p className="text-xs font-semibold text-[var(--app-accent)]">1. Học</p>
+          <h3 className="mt-1.5 text-base font-bold text-[var(--app-foreground)]">{firstLesson?.title || 'Ôn kiến thức cơ bản'}</h3>
+          <p className="mt-1.5 text-xs leading-relaxed text-[var(--app-muted)]">{firstLesson?.reason || 'Chưa đủ dữ liệu nên ôn lại bài cũ.'}</p>
         </div>
 
         {/* Exercises */}
-        <div className="rounded-xl bg-slate-900 p-5">
-          <p className="font-bold text-emerald-500">2. Làm bài tập</p>
-          <ul className="mt-2 space-y-2 text-sm text-slate-300">
+        <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4">
+          <p className="text-xs font-semibold text-[var(--app-accent)]">2. Làm bài tập</p>
+          <ul className="mt-1.5 space-y-1 text-xs text-[var(--app-muted)]">
             {exercises.length > 0 ? (
               exercises.slice(0, 5).map((ex, i) => (
                 <li key={ex.id || i}>• {ex.title}</li>
@@ -55,24 +59,30 @@ export default function DailyTrainingPlan({ plan, onRegenerate, onStartLesson, o
         </div>
 
         {/* Opening */}
-        <div className="rounded-xl bg-slate-900 p-5">
-          <p className="font-bold text-emerald-500">3. Khai cuộc</p>
-          <h3 className="mt-2 text-xl font-extrabold">{openings[0]?.title || 'Khai cuộc cơ bản'}</h3>
-          <p className="mt-2 text-sm leading-6 text-slate-400">{openings[0]?.reason || 'Luyện 3-5 nước đầu để xây nền khai cuộc.'}</p>
+        <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4">
+          <p className="text-xs font-semibold text-[var(--app-accent)]">3. Khai cuộc</p>
+          <h3 className="mt-1.5 text-base font-bold text-[var(--app-foreground)]">{openings[0]?.title || 'Khai cuộc cơ bản'}</h3>
+          <p className="mt-1.5 text-xs leading-relaxed text-[var(--app-muted)]">{openings[0]?.reason || 'Luyện 3-5 nước đầu để xây nền khai cuộc.'}</p>
         </div>
 
         {/* Challenge */}
-        <div className="rounded-xl bg-slate-900 p-5">
-          <p className="font-bold text-emerald-500">4. Chơi</p>
-          <p className="mt-2 text-sm leading-6 text-slate-300">{firstChallenge?.reason || 'Chơi 1 ván và review lại.'}</p>
+        <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4">
+          <p className="text-xs font-semibold text-[var(--app-accent)]">4. Chơi</p>
+          <p className="mt-1.5 text-xs leading-relaxed text-[var(--app-muted)]">{firstChallenge?.reason || 'Chơi 1 ván và review lại.'}</p>
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-3">
-        <button className="btn-primary" onClick={onStartLesson}>Bắt đầu bài học đề xuất</button>
-        <button className="btn-secondary" onClick={onStartExercises}>Làm bài tập đề xuất</button>
+      <div className="mt-6 flex flex-wrap gap-2">
+        <AppButton variant="primary" onClick={onStartLesson}>
+          Bắt đầu bài học đề xuất
+        </AppButton>
+        <AppButton variant="secondary" onClick={onStartExercises}>
+          Làm bài tập đề xuất
+        </AppButton>
         {openings.length > 0 && (
-          <button className="btn-secondary" onClick={onStartOpening}>Lò luyện khai cuộc</button>
+          <AppButton variant="secondary" onClick={onStartOpening}>
+            Lò luyện khai cuộc
+          </AppButton>
         )}
       </div>
     </article>

@@ -1,18 +1,33 @@
 import { Link } from 'react-router-dom';
 import OpeningProgress from './OpeningProgress';
+import { AppButton } from '../../ui';
 
-const sideLabel = { white:'Cho Trắng', black:'Cho Đen', both:'Hai bên' };
+const sideLabel = { white: 'Cho Trắng', black: 'Cho Đen', both: 'Hai bên' };
 
 export default function OpeningCard({ opening, progress }) {
-  return <article className="rounded-xl border border-slate-800 bg-slate-800 p-6  transition hover:border-slate-600 hover:bg-slate-800/80 hover:border-emerald-500/40">
-    <div className="flex flex-wrap gap-2">
-      <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-bold uppercase text-emerald-500">{sideLabel[opening.side]}</span>
-      <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-bold uppercase text-slate-300">{opening.level}</span>
-    </div>
-    <h2 className="mt-4 text-2xl font-bold">{opening.name}</h2>
-    <p className="mt-1 font-bold text-emerald-500">{opening.vietnameseName}</p>
-    <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">{opening.description}</p>
-    <div className="mt-5"><OpeningProgress progress={progress} /></div>
-    <Link to={`/openings/${opening.id}`} className="btn-primary mt-5 w-full">Vào lò luyện</Link>
-  </article>;
+  return (
+    <article className="flex flex-col justify-between rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-5 transition-colors duration-150 hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-hover)]">
+      <div>
+        <div className="flex flex-wrap gap-2">
+          <span className="rounded px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider bg-[var(--app-accent-soft)] text-[var(--app-accent)] border border-[var(--app-accent)]/20">
+            {sideLabel[opening.side]}
+          </span>
+          <span className="rounded px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider bg-[var(--app-surface-raised)] text-[var(--app-muted)] border border-[var(--app-border)]">
+            {opening.level}
+          </span>
+        </div>
+        <h2 className="mt-3.5 text-xl font-bold text-[var(--app-foreground)]">{opening.name}</h2>
+        <p className="mt-0.5 text-sm font-semibold text-[var(--app-accent)]">{opening.vietnameseName}</p>
+        <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-[var(--app-muted)]">{opening.description}</p>
+      </div>
+      <div className="mt-5 space-y-4">
+        <OpeningProgress progress={progress} />
+        <Link to={`/openings/${opening.id}`} className="block">
+          <AppButton variant="primary" className="w-full">
+            Vào lò luyện
+          </AppButton>
+        </Link>
+      </div>
+    </article>
+  );
 }

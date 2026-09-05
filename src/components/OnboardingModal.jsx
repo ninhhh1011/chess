@@ -1,4 +1,5 @@
 import { useOnboarding } from '../hooks/useOnboarding';
+import { AppButton } from '../ui';
 
 export default function OnboardingModal() {
   const { showTips, currentTip, tips, nextTip, dismiss } = useOnboarding();
@@ -9,45 +10,49 @@ export default function OnboardingModal() {
   const isLast = currentTip === tips.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-bg-elevated p-6 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="w-full max-w-sm rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-2xl">
         {/* Icon */}
-        <div className="mb-4 text-center text-5xl">{tip.icon}</div>
+        <div className="mb-4 text-center text-4xl">{tip.icon}</div>
 
         {/* Content */}
-        <h2 className="mb-2 text-center text-xl font-bold text-text-primary">
+        <h2 className="mb-2 text-center text-lg font-bold text-[var(--app-foreground)]">
           {tip.title}
         </h2>
-        <p className="mb-6 text-center text-sm text-text-secondary">
+        <p className="mb-6 text-center text-xs leading-relaxed text-[var(--app-muted)]">
           {tip.content}
         </p>
 
         {/* Progress dots */}
-        <div className="mb-4 flex justify-center gap-2">
+        <div className="mb-5 flex justify-center gap-1.5">
           {tips.map((_, i) => (
             <div
               key={i}
-              className={`h-2 w-2 rounded-full transition-colors ${
-                i === currentTip ? 'bg-primary-400' : 'bg-bg-surface'
+              className={`h-1.5 rounded-full transition-all duration-200 ${
+                i === currentTip ? 'w-5 bg-[var(--app-accent)]' : 'w-1.5 bg-[var(--app-surface-hover)]'
               }`}
             />
           ))}
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
-          <button
+        <div className="flex gap-2">
+          <AppButton
+            variant="secondary"
+            size="sm"
             onClick={dismiss}
-            className="flex-1 rounded-lg border border-border bg-bg-surface px-4 py-2.5 text-sm font-medium text-text-secondary transition hover:bg-bg-base"
+            className="flex-1"
           >
             Bỏ qua
-          </button>
-          <button
+          </AppButton>
+          <AppButton
+            variant="primary"
+            size="sm"
             onClick={nextTip}
-            className="flex-1 rounded-lg bg-primary-400 px-4 py-2.5 text-sm font-semibold text-bg-base transition hover:bg-primary-300"
+            className="flex-1"
           >
             {isLast ? 'Bắt đầu!' : 'Tiếp tục'}
-          </button>
+          </AppButton>
         </div>
       </div>
     </div>

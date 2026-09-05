@@ -1,25 +1,32 @@
-import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, ChessKnight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, LogOut, ChessKnight, ChevronDown, BookOpen, Brain, Trophy } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { signOutUser } from '@/services/authService';
-import { Button } from '@/design-system/primitives';
-import { cn } from '@/lib/utils';
-
-const navItems = [
-  { to: '/', label: 'Trang chủ' },
-  { to: '/learn', label: 'Học cờ' },
-  { to: '/play', label: 'Chơi cờ' },
-  { to: '/exercises', label: 'Bài tập' },
-  { to: '/openings', label: 'Khai cuộc' },
-  { to: '/training', label: 'Huấn luyện' },
-];
+import { AppButton } from '@/ui/AppButton';
+import { AppPopover } from '@/ui/AppPopover';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isAuthenticated } = useAuth();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Handle ESC key to close mobile menu
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen]);
 
   async function handleLogout() {
     const result = await signOutUser();
@@ -33,142 +40,315 @@ export default function Navbar() {
     ? String((user as { email?: string }).email?.[0] || 'U').toUpperCase()
     : 'U';
 
+  const userEmail = (user && typeof user === 'object' && 'email' in user)
+    ? String((user as { email?: string }).email || '')
+    : '';
+
+  const isPracticeActive = ['/learn', '/exercises', '/openings'].some((path) =>
+    location.pathname.startsWith(path)
+  );
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-bg-base/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 lg:px-6">
+    <header className="sticky top-0 z-40 border-b border-[var(--app-border)] bg-[var(--app-bg)]/95 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         {/* Logo */}
-        <NavLink to="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-600">
-            <ChessKnight className="h-5 w-5 text-white" />
+        <NavLink
+          to="/"
+          className="flex items-center gap-2.5 rounded-[8px] focus-visible:ring-2 focus-visible:ring-[var(--app-accent)]"
+          aria-label="Vua Cờ Trang chủ"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[var(--app-accent)] text-[#0C100E] shadow-sm">
+            <ChessKnight className="h-5 w-5" />
           </div>
-          <span className="text-lg font-semibold text-text-primary hidden sm:block">
+          <span className="text-base font-bold tracking-tight text-[var(--app-foreground)] hidden sm:block">
             Ninh Lốp Trưởng
           </span>
         </NavLink>
 
-        {/* Desktop Nav */}
-        <div className="hidden items-center gap-1 md:flex">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                cn(
-                  'relative px-4 py-2 text-sm font-medium transition-colors rounded-lg',
-                  isActive
-                    ? 'text-text-primary bg-bg-elevated'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-                )
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  {item.label}
-                  {isActive && (
-                    <motion.div
-                      layoutId="nav-indicator"
-                      className="absolute bottom-0 left-1/2 h-0.5 w-8 -translate-x-1/2 rounded-full bg-primary-500"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                </>
-              )}
-            </NavLink>
-          ))}
-        </div>
+        {/* Desktop Navigation */}
+        <nav aria-label="Điều hướng chính" className="hidden items-center gap-1.5 md:flex">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `px-3 py-1.5 text-sm font-medium rounded-[8px] transition-colors duration-150 ${
+                isActive
+                  ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                  : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface)]'
+              }`
+            }
+          >
+            Trang chủ
+          </NavLink>
 
-        {/* Desktop Auth */}
-        <div className="hidden items-center gap-3 md:flex">
+          <NavLink
+            to="/play"
+            className={({ isActive }) =>
+              `px-3 py-1.5 text-sm font-medium rounded-[8px] transition-colors duration-150 ${
+                isActive
+                  ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                  : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface)]'
+              }`
+            }
+          >
+            Chơi cờ
+          </NavLink>
+
+          {/* Luyện tập Popover */}
+          <AppPopover
+            placement="bottom-start"
+            trigger={
+              <button
+                type="button"
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-[8px] transition-colors duration-150 ${
+                  isPracticeActive
+                    ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                    : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface)]'
+                }`}
+              >
+                <span>Luyện tập</span>
+                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+              </button>
+            }
+          >
+            <div className="flex flex-col gap-1 w-48 p-1">
+              <NavLink
+                to="/learn"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-2 text-xs font-medium rounded-[6px] transition-colors ${
+                    isActive ? 'bg-[var(--app-surface-hover)] text-[var(--app-foreground)]' : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                  }`
+                }
+              >
+                <BookOpen className="h-4 w-4 text-[var(--app-accent)]" />
+                <span>Học cờ cơ bản</span>
+              </NavLink>
+
+              <NavLink
+                to="/exercises"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-2 text-xs font-medium rounded-[6px] transition-colors ${
+                    isActive ? 'bg-[var(--app-surface-hover)] text-[var(--app-foreground)]' : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                  }`
+                }
+              >
+                <Brain className="h-4 w-4 text-[var(--app-copper)]" />
+                <span>Bài tập chiến thuật</span>
+              </NavLink>
+
+              <NavLink
+                to="/openings"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-2 text-xs font-medium rounded-[6px] transition-colors ${
+                    isActive ? 'bg-[var(--app-surface-hover)] text-[var(--app-foreground)]' : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                  }`
+                }
+              >
+                <Trophy className="h-4 w-4 text-[var(--app-warning)]" />
+                <span>Kho Khai cuộc</span>
+              </NavLink>
+            </div>
+          </AppPopover>
+
+          <NavLink
+            to="/training"
+            className={({ isActive }) =>
+              `px-3 py-1.5 text-sm font-medium rounded-[8px] transition-colors duration-150 ${
+                isActive
+                  ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                  : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface)]'
+              }`
+            }
+          >
+            Tiến bộ
+          </NavLink>
+        </nav>
+
+        {/* Desktop Auth Section */}
+        <div className="hidden items-center gap-2.5 md:flex">
           {isAuthenticated ? (
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-elevated text-sm font-semibold text-primary-500 border border-border">
+            <div className="flex items-center gap-2.5">
+              <div
+                title={userEmail}
+                className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[var(--app-surface-raised)] border border-[var(--app-border)] text-xs font-bold text-[var(--app-accent)]"
+              >
                 {accountInitial}
               </div>
-              <Button variant="ghost" size="sm" onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
+              <AppButton
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                leftIcon={<LogOut className="h-3.5 w-3.5" />}
+              >
                 Đăng xuất
-              </Button>
+              </AppButton>
             </div>
           ) : (
             <>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/login')}>
+              <AppButton
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/login')}
+              >
                 Đăng nhập
-              </Button>
-              <Button variant="primary" size="sm" onClick={() => navigate('/signup')}>
+              </AppButton>
+              <AppButton
+                variant="primary"
+                size="sm"
+                onClick={() => navigate('/signup')}
+              >
                 Đăng ký
-              </Button>
+              </AppButton>
             </>
           )}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button - min 44x44px touch target */}
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary hover:bg-bg-elevated md:hidden"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
+          type="button"
+          className="flex h-11 w-11 items-center justify-center rounded-[8px] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface)] md:hidden cursor-pointer"
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          aria-expanded={isMobileMenuOpen}
+          aria-label={isMobileMenuOpen ? 'Đóng menu điều hướng' : 'Mở menu điều hướng'}
         >
           {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="border-t border-border overflow-hidden md:hidden"
-          >
-            <div className="mx-auto max-w-7xl px-4 py-4">
-              <div className="flex flex-col gap-1">
-                {navItems.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={({ isActive }) =>
-                      cn(
-                        'px-4 py-3 text-sm font-medium transition-colors rounded-lg',
-                        isActive
-                          ? 'text-text-primary bg-bg-elevated'
-                          : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-                      )
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </div>
+      {/* Mobile Drawer Menu */}
+      {isMobileMenuOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu điều hướng di động"
+          className="border-t border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-4 md:hidden animate-fadeIn"
+        >
+          <div className="flex flex-col gap-1">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `flex items-center min-h-[44px] px-3 py-2 text-sm font-medium rounded-[8px] transition-colors ${
+                  isActive
+                    ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                    : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                }`
+              }
+            >
+              Trang chủ
+            </NavLink>
 
-              <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4">
-                {isAuthenticated ? (
-                  <>
-                    <div className="flex items-center gap-3 px-4 py-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-elevated text-sm font-semibold text-primary-500">
-                        {accountInitial}
-                      </div>
-                      <span className="text-sm text-text-secondary">{(user && typeof user === 'object' && 'email' in user) ? (user as { email?: string }).email : ''}</span>
-                    </div>
-                    <Button variant="secondary" onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
-                      Đăng xuất
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="secondary" onClick={() => { navigate('/login'); setIsMobileMenuOpen(false); }}>
-                      Đăng nhập
-                    </Button>
-                    <Button variant="primary" onClick={() => { navigate('/signup'); setIsMobileMenuOpen(false); }}>
-                      Đăng ký
-                    </Button>
-                  </>
-                )}
+            <NavLink
+              to="/play"
+              className={({ isActive }) =>
+                `flex items-center min-h-[44px] px-3 py-2 text-sm font-medium rounded-[8px] transition-colors ${
+                  isActive
+                    ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                    : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                }`
+              }
+            >
+              Chơi cờ
+            </NavLink>
+
+            <NavLink
+              to="/learn"
+              className={({ isActive }) =>
+                `flex items-center min-h-[44px] px-3 py-2 text-sm font-medium rounded-[8px] transition-colors ${
+                  isActive
+                    ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                    : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                }`
+              }
+            >
+              Học cờ cơ bản
+            </NavLink>
+
+            <NavLink
+              to="/exercises"
+              className={({ isActive }) =>
+                `flex items-center min-h-[44px] px-3 py-2 text-sm font-medium rounded-[8px] transition-colors ${
+                  isActive
+                    ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                    : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                }`
+              }
+            >
+              Bài tập chiến thuật
+            </NavLink>
+
+            <NavLink
+              to="/openings"
+              className={({ isActive }) =>
+                `flex items-center min-h-[44px] px-3 py-2 text-sm font-medium rounded-[8px] transition-colors ${
+                  isActive
+                    ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                    : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                }`
+              }
+            >
+              Kho Khai cuộc
+            </NavLink>
+
+            <NavLink
+              to="/training"
+              className={({ isActive }) =>
+                `flex items-center min-h-[44px] px-3 py-2 text-sm font-medium rounded-[8px] transition-colors ${
+                  isActive
+                    ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)]'
+                    : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
+                }`
+              }
+            >
+              Tiến bộ & Huấn luyện
+            </NavLink>
+          </div>
+
+          <div className="mt-4 border-t border-[var(--app-border)] pt-4 flex flex-col gap-2">
+            {isAuthenticated ? (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[var(--app-surface-raised)] border border-[var(--app-border)] text-xs font-bold text-[var(--app-accent)]">
+                    {accountInitial}
+                  </div>
+                  <span className="text-xs text-[var(--app-muted)] truncate max-w-[180px]">{userEmail}</span>
+                </div>
+                <AppButton
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  leftIcon={<LogOut className="h-3.5 w-3.5" />}
+                >
+                  Đăng xuất
+                </AppButton>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <AppButton
+                  variant="secondary"
+                  size="md"
+                  onClick={() => {
+                    navigate('/login');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Đăng nhập
+                </AppButton>
+                <AppButton
+                  variant="primary"
+                  size="md"
+                  onClick={() => {
+                    navigate('/signup');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Đăng ký
+                </AppButton>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

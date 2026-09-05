@@ -22,6 +22,7 @@ export default defineConfig({
       'playwright.config.js',
       '**/node_modules/**',
       '**/.worktrees/**',
+      'ui-lab/**',
     ],
   },
 });

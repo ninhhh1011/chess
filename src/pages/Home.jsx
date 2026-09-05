@@ -1,50 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Swords, Search, BookOpen, TrendingUp, Play, Calendar, Globe } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile } from '../services/userProfileService';
-import logoImg from '../assets/avatarcoach.webp';
-import { BRAND_NAMES, brandName, BRAND_TAGLINE, BRAND_DESCRIPTION } from '../config/brand';
 import { createGame } from '../services/onlineGameService';
-import { useNavigate } from 'react-router-dom';
-
-const features = [
-  {
-    icon: '📚',
-    title: 'Học cờ từ cơ bản',
-    description: 'Nắm vững luật cờ, cách di chuyển quân và chiến thuật cơ bản.',
-    link: '/learn',
-  },
-  {
-    icon: '🎯',
-    title: 'Luyện bài tập',
-    description: 'Giải các bài tập chiến thuật để nâng cao kỹ năng.',
-    link: '/exercises',
-  },
-  {
-    icon: '♟️',
-    title: `Đấu với ${BRAND_NAMES.bot}`,
-    description: 'Thực hành với bot AI từ dễ đến khó, gáy vừa đủ.',
-    link: '/play',
-  },
-  {
-    icon: '📖',
-    title: BRAND_NAMES.openingTrainer,
-    description: 'Nắm vững khai cuộc phổ biến và ý tưởng chính.',
-    link: '/openings',
-  },
-  {
-    icon: '🎓',
-    title: 'Huấn luyện cá nhân',
-    description: 'Lộ trình học tập được cá nhân hóa theo trình độ.',
-    link: '/training',
-  },
-  {
-    icon: '🤖',
-    title: BRAND_NAMES.coach,
-    description: 'Trợ lý AI giúp bạn phân tích và sửa nước thiếu lực.',
-    link: '/play',
-  },
-];
+import { AppButton } from '@/ui/AppButton';
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
@@ -54,7 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     setProfile(getUserProfile());
-  }, []);
+  }, [user]);
 
   const handleCreateOnlineGame = async () => {
     if (!isAuthenticated) {
@@ -68,175 +28,192 @@ export default function Home() {
     } catch (error) {
       console.error(error);
       setIsCreatingGame(false);
-      alert('Failed to create online game');
+      alert('Không thể tạo phòng chơi online');
     }
   };
 
-  // Unicode piece color mapping - deterministic based on piece, not square
-  // White pieces: always light (good on dark squares, slightly dimmer on light squares)
-  // Black pieces: always dark (good on light squares, very dark on dark squares for contrast)
+  const flowSteps = [
+    {
+      step: 1,
+      title: '1. Chơi',
+      desc: 'Thi đấu với Bot ở nhịp độ thoải mái, tập trung vào chiến thuật thực tế.',
+      icon: Swords,
+    },
+    {
+      step: 2,
+      title: '2. Review bằng Stockfish',
+      desc: 'Tự động trích xuất tối đa 3 lỗi quan trọng nhất kèm gợi ý tối ưu.',
+      icon: Search,
+    },
+    {
+      step: 3,
+      title: '3. Luyện đúng lỗi',
+      desc: 'Giải bài tập chiến thuật sát với tình huống cờ bạn vừa mắc sai lầm.',
+      icon: BookOpen,
+    },
+    {
+      step: 4,
+      title: '4. Theo dõi tiến bộ',
+      desc: 'Lộ trình rèn luyện cá nhân hóa tự cập nhật theo kết quả từng ván.',
+      icon: TrendingUp,
+    },
+  ];
+
+  // Starting position pieces for the visual preview board
+  const startingPieces = [
+    '♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜',
+    '♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟',
+    '', '', '', '', '', '', '', '',
+    '', '', '', '', '', '', '', '',
+    '', '', '', '', '', '', '', '',
+    '', '', '', '', '', '', '', '',
+    '♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙',
+    '♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖',
+  ];
+
   const isWhitePiece = (piece) => ['♔', '♕', '♖', '♗', '♘', '♙'].includes(piece);
 
   return (
-    <div className="space-y-14 py-6">
+    <div className="space-y-12 py-2 sm:py-6">
       {/* Hero Section */}
-      <section className="relative grid items-center gap-12 lg:grid-cols-[1.1fr_.9fr]">
-        <div>
-          <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-slate-700/80 bg-slate-950 px-3 py-2 text-sm font-medium text-emerald-300">
-            <img src={logoImg} alt={brandName} className="h-5 w-5 rounded object-cover" />
-            {BRAND_TAGLINE}
-          </div>
-
-          <h1 className="text-5xl font-bold tracking-tight text-slate-100 md:text-7xl">
-            {brandName}
-          </h1>
-
-          <p className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-400">
-            {BRAND_DESCRIPTION}
-          </p>
-
-          {isAuthenticated && profile && (
-            <div className="mt-8 rounded-lg border border-slate-700/70 bg-slate-950/60 p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Tiến độ của bạn</p>
-              <div className="mt-3 flex items-center gap-8">
-                <div>
-                  <p className="text-2xl font-bold text-slate-100">{profile.gamesPlayed}</p>
-                  <p className="text-sm text-slate-400">Ván đã chơi</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-100 capitalize">{profile.currentLevel}</p>
-                  <p className="text-sm text-slate-400">Trình độ</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-100">{profile.exerciseStats.accuracy}%</p>
-                  <p className="text-sm text-slate-400">Độ chính xác</p>
-                </div>
-              </div>
+      <section className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-10 lg:p-12 shadow-xs">
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+          {/* Left Column: Heading & CTAs */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[var(--app-accent-soft)] text-[var(--app-accent)] text-xs font-semibold border border-[var(--app-accent)]/20">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-accent)]" />
+              <span>Phương pháp rèn luyện cờ thực chiến</span>
             </div>
-          )}
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link className="btn-primary text-base" to="/learn">
-              Bắt đầu học
-            </Link>
-            <Link className="btn-secondary text-base" to="/play">
-              Chơi ngay
-            </Link>
-            <button
-              className="btn-secondary gap-2 text-base"
-              onClick={handleCreateOnlineGame}
-              disabled={isCreatingGame}
-            >
-              {isCreatingGame ? 'Đang tạo ván...' : 'Chơi Online'}
-              <span className="rounded border border-amber-300/25 bg-amber-300/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase text-amber-200">
-                Beta
-              </span>
-            </button>
-            <Link className="btn-secondary text-base hidden sm:inline-block" to="/training">
-              Huấn luyện
-            </Link>
-          </div>
-        </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--app-foreground)] leading-tight">
+              Học từ chính những nước cờ của bạn
+            </h1>
 
-        {/* Chess board preview */}
-        <div className="relative">
-          <div className="relative rounded-lg border border-slate-700/70 bg-slate-950/70 p-3 shadow-[0_18px_50px_rgba(2,6,23,0.36)]">
-            <div className="grid grid-cols-8 overflow-hidden rounded-lg border border-slate-700/80">
-              {Array.from({ length: 64 }).map((_, i) => {
-                const row = Math.floor(i / 8);
-                const col = i % 8;
-                const isDark = (row + col) % 2 === 1;
+            <p className="text-base sm:text-lg text-[var(--app-muted)] leading-relaxed max-w-xl">
+              Chơi một ván, xem các lỗi quan trọng và luyện đúng kỹ năng cần cải thiện.
+            </p>
 
-                let piece = '';
-                if (i === 0 || i === 7) piece = '♜';
-                else if (i === 1 || i === 6) piece = '♞';
-                else if (i === 2 || i === 5) piece = '♝';
-                else if (i === 3) piece = '♛';
-                else if (i === 4) piece = '♚';
-                else if (i >= 8 && i <= 15) piece = '♟';
-                else if (i >= 48 && i <= 55) piece = '♙';
-                else if (i === 56 || i === 63) piece = '♖';
-                else if (i === 57 || i === 62) piece = '♘';
-                else if (i === 58 || i === 61) piece = '♗';
-                else if (i === 59) piece = '♕';
-                else if (i === 60) piece = '♔';
-
-                // Piece color is determined by the piece symbol, not square color
-                // This ensures deterministic rendering regardless of square
-                const pieceIsWhite = isWhitePiece(piece);
-                const pieceStyle = pieceIsWhite
-                  ? 'text-slate-100'  // Light pieces on light background = visible
-                  : 'text-slate-900'; // Dark pieces on light background = visible
-                  // Note: dark pieces on dark squares have low contrast (known limitation of single-color approach)
-
-                return (
-                  <div
-                    key={i}
-                    className={`aspect-square grid place-items-center text-4xl transition-transform hover:scale-105 ${
-                      isDark ? 'bg-slate-600' : 'bg-slate-300'
-                    } ${pieceStyle}`}
-                  >
-                    {piece}
+            {isAuthenticated && profile && (
+              <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4 max-w-lg">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--app-subtle)]">Tiến độ cá nhân</p>
+                <div className="mt-2.5 grid grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-xl font-bold text-[var(--app-foreground)] font-mono">{profile.gamesPlayed}</p>
+                    <p className="text-xs text-[var(--app-muted)]">Ván đã chơi</p>
                   </div>
-                );
-              })}
+                  <div>
+                    <p className="text-xl font-bold text-[var(--app-foreground)] capitalize">{profile.currentLevel}</p>
+                    <p className="text-xs text-[var(--app-muted)]">Cấp độ</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-[var(--app-accent)] font-mono">{profile.exerciseStats?.accuracy || 0}%</p>
+                    <p className="text-xs text-[var(--app-muted)]">Chính xác</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <AppButton
+                size="lg"
+                variant="primary"
+                onClick={() => navigate('/play')}
+                leftIcon={<Play className="h-4 w-4" />}
+              >
+                Chơi ván đầu tiên
+              </AppButton>
+
+              <AppButton
+                size="lg"
+                variant="secondary"
+                onClick={() => navigate('/training')}
+                leftIcon={<Calendar className="h-4 w-4" />}
+              >
+                Xem kế hoạch hôm nay
+              </AppButton>
+
+              <AppButton
+                size="lg"
+                variant="outline"
+                onClick={handleCreateOnlineGame}
+                disabled={isCreatingGame}
+                leftIcon={<Globe className="h-4 w-4" />}
+                rightIcon={
+                  <span className="rounded-[4px] border border-[var(--app-warning)]/30 bg-[var(--app-warning)]/10 px-1.5 py-0.2 text-[10px] font-semibold text-[var(--app-warning)]">
+                    Beta
+                  </span>
+                }
+              >
+                {isCreatingGame ? 'Đang tạo...' : 'Chơi Online'}
+              </AppButton>
+            </div>
+          </div>
+
+          {/* Right Column: Clean Visual Board Preview */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end">
+            <div className="w-full max-w-[380px]">
+              <div className="mb-2 flex items-center justify-between text-xs text-[var(--app-muted)]">
+                <span className="font-semibold">Ván cờ minh họa</span>
+                <span className="font-mono text-[var(--app-copper)] font-bold">Thế cờ khởi đầu</span>
+              </div>
+              <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-2.5 shadow-md">
+                <div className="grid grid-cols-8 overflow-hidden rounded-[6px] border border-[var(--app-border)] aspect-square">
+                  {startingPieces.map((piece, i) => {
+                    const row = Math.floor(i / 8);
+                    const col = i % 8;
+                    const isDark = (row + col) % 2 === 1;
+                    const pieceColor = isWhitePiece(piece)
+                      ? 'text-[#F1F4F2]'
+                      : 'text-[#141A17] drop-shadow-[0_1px_1px_rgba(255,255,255,0.2)]';
+
+                    return (
+                      <div
+                        key={i}
+                        className={`aspect-square grid place-items-center text-2xl sm:text-3xl select-none ${
+                          isDark ? 'bg-[#66745C]' : 'bg-[#DAD2BD]'
+                        } ${pieceColor}`}
+                      >
+                        {piece}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="pt-8">
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-slate-100 md:text-4xl">Tính năng nổi bật</h2>
-          <p className="mt-4 text-slate-400">Mọi thứ bạn cần để trở thành cao thủ cờ vua</p>
+      {/* 4-Step Improvement Loop */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-[var(--app-foreground)]">
+            Vòng lặp tiến bộ
+          </h2>
+          <span className="text-xs text-[var(--app-muted)]">Quy trình rèn luyện cờ thực chất</span>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature, index) => (
-            <Link
-              key={index}
-              to={feature.link}
-              className="group rounded-lg border border-slate-800 bg-slate-950/70 p-5 transition-all hover:border-slate-600 hover:bg-slate-900"
-            >
-              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-md border border-slate-700/70 bg-slate-900 text-2xl group-hover:bg-slate-800">
-                {feature.icon}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {flowSteps.map((step) => {
+            const Icon = step.icon;
+            return (
+              <div
+                key={step.step}
+                className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-5 space-y-2.5 transition-all hover:border-[var(--app-accent)]/40"
+                style={{ borderRadius: '10px' }}
+              >
+                <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[var(--app-surface)] text-[var(--app-accent)] border border-[var(--app-border)]">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <h3 className="text-sm font-bold text-[var(--app-foreground)]">
+                  {step.title}
+                </h3>
+                <p className="text-xs text-[var(--app-muted)] leading-relaxed">
+                  {step.desc}
+                </p>
               </div>
-              
-              <h3 className="text-lg font-bold text-slate-100">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">{feature.description}</p>
-              
-              <div className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-emerald-500 transition-all group-hover:gap-3">
-                Khám phá
-                <span>→</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="rounded-lg border border-slate-800 bg-slate-950/70 p-8 text-center sm:p-10">
-        <h2 className="text-3xl font-bold text-slate-100 md:text-4xl">Sẵn sàng bắt đầu?</h2>
-        <p className="mx-auto mt-6 max-w-2xl text-xl text-slate-300">
-          Chơi một ván, nhận nhận xét ngắn gọn, rồi luyện lại điểm yếu quan trọng nhất cùng Ninh.
-        </p>
-        
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-          {!isAuthenticated ? (
-            <>
-              <Link className="btn-primary text-base" to="/signup">
-                Tạo tài khoản miễn phí
-              </Link>
-              <Link className="btn-secondary text-base" to="/learn">
-                Học ngay không cần đăng ký
-              </Link>
-            </>
-          ) : (
-            <Link className="btn-primary text-base" to="/training">
-              Tiếp tục học tập
-            </Link>
-          )}
+            );
+          })}
         </div>
       </section>
     </div>

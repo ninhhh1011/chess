@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChessGame } from '../../contexts/ChessGameContext';
-import { BRAND_NAMES, RESULT_COPY } from '../../config/brand';
-import coachAvatar from '../../assets/avatarcoach.webp';
+import { RESULT_COPY } from '../../config/brand';
+import { AppDialog } from '@/ui/AppDialog';
+import { AppButton } from '@/ui/AppButton';
+import { AppStatus } from '@/ui/AppStatus';
+import { ChevronDown, ChevronUp, RotateCcw, Eye, Target, Sparkles } from 'lucide-react';
 
 function getResultKind({ game, playerColor, resultNotice }) {
   if (game.isDraw() || resultNotice?.toLowerCase().includes('hòa')) return 'draw';
@@ -27,6 +31,8 @@ export default function PostGameReview() {
     restartGameWithCurrentSettings,
   } = useChessGame();
 
+  const [showStats, setShowStats] = useState(false);
+
   const resultKind = getResultKind({ game, playerColor, resultNotice });
   const resultCopy = RESULT_COPY[resultKind];
 
@@ -39,6 +45,7 @@ export default function PostGameReview() {
     setPlayState('analysis');
   };
 
+  // Compute move counts and collect real mistakes
   let brilliant = 0;
   let great = 0;
   let bestMoves = 0;
@@ -46,165 +53,253 @@ export default function PostGameReview() {
   let inaccuracies = 0;
   let mistakes = 0;
   let blunders = 0;
-  let suggestedBestSan = null;
-  let largestLoss = 0;
 
-  Object.values(moveAnnotations).forEach((annotation) => {
+  const mistakeItems = [];
+
+  Object.entries(moveAnnotations || {}).forEach(([plyKey, annotation]) => {
+    const ply = parseInt(plyKey, 10);
+    const moveNumber = !isNaN(ply) ? Math.floor(ply / 2) + 1 : 1;
+    const isBlackMove = !isNaN(ply) ? ply % 2 === 1 : false;
+
     if (annotation.tone === 'blunder') {
       blunders += 1;
-      if (annotation.loss > largestLoss) {
-        largestLoss = annotation.loss;
-        suggestedBestSan = annotation.bestSan;
-      }
+      mistakeItems.push({
+        ply,
+        moveNumber,
+        isBlackMove,
+        ...annotation,
+        classification: 'blunder',
+      });
+    } else if (annotation.tone === 'mistake') {
+      mistakes += 1;
+      mistakeItems.push({
+        ply,
+        moveNumber,
+        isBlackMove,
+        ...annotation,
+        classification: 'mistake',
+      });
+    } else if (annotation.tone === 'inaccuracy') {
+      inaccuracies += 1;
+      mistakeItems.push({
+        ply,
+        moveNumber,
+        isBlackMove,
+        ...annotation,
+        classification: 'inaccuracy',
+      });
+    } else if (annotation.tone === 'good') {
+      good += 1;
+    } else if (annotation.tone === 'best') {
+      bestMoves += 1;
+    } else if (annotation.tone === 'great') {
+      great += 1;
+    } else if (annotation.tone === 'brilliant') {
+      brilliant += 1;
     }
-    if (annotation.tone === 'mistake') mistakes += 1;
-    if (annotation.tone === 'inaccuracy') inaccuracies += 1;
-    if (annotation.tone === 'good') good += 1;
-    if (annotation.tone === 'best') bestMoves += 1;
-    if (annotation.tone === 'great') great += 1;
-    if (annotation.tone === 'brilliant') brilliant += 1;
   });
 
-  // Coach advice based on game analysis
-  const getCoachAdvice = () => {
-    const goalAdvice = {
-      fun: 'Chơi tiếp để cải thiện nhé.',
-      opening: 'Tập trung vào phát triển quân và kiểm soát trung tâm.',
-      noblunder: 'Hãy chú ý đến các quân đang bị tấn công trước mỗi nước đi.',
-      checkmate: 'Tập phối hợp tấn công và xử lý chiếu hết.',
-    };
+  // Sort real mistakes by loss descending, take top 3
+  mistakeItems.sort((a, b) => (b.loss || 0) - (a.loss || 0));
+  const topMistakes = mistakeItems.slice(0, 3);
 
-    let advice = goalAdvice[gameGoal] || goalAdvice.fun;
-
-    if (blunders > 0) {
-      advice = `Có ${blunders} nước mắc sai lầm nghiêm trọng. Đây là điểm cần luyện tập trước.`;
-    } else if (mistakes > 2) {
-      advice = 'Một vài nước cần cải thiện. Hãy chậm lại và suy nghĩ kỹ hơn.';
-    } else if (inaccuracies > 5) {
-      advice = 'Còn nhiều chỗ cải thiện. Luyện thêm để có những nước chính xác hơn.';
-    } else if (resultKind === 'win') {
-      advice = 'Ván chơi tốt! Hãy tiếp tục phát huy và thử thách bản thân với cấp độ cao hơn.';
+  // One-line summary
+  const getSummaryLine = () => {
+    if (resultKind === 'win') {
+      return 'Ván cờ kết thúc xuất sắc. Bạn đã khai thác tốt các thời điểm quyết định.';
     }
-
-    return advice;
+    if (blunders > 0) {
+      return `Ván đấu có ${blunders} nước đi mất quân nghiêm trọng cần chú ý xem lại.`;
+    }
+    if (mistakes > 0) {
+      return 'Một vài nước đi thiếu chính xác đã khiến thế cờ chuyển dịch bất lợi.';
+    }
+    if (inaccuracies > 2) {
+      return 'Thế cờ ổn định nhưng còn một số nước đi chưa tận dụng tối đa lợi thế.';
+    }
+    return 'Ván cờ giằng co cân bằng cho đến những nước cờ cuối cùng.';
   };
 
-  // Practice recommendation based on weakness
-  const getPracticeRecommendation = () => {
-    if (blunders > 0) return { type: 'tactics', label: 'Bài tập chiến thuật', hint: 'Luyện tập các bài chiến thuật cơ bản' };
-    if (mistakes > 2) return { type: 'endgame', label: 'Tàn cuộc', hint: 'Học cách kết thúc ván cờ hiệu quả' };
-    if (inaccuracies > 3) return { type: 'opening', label: 'Khai cuộc', hint: 'Ôn lại các nguyên tắc khai cuộc' };
-    return { type: 'general', label: 'Luyện tập', hint: 'Chơi thêm để cải thiện' };
+  const badgeConfig = {
+    blunder: { label: 'Sai lầm nghiêm trọng', variant: 'danger' },
+    mistake: { label: 'Nước đi lỗi', variant: 'warning' },
+    inaccuracy: { label: 'Nước thiếu lực', variant: 'warning' },
   };
-
-  const coachAdvice = getCoachAdvice();
-  const recommendation = getPracticeRecommendation();
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-bg-base/80 p-4">
-      <div className="ui-card w-full max-w-lg space-y-6 p-8 shadow-2xl">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-text-primary md:text-3xl">{resultCopy.title}</h2>
-          <p className="mt-2 text-base font-medium text-primary-400">{resultCopy.description}</p>
+    <AppDialog
+      isOpen={true}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) handleReviewBoard();
+      }}
+      title={
+        <div className="flex items-center gap-2">
+          <span className="text-xl font-bold">{resultCopy.title}</span>
+          <AppStatus
+            variant={resultKind === 'win' ? 'teal' : resultKind === 'lose' ? 'danger' : 'basic'}
+            size="sm"
+          >
+            {resultKind === 'win' ? 'Thắng' : resultKind === 'lose' ? 'Thua' : 'Hòa'}
+          </AppStatus>
         </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-lg bg-bg-base p-4 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Tổng nước đi</div>
-            <div className="mt-1 text-2xl font-bold text-text-primary">{moveHistory.length}</div>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="flex flex-col justify-center rounded-lg bg-bg-base p-2 text-center">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Xuất sắc</div>
-              <div className="font-bold text-cyan-300">{brilliant}</div>
-            </div>
-            <div className="flex flex-col justify-center rounded-lg bg-bg-base p-2 text-center">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-primary-400">Tốt</div>
-              <div className="font-bold text-primary-300">{great + bestMoves}</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-between rounded-lg bg-bg-base p-4">
-          <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Bình thường</div>
-            <div className="mt-1 font-bold text-text-secondary">{good}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Thiếu lực</div>
-            <div className="mt-1 font-bold text-yellow-500">{inaccuracies}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Sai lầm</div>
-            <div className="mt-1 font-bold text-orange-500">{mistakes}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-disabled">Nghiêm trọng</div>
-            <div className="mt-1 font-bold text-red-500">{blunders}</div>
-          </div>
-        </div>
-
-        {largestLoss > 0 && (
-          <div className="rounded-lg bg-bg-base p-4 text-center text-sm">
-            <span className="text-text-tertiary">Nước sai nghiêm trọng nhất: </span>
-            <span className="font-bold text-rose-400">{suggestedBestSan || 'chưa có'}</span>
-          </div>
-        )}
-
-        {/* Coach advice */}
-        <div className="rounded-lg border border-primary-500/20 bg-primary-500/10 p-5 transition-all duration-200">
-          <div className="mb-2 flex items-center gap-2">
-            <img src={coachAvatar} alt="Coach" className="h-6 w-6 rounded-full" />
-            <h3 className="font-bold text-primary-400">{BRAND_NAMES.coach}</h3>
-          </div>
-          <p className="text-sm leading-relaxed text-primary-100/90">{coachAdvice}</p>
-        </div>
-
-        {/* Practice recommendation */}
-        <div className="rounded-lg border border-border bg-bg-surface/50 p-4 transition-all duration-200">
-          <div className="text-xs font-medium text-text-tertiary mb-2">Gợi ý luyện tập tiếp theo</div>
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium text-text-primary">{recommendation.label}</div>
-              <div className="text-xs text-text-disabled">{recommendation.hint}</div>
-            </div>
-            <button
-              onClick={() => {
-                const routes = {
-                  tactics: '/exercises',
-                  endgame: '/exercises',
-                  opening: '/openings',
-                  general: '/exercises',
-                };
-                navigate(routes[recommendation.type] || '/exercises');
-              }}
-              className="rounded-md border border-primary-500/30 px-3 py-1.5 text-xs font-medium text-primary-400 hover:bg-primary-500/10 transition-colors"
+      }
+      description={resultCopy.description}
+      maxWidth="max-w-xl"
+      footer={
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <AppButton
+              variant="outline"
+              size="sm"
+              onClick={handleReviewBoard}
+              leftIcon={<Eye className="h-3.5 w-3.5" />}
+              className="flex-1 sm:flex-initial"
             >
-              Luyện ngay
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3 pt-2">
-          <button onClick={handlePlayAgain} className="ui-button-primary w-full py-3">
-            {resultCopy.primary}
-          </button>
-          <div className="grid grid-cols-2 gap-3">
-            <button onClick={handleReviewBoard} className="ui-button-secondary w-full py-2">
-              {resultCopy.secondary}
-            </button>
-            <button
+              Xem bàn cờ
+            </AppButton>
+            <AppButton
+              variant="outline"
+              size="sm"
               onClick={() => {
                 newGame();
                 setPlayState('lobby');
               }}
-              className="ui-button-secondary w-full py-2"
+              className="flex-1 sm:flex-initial"
             >
               Đổi cấp độ
-            </button>
+            </AppButton>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <AppButton
+              variant="secondary"
+              size="sm"
+              onClick={() => navigate('/exercises')}
+              leftIcon={<Target className="h-3.5 w-3.5" />}
+              className="flex-1 sm:flex-initial"
+            >
+              Luyện bài
+            </AppButton>
+            <AppButton
+              variant="primary"
+              size="sm"
+              onClick={handlePlayAgain}
+              leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
+              className="flex-1 sm:flex-initial font-bold"
+            >
+              Chơi lại
+            </AppButton>
           </div>
         </div>
+      }
+    >
+      <div className="space-y-4">
+        {/* 1. Truthful One-line Summary */}
+        <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 text-xs text-[var(--app-foreground)] leading-relaxed flex items-start gap-2.5">
+          <Sparkles className="h-4 w-4 text-[var(--app-accent)] shrink-0 mt-0.5" />
+          <p>{getSummaryLine()}</p>
+        </div>
+
+        {/* 2. Top Mistakes Priority Section (Max 3) */}
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">
+              {topMistakes.length > 0 ? `Các nước cờ cần rút kinh nghiệm (${topMistakes.length})` : 'Đánh giá nước cờ'}
+            </h3>
+            {topMistakes.length > 0 && (
+              <span className="text-[11px] text-[var(--app-muted)]">Ưu tiên tối đa 3 lỗi lớn nhất</span>
+            )}
+          </div>
+
+          {topMistakes.length > 0 ? (
+            <div className="space-y-2">
+              {topMistakes.map((m, idx) => {
+                const conf = badgeConfig[m.classification] || badgeConfig.mistake;
+                return (
+                  <div
+                    key={idx}
+                    className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 space-y-2 text-xs"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-[var(--app-foreground)]">
+                          Nước {m.moveNumber}{m.isBlackMove ? ' (Đen)' : ' (Trắng)'}
+                        </span>
+                        <AppStatus variant={conf.variant} size="sm">
+                          {conf.label}
+                        </AppStatus>
+                      </div>
+                      {m.loss > 0 && (
+                        <span className="font-mono font-semibold text-[var(--app-danger)]">
+                          -{(m.loss).toFixed(1)}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[11px]">
+                      <div className="rounded-[6px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2">
+                        <span className="text-[10px] text-[var(--app-muted)] block">Bạn đã đi:</span>
+                        <span className="font-mono font-bold text-[var(--app-danger)] text-xs mt-0.5 block">
+                          {m.playedSan || 'Chưa rõ'}
+                        </span>
+                      </div>
+                      <div className="rounded-[6px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2">
+                        <span className="text-[10px] text-[var(--app-muted)] block">Nước tối ưu:</span>
+                        <span className="font-mono font-bold text-[var(--app-success)] text-xs mt-0.5 block">
+                          {m.bestSan || 'Chưa có gợi ý'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 text-xs text-[var(--app-muted)] text-center">
+              Không có nước đi sai lầm nghiêm trọng nào được ghi nhận trong ván đấu này.
+            </div>
+          )}
+        </div>
+
+        {/* 3. Collapsible Game Statistics (Collapsed by default) */}
+        <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)]/70 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setShowStats(!showStats)}
+            className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-raised)] transition-colors cursor-pointer"
+          >
+            <span>Thống kê chi tiết ({moveHistory?.length || 0} nước đi)</span>
+            {showStats ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+
+          {showStats && (
+            <div className="p-3 border-t border-[var(--app-border)] space-y-2.5">
+              <div className="grid grid-cols-4 gap-2 text-center text-xs">
+                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                  <div className="text-[10px] font-bold text-[var(--app-success)]">Tốt nhất</div>
+                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">
+                    {brilliant + great + bestMoves}
+                  </div>
+                </div>
+                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                  <div className="text-[10px] font-bold text-[var(--app-muted)]">Bình thường</div>
+                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">{good}</div>
+                </div>
+                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                  <div className="text-[10px] font-bold text-[var(--app-warning)]">Thiếu lực</div>
+                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">
+                    {inaccuracies + mistakes}
+                  </div>
+                </div>
+                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                  <div className="text-[10px] font-bold text-[var(--app-danger)]">Nghiêm trọng</div>
+                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">{blunders}</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </AppDialog>
   );
 }

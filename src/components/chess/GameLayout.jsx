@@ -21,15 +21,19 @@ import EngineAnalysisPanel from '../analysis/EngineAnalysisPanel';
 import AICoachPanel from '../AICoachPanel';
 import coachAvatar from '../../assets/avatarcoach.webp';
 import { BRAND_NAMES } from '../../config/brand';
+import { AppPopover } from '@/ui/AppPopover';
+import { AppTabs } from '@/ui/AppTabs';
+import { Settings, History, Activity, Sparkles } from 'lucide-react';
 
 /**
- * GameLayout - Production-quality chess app layout
+ * GameLayout - Option C layout
  *
- * Optimized for 100% desktop zoom:
- * - Board is the visual centerpiece
- * - Compact player strips
- * - Sidebar with collapsible coach panel
- * - No wasted vertical space
+ * Board is the visual centerpiece (~65% desktop width).
+ * Sidebar has exactly 3 main tabs:
+ * 1. Ván đấu (moves)
+ * 2. Phân tích (analysis)
+ * 3. Huấn luyện (coach)
+ * Settings is cleanly tucked into an AppPopover.
  */
 export default function GameLayout({
   liveAnalysis,
@@ -48,12 +52,11 @@ export default function GameLayout({
 }) {
   const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState, resignGame } = useChessGame();
   const [activeTab, setActiveTab] = useState('moves');
-  const [coachExpanded, setCoachExpanded] = useState(false);
   const [showResignConfirm, setShowResignConfirm] = useState(false);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
-    onHint: () => { setActiveTab('coach'); setCoachExpanded(true); },
+    onHint: () => { setActiveTab('coach'); },
     onResign: () => setShowResignConfirm(true),
   });
 
@@ -61,10 +64,9 @@ export default function GameLayout({
   useKeyboardNavigation();
 
   const tabs = [
-    { id: 'moves', label: BRAND_NAMES.moveHistory },
-    { id: 'analysis', label: BRAND_NAMES.analysis },
-    { id: 'coach', label: BRAND_NAMES.coach, iconType: 'avatar', iconSrc: coachAvatar },
-    { id: 'settings', label: 'Cài đặt' },
+    { id: 'moves', label: 'Ván đấu', icon: <History className="h-3.5 w-3.5" /> },
+    { id: 'analysis', label: 'Phân tích', icon: <Activity className="h-3.5 w-3.5" /> },
+    { id: 'coach', label: 'Huấn luyện', icon: <Sparkles className="h-3.5 w-3.5 text-[var(--app-accent)]" /> },
   ];
 
   return (
@@ -72,7 +74,7 @@ export default function GameLayout({
       {/* Pre-Game Lobby */}
       {playState === 'lobby' && <PreGameLobby />}
 
-      {/* Main Game Layout (Only visible if not lobby) */}
+      {/* Main Game Layout */}
       {playState !== 'lobby' && (
         <div className="relative">
           {/* Post-Game Review Modal */}
@@ -81,15 +83,15 @@ export default function GameLayout({
           {/* Resign Confirmation Modal */}
           {showResignConfirm && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="w-full max-w-sm rounded-lg border border-border bg-bg-elevated p-6 shadow-xl">
-                <h2 className="mb-2 text-lg font-bold text-text-primary">Xác nhận đầu hàng?</h2>
-                <p className="mb-4 text-sm text-text-secondary">
-                  Bạn sẽ thua ván cờ này. Bạn có chắc không?
+              <div className="w-full max-w-sm rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-xl space-y-4">
+                <h2 className="text-base font-bold text-[var(--app-foreground)]">Xác nhận đầu hàng?</h2>
+                <p className="text-xs text-[var(--app-muted)] leading-relaxed">
+                  Bạn sẽ kết thúc ván cờ này với kết quả thua. Bạn có chắc không?
                 </p>
-                <div className="flex gap-3">
+                <div className="flex gap-2 justify-end pt-2">
                   <button
                     onClick={() => setShowResignConfirm(false)}
-                    className="flex-1 rounded-md border border-border bg-bg-surface px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-base transition-colors"
+                    className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] px-3 py-1.5 text-xs font-medium text-[var(--app-muted)] hover:text-[var(--app-foreground)] transition-colors cursor-pointer"
                   >
                     Hủy
                   </button>
@@ -98,7 +100,7 @@ export default function GameLayout({
                       resignGame();
                       setShowResignConfirm(false);
                     }}
-                    className="flex-1 rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-500 transition-colors"
+                    className="rounded-[8px] bg-[var(--app-danger)] px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity cursor-pointer"
                   >
                     Đầu hàng
                   </button>
@@ -111,159 +113,139 @@ export default function GameLayout({
           {showStartNotice && playState === 'playing' && <StartNotice />}
           <PromotionModal />
 
-          {/* Main layout: board first, sidebar secondary */}
-          <div className="mx-auto grid w-full max-w-[1320px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_348px]">
+          {/* Main Layout Grid: Desktop board ~65%, sidebar ~340px */}
+          <div className="mx-auto grid w-full max-w-[1340px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]">
 
-        {/* LEFT COLUMN: Board area */}
-        <section className="min-w-0 rounded-lg border border-border bg-bg-base/35 p-2 sm:p-3">
-          {/* Game status bar - compact */}
-          <div className="mb-2">
-            <GameInfoBar botElo={botElo} />
-          </div>
+            {/* LEFT COLUMN: Board Area */}
+            <section className="min-w-0 rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5 sm:p-3 space-y-2">
+              {/* Game status bar */}
+              <GameInfoBar botElo={botElo} />
 
-          {/* Opponent strip - above board */}
-          <div className="mb-2">
-            <PlayerBar position="top" />
-          </div>
+              {/* Opponent strip - above board */}
+              <PlayerBar position="top" />
 
-          {/* Board with evaluation bar - hidden during gameplay, shown in review/analysis */}
-          <div className="flex items-start justify-center gap-2 rounded-lg border border-border bg-bg-surface/45 p-2">
-            <LiveEvaluationBar
-              analysis={liveAnalysis}
-              status={liveEvalStatus}
-              hidden={playState === 'playing' && !isReviewing}
-            />
-            <div className="flex min-w-0 flex-1 justify-center">
-              <ChessBoardPanel engineHint={engineHint} />
-            </div>
-          </div>
-
-          {/* Player strip - below board */}
-          <div className="mt-2">
-            <PlayerBar position="bottom" />
-          </div>
-
-          {/* Move hint - compact */}
-          {engineMove && (
-            <div className="mt-2">
-              <MoveHintDisplay engineMove={engineMove} />
-            </div>
-          )}
-        </section>
-
-        {/* RIGHT COLUMN: Sidebar */}
-        <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-20 lg:self-start">
-          <GameControls onHint={() => { setActiveTab('coach'); setCoachExpanded(true); }} requestHint={onRequestHint} />
-          <ReviewNavigator />
-
-          <div className="overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-[0_1px_0_rgba(255,255,255,0.03)]">
-            {/* Tabs - compact */}
-            <nav className="flex border-b border-border bg-bg-base">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 px-2 py-3 text-xs font-medium transition ${
-                    activeTab === tab.id
-                      ? 'border-b-2 border-primary-500 bg-bg-surface text-primary-300'
-                      : 'text-text-tertiary hover:bg-bg-surface hover:text-text-secondary'
-                  }`}
-                >
-                  {tab.iconType === 'avatar' ? (
-                    <img
-                      src={tab.iconSrc}
-                      alt={tab.label}
-                      className="mx-auto mb-1 h-5 w-5 rounded-md border border-border object-cover"
-                    />
-                  ) : tab.icon ? (
-                    <span className="block text-sm mb-0.5">{tab.icon}</span>
-                  ) : null}
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
-
-            {/* Tab content - reduced padding */}
-            <div className="overflow-y-auto p-3" style={{ maxHeight: 'calc(100svh - 10rem)' }}>
-              {activeTab === 'moves' && <MoveHistory />}
-
-              {activeTab === 'analysis' && (
-                <EngineAnalysisPanel
-                  fen={currentFen}
-                  onBestMove={setEngineHint}
-                  autoAnalyze={autoAnalyze}
-                  onAutoAnalyzeChange={setAutoAnalyze}
-                  autoComment={autoComment}
-                  review={review}
-                  isReviewing={isReviewing}
-                  onReview={reviewGameWithEngine}
+              {/* Board with evaluation bar */}
+              <div className="flex items-start justify-center gap-2 rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)]/40 p-2 sm:p-3">
+                <LiveEvaluationBar
+                  analysis={liveAnalysis}
+                  status={liveEvalStatus}
+                  hidden={playState === 'playing' && !isReviewing}
                 />
-              )}
+                <div className="flex min-w-0 flex-1 justify-center">
+                  <ChessBoardPanel engineHint={engineHint} />
+                </div>
+              </div>
 
-              {activeTab === 'coach' && (
-                <div className="space-y-3">
-                  {/* Coach header with collapse button */}
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-text-primary">{BRAND_NAMES.coach}</h3>
-                    <button
-                      onClick={() => setCoachExpanded(!coachExpanded)}
-                      className="text-xs text-text-tertiary hover:text-text-secondary"
-                    >
-                      {coachExpanded ? 'Thu gọn' : 'Mở rộng'}
-                    </button>
+              {/* Player strip - below board */}
+              <PlayerBar position="bottom" />
+
+              {/* Move hint */}
+              {engineMove && (
+                <div className="mt-1">
+                  <MoveHintDisplay engineMove={engineMove} />
+                </div>
+              )}
+            </section>
+
+            {/* RIGHT COLUMN: Sidebar (3 tabs + settings popover) */}
+            <aside className="flex w-full flex-col gap-2.5 lg:sticky lg:top-20 lg:self-start">
+              {/* Controls */}
+              <GameControls
+                onHint={() => { setActiveTab('coach'); }}
+                requestHint={onRequestHint}
+              />
+              <ReviewNavigator />
+
+              {/* Tab Box */}
+              <div className="overflow-hidden rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface)] shadow-xs">
+                {/* Tab Header with 3 main tabs + settings popover */}
+                <div className="flex items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-surface-raised)] pr-2">
+                  <div className="flex-1">
+                    <AppTabs
+                      tabs={tabs}
+                      selectedId={activeTab}
+                      onSelectionChange={(id) => setActiveTab(id)}
+                    />
                   </div>
 
-                  {/* Collapsed view - just avatar and brief hint */}
-                  {!coachExpanded && (
-                    <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-surface/50 p-3">
-                      <img src={coachAvatar} alt={BRAND_NAMES.coach} className="h-8 w-8 rounded-full" />
-                      <p className="text-xs text-text-tertiary">
-                        Nhấn "Mở rộng" để xem gợi ý từ AI Coach
-                      </p>
+                  {/* Settings Popover */}
+                  <AppPopover
+                    title="Cài đặt ván đấu"
+                    placement="bottom-end"
+                    trigger={
+                      <button
+                        type="button"
+                        aria-label="Cài đặt"
+                        className="flex h-7 w-7 items-center justify-center rounded-[6px] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] transition-colors cursor-pointer"
+                      >
+                        <Settings className="h-3.5 w-3.5" />
+                      </button>
+                    }
+                  >
+                    <div className="w-64 p-1">
+                      <BotSettings />
+                    </div>
+                  </AppPopover>
+                </div>
+
+                {/* Tab Content Panel */}
+                <div className="overflow-y-auto p-3" style={{ maxHeight: 'calc(100svh - 11rem)' }}>
+                  {/* Tab 1: Ván đấu (Move History) */}
+                  {activeTab === 'moves' && (
+                    <div className="space-y-2">
+                      <MoveHistory />
                     </div>
                   )}
 
-                  {/* Expanded view - full coach panel */}
-                  {coachExpanded && (
-                    <AICoachPanel
+                  {/* Tab 2: Phân tích (Engine Analysis) */}
+                  {activeTab === 'analysis' && (
+                    <EngineAnalysisPanel
                       fen={currentFen}
-                      pgn={currentPgn}
-                      history={moveHistory}
-                      stockfish={
-                        liveAnalysis
-                          ? {
-                              bestMove: liveAnalysis.bestMove,
-                              bestMoveSan: liveAnalysis.bestMove
-                                ? (() => {
-                                    try {
-                                      return getSanFromUci(liveAnalysis.fen, liveAnalysis.bestMove);
-                                } catch {
-                                  return null;
-                                }
-                              })()
-                            : null,
-                          evaluation: liveAnalysis.evaluation,
-                          pv: liveAnalysis.pv,
-                        }
-                      : null
-                  }
-                      turn={activeGame.turn()}
-                      status={isGameOver ? 'Kết thúc' : isCheck ? 'Chiếu' : 'Đang chơi'}
+                      onBestMove={setEngineHint}
+                      autoAnalyze={autoAnalyze}
+                      onAutoAnalyzeChange={setAutoAnalyze}
+                      autoComment={autoComment}
+                      review={review}
+                      isReviewing={isReviewing}
+                      onReview={reviewGameWithEngine}
                     />
                   )}
-                </div>
-              )}
 
-              {activeTab === 'settings' && (
-                <div className="space-y-3">
-                  <BotSettings />
+                  {/* Tab 3: Huấn luyện (AI Coach) */}
+                  {activeTab === 'coach' && (
+                    <div className="space-y-3">
+                      <AICoachPanel
+                        fen={currentFen}
+                        pgn={currentPgn}
+                        history={moveHistory}
+                        stockfish={
+                          liveAnalysis
+                            ? {
+                                bestMove: liveAnalysis.bestMove,
+                                bestMoveSan: liveAnalysis.bestMove
+                                  ? (() => {
+                                      try {
+                                        return getSanFromUci(liveAnalysis.fen, liveAnalysis.bestMove);
+                                      } catch {
+                                        return null;
+                                      }
+                                    })()
+                                  : null,
+                                evaluation: liveAnalysis.evaluation,
+                                pv: liveAnalysis.pv,
+                              }
+                            : null
+                        }
+                        turn={activeGame.turn()}
+                        status={isGameOver ? 'Kết thúc' : isCheck ? 'Chiếu' : 'Đang chơi'}
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            </aside>
           </div>
-        </aside>
-      </div>
-      </div>
+        </div>
       )}
     </>
   );
