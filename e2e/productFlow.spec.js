@@ -300,7 +300,7 @@ test.describe('Learning Loop E2E', () => {
           try {
             const parsed = JSON.parse(val);
             if (parsed.tasks && parsed.tasks.length > 0) {
-              const types = parsed.tasks.map((t: { type: string }) => t.type);
+              const types = parsed.tasks.map((t) => t.type);
               return {
                 hasLesson: types.includes('lesson'),
                 hasExercise: types.includes('exercise'),
@@ -308,7 +308,9 @@ test.describe('Learning Loop E2E', () => {
                 taskCount: parsed.tasks.length
               };
             }
-          } catch {}
+          } catch {
+            // ignore
+          }
         }
       }
       return null;
@@ -316,7 +318,7 @@ test.describe('Learning Loop E2E', () => {
 
     // Plan should have tasks
     expect(hasTasks).not.toBeNull();
-    expect(hasTasks!.taskCount).toBeGreaterThan(0);
+    expect(hasTasks.taskCount).toBeGreaterThan(0);
   });
 
   test('skill state persists after page reload', async ({ page }) => {
@@ -335,7 +337,9 @@ test.describe('Learning Loop E2E', () => {
             if (parsed.currentLevel !== undefined) {
               return parsed;
             }
-          } catch {}
+          } catch {
+            // ignore
+          }
         }
       }
       return null;
@@ -359,7 +363,9 @@ test.describe('Learning Loop E2E', () => {
             if (parsed.currentLevel !== undefined) {
               return parsed;
             }
-          } catch {}
+          } catch {
+            // ignore
+          }
         }
       }
       return null;
@@ -384,13 +390,15 @@ test.describe('Learning Loop E2E', () => {
             if (parsed.tasks && Array.isArray(parsed.tasks)) {
               return {
                 taskCount: parsed.tasks.length,
-                tasks: parsed.tasks.slice(0, 5).map((t: { type: string; title: string }) => ({
+                tasks: parsed.tasks.slice(0, 5).map((t) => ({
                   type: t.type,
                   title: t.title
                 }))
               };
             }
-          } catch {}
+          } catch {
+            // ignore
+          }
         }
       }
       return null;
@@ -398,7 +406,7 @@ test.describe('Learning Loop E2E', () => {
 
     // Should never have 0 tasks
     expect(planState).not.toBeNull();
-    expect(planState!.taskCount).toBeGreaterThan(0);
+    expect(planState.taskCount).toBeGreaterThan(0);
   });
 
   test('exercise completion updates skill state', async ({ page }) => {
@@ -427,7 +435,9 @@ test.describe('Learning Loop E2E', () => {
               localStorage.setItem(key, JSON.stringify(parsed));
               return parsed;
             }
-          } catch {}
+          } catch {
+            // ignore
+          }
         }
       }
       return null;
@@ -451,7 +461,9 @@ test.describe('Learning Loop E2E', () => {
             if (parsed.exerciseStats?.total > 0) {
               return parsed;
             }
-          } catch {}
+          } catch {
+            // ignore
+          }
         }
       }
       return null;
@@ -483,7 +495,7 @@ test.describe('Learning Loop E2E', () => {
   });
 
   test('no page errors during learning flow', async ({ page }) => {
-    const errors: string[] = [];
+    const errors = [];
     page.on('pageerror', err => {
       errors.push(err.message);
     });
