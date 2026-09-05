@@ -103,14 +103,23 @@ export default function Training() {
             </div>
             {profile.dailyTrainingPlan?.tasks?.length > 0 && (
               <div className="mt-4 space-y-3">
-                {profile.dailyTrainingPlan.tasks.map((task, i) => (
-                  <div key={i} className="flex items-center gap-3 rounded-xl bg-bg-elevated px-4 py-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-bold text-white">
-                      {i + 1}
-                    </span>
-                    <span className="text-text-primary">{task}</span>
-                  </div>
-                ))}
+                {profile.dailyTrainingPlan.tasks.map((task, i) => {
+                  const title = typeof task === 'string' ? task : (task.title || task.reason || 'Nhiệm vụ');
+                  const reason = typeof task === 'object' ? task.reason : null;
+                  return (
+                    <div key={task.id || i} className="flex items-start gap-3 rounded-xl bg-bg-elevated px-4 py-3">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white mt-0.5">
+                        {i + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-text-primary">{title}</p>
+                        {reason && reason !== title && (
+                          <p className="text-xs text-text-tertiary mt-0.5">{reason}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
