@@ -6,6 +6,7 @@ import OpeningCoachPanel from '../components/openings/OpeningCoachPanel';
 import OpeningMoveList from '../components/openings/OpeningMoveList';
 import OpeningProgress from '../components/openings/OpeningProgress';
 import OpeningTrainerBoard from '../components/openings/OpeningTrainerBoard';
+import { getOpeningById } from '../data/openings';
 import { getOpeningProgressById } from '../services/openingProgressService';
 import { playMoveSound } from '../utils/sound';
 import { AppButton } from '@/ui/AppButton';
