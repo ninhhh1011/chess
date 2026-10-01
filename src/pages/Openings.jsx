@@ -3,7 +3,7 @@ import OpeningCard from '../components/openings/OpeningCard';
 import { openings } from '../data/openings';
 import { getOpeningProgress } from '../services/openingProgressService';
 import { BRAND_NAMES } from '../config/brand';
-import { AppButton } from '../ui';
+import { AppTabs } from '@/ui/AppTabs';
 
 const filters = [
   { id: 'all', label: 'Tất cả' },
@@ -27,18 +27,17 @@ export default function Openings() {
       <p className="mt-2 max-w-2xl text-sm text-[var(--app-muted)]">
         Học ý tưởng khai cuộc và luyện các nước đầu tiên cho chắc tay.
       </p>
-      <div className="mt-5 flex flex-wrap gap-2">
-        {filters.map(f => (
-          <AppButton
-            key={f.id}
-            size="sm"
-            variant={filter === f.id ? 'primary' : 'secondary'}
-            onClick={() => setFilter(f.id)}
-          >
-            {f.label}
-          </AppButton>
-        ))}
+
+      <div className="mt-5">
+        <AppTabs
+          tabs={filters}
+          selectedId={filter}
+          onSelectionChange={(id) => setFilter(id)}
+          variant="pill"
+          ariaLabel="Lọc danh sách khai cuộc"
+        />
       </div>
+
       <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map(opening => (
           <OpeningCard key={opening.id} opening={opening} progress={progress[opening.id]} />

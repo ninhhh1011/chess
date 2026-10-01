@@ -6,10 +6,11 @@ import OpeningCoachPanel from '../components/openings/OpeningCoachPanel';
 import OpeningMoveList from '../components/openings/OpeningMoveList';
 import OpeningProgress from '../components/openings/OpeningProgress';
 import OpeningTrainerBoard from '../components/openings/OpeningTrainerBoard';
-import { getOpeningById } from '../data/openings';
 import { getOpeningProgressById } from '../services/openingProgressService';
 import { playMoveSound } from '../utils/sound';
-import { AppButton } from '../ui';
+import { AppButton } from '@/ui/AppButton';
+import { AppTabs } from '@/ui/AppTabs';
+import { AppSurface } from '@/ui/AppSurface';
 
 const moveDotStyle = {
   backgroundImage: 'radial-gradient(circle, rgba(16,24,20,0.38) 22%, transparent 24%)',
@@ -35,6 +36,11 @@ function buildFen(opening, currentIndex){
   }
   return { fen: game.fen(), error, game };
 }
+
+const modeTabs = [
+  { id: 'learn', label: 'Học khai cuộc' },
+  { id: 'practice', label: 'Luyện tập (Practice)' },
+];
 
 export default function OpeningDetail(){
   const { openingId } = useParams();
@@ -89,19 +95,24 @@ export default function OpeningDetail(){
           <h1 className="text-3xl font-bold text-[var(--app-foreground)] md:text-4xl">{opening.name}</h1>
           <p className="mt-1 text-base font-semibold text-[var(--app-accent)]">{opening.vietnameseName}</p>
         </div>
-        <div className="flex gap-2">
-          <AppButton size="sm" variant={mode === 'learn' ? 'primary' : 'secondary'} onClick={() => setMode('learn')}>
-            Learn Mode
-          </AppButton>
-          <AppButton size="sm" variant={mode === 'practice' ? 'primary' : 'secondary'} onClick={() => setMode('practice')}>
-            Practice Mode
-          </AppButton>
+        <div>
+          <AppTabs
+            tabs={modeTabs}
+            selectedId={mode}
+            onSelectionChange={(id) => setMode(id)}
+            variant="pill"
+            ariaLabel="Chọn chế độ học hoặc luyện tập khai cuộc"
+          />
         </div>
       </div>
 
       {mode === 'learn' ? (
         <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
-          <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+          <AppSurface
+            variant="base"
+            radius="md"
+            className="mx-auto aspect-square w-[min(100%,560px)] p-3 shadow-sm"
+          >
             <Chessboard
               options={{
                 position: boardState.fen,
@@ -116,8 +127,13 @@ export default function OpeningDetail(){
                 lightSquareStyle: { backgroundColor: '#DAD2BD' },
               }}
             />
-          </div>
-          <aside className="space-y-4 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-5">
+          </AppSurface>
+
+          <AppSurface
+            variant="base"
+            radius="md"
+            className="space-y-4 p-5 shadow-sm"
+          >
             <OpeningProgress progress={progress} />
             <p className="text-xs leading-relaxed text-[var(--app-muted)]">{opening.description}</p>
             {boardState.error && (
@@ -133,12 +149,12 @@ export default function OpeningDetail(){
                 ))}
               </ul>
             </div>
-            <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 text-xs">
+            <AppSurface variant="raised" radius="sm" className="p-3 text-xs">
               <span className="font-semibold text-[var(--app-foreground)]">Giải thích nước hiện tại:</span>
               <p className="mt-1 text-[var(--app-muted)]">
                 {currentMove ? `${currentMove.san}: ${currentMove.explanation}` : 'Bấm Bước tiếp theo để bắt đầu replay line.'}
               </p>
-            </div>
+            </AppSurface>
             <OpeningMoveList moves={opening.moves} currentIndex={currentIndex} />
             <div className="flex flex-wrap gap-2">
               <AppButton size="sm" variant="secondary" onClick={() => goToMove(Math.max(-1, currentIndex - 1))}>
@@ -163,7 +179,7 @@ export default function OpeningDetail(){
               </ul>
             </div>
             <OpeningCoachPanel opening={opening} />
-          </aside>
+          </AppSurface>
         </div>
       ) : (
         <OpeningTrainerBoard opening={opening} onProgress={setProgress} />

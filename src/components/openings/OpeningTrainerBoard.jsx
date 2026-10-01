@@ -3,7 +3,7 @@ import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { updateOpeningAttempt, updateOpeningProgressSM2 } from '../../services/openingProgressService';
 import { playCaptureSound, playMoveSound } from '../../utils/sound';
-import { AppButton } from '../../ui';
+import { AppButton, AppSurface } from '../../ui';
 
 const moveDotStyle = {
   backgroundImage: 'radial-gradient(circle, rgba(16,24,20,0.38) 22%, transparent 24%)',
@@ -129,7 +129,11 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
-      <div className="mx-auto aspect-square w-[min(100%,560px)] rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+      <AppSurface
+        variant="base"
+        radius="md"
+        className="mx-auto aspect-square w-[min(100%,560px)] p-3 shadow-sm"
+      >
         <Chessboard
           options={{
             position: game.fen(),
@@ -145,8 +149,12 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
             lightSquareStyle: { backgroundColor: '#DAD2BD' },
           }}
         />
-      </div>
-      <aside className="space-y-4 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-5">
+      </AppSurface>
+      <AppSurface
+        variant="base"
+        radius="md"
+        className="space-y-4 p-5 shadow-sm"
+      >
         <h2 className="text-xl font-bold text-[var(--app-foreground)]">Practice Mode</h2>
         <div className="rounded-md border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-3 text-xs font-medium text-[var(--app-accent-hover)]">
           {message}
@@ -168,7 +176,7 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
         <p className="text-xs text-[var(--app-subtle)]">Lỗi sai phiên này: {mistakes.length}</p>
 
         {showQualityRating && (
-          <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4">
+          <AppSurface variant="raised" radius="sm" className="p-4 space-y-2">
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--app-foreground)]">
               Đánh giá mức độ ghi nhớ (SM-2)
             </h3>
