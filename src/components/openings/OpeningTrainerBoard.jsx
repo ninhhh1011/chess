@@ -200,9 +200,9 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
                 0 - Hoàn toàn không nhớ gì
               </AppButton>
             </div>
-          </div>
+          </AppSurface>
         )}
-      </aside>
+      </AppSurface>
     </div>
   );
 }
