@@ -8,8 +8,8 @@ afterEach(() => {
 });
 
 // Polyfill ResizeObserver for JSDOM / Vitest environment (needed by HeroUI ScrollShadow & Tabs)
-if (typeof global.ResizeObserver === 'undefined') {
-  global.ResizeObserver = class ResizeObserver {
+if (typeof (globalThis as any).ResizeObserver === 'undefined') {
+  (globalThis as any).ResizeObserver = class ResizeObserver {
     observe() {}
     unobserve() {}
     disconnect() {}
