@@ -4,6 +4,9 @@ import { Chessboard } from 'react-chessboard';
 import { sameMove } from '../utils/chessStatus';
 import { UI_COPY } from '../config/brand';
 import { AppButton } from '@/ui/AppButton';
+import { AppCard } from '@/ui/AppCard';
+import { AppSurface } from '@/ui/AppSurface';
+import { AppStatus } from '@/ui/AppStatus';
 import { Lightbulb, RotateCcw } from 'lucide-react';
 
 function uciMove(value) {
@@ -97,7 +100,11 @@ export default function ExerciseBoard({ exercise, onResult, onAttempt }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(280px,540px)_1fr] items-start">
       {/* Board Column */}
-      <div className="mx-auto w-full max-w-[540px] rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-3.5 shadow-sm">
+      <AppSurface
+        variant="base"
+        radius="md"
+        className="mx-auto w-full max-w-[540px] p-3.5 shadow-sm"
+      >
         <Chessboard
           options={{
             position: game.fen(),
@@ -107,65 +114,76 @@ export default function ExerciseBoard({ exercise, onResult, onAttempt }) {
             lightSquareStyle: { backgroundColor: '#DAD2BD' },
           }}
         />
-      </div>
+      </AppSurface>
 
-      {/* Details & Controls Column */}
-      <div className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 space-y-4">
-        <div className="space-y-1.5">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[var(--app-accent)]">
-            Bài tập chiến thuật
-          </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-[var(--app-foreground)]">
-            {exercise.title}
-          </h2>
-          <p className="text-xs sm:text-sm leading-relaxed text-[var(--app-muted)]">
-            {exercise.description}
-          </p>
-        </div>
-
-        {/* Feedback Alert Box */}
-        <div
-          className={`rounded-[8px] p-3 text-xs font-semibold border transition-colors ${
-            isSuccess
-              ? 'border-[var(--app-success)]/40 bg-[var(--app-success)]/10 text-[var(--app-success)]'
-              : isWrong
-              ? 'border-[var(--app-danger)]/40 bg-[var(--app-danger)]/10 text-[var(--app-danger)]'
-              : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)]'
-          }`}
-        >
-          {message}
-        </div>
-
-        {showHint && (
-          <div className="rounded-[8px] bg-[var(--app-surface-raised)] p-3 border border-[var(--app-border)] text-xs text-[var(--app-muted)] leading-relaxed">
-            <span className="font-semibold text-[var(--app-foreground)]">{UI_COPY.hint}: </span>
-            {exercise.hint}
+      {/* Details & Controls Column - HeroUI AppCard Compound */}
+      <AppCard className="p-6 space-y-4">
+        <AppCard.Header className="space-y-1.5 p-0">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <AppStatus variant="teal" size="sm">
+              Bài tập chiến thuật
+            </AppStatus>
+            {exercise.tags?.map((tag) => (
+              <AppStatus key={tag} variant="basic" size="sm">
+                {tag}
+              </AppStatus>
+            ))}
           </div>
-        )}
+          <AppCard.Title className="text-xl sm:text-2xl font-bold text-[var(--app-foreground)]">
+            {exercise.title}
+          </AppCard.Title>
+          <AppCard.Description className="text-xs sm:text-sm leading-relaxed text-[var(--app-muted)]">
+            {exercise.description}
+          </AppCard.Description>
+        </AppCard.Header>
 
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          <AppButton
-            variant="secondary"
-            size="sm"
-            onClick={() => setShowHint(true)}
-            leftIcon={<Lightbulb className="h-3.5 w-3.5" />}
+        <AppCard.Content className="p-0 space-y-4">
+          {/* Feedback Alert Box */}
+          <div
+            className={`rounded-[8px] p-3 text-xs font-semibold border transition-colors ${
+              isSuccess
+                ? 'border-[var(--app-success)]/40 bg-[var(--app-success)]/10 text-[var(--app-success)]'
+                : isWrong
+                ? 'border-[var(--app-danger)]/40 bg-[var(--app-danger)]/10 text-[var(--app-danger)]'
+                : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)]'
+            }`}
           >
-            {UI_COPY.hint}
-          </AppButton>
-          <AppButton
-            variant="outline"
-            size="sm"
-            onClick={reset}
-            leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
-          >
-            Làm lại
-          </AppButton>
-        </div>
+            {message}
+          </div>
 
-        <p className="pt-2 text-[11px] font-mono text-[var(--app-subtle)] break-all border-t border-[var(--app-border)]">
-          FEN: {exercise.fen}
-        </p>
-      </div>
+          {showHint && (
+            <div className="rounded-[8px] bg-[var(--app-surface-raised)] p-3 border border-[var(--app-border)] text-xs text-[var(--app-muted)] leading-relaxed">
+              <span className="font-semibold text-[var(--app-foreground)]">{UI_COPY.hint}: </span>
+              {exercise.hint}
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <AppButton
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowHint(true)}
+              leftIcon={<Lightbulb className="h-3.5 w-3.5" />}
+            >
+              {UI_COPY.hint}
+            </AppButton>
+            <AppButton
+              variant="outline"
+              size="sm"
+              onClick={reset}
+              leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
+            >
+              Làm lại
+            </AppButton>
+          </div>
+        </AppCard.Content>
+
+        <AppCard.Footer className="p-0 pt-2 border-t border-[var(--app-border)]">
+          <p className="text-[11px] font-mono text-[var(--app-subtle)] break-all">
+            FEN: {exercise.fen}
+          </p>
+        </AppCard.Footer>
+      </AppCard>
     </div>
   );
 }

@@ -10,6 +10,8 @@ import { ChevronRight } from 'lucide-react';
 import { AppSpinner } from '@/ui/AppSpinner';
 import { AppSurface } from '@/ui/AppSurface';
 
+import { AppCard } from '@/ui/AppCard';
+
 const validExercises = exercises.filter((exercise) => validateExerciseRecord(exercise).valid);
 
 export default function Exercises() {
@@ -68,10 +70,10 @@ export default function Exercises() {
   if (error) {
     return (
       <div className="mx-auto max-w-6xl py-8">
-        <AppSurface className="border border-[var(--app-danger)]/30 p-8 text-center space-y-3">
-          <h1 className="text-xl font-bold text-[var(--app-danger)]">Đã xảy ra lỗi</h1>
-          <p className="text-xs text-[var(--app-muted)]">{error}</p>
-        </AppSurface>
+        <AppCard className="p-8 text-center space-y-3 border-[var(--app-danger)]/30">
+          <AppCard.Title className="text-xl font-bold text-[var(--app-danger)]">Đã xảy ra lỗi</AppCard.Title>
+          <AppCard.Description className="text-xs text-[var(--app-muted)]">{error}</AppCard.Description>
+        </AppCard>
       </div>
     );
   }
@@ -79,10 +81,12 @@ export default function Exercises() {
   if (availableExercises.length === 0) {
     return (
       <div className="mx-auto max-w-6xl py-8">
-        <AppSurface className="border border-[var(--app-border)] p-8 text-center space-y-3">
-          <h1 className="text-xl font-bold text-[var(--app-foreground)]">Chưa có bài tập</h1>
-          <p className="text-xs text-[var(--app-muted)]">Hiện tại chưa có bài tập nào khả dụng. Vui lòng quay lại sau.</p>
-        </AppSurface>
+        <AppCard className="p-8 text-center space-y-3">
+          <AppCard.Title className="text-xl font-bold text-[var(--app-foreground)]">Chưa có bài tập</AppCard.Title>
+          <AppCard.Description className="text-xs text-[var(--app-muted)]">
+            Hiện tại chưa có bài tập nào khả dụng. Vui lòng quay lại sau.
+          </AppCard.Description>
+        </AppCard>
       </div>
     );
   }
@@ -92,17 +96,21 @@ export default function Exercises() {
   if (!exercise) {
     return (
       <div className="mx-auto max-w-6xl py-8">
-        <AppSurface className="border border-[var(--app-border)] p-8 text-center space-y-4">
-          <h1 className="text-xl font-bold text-[var(--app-foreground)]">Không tìm thấy bài tập</h1>
-          <p className="text-xs text-[var(--app-muted)]">Không tìm thấy bài tập số #{index + 1}</p>
-          <AppButton
-            variant="primary"
-            size="sm"
-            onClick={() => setIndex(0)}
-          >
-            Quay về bài đầu
-          </AppButton>
-        </AppSurface>
+        <AppCard className="p-8 text-center space-y-4">
+          <AppCard.Title className="text-xl font-bold text-[var(--app-foreground)]">Không tìm thấy bài tập</AppCard.Title>
+          <AppCard.Description className="text-xs text-[var(--app-muted)]">
+            Không tìm thấy bài tập số #{index + 1}
+          </AppCard.Description>
+          <AppCard.Content className="p-0">
+            <AppButton
+              variant="primary"
+              size="sm"
+              onClick={() => setIndex(0)}
+            >
+              Quay về bài đầu
+            </AppButton>
+          </AppCard.Content>
+        </AppCard>
       </div>
     );
   }
@@ -130,17 +138,17 @@ export default function Exercises() {
       </div>
 
       {!corpusStatus.available && (
-        <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] px-4 py-3 text-xs text-[var(--app-muted)]" role="status">
+        <AppSurface variant="raised" radius="sm" className="px-4 py-3 text-xs text-[var(--app-muted)]" role="status">
           Kho bài tập mở rộng chưa khả dụng. Bạn đang luyện với {availableExercises.length} bài tập tích hợp, không phải corpus bên ngoài.
-        </div>
+        </AppSurface>
       )}
 
       {corpusStatus.available && (
-        <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] px-4 py-3 text-xs text-[var(--app-muted)]" role="status">
+        <AppSurface variant="raised" radius="sm" className="px-4 py-3 text-xs text-[var(--app-muted)]" role="status">
           Nguồn: <a className="underline" href={exercise.sourceUrl} target="_blank" rel="noreferrer">Lichess</a>
           {' · '}Giấy phép: <a className="underline" href={corpusStatus.licenseUrl} target="_blank" rel="noreferrer">{corpusStatus.licenseId}</a>
           {corpusStatus.datasetVersion ? ` · Dữ liệu ${corpusStatus.datasetVersion}` : ''}
-        </div>
+        </AppSurface>
       )}
 
       <ExerciseBoard
