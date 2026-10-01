@@ -4,6 +4,9 @@ import LessonCard from '../components/LessonCard';
 import { lessons } from '../data/lessons';
 import { getUserProfile, markLessonCompleted } from '../services/userProfileService';
 import { AppButton } from '@/ui/AppButton';
+import { AppCard } from '@/ui/AppCard';
+import { AppSurface } from '@/ui/AppSurface';
+import { AppStatus } from '@/ui/AppStatus';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 export default function Learn() {
@@ -28,43 +31,51 @@ export default function Learn() {
         </AppButton>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-          <article className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8 space-y-6">
-            <div className="space-y-2">
-              <span className="text-xs font-semibold text-[var(--app-accent)] uppercase tracking-wider">
-                Bài học cờ vua
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-bold text-[var(--app-foreground)]">
+          <AppCard className="p-6 sm:p-8 space-y-6">
+            <AppCard.Header className="space-y-2 p-0">
+              <div>
+                <AppStatus variant="teal" size="sm">
+                  Bài học cờ vua
+                </AppStatus>
+              </div>
+              <AppCard.Title className="text-2xl sm:text-3xl font-bold text-[var(--app-foreground)]">
                 {selected.title}
-              </h1>
-            </div>
+              </AppCard.Title>
+            </AppCard.Header>
 
-            <p className="text-sm leading-relaxed text-[var(--app-muted)]">
-              {selected.content}
-            </p>
-
-            <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4 space-y-2">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--app-foreground)]">
-                Ví dụ minh họa
-              </h2>
-              <p className="text-xs leading-relaxed text-[var(--app-muted)]">
-                {selected.example}
+            <AppCard.Content className="p-0 space-y-4">
+              <p className="text-sm leading-relaxed text-[var(--app-muted)]">
+                {selected.content}
               </p>
-            </div>
 
-            <div className="pt-2">
-              <AppButton
-                variant={isDone ? 'secondary' : 'primary'}
-                size="md"
-                onClick={() => completeLesson(selected.id)}
-                leftIcon={isDone ? <CheckCircle2 className="h-4 w-4 text-[var(--app-success)]" /> : undefined}
-              >
-                {isDone ? 'Đã hoàn thành bài học' : 'Đánh dấu đã hoàn thành'}
-              </AppButton>
-            </div>
-          </article>
+              <AppSurface variant="raised" radius="sm" className="p-4 space-y-2">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--app-foreground)]">
+                  Ví dụ minh họa
+                </h2>
+                <p className="text-xs leading-relaxed text-[var(--app-muted)]">
+                  {selected.example}
+                </p>
+              </AppSurface>
+
+              <div className="pt-2">
+                <AppButton
+                  variant={isDone ? 'secondary' : 'primary'}
+                  size="md"
+                  onClick={() => completeLesson(selected.id)}
+                  leftIcon={isDone ? <CheckCircle2 className="h-4 w-4 text-[var(--app-success)]" /> : undefined}
+                >
+                  {isDone ? 'Đã hoàn thành bài học' : 'Đánh dấu đã hoàn thành'}
+                </AppButton>
+              </div>
+            </AppCard.Content>
+          </AppCard>
 
           {/* Chess board example with Option C colors */}
-          <div className="mx-auto w-full max-w-[400px] rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-3 shadow-sm h-fit">
+          <AppSurface
+            variant="base"
+            radius="md"
+            className="mx-auto w-full max-w-[400px] p-3 shadow-sm h-fit"
+          >
             <Chessboard
               options={{
                 position: selected.fen,
@@ -74,7 +85,7 @@ export default function Learn() {
                 lightSquareStyle: { backgroundColor: '#DAD2BD' },
               }}
             />
-          </div>
+          </AppSurface>
         </div>
       </section>
     );
