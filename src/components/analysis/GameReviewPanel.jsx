@@ -1,6 +1,6 @@
 import MoveClassificationBadge from './MoveClassificationBadge';
 import { BRAND_NAMES } from '../../config/brand';
-import { AppButton } from '../../ui';
+import { AppButton, AppSurface } from '../../ui';
 
 export default function GameReviewPanel({ review, isReviewing, onReview, onSelectFact }) {
   return (
@@ -22,31 +22,32 @@ export default function GameReviewPanel({ review, isReviewing, onReview, onSelec
       ) : (
         <div className="mt-3.5 space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-center">
+            <AppSurface variant="base" radius="sm" className="p-2 text-center border border-[var(--app-border)]">
               <b className="text-sm font-bold text-[var(--app-foreground)]">{review.total}</b>
               <p className="text-[11px] text-[var(--app-muted)]">Nước</p>
-            </div>
-            <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-center">
+            </AppSurface>
+            <AppSurface variant="base" radius="sm" className="p-2 text-center border border-[var(--app-border)]">
               <b className="text-sm font-bold text-[var(--app-success)]">{review.counts.good}</b>
               <p className="text-[11px] text-[var(--app-muted)]">Ổn</p>
-            </div>
-            <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-center">
+            </AppSurface>
+            <AppSurface variant="base" radius="sm" className="p-2 text-center border border-[var(--app-border)]">
               <b className="text-sm font-bold text-[var(--app-warning)]">{review.counts.inaccuracy}</b>
               <p className="text-[11px] text-[var(--app-muted)]">Thiếu lực</p>
-            </div>
-            <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-center">
+            </AppSurface>
+            <AppSurface variant="base" radius="sm" className="p-2 text-center border border-[var(--app-border)]">
               <b className="text-sm font-bold text-[var(--app-danger)]">{review.counts.blunder}</b>
               <p className="text-[11px] text-[var(--app-muted)]">Tự hủy</p>
-            </div>
+            </AppSurface>
           </div>
           <div>
             <h3 className="text-xs font-semibold text-[var(--app-accent)]">Pha cần xem lại</h3>
             <div className="mt-2 space-y-1.5">
               {review.worstMoves.length ? (
                 review.worstMoves.map((item) => (
-                  <button
-                    type="button"
+                  <AppButton
                     key={item.evidenceId}
+                    variant="ghost"
+                    size="sm"
                     data-evidence-id={item.evidenceId}
                     data-engine-source={item.engineSource}
                     data-skill-tags={item.skillTags.join(',')}
@@ -58,13 +59,13 @@ export default function GameReviewPanel({ review, isReviewing, onReview, onSelec
                     data-played-uci={item.playedUci}
                     data-best-uci={item.bestUci}
                     onClick={() => onSelectFact?.(item)}
-                    className="flex w-full items-center gap-2 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-left text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-accent)]"
+                    className="flex w-full items-center justify-start gap-2 h-auto p-2 text-left text-xs bg-[var(--app-surface)] border border-[var(--app-border)] hover:bg-[var(--app-surface-hover)] rounded-md font-normal"
                   >
                     <MoveClassificationBadge type={item.classification.type} label={item.classification.label} />
                     <span className="text-[var(--app-muted)]">
                       #{item.index + 1}: <span className="font-mono font-medium text-[var(--app-foreground)]">{item.playedSan}</span>, Ninh mách <span className="font-mono font-medium text-[var(--app-copper)]">{item.bestSan}</span>
                     </span>
-                  </button>
+                  </AppButton>
                 ))
               ) : (
                 <p className="text-xs text-[var(--app-muted)]">Chưa thấy pha tự hủy lớn trong phần đã mổ.</p>

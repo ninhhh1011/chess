@@ -133,10 +133,10 @@ export default function PostGameReview({
           <ul className="space-y-2">
             {topMistakes.map((fact) => (
               <li key={fact.ply}>
-                <button
-                  type="button"
+                <AppButton
+                  variant="ghost"
                   onClick={() => handleMistakeClick(fact)}
-                  className={`w-full rounded-[8px] p-3 text-left transition-colors cursor-pointer ${
+                  className={`w-full block h-auto rounded-[8px] p-3 text-left transition-colors cursor-pointer ${
                     selectedMistake?.ply === fact.ply
                       ? 'bg-[var(--app-accent)]/15 border border-[var(--app-accent)]'
                       : 'bg-[var(--app-surface-raised)] hover:bg-[var(--app-surface-hover)] border border-[var(--app-border)]'
@@ -162,7 +162,7 @@ export default function PostGameReview({
                       <span>CPL: {fact.centipawnLoss}</span>
                     )}
                   </div>
-                </button>
+                </AppButton>
               </li>
             ))}
           </ul>

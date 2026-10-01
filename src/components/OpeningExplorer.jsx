@@ -90,11 +90,11 @@ export default function OpeningExplorer({ onSelect }) {
         ) : (
           filtered.map(opening => (
             <AppSurface key={opening.eco} className="border border-[var(--app-border)] overflow-hidden">
-              <button
-                type="button"
+              <AppButton
+                variant="ghost"
                 onClick={() => setExpanded(expanded === opening.eco ? null : opening.eco)}
                 aria-expanded={expanded === opening.eco}
-                className="flex w-full items-center justify-between p-2.5 text-left transition hover:bg-[var(--app-surface-hover)] cursor-pointer"
+                className="flex w-full items-center justify-between p-2.5 h-auto rounded-none text-left transition hover:bg-[var(--app-surface-hover)] cursor-pointer"
               >
                 <div className="flex items-center gap-2">
                   <AppStatus variant="teal" size="sm">
@@ -107,7 +107,7 @@ export default function OpeningExplorer({ onSelect }) {
                     expanded === opening.eco ? 'rotate-180' : ''
                   }`}
                 />
-              </button>
+              </AppButton>
 
               {expanded === opening.eco && (
                 <div className="border-t border-[var(--app-border)] p-2.5 space-y-2 bg-[var(--app-surface-raised)]">
