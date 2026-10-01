@@ -130,4 +130,51 @@ img, svg, canvas, iframe {
   }
 }
 
+/* HeroUI Component Theme Rules */
+.button {
+  border-radius: 8px !important;
+}
+
+.button--primary {
+  --button-bg: var(--app-accent);
+  --button-bg-hover: var(--app-accent-hover);
+  --button-bg-pressed: var(--app-accent-pressed);
+  --button-fg: #0C100E;
+}
+
+.button--secondary {
+  --button-bg: var(--app-surface-raised);
+  --button-bg-hover: var(--app-surface-hover);
+  --button-bg-pressed: var(--app-surface-hover);
+  --button-fg: var(--app-foreground);
+  border: 1px solid var(--app-border);
+}
+
+.button--outline {
+  --button-bg: transparent;
+  --button-bg-hover: var(--app-surface);
+  --button-fg: var(--app-foreground);
+  border: 1px solid var(--app-border);
+}
+
+.button--danger {
+  --button-bg: var(--app-danger);
+  --button-bg-hover: #e07070;
+  --button-fg: #FFFFFF;
+}
+
+.card {
+  border-radius: 10px !important;
+  background-color: var(--app-surface-raised);
+  border: 1px solid var(--app-border);
+}
+
+.surface {
+  background-color: var(--app-surface);
+}
+
+.chip {
+  border-radius: 6px !important;
+}
+
 

@@ -3,7 +3,9 @@
  * Single source of truth for design tokens in production.
  * -----------------------------------------------------------------------------------------------*/
 
-:root {
+:root,
+.dark,
+[data-theme="dark"] {
   color-scheme: dark;
 
   /* Surface & Base */
@@ -87,6 +89,10 @@
   --success: var(--app-success);
   --warning: var(--app-warning);
   --danger: var(--app-danger);
+  --danger-foreground: #FFFFFF;
+  --danger-hover: #e07070;
+  --segment: var(--app-surface-raised);
+  --segment-foreground: var(--app-foreground);
   --radius: 8px;
   --field-radius: 8px;
   --surface-shadow: none;

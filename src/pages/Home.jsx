@@ -4,7 +4,7 @@ import { Swords, Search, BookOpen, TrendingUp, Play, Calendar, Globe } from 'luc
 import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile } from '../services/userProfileService';
 import { createGame } from '../services/onlineGameService';
-import { AppButton } from '@/ui/AppButton';
+import { AppButton, AppCard, AppSurface } from '@/ui';
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <div className="space-y-12 py-2 sm:py-6">
       {/* Hero Section */}
-      <section className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-10 lg:p-12 shadow-xs">
+      <AppSurface className="rounded-[12px] border border-[var(--app-border)] p-6 sm:p-10 lg:p-12 shadow-sm">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
           {/* Left Column: Heading & CTAs */}
           <div className="lg:col-span-7 space-y-6">
@@ -94,23 +94,27 @@ export default function Home() {
             </p>
 
             {isAuthenticated && profile && (
-              <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4 max-w-lg">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--app-subtle)]">Tiến độ cá nhân</p>
-                <div className="mt-2.5 grid grid-cols-3 gap-4">
-                  <div>
-                    <p className="text-xl font-bold text-[var(--app-foreground)] font-mono">{profile.gamesPlayed}</p>
-                    <p className="text-xs text-[var(--app-muted)]">Ván đã chơi</p>
+              <AppCard className="p-4 max-w-lg">
+                <AppCard.Header className="pb-1">
+                  <AppCard.Title className="text-[11px] font-semibold uppercase tracking-wider text-[var(--app-subtle)]">Tiến độ cá nhân</AppCard.Title>
+                </AppCard.Header>
+                <AppCard.Content>
+                  <div className="mt-1 grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xl font-bold text-[var(--app-foreground)] font-mono">{profile.gamesPlayed}</p>
+                      <p className="text-xs text-[var(--app-muted)]">Ván đã chơi</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold text-[var(--app-foreground)] capitalize">{profile.currentLevel}</p>
+                      <p className="text-xs text-[var(--app-muted)]">Cấp độ</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold text-[var(--app-accent)] font-mono">{profile.exerciseStats?.accuracy || 0}%</p>
+                      <p className="text-xs text-[var(--app-muted)]">Chính xác</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xl font-bold text-[var(--app-foreground)] capitalize">{profile.currentLevel}</p>
-                    <p className="text-xs text-[var(--app-muted)]">Cấp độ</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-[var(--app-accent)] font-mono">{profile.exerciseStats?.accuracy || 0}%</p>
-                    <p className="text-xs text-[var(--app-muted)]">Chính xác</p>
-                  </div>
-                </div>
-              </div>
+                </AppCard.Content>
+              </AppCard>
             )}
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -156,7 +160,7 @@ export default function Home() {
                 <span className="font-semibold">Ván cờ minh họa</span>
                 <span className="font-mono text-[var(--app-copper)] font-bold">Thế cờ khởi đầu</span>
               </div>
-              <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-2.5 shadow-md">
+              <AppSurface className="rounded-[10px] border border-[var(--app-border)] p-2.5 shadow-md">
                 <div className="grid grid-cols-8 overflow-hidden rounded-[6px] border border-[var(--app-border)] aspect-square">
                   {startingPieces.map((piece, i) => {
                     const row = Math.floor(i / 8);
@@ -178,11 +182,11 @@ export default function Home() {
                     );
                   })}
                 </div>
-              </div>
+              </AppSurface>
             </div>
           </div>
         </div>
-      </section>
+      </AppSurface>
 
       {/* 4-Step Improvement Loop */}
       <section className="space-y-4">
@@ -197,21 +201,24 @@ export default function Home() {
           {flowSteps.map((step) => {
             const Icon = step.icon;
             return (
-              <div
+              <AppCard
                 key={step.step}
-                className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-5 space-y-2.5 transition-all hover:border-[var(--app-accent)]/40"
-                style={{ borderRadius: '10px' }}
+                className="p-5 space-y-2.5 transition-all hover:border-[var(--app-accent)]/40"
               >
                 <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[var(--app-surface)] text-[var(--app-accent)] border border-[var(--app-border)]">
                   <Icon className="h-4 w-4" />
                 </div>
-                <h3 className="text-sm font-bold text-[var(--app-foreground)]">
-                  {step.title}
-                </h3>
-                <p className="text-xs text-[var(--app-muted)] leading-relaxed">
-                  {step.desc}
-                </p>
-              </div>
+                <AppCard.Header className="p-0">
+                  <AppCard.Title className="text-sm font-bold text-[var(--app-foreground)]">
+                    {step.title}
+                  </AppCard.Title>
+                </AppCard.Header>
+                <AppCard.Content className="p-0">
+                  <AppCard.Description className="text-xs text-[var(--app-muted)] leading-relaxed">
+                    {step.desc}
+                  </AppCard.Description>
+                </AppCard.Content>
+              </AppCard>
             );
           })}
         </div>

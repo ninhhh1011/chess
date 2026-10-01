@@ -56,9 +56,10 @@ export const AppButton = React.forwardRef<HTMLButtonElement, AppButtonProps>(
     return (
       <HeroUIButton
         ref={ref}
+        variant={variant as any}
         size={size}
         isDisabled={isActuallyDisabled}
-        className={`inline-flex items-center justify-center font-medium interactive-hover interactive-press cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 select-none ${sizeClasses} ${variantStyles[variant] || variantStyles.primary} ${className}`}
+        className={`rounded-[8px] font-medium transition-all ${className}`}
         style={{ borderRadius: '8px', ...style }}
         onPress={onPress}
         onClick={onClick}

@@ -33,9 +33,16 @@ export function AppSurface({
   }[radius];
 
   const borderClass = hasBorder ? 'border border-[var(--app-border)]' : '';
+  const heroUIVariant = {
+    base: 'default' as const,
+    raised: 'secondary' as const,
+    hover: 'secondary' as const,
+    transparent: 'transparent' as const,
+  }[variant];
 
   return (
     <HeroUISurface
+      variant={heroUIVariant}
       className={`${variantStyles} ${radiusStyles} ${borderClass} ${className}`}
       style={{
         borderRadius: radius === 'md' ? '10px' : radius === 'sm' ? '8px' : radius === 'lg' ? '12px' : 0,

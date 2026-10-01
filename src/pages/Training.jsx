@@ -5,10 +5,7 @@ import { getUserProfile, updateDailyTrainingPlan } from '../services/userProfile
 import { signOutUser } from '../services/authService';
 import { syncLocalProfileToCloud, loadCloudProfileToLocal } from '../services/syncService';
 import SyncStatusBadge from '../components/SyncStatusBadge';
-import { AppButton } from '@/ui/AppButton';
-import { AppProgress } from '@/ui/AppProgress';
-import { AppStatus } from '@/ui/AppStatus';
-import { AppSurface } from '@/ui/AppSurface';
+import { AppButton, AppCard, AppProgress, AppStatus, AppSurface } from '@/ui';
 import {
   CheckCircle2,
   Circle,
@@ -128,8 +125,8 @@ export default function Training() {
 
   return (
     <div className="space-y-8 py-2 sm:py-6 max-w-6xl mx-auto">
-      {/* Header Banner */}
-      <div className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      {/* Header Banner - Surface Component */}
+      <AppSurface className="rounded-[12px] border border-[var(--app-border)] p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[var(--app-accent)]" />
@@ -159,19 +156,19 @@ export default function Training() {
             </span>
           </div>
         </div>
-      </div>
+      </AppSurface>
 
       {/* Main Content: Left Column (Tasks), Right Column (Skill Progress & Sync) */}
       <div className="grid gap-6 lg:grid-cols-12">
         {/* LEFT COLUMN: Kế hoạch hôm nay */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-5 space-y-3">
-            <div className="flex items-center justify-between">
+          <AppCard className="p-5 space-y-3">
+            <AppCard.Header className="flex flex-row items-center justify-between pb-2">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-[var(--app-accent)]" />
-                <h2 className="text-base font-bold text-[var(--app-foreground)]">
+                <AppCard.Title className="text-base font-bold text-[var(--app-foreground)]">
                   Nhiệm vụ hôm nay
-                </h2>
+                </AppCard.Title>
               </div>
               <AppButton
                 size="sm"
@@ -181,17 +178,18 @@ export default function Training() {
               >
                 Tạo mới
               </AppButton>
-            </div>
+            </AppCard.Header>
 
-            {/* AppProgress */}
-            <AppProgress
-              value={progressPercent}
-              showValue
-              valueLabel={`${completedCount}/${rawTasks.length} hoàn thành (${progressPercent}%)`}
-              variant="pine"
-              size="md"
-            />
-          </div>
+            <AppCard.Content>
+              <AppProgress
+                value={progressPercent}
+                showValue
+                valueLabel={`${completedCount}/${rawTasks.length} hoàn thành (${progressPercent}%)`}
+                variant="pine"
+                size="md"
+              />
+            </AppCard.Content>
+          </AppCard>
 
           {/* Canonical Tasks List */}
           <div className="space-y-2.5">
@@ -204,12 +202,13 @@ export default function Training() {
                 const isCompleted = typeof task === 'object' && Boolean(task.completed);
 
                 return (
-                  <div
+                  <AppCard
                     key={task.id || i}
-                    className={`rounded-[10px] border p-4 transition-all duration-150 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    isInteractive={!isCompleted}
+                    className={`p-4 transition-all duration-150 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                       isCompleted
-                        ? 'border-[var(--app-border)] bg-[var(--app-surface)] opacity-80'
-                        : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] hover:border-[var(--app-accent)]/40 shadow-xs'
+                        ? 'opacity-80'
+                        : 'hover:border-[var(--app-accent)]/40 shadow-xs'
                     }`}
                   >
                     <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -248,13 +247,13 @@ export default function Training() {
                         {isCompleted ? 'Ôn lại' : 'Thực hiện'}
                       </AppButton>
                     </div>
-                  </div>
+                  </AppCard>
                 );
               })
             ) : (
-              <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 text-center text-xs text-[var(--app-muted)]">
+              <AppSurface className="rounded-[10px] border border-[var(--app-border)] p-6 text-center text-xs text-[var(--app-muted)]">
                 Chưa có nhiệm vụ. Nhấn "Tạo mới" để tạo lộ trình hôm nay.
-              </div>
+              </AppSurface>
             )}
           </div>
         </div>
@@ -262,18 +261,17 @@ export default function Training() {
         {/* RIGHT COLUMN: Skill Progress & Account */}
         <div className="lg:col-span-5 space-y-4">
           {/* Skill Performance Overview */}
-          <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-5 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--app-border)]">
-              <h3 className="text-sm font-bold text-[var(--app-foreground)]">
+          <AppCard className="p-5 space-y-4">
+            <AppCard.Header className="flex flex-row items-center justify-between pb-3 border-b border-[var(--app-border)]">
+              <AppCard.Title className="text-sm font-bold text-[var(--app-foreground)]">
                 Chỉ số năng lực
-              </h3>
-              <span className="text-xs font-semibold text-[var(--app-success)] flex items-center gap-1">
-                <TrendingUp className="h-3.5 w-3.5" />
-                <span>Thực tế</span>
-              </span>
-            </div>
+              </AppCard.Title>
+              <AppStatus variant="teal" size="sm" icon={<TrendingUp className="h-3.5 w-3.5" />}>
+                Thực tế
+              </AppStatus>
+            </AppCard.Header>
 
-            <div className="space-y-3.5">
+            <AppCard.Content className="space-y-3.5">
               {/* Tactical Accuracy */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
@@ -297,15 +295,15 @@ export default function Training() {
                   {profile.openingStats?.totalAttempts || 0} lượt luyện
                 </div>
               </div>
-            </div>
-          </div>
+            </AppCard.Content>
+          </AppCard>
 
           {/* Account & Sync Status Section */}
-          <div className="rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-5 space-y-3">
-            <div className="flex items-center justify-between">
+          <AppCard className="p-5 space-y-3">
+            <AppCard.Header className="flex flex-row items-center justify-between pb-2">
               <div>
-                <h3 className="text-sm font-bold text-[var(--app-foreground)]">Tài khoản & Đồng bộ</h3>
-                <p className="text-xs text-[var(--app-muted)] mt-0.5">
+                <AppCard.Title className="text-sm font-bold text-[var(--app-foreground)]">Tài khoản & Đồng bộ</AppCard.Title>
+                <AppCard.Description className="text-xs text-[var(--app-muted)] mt-0.5">
                   {isAuthenticated ? (
                     <span className="flex items-center gap-1.5">
                       <span>{user?.email}</span>
@@ -314,7 +312,7 @@ export default function Training() {
                   ) : (
                     'Lưu trữ cục bộ trên trình duyệt'
                   )}
-                </p>
+                </AppCard.Description>
               </div>
 
               {isAuthenticated ? (
@@ -335,42 +333,44 @@ export default function Training() {
                   Đăng nhập
                 </AppButton>
               )}
-            </div>
+            </AppCard.Header>
 
-            {!isAuthenticated && (
-              <p className="text-[11px] text-[var(--app-subtle)] leading-relaxed">
-                Đăng nhập để tự động sao lưu dữ liệu và lộ trình bài tập lên đám mây.
-              </p>
-            )}
-
-            {isAuthenticated && (
-              <div className="rounded-[8px] bg-[var(--app-surface)] p-3 border border-[var(--app-border)] space-y-2">
-                <p className="text-xs text-[var(--app-foreground)]">
-                  Phát hiện dữ liệu cần đồng bộ lên tài khoản:
+            <AppCard.Content>
+              {!isAuthenticated && (
+                <p className="text-[11px] text-[var(--app-subtle)] leading-relaxed">
+                  Đăng nhập để tự động sao lưu dữ liệu và lộ trình bài tập lên đám mây.
                 </p>
-                <div className="flex gap-2">
-                  <AppButton
-                    size="sm"
-                    variant="primary"
-                    onClick={() => handleSync('upload')}
-                    disabled={syncing}
-                    className="flex-1"
-                  >
-                    {syncing ? 'Đang đồng bộ...' : 'Đồng bộ lên cloud'}
-                  </AppButton>
-                  <AppButton
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => handleSync('download')}
-                    disabled={syncing}
-                    className="flex-1"
-                  >
-                    {syncing ? 'Đang tải...' : 'Tải về'}
-                  </AppButton>
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+
+              {isAuthenticated && (
+                <AppSurface className="rounded-[8px] p-3 border border-[var(--app-border)] space-y-2">
+                  <p className="text-xs text-[var(--app-foreground)]">
+                    Phát hiện dữ liệu cần đồng bộ lên tài khoản:
+                  </p>
+                  <div className="flex gap-2">
+                    <AppButton
+                      size="sm"
+                      variant="primary"
+                      onClick={() => handleSync('upload')}
+                      disabled={syncing}
+                      className="flex-1"
+                    >
+                      {syncing ? 'Đang đồng bộ...' : 'Đồng bộ lên cloud'}
+                    </AppButton>
+                    <AppButton
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handleSync('download')}
+                      disabled={syncing}
+                      className="flex-1"
+                    >
+                      {syncing ? 'Đang tải...' : 'Tải về'}
+                    </AppButton>
+                  </div>
+                </AppSurface>
+              )}
+            </AppCard.Content>
+          </AppCard>
         </div>
       </div>
     </div>

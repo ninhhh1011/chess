@@ -16,22 +16,22 @@ export function AppStatus({
   size = 'sm',
   className = '',
 }: AppStatusProps) {
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs';
-
-  const variantStyles = {
-    engine: 'bg-[var(--app-success)]/12 text-[var(--app-success)] border-[var(--app-success)]/25',
-    teal: 'bg-[var(--app-success)]/12 text-[var(--app-success)] border-[var(--app-success)]/25',
-    ai: 'bg-[var(--app-accent)]/12 text-[var(--app-accent)] border-[var(--app-accent)]/25',
-    basic: 'bg-[var(--app-surface-hover)] text-[var(--app-muted)] border-[var(--app-border)]',
-    warning: 'bg-[var(--app-warning)]/12 text-[var(--app-warning)] border-[var(--app-warning)]/25',
-    danger: 'bg-[var(--app-danger)]/12 text-[var(--app-danger)] border-[var(--app-danger)]/25',
-    copper: 'bg-[var(--app-copper)]/15 text-[var(--app-copper)] border-[var(--app-copper)]/30',
-  }[variant];
+  const colorMap: Record<string, 'accent' | 'danger' | 'default' | 'success' | 'warning'> = {
+    engine: 'success',
+    teal: 'success',
+    ai: 'accent',
+    basic: 'default',
+    warning: 'warning',
+    danger: 'danger',
+    copper: 'accent',
+  };
 
   return (
     <HeroUIChip
-      className={`inline-flex items-center gap-1.5 font-medium rounded-[6px] border ${variantStyles} ${sizeClasses} ${className}`}
-      style={{ borderRadius: '6px' }}
+      color={colorMap[variant] || 'default'}
+      variant="secondary"
+      size={size}
+      className={`inline-flex items-center gap-1.5 font-medium ${className}`}
     >
       {icon && <span className="shrink-0 flex items-center">{icon}</span>}
       <HeroUIChip.Label>{children}</HeroUIChip.Label>
