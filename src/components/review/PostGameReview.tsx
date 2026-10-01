@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { Chess } from 'chess.js';
 import type { GameAnalysis, AnalysisFactV1, AnalysisProgress } from '../../types/analysis';
 import type { ReviewItem } from '../../types/analysis';
-import { AppButton } from '../../ui';
+import { AppButton, AppProgress, AppStatus, AppSurface } from '../../ui';
 
 interface PostGameReviewProps {
   analysis: GameAnalysis | null;
@@ -39,7 +39,7 @@ export default function PostGameReview({
 
   if (error) {
     return (
-      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-6">
+      <AppSurface className="p-6 border border-red-500/30 bg-red-500/10">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-bold text-red-400">Analysis Error</h3>
@@ -49,39 +49,34 @@ export default function PostGameReview({
             Thử lại
           </AppButton>
         </div>
-      </div>
+      </AppSurface>
     );
   }
 
   if (isAnalyzing) {
     return (
-      <div className="rounded-xl border border-primary-500/30 bg-primary-500/10 p-6">
-        <h3 className="text-lg font-bold text-primary-400">Analyzing Game...</h3>
+      <AppSurface className="p-6 border border-[var(--app-border)]">
+        <h3 className="text-lg font-bold text-[var(--app-foreground)]">Đang phân tích ván đấu...</h3>
 
         {progress && (
-          <div className="mt-4">
-            <div className="flex justify-between text-sm text-slate-400">
-              <span>{progress.message}</span>
-              <span>{progress.percentage}%</span>
-            </div>
-            <div className="mt-2 h-2 w-full rounded-full bg-slate-700">
-              <div
-                className="h-2 rounded-full bg-primary-500 transition-all"
-                style={{ width: `${progress.percentage}%` }}
-              />
-            </div>
+          <div className="mt-4 space-y-2">
+            <AppProgress
+              value={progress.percentage}
+              label={progress.message}
+              valueLabel={`${progress.percentage}%`}
+            />
             {progress.currentPly > 0 && (
-              <p className="mt-2 text-sm text-slate-500">
-                Move {progress.currentPly} / {progress.totalPlies}
+              <p className="text-xs text-[var(--app-muted)]">
+                Nước {progress.currentPly} / {progress.totalPlies}
               </p>
             )}
           </div>
         )}
 
         <AppButton variant="secondary" className="mt-4" onClick={onCancel}>
-          Cancel
+          Hủy
         </AppButton>
-      </div>
+      </AppSurface>
     );
   }
 
@@ -101,65 +96,68 @@ export default function PostGameReview({
   return (
     <div className="space-y-4">
       {/* Summary */}
-      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+      <AppSurface className="p-4 border border-[var(--app-border)]">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-emerald-400">
-              Game Analysis
+            <p className="text-xs font-bold uppercase tracking-wide text-[var(--app-accent)]">
+              Phân tích ván đấu
             </p>
-            <p className="mt-1 text-2xl font-bold text-white">
-              {analysis.summary.mistakesCount} mistakes, {analysis.summary.blundersCount} blunders
+            <p className="mt-1 text-xl font-bold text-[var(--app-foreground)]">
+              {analysis.summary.mistakesCount} nước lỗi, {analysis.summary.blundersCount} sai lầm lớn
             </p>
           </div>
-          <div className="text-right text-sm text-slate-400">
+          <div className="text-right text-xs text-[var(--app-muted)]">
             <p>{analysis.engine.source}</p>
-            {analysis.engine.depth && <p>Depth: {analysis.engine.depth}</p>}
+            {analysis.engine.depth && <p>Độ sâu: {analysis.engine.depth}</p>}
           </div>
         </div>
 
         {analysis.summary.avgCPL !== null && (
-          <p className="mt-2 text-sm text-slate-400">
-            Average centipawn loss: {analysis.summary.avgCPL}
+          <p className="mt-2 text-xs text-[var(--app-muted)]">
+            Tổn thất centipawn trung bình: {analysis.summary.avgCPL}
           </p>
         )}
 
-        <p className="mt-2 text-xs text-slate-500">
-          Analysis completed in {(analysis.durationMs / 1000).toFixed(1)}s
+        <p className="mt-2 text-[11px] text-[var(--app-subtle)]">
+          Hoàn thành phân tích trong {(analysis.durationMs / 1000).toFixed(1)} giây
         </p>
-      </div>
+      </AppSurface>
 
       {/* Top Mistakes */}
       {topMistakes.length > 0 && (
-        <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
-          <h4 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-400">
-            Top Turning Points
+        <AppSurface className="p-4 border border-[var(--app-border)]">
+          <h4 className="mb-3 text-xs font-bold uppercase tracking-wide text-[var(--app-subtle)]">
+            Các điểm ngoặt của ván đấu
           </h4>
 
           <ul className="space-y-2">
-            {topMistakes.map((fact, i) => (
+            {topMistakes.map((fact) => (
               <li key={fact.ply}>
                 <button
+                  type="button"
                   onClick={() => handleMistakeClick(fact)}
-                  className={`w-full rounded-lg p-3 text-left transition-colors ${
+                  className={`w-full rounded-[8px] p-3 text-left transition-colors cursor-pointer ${
                     selectedMistake?.ply === fact.ply
-                      ? 'bg-primary-500/20 border border-primary-500/50'
-                      : 'bg-slate-700/50 hover:bg-slate-700'
+                      ? 'bg-[var(--app-accent)]/15 border border-[var(--app-accent)]'
+                      : 'bg-[var(--app-surface-raised)] hover:bg-[var(--app-surface-hover)] border border-[var(--app-border)]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-300">
-                      Move {fact.ply}: {fact.playedMove.san}
+                    <span className="text-xs font-medium text-[var(--app-foreground)]">
+                      Nước {fact.ply}: {fact.playedMove.san}
                     </span>
-                    <span className={`text-xs font-bold ${
-                      fact.classification === 'blunder' ? 'text-red-400' :
-                      fact.classification === 'mistake' ? 'text-orange-400' :
-                      'text-yellow-400'
-                    }`}>
+                    <AppStatus
+                      variant={
+                        fact.classification === 'blunder' ? 'danger' :
+                        fact.classification === 'mistake' ? 'warning' : 'basic'
+                      }
+                      size="sm"
+                    >
                       {fact.classification.toUpperCase()}
-                    </span>
+                    </AppStatus>
                   </div>
-                  <div className="mt-1 flex items-center justify-between text-xs text-slate-500">
-                    <span>Best: {fact.bestMove.san || 'N/A'}</span>
+                  <div className="mt-1 flex items-center justify-between text-xs text-[var(--app-muted)]">
+                    <span>Nước tối ưu: {fact.bestMove.san || 'N/A'}</span>
                     {fact.centipawnLoss !== null && (
                       <span>CPL: {fact.centipawnLoss}</span>
                     )}
@@ -168,100 +166,73 @@ export default function PostGameReview({
               </li>
             ))}
           </ul>
-        </div>
+        </AppSurface>
       )}
 
       {/* Selected Mistake Detail */}
       {selectedMistake && (
-        <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
+        <AppSurface className="p-4 border border-[var(--app-border)]">
           <div className="flex items-center justify-between">
-            <h4 className="font-bold text-white">
-              Move {selectedMistake.ply} Detail
+            <h4 className="font-bold text-sm text-[var(--app-foreground)]">
+              Chi tiết nước {selectedMistake.ply}
             </h4>
             <AppButton
               size="sm"
               variant="primary"
               onClick={() => onSendToCoach(selectedMistake)}
             >
-              Ask Coach
+              Hỏi Coach
             </AppButton>
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+          <div className="mt-3 grid grid-cols-2 gap-4 text-xs">
             <div>
-              <p className="text-slate-500">Played</p>
-              <p className="font-mono text-lg text-white">{selectedMistake.playedMove.san}</p>
+              <p className="text-[var(--app-muted)]">Đã đi</p>
+              <p className="font-mono text-base font-bold text-[var(--app-foreground)]">{selectedMistake.playedMove.san}</p>
             </div>
             <div>
-              <p className="text-slate-500">Best</p>
-              <p className="font-mono text-lg text-emerald-400">{selectedMistake.bestMove.san || 'N/A'}</p>
+              <p className="text-[var(--app-muted)]">Tối ưu</p>
+              <p className="font-mono text-base font-bold text-[var(--app-accent)]">{selectedMistake.bestMove.san || 'N/A'}</p>
             </div>
           </div>
 
           {selectedMistake.centipawnLoss !== null && (
-            <div className="mt-3 rounded bg-slate-700/50 p-3">
-              <p className="text-sm text-slate-400">
-                Centipawn Loss: <span className="font-mono text-white">{selectedMistake.centipawnLoss}</span>
-              </p>
-              <p className="text-sm text-slate-400">
-                Classification: <span className={`font-bold ${
-                  selectedMistake.classification === 'blunder' ? 'text-red-400' :
-                  selectedMistake.classification === 'mistake' ? 'text-orange-400' :
-                  'text-yellow-400'
-                }`}>{selectedMistake.classification}</span>
+            <div className="mt-3 rounded-[6px] bg-[var(--app-surface)] p-2.5 border border-[var(--app-border)]">
+              <p className="text-xs text-[var(--app-muted)]">
+                Tổn thất centipawn: <span className="font-mono text-[var(--app-foreground)] font-bold">{selectedMistake.centipawnLoss}</span>
               </p>
             </div>
           )}
 
           {selectedMistake.skillTags.length > 0 && (
             <div className="mt-3">
-              <p className="text-sm text-slate-500">Tags:</p>
-              <div className="mt-1 flex flex-wrap gap-2">
+              <p className="text-xs text-[var(--app-muted)]">Chủ đề:</p>
+              <div className="mt-1 flex flex-wrap gap-1.5">
                 {selectedMistake.skillTags.map(tag => (
-                  <span key={tag} className="rounded bg-slate-600 px-2 py-1 text-xs text-slate-300">
+                  <AppStatus key={tag} variant="basic" size="sm">
                     {tag.replace(/_/g, ' ')}
-                  </span>
+                  </AppStatus>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Candidates */}
-          {selectedMistake.candidates.length > 0 && (
-            <div className="mt-3">
-              <p className="text-sm text-slate-500">Top Alternatives:</p>
-              <ul className="mt-1 space-y-1">
-                {selectedMistake.candidates.slice(0, 3).map((cand, i) => (
-                  <li key={i} className="text-sm text-slate-300">
-                    <span className="font-mono">{cand.san}</span>
-                    {cand.eval && (
-                      <span className="ml-2 text-xs text-slate-500">
-                        {cand.eval.type === 'cp' ? `cp: ${cand.eval.value}` : `mate: ${cand.eval.value}`}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
           {/* Engine Info */}
-          <div className="mt-3 border-t border-slate-700 pt-3">
-            <p className="text-xs text-slate-500">
+          <div className="mt-3 border-t border-[var(--app-border)] pt-2.5">
+            <p className="text-[11px] text-[var(--app-subtle)]">
               Engine: {selectedMistake.engine.source}
               {selectedMistake.engine.version !== 'unknown' && ` v${selectedMistake.engine.version}`}
               {selectedMistake.engine.depth && ` @ depth ${selectedMistake.engine.depth}`}
-              {selectedMistake.engine.movetimeMs && ` in ${selectedMistake.engine.movetimeMs}ms`}
             </p>
           </div>
-        </div>
+        </AppSurface>
       )}
 
       {topMistakes.length === 0 && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-center">
-          <p className="text-lg font-bold text-emerald-400">Great Game!</p>
-          <p className="mt-2 text-slate-400">No significant mistakes detected.</p>
-        </div>
+        <AppSurface className="p-6 text-center border border-[var(--app-border)]">
+          <p className="text-base font-bold text-[var(--app-accent)]">Ván cờ tuyệt vời!</p>
+          <p className="mt-1 text-xs text-[var(--app-muted)]">Không ghi nhận sai lầm nghiêm trọng nào.</p>
+        </AppSurface>
       )}
     </div>
   );

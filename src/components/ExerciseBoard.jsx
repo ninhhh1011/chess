@@ -6,17 +6,48 @@ import { UI_COPY } from '../config/brand';
 import { AppButton } from '@/ui/AppButton';
 import { Lightbulb, RotateCcw } from 'lucide-react';
 
-export default function ExerciseBoard({ exercise, onResult }) {
+function uciMove(value) {
+  return { from: value.slice(0, 2), to: value.slice(2, 4), ...(value[4] ? { promotion: value[4] } : {}) };
+}
+
+function newAttemptId() {
+  return `attempt:${globalThis.crypto.randomUUID()}`;
+}
+
+export default function ExerciseBoard({ exercise, onResult, onAttempt }) {
   const [game, setGame] = useState(() => new Chess(exercise.fen));
   const [message, setMessage] = useState('Kéo quân để nhập đáp án của bạn.');
   const [showHint, setShowHint] = useState(false);
   const [isSolved, setIsSolved] = useState(false);
+  const [solutionIndex, setSolutionIndex] = useState(0);
+  const [attemptId, setAttemptId] = useState(newAttemptId);
+  const solutionMoves = exercise.solutionMoves?.length
+    ? exercise.solutionMoves
+    : [`${exercise.correctMove.from}${exercise.correctMove.to}${exercise.correctMove.promotion || ''}`];
 
   function reset() {
+    if (isSolved) setAttemptId(newAttemptId());
+    else emitAttempt('retry', null, false);
     setGame(new Chess(exercise.fen));
     setMessage('Kéo quân để nhập đáp án của bạn.');
     setShowHint(false);
     setIsSolved(false);
+    setSolutionIndex(0);
+  }
+
+  function emitAttempt(type, moveUci, solved) {
+    if (!exercise.sourcePuzzleId) return;
+    onAttempt?.({
+      attemptId,
+      eventId: `event:${globalThis.crypto.randomUUID()}`,
+      puzzleId: exercise.id,
+      sourcePuzzleId: exercise.sourcePuzzleId,
+      skillTags: exercise.tags || [],
+      type,
+      moveUci,
+      solved,
+      at: new Date().toISOString(),
+    });
   }
 
   function onDrop({ sourceSquare, targetSquare }) {
@@ -26,19 +57,38 @@ export default function ExerciseBoard({ exercise, onResult }) {
     const move = copy.move({ from: sourceSquare, to: targetSquare, promotion: 'q' });
     if (!move) {
       setMessage('Nước đi không hợp lệ. Vui lòng thử lại.');
+      emitAttempt('wrong', `${sourceSquare}${targetSquare}`, false);
       onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: false, tags: exercise.tags || ['illegal_move'] });
       return false;
     }
-    if (sameMove(move, exercise.correctMove)) {
-      setGame(copy);
-      setMessage('Chính xác! Nước cờ tối ưu.');
-      setIsSolved(true);
-      onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: true, tags: exercise.tags || ['tactic'] });
+    if (!sameMove(move, uciMove(solutionMoves[solutionIndex]))) {
+      setMessage('Chưa đúng. Hãy tính toán lại nước cờ.');
+      emitAttempt('wrong', `${sourceSquare}${targetSquare}${move.promotion || ''}`, false);
+      onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: false, tags: exercise.tags || ['wrong_candidate_move'] });
+      return false;
+    }
+
+    let nextIndex = solutionIndex + 1;
+    if (nextIndex < solutionMoves.length) {
+      const reply = copy.move(uciMove(solutionMoves[nextIndex]));
+      if (!reply) {
+        setMessage('Không thể phát nước đáp của bài tập.');
+        return false;
+      }
+      nextIndex += 1;
+    }
+    setGame(copy);
+    const solved = nextIndex >= solutionMoves.length;
+    emitAttempt('correct', solutionMoves[solutionIndex], solved);
+    if (nextIndex < solutionMoves.length) {
+      setSolutionIndex(nextIndex);
+      setMessage('Đúng! Đối thủ đã đáp lại, hãy tiếp tục.');
       return true;
     }
-    setMessage('Chưa đúng. Hãy tính toán lại nước cờ.');
-    onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: false, tags: exercise.tags || ['wrong_candidate_move'] });
-    return false;
+    setMessage('Chính xác! Bạn đã hoàn tất lời giải.');
+    setIsSolved(true);
+    onResult?.({ exerciseId: exercise.id || exercise.title, isCorrect: true, tags: exercise.tags || ['tactic'] });
+    return true;
   }
 
   const isSuccess = isSolved;

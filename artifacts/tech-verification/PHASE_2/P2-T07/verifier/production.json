@@ -1,0 +1,75 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4179",
+  "productionAssets": [
+    "http://127.0.0.1:4179/assets/rolldown-runtime-FPZURlb5.js",
+    "http://127.0.0.1:4179/assets/index-BEbxCn2f.css",
+    "http://127.0.0.1:4179/assets/index-B_Xtaskg.js",
+    "http://127.0.0.1:4179/assets/vendor-icons-CP6Rw3Sy.js",
+    "http://127.0.0.1:4179/assets/vendor-chess-CoWJzkGK.js",
+    "http://127.0.0.1:4179/assets/vendor-animation-DtDKRWZd.js",
+    "http://127.0.0.1:4179/assets/vendor-heroui-BnHQI-GB.js",
+    "http://127.0.0.1:4179/assets/vendor-react-C6juNK5L.js",
+    "http://127.0.0.1:4179/assets/brand-DOGjdoM8.js",
+    "http://127.0.0.1:4179/assets/Exercises-P7da1e4M.js",
+    "http://127.0.0.1:4179/assets/Play-CzTF4p87.js",
+    "http://127.0.0.1:4179/assets/sound-BeATkyfg.js",
+    "http://127.0.0.1:4179/assets/ChessGameBoard-oCJq8LH0.js"
+  ],
+  "corpus": {
+    "puzzleId": "lichess-0000D",
+    "sourceHref": "https://lichess.org/training/0000D",
+    "licenseHref": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "responses": [
+      {
+        "url": "http://127.0.0.1:4179/corpus/current.json",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4179/corpus/runs/c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338/manifest.json",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4179/corpus/runs/c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338/chunks/00000.json",
+        "status": 200
+      }
+    ]
+  },
+  "selfPlay": {
+    "plies": 6,
+    "sanMoves": [
+      "e4",
+      "e6",
+      "Nf3",
+      "a5",
+      "d3",
+      "b6"
+    ],
+    "finalFen": "rnbqkbnr/2pp1ppp/1p2p3/p7/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+    "engineSource": "stockfish_wasm",
+    "worker": {
+      "starts": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "ready": [
+        {
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "bestmoves": [
+        "bestmove e2e4 ponder e7e5",
+        "bestmove e7e6 ponder d2d4",
+        "bestmove e2e4 ponder e7e5",
+        "bestmove e7e5 ponder g1f3",
+        "bestmove a7a5 ponder d2d4",
+        "bestmove d2d4 ponder d7d5",
+        "bestmove d7d5 ponder e4d5",
+        "bestmove b7b6 ponder d3d4"
+      ]
+    }
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

@@ -1,0 +1,71 @@
+{
+  "taskId": "P0-T01",
+  "capturedAt": "2026-09-05T19:05:00+07:00",
+  "commands": [
+    {
+      "command": "git status --short --untracked-files=all; git branch --show-current; git log -1 --oneline; git diff --stat; git diff --check; git remote -v; node --version; npm --version",
+      "exitCode": 0,
+      "result": "Initial tree clean; main; 7ecc6a6; Node v24.15.0; npm 11.12.1"
+    },
+    {
+      "command": "gh run view 33962483253 --log-failed",
+      "exitCode": 0,
+      "result": "GitHub CI failed npm run typecheck with TS2307 at corpusLoader.ts:24"
+    },
+    {
+      "command": "git archive HEAD to temp; npm ci; npm run typecheck; npm run build",
+      "exitCode": 0,
+      "result": "npm ci=0; generated JSON absent; typecheck=2 TS2307; build=0"
+    },
+    {
+      "command": "npm run test:e2e -- --list",
+      "exitCode": 0,
+      "result": "29 tests in 1 file"
+    },
+    {
+      "command": "npx playwright test --list",
+      "exitCode": 0,
+      "result": "67 tests in 4 files"
+    },
+    {
+      "command": "node scripts/verify-corpus.cjs",
+      "exitCode": 0,
+      "result": "False PASS despite missing checksum, provenance 0/10 and 39977 duplicates"
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 1,
+      "result": "30 files; 578 passed, 2 failed, 580 total; two ChessGameBoard integration timeouts"
+    },
+    {
+      "command": "npm run test -- src/components/ChessGameBoard.integration.test.jsx -t requests one bot move after the white player moves",
+      "exitCode": 1,
+      "result": "RED: opponent turn reached but getBotMove called 0 times"
+    },
+    {
+      "command": "npx playwright test e2e/stockfish.spec.js -g concurrent analysis requests",
+      "exitCode": 1,
+      "result": "RED: concurrent single-worker analysis timed out"
+    },
+    {
+      "command": "npm run test -- src/components/ChessGameBoard.integration.test.jsx",
+      "exitCode": 0,
+      "result": "11/11 passed"
+    },
+    {
+      "command": "npx playwright test e2e/stockfish.spec.js -g concurrent analysis requests",
+      "exitCode": 0,
+      "result": "1/1 passed; three concurrent results source stockfish_wasm"
+    },
+    {
+      "command": "npm run lint; npm run typecheck; git diff --check",
+      "exitCode": 0,
+      "result": "lint=0; typecheck=0; diff-check=0"
+    },
+    {
+      "command": "node p0-t01-self-play.cjs against clean temporary production preview",
+      "exitCode": 0,
+      "result": "6 legal plies; PGN replay PASS; final FEN parse PASS; real worker ready/bestmove evidence; no page/network errors"
+    }
+  ]
+}

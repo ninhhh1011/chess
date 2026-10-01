@@ -1,0 +1,71 @@
+{
+  "task": "P3-T04",
+  "role": "independent-verifier",
+  "date": "2026-09-06",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "remote": "https://github.com/ninhhh1011/chess",
+    "diffCheck": "PASS (exit 0; line-ending warnings only)"
+  },
+  "history": [
+    {
+      "stage": "focused",
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts src/test/exerciseBoardRealSolution.test.jsx --reporter=dot",
+      "result": "PASS",
+      "files": 4,
+      "passed": 26,
+      "failed": 0,
+      "durationSeconds": 3.94
+    },
+    {
+      "stage": "independent-adversarial",
+      "command": "npx vitest run artifacts/tech-verification/PHASE_3/P3-T04/verifier/adversarial.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 1,
+      "passed": 4,
+      "failed": 0,
+      "durationSeconds": 1.27
+    },
+    {
+      "stage": "full-standalone-including-verifier",
+      "command": "npm test -- --run --reporter=dot",
+      "result": "PASS",
+      "files": 45,
+      "passed": 725,
+      "failed": 0,
+      "durationSeconds": 34.72
+    },
+    {
+      "stage": "quality",
+      "commands": ["npm run lint", "npm run typecheck", "npm run build", "git diff --check"],
+      "result": "PASS",
+      "workspaceBuild": { "modules": 4105, "pwaEntries": 45, "durationSeconds": 6.60 }
+    },
+    {
+      "stage": "clean-candidate",
+      "commands": ["git ls-files --cached --others --exclude-standard", "npm run typecheck", "npm run build"],
+      "result": "PASS",
+      "files": 1070,
+      "ignoredGeneratedPuzzlesPresent": false,
+      "publicCorpusCurrentPresent": true,
+      "distCorpusCurrentPresent": true,
+      "build": { "modules": 4064, "pwaEntries": 34, "durationSeconds": 7.30 }
+    },
+    {
+      "stage": "production-browser",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T04/self-play.mjs http://127.0.0.1:4290",
+      "candidate": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p3t04-verifier-70ab4cb2de2046839aa75fdb7fa77e3b",
+      "result": "PASS",
+      "puzzleId": "lichess-00008",
+      "skillCount": 4,
+      "wrongScore": -1,
+      "finalScore": 0,
+      "exactReloadBytes": true,
+      "errors": { "console": 0, "page": 0, "network": 0 }
+    }
+  ],
+  "verdict": "PASS"
+}

@@ -1,0 +1,18 @@
+{
+  "task": "P2-T01",
+  "status": "local-pass-awaiting-independent-verification",
+  "commands": [
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T01/audit.mjs", "result": "PASS: every data artifact classified; production external records 0; generated 40000 rows / 23 normalized positions / 39977 duplicates" },
+    { "command": "curl.exe -I https://database.lichess.org/lichess_db_puzzle.csv.zst", "result": "PASS: HTTP 200; 304384407 bytes; last modified 2026-08-02" },
+    { "command": "node scripts/verify-corpus.cjs", "result": "REPRODUCED DEFECT: exit 0 despite missing checksum, 0/10 provenance, 39977 duplicate warning, and sampled string-length-only solution check" },
+    { "command": "npm test -- --run src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts src/test/corpus.test.ts src/test/exercisesValidator.test.js", "result": "PASS: 4 files, 46 tests" },
+    { "command": "npx eslint artifacts/tech-verification/PHASE_2/P2-T01/audit.mjs", "result": "PASS" },
+    { "command": "npm run lint", "result": "PASS" },
+    { "command": "npm run typecheck", "result": "PASS" },
+    { "command": "npm test -- --run", "result": "PASS: 33 files, 592 tests" },
+    { "command": "npm run build", "result": "PASS: 4103 modules transformed" },
+    { "command": "rg generated/synthetic markers in dist", "result": "PASS: exit 1, no synthetic corpus marker in production bundle" },
+    { "command": "production preview plus six-ply Chromium self-play", "result": "PASS: truthful external-corpus unavailable notice, legal PGN replay, real stockfish_wasm, zero console/page/network errors" },
+    { "command": "git diff --check", "result": "PASS" }
+  ]
+}

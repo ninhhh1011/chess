@@ -1,0 +1,15 @@
+{
+  "task": "P2-T07",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    { "command": "npm test -- --run scripts/corpus-delivery.test.mjs", "stage": "RED missing module", "exit": 1 },
+    { "command": "npm test -- --run scripts/corpus-delivery.test.mjs", "stage": "RED corrupt rollback target", "exit": 1 },
+    { "command": "npm test -- --run scripts/corpus-delivery.test.mjs src/test/exercisesProductionCorpus.test.jsx src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts", "exit": 0, "tests": "7/7" },
+    { "command": "npm run lint", "exit": 0 },
+    { "command": "npm run typecheck", "exit": 0 },
+    { "command": "npm run build", "exit": 0, "modules": 4104, "pwaPrecacheEntries": 45 },
+    { "command": "npm test", "exit": 0, "files": "40/40", "tests": "698/698" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T07/verify-production.mjs http://127.0.0.1:4173", "exit": 0, "verdict": "PASS" }
+  ],
+  "computerUseFallback": "CUA initialization failed before browser control: failed to write kernel assets (os error 3). Existing Playwright was used instead."
+}

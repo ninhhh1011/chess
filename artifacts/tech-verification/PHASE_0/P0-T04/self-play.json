@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "route": "/play",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "difficulty": "easy",
+  "playerColor": "white",
+  "counts": [2, 4, 6],
+  "plies": 6,
+  "sanMoves": ["e4", "c5", "Nf3", "d6", "d3", "g6"],
+  "finalFen": "rnbqkbnr/pp2pp1p/3p2p1/2p5/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": [],
+  "workerReady": true,
+  "bestmoveCount": 11
+}

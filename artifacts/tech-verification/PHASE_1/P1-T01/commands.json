@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "dirtyTreePreserved": true
+  },
+  "commands": [
+    { "command": "npm run lint", "exitCode": 0, "result": "PASS" },
+    { "command": "npm run typecheck", "exitCode": 0, "result": "PASS" },
+    { "command": "npm test", "exitCode": 0, "result": "31 files, 572 tests passed" },
+    { "command": "npm run build", "exitCode": 0, "result": "4098 modules transformed; PWA assets generated" },
+    { "command": "npx playwright test e2e/stockfish.spec.js", "exitCode": 0, "result": "8 tests passed in 24.9s" },
+    { "command": "npx playwright test --list", "exitCode": 0, "result": "70 tests in 4 files" },
+    { "command": "node artifacts/tech-verification/PHASE_1/P1-T01/self-play.mjs", "exitCode": 0, "result": "White 10 plies and Black 10 plies; real stockfish_wasm depth/time telemetry; zero browser errors" },
+    { "command": "git diff --check", "exitCode": 0, "result": "PASS; line-ending notices only" }
+  ]
+}

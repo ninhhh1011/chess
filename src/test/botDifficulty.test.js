@@ -74,10 +74,10 @@ describe('Bot Difficulty Configuration', () => {
       expect(medium.skillLevel).toBeGreaterThan(0);
     });
 
-    it('Khó and above use UCI_Elo', () => {
+    it('uses Skill Level below Stockfish UCI_Elo range', () => {
       const hard = getBotLevelByElo(1200);
       const challenge = getBotLevelByElo(1600);
-      expect(hard.useSkillLevelOnly).toBe(false);
+      expect(hard.useSkillLevelOnly).toBe(true);
       expect(challenge.useSkillLevelOnly).toBe(false);
     });
 

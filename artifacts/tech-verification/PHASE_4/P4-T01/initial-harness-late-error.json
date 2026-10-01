@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-09-06T08:42:57.805Z",
+  "verdict": "INVALIDATED_HARNESS_RESULT",
+  "reason": "The harness asserted before asynchronous request failure telemetry arrived.",
+  "lateErrors": {
+    "console": ["Failed to load resource: the server responded with a status of 502 (Bad Gateway)"],
+    "page": [],
+    "network": ["POST /api/coach"]
+  },
+  "resolution": "Started the existing canonical Express endpoint, awaited the exact API response, and reran successfully without changing product source."
+}

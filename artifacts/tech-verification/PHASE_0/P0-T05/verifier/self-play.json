@@ -1,0 +1,47 @@
+{
+  "verdict": "PASS",
+  "route": "/play",
+  "server": "vite preview production build",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "difficulty": "easy",
+  "playerColor": "white",
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "e6",
+    "Nf3",
+    "a6",
+    "d3",
+    "d5"
+  ],
+  "finalFen": "rnbqkbnr/1pp2ppp/p3p3/3p4/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+  "pgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. e4 e6 2. Nf3 a6 3. d3 d5 *",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "corpusText": "Kho bài tập mở rộng chưa khả dụng. Bạn đang luyện với 5 bài tập tích hợp, không phải corpus bên ngoài.",
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove d2d4 ponder d7d5",
+      "bestmove e7e6 ponder b1c3",
+      "bestmove d2d4 ponder d7d5",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove a7a6 ponder d2d4",
+      "bestmove d2d3 ponder d7d5",
+      "bestmove d7d6 ponder d2d4",
+      "bestmove d7d5 ponder e4e5"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

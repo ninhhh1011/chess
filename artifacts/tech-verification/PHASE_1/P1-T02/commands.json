@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "baseline": "main@7ecc6a6",
+  "commands": [
+    { "command": "npm run lint", "result": "PASS" },
+    { "command": "npm run typecheck", "result": "PASS" },
+    { "command": "npx vitest run src/test/botDifficulty.test.js src/test/botUCIProtocol.test.js", "result": "PASS", "tests": 30 },
+    { "command": "npm test", "result": "PASS", "files": 31, "tests": 572 },
+    { "command": "npm run build", "result": "PASS", "modules": 4098 },
+    { "command": "npx playwright test e2e/stockfish.spec.js", "result": "PASS", "tests": 9 },
+    { "command": "node artifacts/tech-verification/PHASE_1/P1-T02/self-play.mjs", "result": "PASS", "displayedLevels": 4 }
+  ],
+  "engineRanges": {
+    "skillLevel": { "min": 0, "max": 20 },
+    "uciElo": { "min": 1320, "max": 3190 }
+  },
+  "independentVerifier": "PASS"
+}

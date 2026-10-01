@@ -1,6 +1,8 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
-import { AppButton } from '../../ui';
+import { AppButton } from '../../ui/AppButton';
+import { AppSurface } from '../../ui/AppSurface';
+import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, X } from 'lucide-react';
 
 export default function ReviewNavigator() {
   const {
@@ -11,7 +13,7 @@ export default function ReviewNavigator() {
     newGame,
     setPlayState,
     playState,
-    restartGameWithCurrentSettings
+    restartGameWithCurrentSettings,
   } = useChessGame();
 
   if (playState !== 'analysis') return null;
@@ -35,56 +37,73 @@ export default function ReviewNavigator() {
   };
 
   return (
-    <div className="flex flex-col gap-2.5 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+    <AppSurface variant="base" radius="sm" className="flex flex-col gap-2.5 p-3 shadow-xs">
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--app-muted)]">{BRAND_NAMES.analysis}</h4>
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--app-muted)]">
+          {BRAND_NAMES.analysis}
+        </h4>
         {playState === 'analysis' && (
-          <button 
+          <AppButton
+            variant="ghost"
+            size="sm"
             onClick={handleExitReview}
-            className="text-xs text-[var(--app-subtle)] hover:text-[var(--app-foreground)]"
+            className="h-6 px-1.5 text-[11px] text-[var(--app-subtle)] hover:text-[var(--app-foreground)]"
+            leftIcon={<X className="h-3 w-3" />}
           >
             Đóng
-          </button>
+          </AppButton>
         )}
       </div>
 
-      <div className="flex items-center justify-between rounded-md bg-[var(--app-surface-raised)] border border-[var(--app-border)] p-1.5">
-        <button
+      <AppSurface
+        variant="raised"
+        radius="sm"
+        className="flex items-center justify-between p-1.5"
+      >
+        <AppButton
+          variant="ghost"
+          size="sm"
           onClick={handleFirst}
           disabled={analysisPly === 0}
-          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
-          title="Về đầu ván"
+          className="h-7 w-7 p-0"
+          aria-label="Về đầu ván"
         >
-          |&lt;
-        </button>
-        <button
+          <ChevronsLeft className="h-3.5 w-3.5" />
+        </AppButton>
+        <AppButton
+          variant="ghost"
+          size="sm"
           onClick={handlePrev}
           disabled={analysisPly === 0}
-          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
-          title="Lùi một nước"
+          className="h-7 w-7 p-0"
+          aria-label="Lùi một nước"
         >
-          &lt;
-        </button>
-        <div className="px-3 font-mono text-xs text-[var(--app-foreground)]">
+          <ChevronLeft className="h-3.5 w-3.5" />
+        </AppButton>
+        <div className="px-3 font-mono text-xs font-semibold text-[var(--app-foreground)]">
           {analysisPly} / {totalMoves}
         </div>
-        <button
+        <AppButton
+          variant="ghost"
+          size="sm"
           onClick={handleNext}
           disabled={analysisPly === totalMoves}
-          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
-          title="Tiến một nước"
+          className="h-7 w-7 p-0"
+          aria-label="Tiến một nước"
         >
-          &gt;
-        </button>
-        <button
+          <ChevronRight className="h-3.5 w-3.5" />
+        </AppButton>
+        <AppButton
+          variant="ghost"
+          size="sm"
           onClick={handleLast}
           disabled={analysisPly === totalMoves}
-          className="flex h-7 w-7 items-center justify-center rounded bg-[var(--app-surface)] text-xs text-[var(--app-muted)] hover:text-[var(--app-foreground)] disabled:opacity-40"
-          title="Về cuối ván"
+          className="h-7 w-7 p-0"
+          aria-label="Về cuối ván"
         >
-          &gt;|
-        </button>
-      </div>
+          <ChevronsRight className="h-3.5 w-3.5" />
+        </AppButton>
+      </AppSurface>
 
       <div className="grid grid-cols-2 gap-2">
         <AppButton
@@ -105,6 +124,6 @@ export default function ReviewNavigator() {
           {UI_COPY.newGame}
         </AppButton>
       </div>
-    </div>
+    </AppSurface>
   );
 }

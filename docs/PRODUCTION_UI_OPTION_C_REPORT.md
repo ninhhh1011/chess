@@ -1,9 +1,11 @@
 # BÁO CÁO MIGRATION PRODUCTION UI — OPTION C
 # CHARCOAL + PINE + COPPER WITH HEROUI & TAILWIND V4
 
+> **Historical UI migration snapshot.** The design record remains useful, but its readiness wording, HEAD, and test counts are not current verification evidence. See [CURRENT_RUNTIME.md](CURRENT_RUNTIME.md).
+
 **Repository:** https://github.com/ninhhh1011/chess  
 **Thời gian hoàn thành:** 05/09/2026  
-**Trạng thái:** HOÀN THÀNH TOÀN DIỆN & SẴN SÀNG REVIEW TRÊN LOCAL  
+**Trạng thái:** HISTORICAL SNAPSHOT
 
 ---
 
@@ -300,4 +302,4 @@ Tất cả các lệnh kiểm thử đều kết thúc với mã thoát thành c
 
 ## 21. XÁC NHẬN KHÔNG COMMIT HOẶC PUSH
 - **Tuyệt đối tuân thủ quy tắc an toàn:** Không thực hiện bất kỳ lệnh `git commit`, `git push`, `git reset`, `git restore`, `git clean` hay can thiệp vào remote Git.
-- Toàn bộ thay đổi nằm an toàn trong working tree sẵn sàng cho người dùng review.
+- Toàn bộ thay đổi của lần migration đó được để trong working tree để người dùng review; đây không phải tuyên bố readiness hiện tại.

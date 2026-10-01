@@ -1,0 +1,24 @@
+{
+  "verdict": "PASS",
+  "assembly": "git ls-files --cached --others --exclude-standard",
+  "listedFiles": 956,
+  "ignoredGeneratedPuzzlesPresent": false,
+  "sourceCorpus": {
+    "pointerPresent": true,
+    "manifestPresent": true,
+    "chunkPresent": true
+  },
+  "typecheckExitCode": 0,
+  "buildExitCode": 0,
+  "buildModules": 4063,
+  "distCorpus": {
+    "pointerPresent": true,
+    "manifestPresent": true,
+    "chunkPresent": true,
+    "puzzleCount": 1000,
+    "chunkSha256MatchesManifest": true
+  },
+  "activeRun": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338",
+  "datasetVersion": "2026-08-02",
+  "sourceSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073"
+}

@@ -1,0 +1,48 @@
+{
+  "verdict": "HISTORICAL_BASELINE_NOT_COMPARABLE",
+  "commit": "c5a33af",
+  "requestedPreviousMedianMs": 5365,
+  "historicalReportMedianMs": 5772,
+  "freshMedianMs": 42764,
+  "freshMaxMs": 42997,
+  "changeAgainstRequestedPercent": 697.1,
+  "findings": [
+    {
+      "fact": "The historical Vitest environment was jsdom.",
+      "evidence": "c5a33af:vitest.config.js sets test.environment to jsdom."
+    },
+    {
+      "fact": "The historical test setup did not install a Worker implementation.",
+      "evidence": "c5a33af:src/test/setup.ts only imports jest-dom, cleanup, and afterEach."
+    },
+    {
+      "fact": "Stockfish could not initialize without Worker and analysis then used the fallback engine.",
+      "evidence": "c5a33af:src/services/stockfishService.ts returns false when Worker is undefined; analyzeFen then calls fallbackAnalysis, whose source is fallback."
+    },
+    {
+      "fact": "The historical latency test had no Worker mock and did not observe real worker commands.",
+      "evidence": "c5a33af:src/test/gameLatency.test.ts directly calls analyzeGame in jsdom and contains no Worker replacement or worker telemetry."
+    },
+    {
+      "fact": "The historical analyzer hardcoded stockfish_wasm into output facts and the top-level result even when engine calls fell back.",
+      "evidence": "c5a33af:src/services/analysis/gameAnalyzer.ts writes source: 'stockfish_wasm' into placeholder facts, analyzed facts, and the returned engine object."
+    },
+    {
+      "fact": "The historical test asserted the hardcoded top-level source and printed a literal source string.",
+      "evidence": "c5a33af:src/test/gameLatency.test.ts prints 'Engine source: stockfish_wasm' and only asserts result.engine.source."
+    },
+    {
+      "fact": "The requested movetimeMs 500 was not forwarded in the historical first-pass analyzeFen calls.",
+      "evidence": "c5a33af:src/services/analysis/gameAnalyzer.ts first-pass analyzeFen calls provide fen/depth/elo, not movetimeMs."
+    },
+    {
+      "fact": "The historical report itself recorded zero second-pass positions.",
+      "evidence": "c5a33af:docs/PHASE_1_IMPLEMENTATION_REPORT.md records 80 first-pass positions, zero second-pass positions, and a 5772 ms median."
+    },
+    {
+      "fact": "Two different historical numbers exist.",
+      "evidence": "The requested comparison is 5365 ms; c5a33af:docs/FINAL_VERIFICATION_REPORT.md calls 5365-5377 ms 'previously reported', while the implementation report records a fresh-looking 5772 ms median. Neither proves real Worker execution."
+    }
+  ],
+  "explanation": "The fresh browser benchmark performs 83 completed real Stockfish searches per run. At movetime 500 ms, those commands alone imply a 41,500 ms nominal search-time floor. The observed 42,764 ms median is about 1,264 ms above that floor and remains below the historical 60-second gate. The 697.1% increase over 5,365 ms is therefore a workload/provenance correction, not evidence of a like-for-like regression."
+}

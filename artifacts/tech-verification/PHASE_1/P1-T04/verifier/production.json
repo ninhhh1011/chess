@@ -1,0 +1,102 @@
+{
+  "verdict": "PASS",
+  "browser": "Chromium",
+  "buildUrl": "http://127.0.0.1:4181",
+  "plies": 10,
+  "displayedHistory": [
+    "a3",
+    "g6",
+    "a4",
+    "Nf6",
+    "a5",
+    "c5",
+    "a6",
+    "Nxa6",
+    "b3",
+    "Bg7"
+  ],
+  "exportedPgn": "[Event \"?\"]\r\n[Site \"?\"]\r\n[Date \"????.??.??\"]\r\n[Round \"?\"]\r\n[White \"?\"]\r\n[Black \"?\"]\r\n[Result \"*\"]\r\n\r\n1. a3 g6 2. a4 Nf6 3. a5 c5 4. a6 Nxa6 5. b3 Bg7 *",
+  "replayedHistory": [
+    "a3",
+    "g6",
+    "a4",
+    "Nf6",
+    "a5",
+    "c5",
+    "a6",
+    "Nxa6",
+    "b3",
+    "Bg7"
+  ],
+  "finalFen": "r1bqk2r/pp1pppbp/n4np1/2p5/8/1P6/2PPPPPP/RNBQKBNR w KQkq - 1 6",
+  "engineEvidence": {
+    "searches": [
+      {
+        "command": "go movetime 400",
+        "bestmove": "e2e4"
+      },
+      {
+        "command": "go movetime 800",
+        "bestmove": "g7g6"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "e2e4"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "e7e5"
+      },
+      {
+        "command": "go movetime 800",
+        "bestmove": "g8f6"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "e2e4"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "g8f6"
+      },
+      {
+        "command": "go movetime 800",
+        "bestmove": "c7c5"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "d2d4"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "c7c5"
+      },
+      {
+        "command": "go movetime 800",
+        "bestmove": "b8a6"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "e2e3"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": "b8a6"
+      },
+      {
+        "command": "go movetime 800",
+        "bestmove": "f8g7"
+      },
+      {
+        "command": "go movetime 500",
+        "bestmove": null
+      }
+    ],
+    "workerUrls": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

@@ -1,5 +1,6 @@
 import { useOnboarding } from '../hooks/useOnboarding';
-import { AppButton } from '../ui';
+import { AppDialog } from '../ui/AppDialog';
+import { AppButton } from '../ui/AppButton';
 
 export default function OnboardingModal() {
   const { showTips, currentTip, tips, nextTip, dismiss } = useOnboarding();
@@ -10,51 +11,57 @@ export default function OnboardingModal() {
   const isLast = currentTip === tips.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-sm rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-2xl">
-        {/* Icon */}
-        <div className="mb-4 text-center text-4xl">{tip.icon}</div>
-
-        {/* Content */}
-        <h2 className="mb-2 text-center text-lg font-bold text-[var(--app-foreground)]">
-          {tip.title}
-        </h2>
-        <p className="mb-6 text-center text-xs leading-relaxed text-[var(--app-muted)]">
-          {tip.content}
-        </p>
-
-        {/* Progress dots */}
-        <div className="mb-5 flex justify-center gap-1.5">
-          {tips.map((_, i) => (
-            <div
-              key={i}
-              className={`h-1.5 rounded-full transition-all duration-200 ${
-                i === currentTip ? 'w-5 bg-[var(--app-accent)]' : 'w-1.5 bg-[var(--app-surface-hover)]'
-              }`}
-            />
-          ))}
+    <AppDialog
+      isOpen={showTips}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) dismiss();
+      }}
+      title={
+        <div className="text-center w-full">
+          <div className="mb-2 text-3xl">{tip.icon}</div>
+          <span className="text-lg font-bold text-[var(--app-foreground)]">{tip.title}</span>
         </div>
+      }
+      maxWidth="max-w-sm"
+      footer={
+        <div className="w-full space-y-4">
+          {/* Progress dots */}
+          <div className="flex justify-center gap-1.5">
+            {tips.map((_, i) => (
+              <div
+                key={i}
+                className={`h-1.5 rounded-full transition-all duration-180 ${
+                  i === currentTip ? 'w-5 bg-[var(--app-accent)]' : 'w-1.5 bg-[var(--app-border-strong)]'
+                }`}
+              />
+            ))}
+          </div>
 
-        {/* Actions */}
-        <div className="flex gap-2">
-          <AppButton
-            variant="secondary"
-            size="sm"
-            onClick={dismiss}
-            className="flex-1"
-          >
-            Bỏ qua
-          </AppButton>
-          <AppButton
-            variant="primary"
-            size="sm"
-            onClick={nextTip}
-            className="flex-1"
-          >
-            {isLast ? 'Bắt đầu!' : 'Tiếp tục'}
-          </AppButton>
+          {/* Actions */}
+          <div className="flex gap-2">
+            <AppButton
+              variant="secondary"
+              size="sm"
+              onClick={dismiss}
+              className="flex-1"
+            >
+              Bỏ qua
+            </AppButton>
+            <AppButton
+              variant="primary"
+              size="sm"
+              onClick={nextTip}
+              className="flex-1 font-bold"
+            >
+              {isLast ? 'Bắt đầu!' : 'Tiếp tục'}
+            </AppButton>
+          </div>
         </div>
-      </div>
-    </div>
+      }
+    >
+      <p className="text-center text-xs leading-relaxed text-[var(--app-muted)] py-2">
+        {tip.content}
+      </p>
+    </AppDialog>
   );
 }

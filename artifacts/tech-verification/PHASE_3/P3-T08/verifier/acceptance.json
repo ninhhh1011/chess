@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-09-06T07:56:56.976Z",
+  "verdict": "PASS",
+  "local": {
+    "focused": { "files": 5, "passed": 13, "failed": 0 },
+    "adversarial": { "files": 2, "passed": 5, "failed": 0 },
+    "full": { "files": 56, "passed": 759, "failed": 0 },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "productionBuild": { "status": "PASS", "modules": 4105 },
+    "diffCheck": "PASS",
+    "schemaUniqueUserId": true,
+    "adapterUsesUserProgressUpsertOnUserId": true,
+    "failedAdapterDoesNotReportSynced": true
+  },
+  "cleanCandidate": {
+    "sourceFiles": 1163,
+    "ignoredGeneratedPuzzlesAbsent": true,
+    "publicCorpusPresent": true,
+    "typecheck": "PASS",
+    "build": { "status": "PASS", "modules": 4064 },
+    "distCorpusPresent": true
+  },
+  "historicalBlockedRun": {
+    "credentialsConfigured": true,
+    "controlDns": "PASS",
+    "projectDns": "ENOTFOUND",
+    "restQuery": "TypeError: fetch failed (ENOTFOUND)",
+    "productionLoginForm": "PASS",
+    "productionLoginErrorVisible": true,
+    "authRequest": "net::ERR_NAME_NOT_RESOLVED",
+    "pageErrors": 0
+  },
+  "liveRestoredRun": {
+    "accountCreated": true,
+    "productionLogin": "PASS",
+    "manualUploadStatuses": [201, 200],
+    "rowCounts": [1, 1],
+    "sameRowIdentityAfterRetry": true,
+    "sameProfileBytesAfterRetry": true,
+    "trainingEventCounts": [0, 0],
+    "pageErrors": 0,
+    "consoleErrors": 0,
+    "failedRequests": 0,
+    "unexpectedHttpResponses": 0,
+    "cleanup": { "profileRowsRemaining": 0, "accountAbsent": true }
+  },
+  "decision": null
+}

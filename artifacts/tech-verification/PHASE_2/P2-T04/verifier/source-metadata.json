@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "checkedAt": "2026-09-06",
+  "officialPage": "https://database.lichess.org/",
+  "officialDatasetUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+  "licenseId": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "publishedPuzzleCount": 6057356,
+  "schema": "PuzzleId,FEN,Moves,Rating,RatingDeviation,Popularity,NbPlays,Themes,GameUrl,OpeningTags,DailyDate",
+  "httpStatus": 200,
+  "contentLength": 304384407,
+  "lastModified": "2026-08-02T07:23:55.000Z",
+  "acceptRanges": "bytes",
+  "localSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+  "officialChecksumPublished": false,
+  "format": "seekable Zstandard stream with a leading skippable frame"
+}

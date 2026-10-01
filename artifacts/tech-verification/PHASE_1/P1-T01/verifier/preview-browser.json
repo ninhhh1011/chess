@@ -1,0 +1,350 @@
+{
+  "verdict": "PASS",
+  "mode": "preview-self-play",
+  "selfPlay": {
+    "white": {
+      "color": "w",
+      "plies": 10,
+      "sanMoves": [
+        "a3",
+        "c5",
+        "a4",
+        "Nc6",
+        "a5",
+        "Nf6",
+        "a6",
+        "d5",
+        "b3",
+        "e5"
+      ],
+      "finalFen": "r1bqkb1r/pp3ppp/P1n2n2/2ppp3/8/1P6/2PPPPPP/RNBQKBNR w KQkq - 0 6",
+      "pgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. a3 c5 2. a4 Nc6 3. a5 Nf6 4. a6 d5 5. b3 e5 *",
+      "pgnReplay": true,
+      "workerUrls": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "ready": [
+        {
+          "id": 1,
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "searches": [
+        {
+          "id": 1,
+          "command": "go movetime 400",
+          "startedAt": 1183.7999999523163,
+          "depth": 13,
+          "engineTimeMs": 400,
+          "wallTimeMs": 413,
+          "bestmove": "d2d4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 1598.2999999523163,
+          "depth": 15,
+          "engineTimeMs": 502,
+          "wallTimeMs": 510,
+          "bestmove": "c7c5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2111,
+          "depth": 14,
+          "engineTimeMs": 503,
+          "wallTimeMs": 510,
+          "bestmove": "e2e4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2621.5,
+          "depth": 16,
+          "engineTimeMs": 501,
+          "wallTimeMs": 511,
+          "bestmove": "e7e5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3133.2999999523163,
+          "depth": 15,
+          "engineTimeMs": 501,
+          "wallTimeMs": 508,
+          "bestmove": "b8c6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3644.5999999046326,
+          "depth": 13,
+          "engineTimeMs": 501,
+          "wallTimeMs": 509,
+          "bestmove": "e2e3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4155,
+          "depth": 15,
+          "engineTimeMs": 502,
+          "wallTimeMs": 510,
+          "bestmove": "b8c6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4666.199999809265,
+          "depth": 15,
+          "engineTimeMs": 504,
+          "wallTimeMs": 511,
+          "bestmove": "g8f6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5180.199999809265,
+          "depth": 15,
+          "engineTimeMs": 501,
+          "wallTimeMs": 509,
+          "bestmove": "e2e4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5690.099999904633,
+          "depth": 15,
+          "engineTimeMs": 501,
+          "wallTimeMs": 509,
+          "bestmove": "d7d5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6200.399999856949,
+          "depth": 15,
+          "engineTimeMs": 501,
+          "wallTimeMs": 508,
+          "bestmove": "d7d5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6711.299999952316,
+          "depth": 14,
+          "engineTimeMs": 500,
+          "wallTimeMs": 511,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 7223.199999809265,
+          "depth": 15,
+          "engineTimeMs": 501,
+          "wallTimeMs": 510,
+          "bestmove": "b7b5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 7734.599999904633,
+          "depth": 15,
+          "engineTimeMs": 503,
+          "wallTimeMs": 513,
+          "bestmove": "e7e5"
+        }
+      ],
+      "pass": true
+    },
+    "black": {
+      "color": "b",
+      "plies": 10,
+      "sanMoves": [
+        "e4",
+        "Nc6",
+        "d4",
+        "Rb8",
+        "Nc3",
+        "Ra8",
+        "Nf3",
+        "Rb8",
+        "d5",
+        "Ra8"
+      ],
+      "finalFen": "r1bqkbnr/pppppppp/2n5/3P4/4P3/2N2N2/PPP2PPP/R1BQKB1R w KQk - 1 6",
+      "pgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. e4 Nc6 2. d4 Rb8 3. Nc3 Ra8 4. Nf3 Rb8 5. d5 Ra8 *",
+      "pgnReplay": true,
+      "workerUrls": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "ready": [
+        {
+          "id": 1,
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "searches": [
+        {
+          "id": 1,
+          "command": "go movetime 400",
+          "startedAt": 1177.8000001907349,
+          "depth": 13,
+          "engineTimeMs": 400,
+          "wallTimeMs": 409,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 1591.9000000953674,
+          "depth": 14,
+          "engineTimeMs": 506,
+          "wallTimeMs": 524,
+          "bestmove": "e2e4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2130.4000000953674,
+          "depth": 14,
+          "engineTimeMs": 504,
+          "wallTimeMs": 514,
+          "bestmove": "d2d4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2646.300000190735,
+          "depth": 13,
+          "engineTimeMs": 502,
+          "wallTimeMs": 509,
+          "bestmove": "d2d4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3160.7000000476837,
+          "depth": 14,
+          "engineTimeMs": 505,
+          "wallTimeMs": 517,
+          "bestmove": "g8f6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3679.300000190735,
+          "depth": 12,
+          "engineTimeMs": 503,
+          "wallTimeMs": 516,
+          "bestmove": "b1c3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4197.400000095367,
+          "depth": 15,
+          "engineTimeMs": 505,
+          "wallTimeMs": 513,
+          "bestmove": "b1c3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4718.800000190735,
+          "depth": 14,
+          "engineTimeMs": 502,
+          "wallTimeMs": 514,
+          "bestmove": "d7d5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5233.600000143051,
+          "depth": 15,
+          "engineTimeMs": 500,
+          "wallTimeMs": 509,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5747.100000143051,
+          "depth": 14,
+          "engineTimeMs": 505,
+          "wallTimeMs": 513,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6268.300000190735,
+          "depth": 14,
+          "engineTimeMs": 508,
+          "wallTimeMs": 525,
+          "bestmove": "g7g6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6795.300000190735,
+          "depth": 14,
+          "engineTimeMs": 505,
+          "wallTimeMs": 521,
+          "bestmove": "e4e5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 7320.100000143051,
+          "depth": 15,
+          "engineTimeMs": 503,
+          "wallTimeMs": 517,
+          "bestmove": "d4d5"
+        }
+      ],
+      "pass": true
+    }
+  },
+  "assetResponses": [
+    {
+      "label": "self-play-w",
+      "status": 200,
+      "url": "http://127.0.0.1:4182/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "self-play-w",
+      "status": 200,
+      "url": "http://127.0.0.1:4182/stockfish/stockfish.js"
+    },
+    {
+      "label": "self-play-w",
+      "status": 200,
+      "url": "http://127.0.0.1:4182/stockfish/stockfish.wasm"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4182/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4182/stockfish/stockfish.js"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4182/stockfish/stockfish.wasm"
+    }
+  ],
+  "browserErrors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

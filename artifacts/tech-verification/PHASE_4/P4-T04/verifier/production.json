@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-09-06T09:37:46.372Z",
+  "verdict": "PASS",
+  "production": true,
+  "accountCreated": true,
+  "game": {
+    "plies": 12,
+    "legalReplay": true,
+    "finalFen": "rnbq1rk1/ppp2ppp/P2b1n2/3pp3/8/7N/1PPPPPPP/1NBQKB1R w K - 1 7"
+  },
+  "engine": {
+    "searches": 42,
+    "completed": 42
+  },
+  "evidence": {
+    "evidenceId": "game:72f57513-9a1a-4f3a-9b9e-b4879d99f053:ply:9",
+    "reviewId": "review:43285353-3a01-46cb-a2db-cc979eeade48",
+    "reviewReferencesFact": true,
+    "source": "stockfish_wasm",
+    "playedUci": "a4a5",
+    "bestUci": "b1a3",
+    "bestInCandidates": true
+  },
+  "coach": {
+    "grounded": true,
+    "forgedDomIgnored": true,
+    "hint": "Nước gợi ý: Nxa3",
+    "bestSan": "Nxa3"
+  },
+  "persistence": {
+    "exactReload": true,
+    "factCount": 3,
+    "reviewCount": 1
+  },
+  "cloud": {
+    "reachable": true,
+    "rowsBeforeCleanup": 0
+  },
+  "cleanup": {
+    "profileRowsDeleted": true,
+    "rowsRemaining": 0,
+    "accountDeleted": true
+  },
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "http": []
+  }
+}

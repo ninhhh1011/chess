@@ -1,0 +1,37 @@
+{
+  "verdict": "PASS",
+  "harness": "non-production imported-corpus boundary",
+  "productionIntegrationClaimed": false,
+  "sourceId": "0000D",
+  "sourceUrl": "https://lichess.org/training/0000D",
+  "licenseId": "CC0-1.0",
+  "startFen": "5rk1/1p3ppp/pq1Q1b2/8/8/1P3N2/P4PPP/3R2K1 b - - 3 27",
+  "incorrectAttempt": {
+    "uci": "f8e8",
+    "legal": true,
+    "acceptedAsSolution": false,
+    "resultingFen": "4r1k1/1p3ppp/pq1Q1b2/8/8/1P3N2/P4PPP/3R2K1 w - - 4 28"
+  },
+  "retry": {
+    "resetToStartFen": true
+  },
+  "solution": {
+    "moves": [
+      {
+        "uci": "f8d8",
+        "san": "Rd8"
+      },
+      {
+        "uci": "d6d8",
+        "san": "Qxd8+"
+      },
+      {
+        "uci": "f6d8",
+        "san": "Bxd8"
+      }
+    ],
+    "plies": 3,
+    "completed": true,
+    "finalFen": "3b2k1/1p3ppp/pq6/8/8/1P3N2/P4PPP/3R2K1 w - - 0 29"
+  }
+}

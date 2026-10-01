@@ -1,0 +1,205 @@
+{
+  "verdict": "PASS",
+  "browser": "Chromium",
+  "productionBuildUrl": "http://127.0.0.1:4179",
+  "engineSource": "stockfish_wasm",
+  "engineResponses": [
+    {
+      "label": "white",
+      "url": "http://127.0.0.1:4179/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "label": "white",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "label": "white",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.wasm",
+      "status": 200
+    },
+    {
+      "label": "white",
+      "url": "http://127.0.0.1:4179/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "label": "white",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "label": "white",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.wasm",
+      "status": 200
+    },
+    {
+      "label": "black",
+      "url": "http://127.0.0.1:4179/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "label": "black",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "label": "black",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.wasm",
+      "status": 200
+    },
+    {
+      "label": "black",
+      "url": "http://127.0.0.1:4179/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "label": "black",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "label": "black",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.wasm",
+      "status": 200
+    },
+    {
+      "label": "timeout",
+      "url": "http://127.0.0.1:4179/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "label": "timeout",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "label": "timeout",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.wasm",
+      "status": 200
+    },
+    {
+      "label": "timeout",
+      "url": "http://127.0.0.1:4179/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "label": "timeout",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "label": "timeout",
+      "url": "http://127.0.0.1:4179/stockfish/stockfish.wasm",
+      "status": 200
+    }
+  ],
+  "lifecycles": [
+    {
+      "color": "white",
+      "oldWorkerId": 1,
+      "oldSearch": {
+        "workerId": 1,
+        "command": "go movetime 1200",
+        "bestmove": null
+      },
+      "workerTerminated": true,
+      "replacementWorkers": [
+        {
+          "id": 2,
+          "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+        }
+      ],
+      "replacement": {
+        "workerId": 2,
+        "command": "go movetime 1200",
+        "bestmove": "d7d5"
+      },
+      "historyAfterReset": [],
+      "exactHistory": [
+        "e4",
+        "d5"
+      ],
+      "finalFen": "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "finalPgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. e4 d5 *",
+      "plies": 2,
+      "realBotSearches": [
+        {
+          "workerId": 2,
+          "command": "go movetime 1200",
+          "bestmove": "d7d5"
+        }
+      ]
+    },
+    {
+      "color": "black",
+      "oldWorkerId": 1,
+      "oldSearch": {
+        "workerId": 1,
+        "command": "go movetime 1200",
+        "bestmove": null
+      },
+      "workerTerminated": true,
+      "replacementWorkers": [
+        {
+          "id": 2,
+          "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+        }
+      ],
+      "replacement": {
+        "workerId": 2,
+        "command": "go movetime 1200",
+        "bestmove": "d2d4"
+      },
+      "historyAfterReset": [
+        "d4"
+      ],
+      "exactHistory": [
+        "d4"
+      ],
+      "finalFen": "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1",
+      "finalPgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. d4 *",
+      "plies": 1,
+      "realBotSearches": [
+        {
+          "workerId": 2,
+          "command": "go movetime 1200",
+          "bestmove": "d2d4"
+        }
+      ]
+    }
+  ],
+  "timeoutIsolation": {
+    "shortenedOnlyForFailureTest": [
+      {
+        "requested": 15000,
+        "effective": 250
+      },
+      {
+        "requested": 15000,
+        "effective": 15000
+      }
+    ],
+    "oldWorkerId": 1,
+    "oldSearch": {
+      "workerId": 1,
+      "command": "go movetime 1200",
+      "bestmove": null
+    },
+    "workerTerminated": true,
+    "historyAfterTimeout": [],
+    "replacement": {
+      "workerId": 2,
+      "command": "go movetime 1200",
+      "bestmove": "d2d4"
+    },
+    "replacementLegal": true,
+    "exactHistoryAfterRecovery": [
+      "d4"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

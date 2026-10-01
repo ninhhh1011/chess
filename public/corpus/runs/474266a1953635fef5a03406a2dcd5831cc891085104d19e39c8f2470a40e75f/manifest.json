@@ -1,0 +1,116 @@
+{
+  "manifestSchemaVersion": "corpus-delivery-manifest.v1",
+  "corpusSchemaVersion": "puzzle-record.v1",
+  "completed": true,
+  "contentIdentitySha256": "474266a1953635fef5a03406a2dcd5831cc891085104d19e39c8f2470a40e75f",
+  "inputSha256": "8b135d6778def6f1ec0434c0dd7bf519891d68ceb6604b1c5f7efa7bca38dca6",
+  "source": "lichess",
+  "officialSourceUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+  "licenseId": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "datasetVersion": "2026-08-02",
+  "sourceSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+  "puzzleCount": 20000,
+  "chunks": [
+    {
+      "file": "chunks/00000.json",
+      "count": 1000,
+      "sha256": "af8669712c1111dbfea1e91a904011bf5ec96ff510b8e5ba59aeb5d04953d920"
+    },
+    {
+      "file": "chunks/00001.json",
+      "count": 1000,
+      "sha256": "473532c8a9af4dda19085b86f02ea4de47b32f4ab4d400b2b06b56df65e73b69"
+    },
+    {
+      "file": "chunks/00002.json",
+      "count": 1000,
+      "sha256": "d002ea77ccaf9028364093fd65e0172545ea8184c87c905dc4c802bfe3c855ea"
+    },
+    {
+      "file": "chunks/00003.json",
+      "count": 1000,
+      "sha256": "3efc014941ee43ef0d2087b3cd6d0ab3ae2c6f7d81c4c889bd9ea460967004b2"
+    },
+    {
+      "file": "chunks/00004.json",
+      "count": 1000,
+      "sha256": "bf65a28d84f89b23413cea18bbd4efd5a8ceaff39c006f4bd157ef450c404b7a"
+    },
+    {
+      "file": "chunks/00005.json",
+      "count": 1000,
+      "sha256": "2c91924bdbe39527c25e652e93eede8b6242b5a6185b27dd4af929123b596c32"
+    },
+    {
+      "file": "chunks/00006.json",
+      "count": 1000,
+      "sha256": "7193b3d1f3bf5ce39f9450bdcd595103b289ec401d7ec63082426ff7aa999a7f"
+    },
+    {
+      "file": "chunks/00007.json",
+      "count": 1000,
+      "sha256": "bb03bad54e638c729ce38c645a92c90700e91c2f946c4f10261d18e5efb2fac1"
+    },
+    {
+      "file": "chunks/00008.json",
+      "count": 1000,
+      "sha256": "c71beac2e9232e7b13ff55b2a2b7b54c9b0c8053448f15101b03f152b1979a16"
+    },
+    {
+      "file": "chunks/00009.json",
+      "count": 1000,
+      "sha256": "1c62379f7fee2394aaf531548c9903dfa639973b1b1cc6e4aba42200cba1bd6d"
+    },
+    {
+      "file": "chunks/00010.json",
+      "count": 1000,
+      "sha256": "c2089c166a16fc484fa808fde74995ada6c6f7d1c6ee05552139b8d67c63ae4d"
+    },
+    {
+      "file": "chunks/00011.json",
+      "count": 1000,
+      "sha256": "0e2861fad1b3627e16d0f7362e95c2b685ed1f913be73a2f59d2b159f7d1907b"
+    },
+    {
+      "file": "chunks/00012.json",
+      "count": 1000,
+      "sha256": "3f8342f5bde96ee426f6eb488d9bf449eb22453bb5032438ad07b54d28f852f6"
+    },
+    {
+      "file": "chunks/00013.json",
+      "count": 1000,
+      "sha256": "63ae6c3baf03ad31e8c98ff0c5972ed0cfcf9a70c3a721005b8962fb463415fb"
+    },
+    {
+      "file": "chunks/00014.json",
+      "count": 1000,
+      "sha256": "8bfb77c831752fa36055ba73a331fac2d5e2a738bb55b737b1db3c053f2bc893"
+    },
+    {
+      "file": "chunks/00015.json",
+      "count": 1000,
+      "sha256": "79ae86689f03fe6bfd2ad0c5bb77988da5e8ddeec77072d1bf1cd39d46683c46"
+    },
+    {
+      "file": "chunks/00016.json",
+      "count": 1000,
+      "sha256": "047a1451514b5e79e3affd5a3390b9c4fb524b6592101f4071352a473f953efe"
+    },
+    {
+      "file": "chunks/00017.json",
+      "count": 1000,
+      "sha256": "1ac8fc0262655de2024b05bdeb1fa5752d92fb7f0ee1eb442d95570b917fddc2"
+    },
+    {
+      "file": "chunks/00018.json",
+      "count": 1000,
+      "sha256": "62856a3e3068770d43218c3289da0fb606e1b89baa1d45dd1a04a2fd6625569a"
+    },
+    {
+      "file": "chunks/00019.json",
+      "count": 1000,
+      "sha256": "b53c1d6c0bb11013406825c9536a44d0a52de053da0988352ec73361936596d4"
+    }
+  ]
+}

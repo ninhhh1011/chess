@@ -1,0 +1,135 @@
+{
+  "verdict": "PASS",
+  "browser": "Chromium",
+  "buildUrl": "http://127.0.0.1:4179",
+  "scenarios": [
+    {
+      "color": "white",
+      "oldWorkerId": 1,
+      "afterReset": [],
+      "finalHistory": [
+        "e4",
+        "e6"
+      ],
+      "legal": true,
+      "lifecycle": {
+        "workers": [
+          {
+            "id": 1,
+            "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+          },
+          {
+            "id": 2,
+            "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+          }
+        ],
+        "terminated": [
+          1
+        ],
+        "searches": [
+          {
+            "workerId": 1,
+            "command": "go movetime 400",
+            "bestmove": "e2e4"
+          },
+          {
+            "workerId": 1,
+            "command": "go movetime 1200",
+            "bestmove": null
+          },
+          {
+            "workerId": 2,
+            "command": "go movetime 500",
+            "bestmove": "e2e4"
+          },
+          {
+            "workerId": 2,
+            "command": "go movetime 400",
+            "bestmove": "e2e4"
+          },
+          {
+            "workerId": 2,
+            "command": "go movetime 1200",
+            "bestmove": "e7e6"
+          },
+          {
+            "workerId": 2,
+            "command": "go movetime 500",
+            "bestmove": null
+          }
+        ]
+      },
+      "oldSearch": {
+        "workerId": 1,
+        "command": "go movetime 1200",
+        "bestmove": null
+      },
+      "newSearch": {
+        "workerId": 2,
+        "command": "go movetime 1200",
+        "bestmove": "e7e6"
+      }
+    },
+    {
+      "color": "black",
+      "oldWorkerId": 1,
+      "afterReset": [
+        "d4"
+      ],
+      "finalHistory": [
+        "d4"
+      ],
+      "legal": true,
+      "lifecycle": {
+        "workers": [
+          {
+            "id": 1,
+            "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+          },
+          {
+            "id": 2,
+            "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+          }
+        ],
+        "terminated": [
+          1
+        ],
+        "searches": [
+          {
+            "workerId": 1,
+            "command": "go movetime 400",
+            "bestmove": "e2e4"
+          },
+          {
+            "workerId": 1,
+            "command": "go movetime 1200",
+            "bestmove": null
+          },
+          {
+            "workerId": 2,
+            "command": "go movetime 1200",
+            "bestmove": "d2d4"
+          },
+          {
+            "workerId": 2,
+            "command": "go movetime 500",
+            "bestmove": null
+          }
+        ]
+      },
+      "oldSearch": {
+        "workerId": 1,
+        "command": "go movetime 1200",
+        "bestmove": null
+      },
+      "newSearch": {
+        "workerId": 2,
+        "command": "go movetime 1200",
+        "bestmove": "d2d4"
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

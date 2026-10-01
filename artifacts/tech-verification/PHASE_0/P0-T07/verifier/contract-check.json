@@ -1,0 +1,175 @@
+{
+  "shippedExerciseCount": 5,
+  "shippedBatch": {
+    "passed": true,
+    "results": [
+      {
+        "valid": true,
+        "exerciseId": "mate_one_queen",
+        "fen": "7k/6Q1/6K1/8/8/8/8/8 w - - 0 1",
+        "error": null
+      },
+      {
+        "valid": true,
+        "exerciseId": "knight_capture",
+        "fen": "4k3/8/8/3q4/8/4N3/8/4K3 w - - 0 1",
+        "error": null
+      },
+      {
+        "valid": true,
+        "exerciseId": "promotion_queen",
+        "fen": "8/P7/8/8/8/8/8/4k2K w - - 0 1",
+        "error": null
+      },
+      {
+        "valid": true,
+        "exerciseId": "back_rank_mate",
+        "fen": "8/8/8/8/8/8/6k1/5KQn w - - 0 1",
+        "error": null
+      },
+      {
+        "valid": true,
+        "exerciseId": "bishop_diagonal",
+        "fen": "4k3/8/8/1r6/8/3B4/8/4K3 w - - 0 1",
+        "error": null
+      }
+    ],
+    "failed": []
+  },
+  "shippedChecks": [
+    {
+      "id": "mate_one_queen",
+      "beforeFen": "7k/6Q1/6K1/8/8/8/8/8 w - - 0 1",
+      "legalMove": true,
+      "san": "Kf7#",
+      "afterFen": "7k/5KQ1/8/8/8/8/8/8 b - - 1 1",
+      "tags": [
+        "checkmate",
+        "queen_coordination"
+      ],
+      "independentObjectives": {
+        "checkmate": true,
+        "promotion": true,
+        "capture": true
+      },
+      "productionValidator": {
+        "valid": true,
+        "exerciseId": "mate_one_queen",
+        "fen": "7k/6Q1/6K1/8/8/8/8/8 w - - 0 1",
+        "error": null
+      }
+    },
+    {
+      "id": "knight_capture",
+      "beforeFen": "4k3/8/8/3q4/8/4N3/8/4K3 w - - 0 1",
+      "legalMove": true,
+      "san": "Nxd5",
+      "afterFen": "4k3/8/8/3N4/8/8/8/4K3 b - - 0 1",
+      "tags": [
+        "fork",
+        "hanging_piece"
+      ],
+      "independentObjectives": {
+        "checkmate": true,
+        "promotion": true,
+        "capture": true
+      },
+      "productionValidator": {
+        "valid": true,
+        "exerciseId": "knight_capture",
+        "fen": "4k3/8/8/3q4/8/4N3/8/4K3 w - - 0 1",
+        "error": null
+      }
+    },
+    {
+      "id": "promotion_queen",
+      "beforeFen": "8/P7/8/8/8/8/8/4k2K w - - 0 1",
+      "legalMove": true,
+      "san": "a8=Q",
+      "afterFen": "Q7/8/8/8/8/8/8/4k2K b - - 0 1",
+      "tags": [
+        "promotion",
+        "endgame"
+      ],
+      "independentObjectives": {
+        "checkmate": true,
+        "promotion": true,
+        "capture": true
+      },
+      "productionValidator": {
+        "valid": true,
+        "exerciseId": "promotion_queen",
+        "fen": "8/P7/8/8/8/8/8/4k2K w - - 0 1",
+        "error": null
+      }
+    },
+    {
+      "id": "back_rank_mate",
+      "beforeFen": "8/8/8/8/8/8/6k1/5KQn w - - 0 1",
+      "legalMove": true,
+      "san": "Qxg2#",
+      "afterFen": "8/8/8/8/8/8/6Q1/5K1n b - - 0 1",
+      "tags": [
+        "checkmate",
+        "back_rank"
+      ],
+      "independentObjectives": {
+        "checkmate": true,
+        "promotion": true,
+        "capture": true
+      },
+      "productionValidator": {
+        "valid": true,
+        "exerciseId": "back_rank_mate",
+        "fen": "8/8/8/8/8/8/6k1/5KQn w - - 0 1",
+        "error": null
+      }
+    },
+    {
+      "id": "bishop_diagonal",
+      "beforeFen": "4k3/8/8/1r6/8/3B4/8/4K3 w - - 0 1",
+      "legalMove": true,
+      "san": "Bxb5+",
+      "afterFen": "4k3/8/8/1B6/8/8/8/4K3 b - - 0 1",
+      "tags": [
+        "bishop",
+        "hanging_piece"
+      ],
+      "independentObjectives": {
+        "checkmate": true,
+        "promotion": true,
+        "capture": true
+      },
+      "productionValidator": {
+        "valid": true,
+        "exerciseId": "bishop_diagonal",
+        "fen": "4k3/8/8/1r6/8/3B4/8/4K3 w - - 0 1",
+        "error": null
+      }
+    }
+  ],
+  "shippedExercisesPass": true,
+  "sameProductionValidatorImport": "../../../../../src/services/exerciseValidator.js",
+  "falsePromotionRecord": {
+    "id": "malformed_false_promotion",
+    "tags": [
+      "promotion"
+    ],
+    "title": "Bắt hậu miễn phí",
+    "description": "Trắng đi, dùng mã bắt hậu đen.",
+    "fen": "4k3/8/8/3q4/8/4N3/8/4K3 w - - 0 1",
+    "correctMove": {
+      "from": "e3",
+      "to": "d5"
+    },
+    "hint": "Mã trắng đang tấn công ô d5."
+  },
+  "falsePromotionResult": {
+    "valid": false,
+    "exerciseId": "malformed_false_promotion",
+    "fen": "4k3/8/8/3q4/8/4N3/8/4K3 w - - 0 1",
+    "error": "Move does not achieve the declared promotion"
+  },
+  "falsePromotionRejected": true,
+  "verdict": "PASS"
+}

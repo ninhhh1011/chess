@@ -1,0 +1,281 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4207",
+  "runs": [
+    {
+      "side": "w",
+      "productionScripts": [
+        "http://127.0.0.1:4207/assets/index-CozSBo6p.js",
+        "http://127.0.0.1:4207/registerSW.js"
+      ],
+      "plies": 14,
+      "finalFen": "rn1qkb1r/ppp1ppp1/7n/7p/6b1/3pP1P1/PPPP1P1P/R1B1KB1R w KQkq - 0 8",
+      "displayedFacts": [
+        {
+          "evidenceId": "review-1788634722248:ply:13",
+          "source": "stockfish_wasm",
+          "turn": "w",
+          "cpl": 413,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": -590
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": -1003
+          },
+          "playedUci": "e2d3",
+          "bestUci": "e2c4",
+          "label": "Blunder#13: Qd3, Ninh mách Qxc4",
+          "ply": 13
+        },
+        {
+          "evidenceId": "review-1788634722248:ply:3",
+          "source": "stockfish_wasm",
+          "turn": "w",
+          "cpl": 308,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": -37
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": -345
+          },
+          "playedUci": "a3c4",
+          "bestUci": "g1f3",
+          "label": "Blunder#3: Nc4, Ninh mách Nf3",
+          "ply": 3
+        },
+        {
+          "evidenceId": "review-1788634722248:ply:9",
+          "source": "stockfish_wasm",
+          "turn": "w",
+          "cpl": 251,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": -576
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": -827
+          },
+          "playedUci": "e2e3",
+          "bestUci": "d2d3",
+          "label": "Blunder#9: e3, Ninh mách d3",
+          "ply": 9
+        }
+      ],
+      "sideFact": {
+        "evidenceId": "review-1788634722248:ply:13",
+        "source": "stockfish_wasm",
+        "turn": "w",
+        "cpl": 413,
+        "classification": "blunder",
+        "evalBefore": {
+          "type": "cp",
+          "value": -590
+        },
+        "evalAfter": {
+          "type": "cp",
+          "value": -1003
+        },
+        "playedUci": "e2d3",
+        "bestUci": "e2c4",
+        "label": "Blunder#13: Qd3, Ninh mách Qxc4",
+        "ply": 13
+      },
+      "stockfishWorkerUrls": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "reviewSearchCount": 21,
+      "legalLatestPvCount": 21,
+      "matchedWorkerSearches": [
+        {
+          "fen": "rn1qkb1r/ppp1ppp1/7n/7p/2p3b1/4P1P1/PPPPQP1P/R1B1KB1R w KQkq - 2 7",
+          "command": "go movetime 450",
+          "bestmove": "e2c4",
+          "latest": {
+            "evaluation": {
+              "type": "cp",
+              "value": -590
+            },
+            "pv": [
+              "f2f3",
+              "g4d7",
+              "b2b3",
+              "d7c6",
+              "c1b2",
+              "b8d7",
+              "f1g2",
+              "e7e6",
+              "e1g1",
+              "d7b6",
+              "f3f4",
+              "d8d7",
+              "f4f5",
+              "h6f5",
+              "g2c6",
+              "d7c6",
+              "e3e4"
+            ]
+          },
+          "finalPvWasNormalized": true
+        },
+        {
+          "fen": "rn1qkb1r/ppp1ppp1/7n/7p/2p3b1/4P1P1/PPPPQP1P/R1B1KB1R w KQkq - 2 7",
+          "command": "go movetime 450",
+          "bestmove": "e2c4",
+          "latest": {
+            "evaluation": {
+              "type": "cp",
+              "value": -590
+            },
+            "pv": [
+              "f2f3",
+              "g4d7",
+              "b2b3",
+              "d7c6",
+              "c1b2",
+              "b8d7",
+              "f1g2",
+              "e7e6",
+              "e1g1",
+              "d7b6",
+              "f3f4",
+              "d8d7",
+              "f4f5",
+              "h6f5",
+              "g2c6",
+              "d7c6",
+              "e3e4"
+            ]
+          },
+          "finalPvWasNormalized": true
+        }
+      ],
+      "errors": {
+        "console": [],
+        "page": [],
+        "network": []
+      }
+    },
+    {
+      "side": "b",
+      "productionScripts": [
+        "http://127.0.0.1:4207/assets/index-CozSBo6p.js",
+        "http://127.0.0.1:4207/registerSW.js"
+      ],
+      "plies": 14,
+      "finalFen": "1rb1k1nr/ppppbppp/2n5/3Pp3/7B/2N1PN2/PPP2PPP/R2QKB1R w KQk - 3 8",
+      "displayedFacts": [
+        {
+          "evidenceId": "review-1788634748836:ply:4",
+          "source": "stockfish_wasm",
+          "turn": "b",
+          "cpl": 734,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": -48
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": 686
+          },
+          "playedUci": "d8g5",
+          "bestUci": "e5e4",
+          "label": "Blunder#4: Qg5, Ninh mách e4",
+          "ply": 4
+        },
+        {
+          "evidenceId": "review-1788634748836:ply:3",
+          "source": "stockfish_wasm",
+          "turn": "w",
+          "cpl": 164,
+          "classification": "mistake",
+          "evalBefore": {
+            "type": "cp",
+            "value": 116
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": -48
+          },
+          "playedUci": "d2d4",
+          "bestUci": "b1c3",
+          "label": "Sai lầm#3: d4, Ninh mách Nc3",
+          "ply": 3
+        },
+        {
+          "evidenceId": "review-1788634748836:ply:10",
+          "source": "stockfish_wasm",
+          "turn": "b",
+          "cpl": 107,
+          "classification": "mistake",
+          "evalBefore": {
+            "type": "cp",
+            "value": 620
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": 727
+          },
+          "playedUci": "a8b8",
+          "bestUci": "e7h4",
+          "label": "Sai lầm#10: Rb8, Ninh mách Bxh4",
+          "ply": 10
+        }
+      ],
+      "sideFact": {
+        "evidenceId": "review-1788634748836:ply:4",
+        "source": "stockfish_wasm",
+        "turn": "b",
+        "cpl": 734,
+        "classification": "blunder",
+        "evalBefore": {
+          "type": "cp",
+          "value": -48
+        },
+        "evalAfter": {
+          "type": "cp",
+          "value": 686
+        },
+        "playedUci": "d8g5",
+        "bestUci": "e5e4",
+        "label": "Blunder#4: Qg5, Ninh mách e4",
+        "ply": 4
+      },
+      "stockfishWorkerUrls": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "reviewSearchCount": 24,
+      "legalLatestPvCount": 24,
+      "matchedWorkerSearches": [
+        {
+          "fen": "rnbqkbnr/pppp1ppp/8/4p3/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq - 0 2",
+          "command": "go movetime 450",
+          "bestmove": "e5e4",
+          "latest": {
+            "evaluation": {
+              "type": "cp",
+              "value": 47
+            },
+            "pv": [
+              "e5e4",
+              "f3d2"
+            ]
+          }
+        }
+      ],
+      "errors": {
+        "console": [],
+        "page": [],
+        "network": []
+      }
+    }
+  ]
+}

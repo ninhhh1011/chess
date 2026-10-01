@@ -1,0 +1,24 @@
+{
+  "verdict": "PASS",
+  "testFile": "scripts/validate-puzzle-corpus.test.mjs",
+  "allAcceptedRecordsValidated": true,
+  "samplingOptionRejected": true,
+  "covered": [
+    "official fixture mapping and full solution replay",
+    "FEN and side-to-move mismatch",
+    "illegal solution move",
+    "rating and canonical record contract tampering",
+    "unknown pinned-taxonomy theme",
+    "provenance and CC0 license mismatch",
+    "source and normalized checksum mismatch",
+    "missing raw-row checksum",
+    "duplicate source ID and normalized puzzle key",
+    "malformed JSON",
+    "manifest output/source checksum and accepted-count drift",
+    "canonical and legacy CLI exit 0, 2, and 1"
+  ],
+  "focusedGate": {
+    "filesPassed": 3,
+    "testsPassed": 42
+  }
+}

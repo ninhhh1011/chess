@@ -1,0 +1,27 @@
+{
+  "task": "P3-T07",
+  "verdict": "PASS",
+  "checks": {
+    "canonicalProfileV2FullState": true,
+    "repeatedReadBytesStable": true,
+    "repeatedReloadBytesStable": true,
+    "sameOriginNewTabBytesStable": true,
+    "profileIdStable": true,
+    "revisionStableOnRead": true,
+    "syncIdAndRevisionMatchProfile": true,
+    "reviewFactTracePersists": true,
+    "attemptSkillPlanTracePersists": true,
+    "v1MigrationOccursOnce": true,
+    "v1MigratedBytesStable": true,
+    "malformedJsonPreservesExactBytes": true,
+    "unsupportedSchemaPreservesExactBytes": true,
+    "malformedEntityPreservesExactBytes": true,
+    "validSnapshotRestoresExactly": true,
+    "quotaFailurePreservesDurableBytes": true,
+    "validationFailurePreservesDurableBytes": true,
+    "reloadAddsNoDuplicatePlans": true,
+    "reloadAddsNoDuplicateEvents": true,
+    "productionRealPuzzleTrace": true,
+    "productionErrors": { "console": 0, "page": 0, "network": 0 }
+  }
+}

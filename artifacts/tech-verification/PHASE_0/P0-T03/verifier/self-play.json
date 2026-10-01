@@ -1,0 +1,52 @@
+{
+  "verdict": "PASS",
+  "route": "/play",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "difficulty": "easy",
+  "playerColor": "white",
+  "counts": [
+    2,
+    4,
+    6
+  ],
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "e6",
+    "Nf3",
+    "d5",
+    "d3",
+    "c5"
+  ],
+  "finalFen": "rnbqkbnr/pp3ppp/4p3/2pp4/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove g1f3 ponder d7d5",
+      "bestmove e7e6 ponder d2d4",
+      "bestmove e2e4 ponder e7e5",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove h2h4 ponder d7d5",
+      "bestmove d7d5 ponder e4d5",
+      "bestmove g1f3 ponder d7d5",
+      "bestmove a7a5 ponder d2d4",
+      "bestmove b1c3 ponder d5d4",
+      "bestmove c7c5 ponder e4d5",
+      "bestmove d2d3 ponder f8e7"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

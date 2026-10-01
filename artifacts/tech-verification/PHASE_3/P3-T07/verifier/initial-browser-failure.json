@@ -1,0 +1,9 @@
+{
+  "result": "FAIL",
+  "classification": "VERIFIER_HARNESS_ONLY",
+  "stage": "first real puzzle trace",
+  "error": "Expected five persisted events but observed four",
+  "cause": "The verifier dragged immediately after clicking Retry, racing the chessboard reset animation.",
+  "correction": "Wait for the persisted retry event and allow the board reset to settle before the next drag.",
+  "productChanged": false
+}

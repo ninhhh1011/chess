@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-09-06T08:20:37.232Z",
+  "verdict": "PASS",
+  "production": true,
+  "accountCreated": true,
+  "dailyPlan": {
+    "initialId": "plan:12c8c746-7e34-4ae2-bc02-a33d2991ab28",
+    "initialTasks": 4,
+    "afterPuzzleId": "plan:a496e13c-8c78-4a71-962e-4fde780a1d52",
+    "afterPuzzleTasks": 5,
+    "evidenceTask": {
+      "id": "skill:tactical_oversight",
+      "evidenceIds": [
+        "game:210bc1d9-48fb-45a4-8b10-4e2ea8da1b8a:ply:9",
+        "game:210bc1d9-48fb-45a4-8b10-4e2ea8da1b8a:ply:11",
+        "game:210bc1d9-48fb-45a4-8b10-4e2ea8da1b8a:ply:12"
+      ]
+    }
+  },
+  "game": {
+    "plies": 14,
+    "legal": true,
+    "finalFen": "rnbqkb1r/pp3ppp/1P2pn2/2pp4/8/P5PB/2PPPP1P/RNBQK2R w KQkq - 0 8"
+  },
+  "review": {
+    "evidenceId": "game:210bc1d9-48fb-45a4-8b10-4e2ea8da1b8a:ply:9",
+    "engineSource": "stockfish_wasm",
+    "bestUci": "g2h3"
+  },
+  "coach": {
+    "factId": "game:210bc1d9-48fb-45a4-8b10-4e2ea8da1b8a:ply:9",
+    "hint": "gxh3",
+    "grounded": true
+  },
+  "puzzle": {
+    "id": "lichess-00008",
+    "status": "solved",
+    "events": 5
+  },
+  "persistence": {
+    "exactReload": true,
+    "reviewFacts": 3,
+    "skillStates": 5
+  },
+  "cloud": {
+    "uploadStatuses": [
+      201,
+      200
+    ],
+    "rowCounts": [
+      1,
+      1
+    ],
+    "cleanup": {
+      "profile": true,
+      "rowsRemaining": 0,
+      "account": true
+    },
+    "sameRow": true,
+    "sameProfile": true
+  },
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "http": []
+  }
+}

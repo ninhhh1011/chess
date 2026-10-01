@@ -32,15 +32,37 @@ vi.mock('../services/stockfishService', () => ({
   configureEngine: vi.fn().mockResolvedValue(true),
 }));
 
+vi.mock('../services/analysis/gameAnalyzer', () => ({
+  analyzeGame: vi.fn(),
+}));
+
+vi.mock('react-chessboard', async (importOriginal) => ({
+  ...(await importOriginal()),
+  Chessboard: () => <div data-testid="chessboard" />,
+}));
+
 import * as botService from '../services/botService';
+import * as gameAnalyzer from '../services/analysis/gameAnalyzer';
+import { getUserProfile } from '../services/userProfileService';
 
 // Expected FEN after 1.e4
-const FEN_AFTER_E4 = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
+const FEN_AFTER_E4 = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1';
 const FEN_STARTING = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
+function BotLifecycleDriver() {
+  const { startGame, makeMove, GAME_MODES } = useChessGame();
+  return (
+    <>
+      <button onClick={() => startGame({ elo: 800, color: 'w', mode: GAME_MODES.BOT })}>Start white test game</button>
+      <button onClick={() => makeMove('e2', 'e4')}>Play e2e4</button>
+    </>
+  );
+}
 
 describe('ChessGameBoard Integration - PRODUCTION BOT LIFECYCLE', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   afterEach(() => {
@@ -105,7 +127,7 @@ describe('ChessGameBoard Integration - PRODUCTION BOT LIFECYCLE', () => {
       );
 
       // Find and click start button (with black so bot responds)
-      const blackBtn = await screen.findByRole('button', { name: /Đen/i });
+      const blackBtn = await (screen.findByRole('radio', { name: /Đen/i }).catch(() => screen.findByRole('button', { name: /Đen/i })));
       await act(async () => { blackBtn.click(); });
 
       const startBtn = await screen.findByRole('button', { name: /Bắt đầu ván/i });
@@ -155,6 +177,177 @@ describe('ChessGameBoard Integration - PRODUCTION BOT LIFECYCLE', () => {
       // Bot will be called after player makes a move on the board
       // The test verifies that botService.getBotMove is not called before player moves
       expect(botService.getBotMove).not.toHaveBeenCalled();
+    });
+
+    it('requests one bot move after the white player moves', async () => {
+      botService.getBotMove.mockResolvedValue({ move: 'e7e5', source: 'stockfish_wasm', elo: 800 });
+
+      render(
+        <StrictMode>
+          <ChessGameProvider>
+            <ChessGameBoard />
+            <BotLifecycleDriver />
+          </ChessGameProvider>
+        </StrictMode>
+      );
+
+      await act(async () => { screen.getByRole('button', { name: 'Start white test game' }).click(); });
+      vi.clearAllMocks();
+      await act(async () => { screen.getByRole('button', { name: 'Play e2e4' }).click(); });
+
+      await waitFor(() => expect(botService.getBotMove).toHaveBeenCalledTimes(1));
+      expect(botService.getBotMove).toHaveBeenCalledWith(FEN_AFTER_E4, 800, expect.any(AbortSignal));
+    });
+
+    it('routes the production review button through the two-pass analyzer', async () => {
+      botService.getBotMove.mockResolvedValue({ move: 'e7e5', source: 'stockfish_wasm', elo: 800 });
+      gameAnalyzer.analyzeGame.mockResolvedValue({
+        analysis: [],
+        topMistakes: [],
+        summary: { totalMoves: 2, mistakesCount: 0, blundersCount: 0, inaccuraciesCount: 0, avgCPL: 0 },
+      });
+
+      render(
+        <ChessGameProvider>
+          <ChessGameBoard />
+          <BotLifecycleDriver />
+        </ChessGameProvider>
+      );
+
+      await act(async () => { screen.getByRole('button', { name: 'Start white test game' }).click(); });
+      await act(async () => { screen.getByRole('button', { name: 'Play e2e4' }).click(); });
+      await waitFor(() => expect(botService.getBotMove).toHaveBeenCalled());
+
+      await act(async () => { (screen.queryByRole('tab', { name: 'Phân tích' }) || screen.getByRole('button', { name: 'Phân tích' })).click(); });
+      await act(async () => { screen.getByRole('button', { name: 'Mổ ván cờ' }).click(); });
+
+      await waitFor(() => expect(gameAnalyzer.analyzeGame).toHaveBeenCalledTimes(1));
+      expect(gameAnalyzer.analyzeGame).toHaveBeenCalledWith(expect.objectContaining({
+        pgn: expect.stringMatching(/e4.*e5/),
+        playerSide: 'w',
+        options: expect.objectContaining({ analyzeTopMistakes: 3 }),
+      }));
+    });
+
+    it('renders a selectable evidence ID and records its validated learning tags', async () => {
+      botService.getBotMove.mockResolvedValue({ move: 'e7e5', source: 'stockfish_wasm', elo: 800 });
+      const fact = {
+        schemaVersion: 'analysis.v1',
+        gameId: 'review-contract',
+        ply: 1,
+        turn: 'w',
+        fenBefore: FEN_STARTING,
+        fenAfter: FEN_AFTER_E4,
+        playedMove: { uci: 'e2e4', san: 'e4', fen: FEN_AFTER_E4 },
+        bestMove: { uci: 'd2d4', san: 'd4', fen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1' },
+        evalBefore: { type: 'cp', value: 20, display: '+0.20' },
+        evalAfter: { type: 'cp', value: -100, display: '-1.00' },
+        centipawnLoss: 120,
+        classification: 'mistake',
+        candidates: [{ uci: 'd2d4', san: 'd4', eval: { type: 'cp', value: 20, display: '+0.20' }, pv: ['d2d4'] }],
+        skillTags: ['opening_principle'],
+        engine: { source: 'stockfish_wasm', version: '18', depth: 10, movetimeMs: 450, multiPv: 1 },
+        analyzedAt: '2026-09-06T00:00:00.000Z',
+      };
+      gameAnalyzer.analyzeGame.mockResolvedValue({
+        gameId: 'review-contract',
+        analysis: [fact],
+        topMistakes: ['1'],
+        summary: { totalMoves: 1, mistakesCount: 1, blundersCount: 0, inaccuraciesCount: 0, avgCPL: 120 },
+      });
+
+      render(
+        <ChessGameProvider>
+          <ChessGameBoard />
+          <BotLifecycleDriver />
+        </ChessGameProvider>
+      );
+
+      await act(async () => { screen.getByRole('button', { name: 'Start white test game' }).click(); });
+      await act(async () => { screen.getByRole('button', { name: 'Play e2e4' }).click(); });
+      await waitFor(() => expect(botService.getBotMove).toHaveBeenCalled());
+      await act(async () => { (screen.queryByRole('tab', { name: /Ph.n t.ch/i }) || screen.getByRole('button', { name: /Ph.n t.ch/i })).click(); });
+      await act(async () => { screen.getByRole('button', { name: /M. v.n c./i }).click(); });
+
+      const evidence = await screen.findByRole('button', { name: /#1:.*e4/i });
+      expect(evidence).toHaveAttribute('data-evidence-id', 'review-contract:ply:1');
+      expect(evidence).toHaveAttribute('data-turn', 'w');
+      expect(evidence).toHaveAttribute('data-centipawn-loss', '120');
+      expect(evidence).toHaveAttribute('data-classification', 'mistake');
+      expect(evidence).toHaveAttribute('data-eval-before', 'cp:20');
+      expect(evidence).toHaveAttribute('data-eval-after', 'cp:-100');
+      await act(async () => { evidence.click(); });
+      const profile = getUserProfile();
+      expect(profile.commonMistakes).toContain('opening_principle');
+      expect(profile.persistence.gameReviews).toEqual([
+        expect.objectContaining({
+          reviewId: expect.stringMatching(/^review:/),
+          gameId: 'review-contract',
+          factIds: ['review-contract:ply:1'],
+        }),
+      ]);
+      expect(profile.persistence.analysisFacts).toEqual([
+        expect.objectContaining({ gameId: 'review-contract', ply: 1, engine: expect.objectContaining({ source: 'stockfish_wasm' }) }),
+      ]);
+    });
+
+    it('routes the selected trusted review fact into the existing analysis coach', async () => {
+      botService.getBotMove.mockResolvedValue({ move: 'e7e5', source: 'stockfish_wasm', elo: 800 });
+      const fact = {
+        schemaVersion: 'analysis.v1', gameId: 'coach-review', ply: 1, turn: 'w',
+        fenBefore: FEN_STARTING, fenAfter: FEN_AFTER_E4,
+        playedMove: { uci: 'e2e4', san: 'e4', fen: FEN_AFTER_E4 },
+        bestMove: { uci: 'd2d4', san: 'd4', fen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1' },
+        evalBefore: { type: 'cp', value: 20, display: '+0.20' },
+        evalAfter: { type: 'cp', value: -100, display: '-1.00' },
+        centipawnLoss: 120, classification: 'mistake',
+        candidates: [{ uci: 'd2d4', san: 'd4', eval: { type: 'cp', value: 20, display: '+0.20' }, pv: ['d2d4'] }],
+        skillTags: ['opening_principle'],
+        engine: { source: 'stockfish_wasm', version: '18', depth: 10, movetimeMs: 450, multiPv: 1 },
+        analyzedAt: '2026-09-06T00:00:00.000Z',
+      };
+      gameAnalyzer.analyzeGame.mockResolvedValue({
+        gameId: 'coach-review', pgn: '1. e4 e5', playerSide: 'w', analysis: [fact], topMistakes: ['1'],
+        summary: { totalMoves: 2, mistakesCount: 1, blundersCount: 0, inaccuraciesCount: 0, avgCPL: 120 },
+      });
+
+      render(
+        <ChessGameProvider>
+          <ChessGameBoard />
+          <BotLifecycleDriver />
+        </ChessGameProvider>
+      );
+      await act(async () => { screen.getByRole('button', { name: 'Start white test game' }).click(); });
+      await act(async () => { screen.getByRole('button', { name: 'Play e2e4' }).click(); });
+      await waitFor(() => expect(botService.getBotMove).toHaveBeenCalled());
+      await act(async () => { (screen.queryByRole('tab', { name: /Ph.n t.ch/i }) || screen.getByRole('button', { name: /Ph.n t.ch/i })).click(); });
+      await act(async () => { screen.getByRole('button', { name: /M. v.n c./i }).click(); });
+      const evidence = await screen.findByRole('button', { name: /#1:.*e4/i });
+      await act(async () => { evidence.click(); });
+      fact.bestMove = {
+        uci: 'g1f3',
+        san: 'Nf3',
+        fen: 'rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1',
+      };
+      fact.candidates = [{
+        uci: 'g1f3',
+        san: 'Nf3',
+        eval: { type: 'cp', value: 20, display: '+0.20' },
+        pv: ['g1f3'],
+      }];
+      await act(async () => { (screen.queryByRole('tab', { name: /Hu.n luy.n/i }) || screen.getByRole('button', { name: /Hu.n luy.n/i })).click(); });
+
+      const coachButton = await screen.findByRole('button', { name: /Qu.n s.*v.n n.y/i });
+      await act(async () => { coachButton.click(); });
+      expect(await screen.findByText(/N..c g.i .:/i)).toHaveTextContent('d4');
+      expect(screen.getByText(/Ngu.n:\s*stockfish_wasm/i)).toBeInTheDocument();
+
+      const persisted = JSON.parse(localStorage.getItem('vuaCoUserTrainingProfile'));
+      persisted.persistence.gameReviews = [];
+      localStorage.setItem('vuaCoUserTrainingProfile', JSON.stringify(persisted));
+      await act(async () => { (screen.queryByRole('tab', { name: /Ph.n t.ch/i }) || screen.getByRole('button', { name: /Ph.n t.ch/i })).click(); });
+      await act(async () => { (screen.queryByRole('tab', { name: /Hu.n luy.n/i }) || screen.getByRole('button', { name: /Hu.n luy.n/i })).click(); });
+      expect(screen.queryByRole('button', { name: /Qu.n s.*v.n n.y/i })).not.toBeInTheDocument();
     });
   });
 

@@ -11,8 +11,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Stockfish WASM is CPU-heavy; keep release evidence deterministic locally and in CI. */
+  workers: 1,
   /* Reporter to use */
   reporter: 'list',
   /* Shared settings for all projects */

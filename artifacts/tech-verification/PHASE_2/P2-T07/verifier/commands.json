@@ -1,0 +1,76 @@
+{
+  "verdict": "PASS",
+  "verifiedAt": "2026-09-06T10:36:03.3220371+07:00",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "remote": "https://github.com/ninhhh1011/chess",
+    "diffCheckExitCode": 0,
+    "note": "Dirty worktree was preserved; diff-check emitted only CRLF conversion warnings."
+  },
+  "history": [
+    {
+      "command": "npx vitest run scripts/corpus-delivery.test.mjs src/test/exercisesProductionCorpus.test.jsx artifacts/tech-verification/PHASE_2/P2-T07/verifier/source-pin-adversarial.test.ts",
+      "exitCode": 1,
+      "result": "1 failed / 2 passed files; 2 failed / 3 passed tests",
+      "finding": "Loader accepted unapproved dataset version and a self-consistent corpus re-signed to an unapproved source SHA-256."
+    },
+    {
+      "command": "same focused command after the source-pin fix",
+      "exitCode": 0,
+      "result": "3 files; 5/5 tests passed"
+    },
+    {
+      "command": "npm test -- --runInBand",
+      "exitCode": 1,
+      "result": "Harness-only error: Vitest does not support the Jest --runInBand option; no tests ran."
+    },
+    {
+      "command": "npx vitest run --reporter=dot",
+      "exitCode": 0,
+      "result": "41 files; 700/700 tests passed; 65.18s"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "zero errors and zero warnings"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "TypeScript noEmit passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "4,104 modules; production build and PWA generation passed"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "no whitespace errors; CRLF conversion warnings only"
+    },
+    {
+      "command": "clean candidate assembly from git ls-files --cached --others --exclude-standard",
+      "exitCode": 0,
+      "result": "956 files; ignored generatedPuzzles absent; public corpus present"
+    },
+    {
+      "command": "npm run typecheck && npm run build (clean candidate)",
+      "exitCode": 0,
+      "result": "typecheck passed; 4,063-module production build passed; dist corpus present and chunk SHA matched"
+    },
+    {
+      "command": "production Chromium audit against clean candidate preview on 127.0.0.1:4179",
+      "exitCode": 0,
+      "result": "real puzzle visible; 3/3 corpus responses HTTP 200; 6 legal plies with Stockfish WASM; 0 console/page/network errors"
+    }
+  ],
+  "evidenceSha256": {
+    "production.json": "dc8d11556fad7f0ad7b2191457550d842a75b0c38d14a9583ecd530de91e0179",
+    "real-puzzle.png": "d6978dd1b4b7a15dff8450b67bd8af353a691a814f282586802ed0f5d5bbe195",
+    "six-ply.png": "3f788ce3f8ed6a5462406ceb23994a6076e75b8ed4bab95363f09ada80f9e10e"
+  }
+}

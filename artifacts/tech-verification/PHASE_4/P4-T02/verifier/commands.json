@@ -1,0 +1,55 @@
+{
+  "task": "P4-T02",
+  "verdict": "PASS",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/coach.test.ts server/routes/coach.test.js --reporter=dot",
+      "exitCode": 0,
+      "result": "2 files, 34/34 tests PASS",
+      "durationSeconds": 2.59
+    },
+    {
+      "command": "npm test -- --run --reporter=dot",
+      "exitCode": 0,
+      "result": "57 files, 761/761 tests PASS",
+      "durationSeconds": 56.72
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS; Vite 8.0.10 transformed 4,107 modules and emitted 45 PWA entries",
+      "durationSeconds": 10.27
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS; pre-existing LF/CRLF notices only"
+    },
+    {
+      "command": "node --check artifacts/tech-verification/PHASE_4/P4-T02/verifier/verify.mjs",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_4/P4-T02/verifier/verify.mjs http://127.0.0.1:4175",
+      "exitCode": 0,
+      "result": "PASS; real HTTP Edge, Express, production proxy, and hashed-production Chromium"
+    }
+  ]
+}

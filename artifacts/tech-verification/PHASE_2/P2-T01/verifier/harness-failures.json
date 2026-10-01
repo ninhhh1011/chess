@@ -1,0 +1,9 @@
+[
+  {
+    "attempt": 1,
+    "harness": "audit.mjs",
+    "productFailure": false,
+    "error": "Official puzzle count parser returned null because the number is wrapped in a strong element.",
+    "fix": "Match the official HTML strong element around the count, then rerun the complete audit."
+  }
+]

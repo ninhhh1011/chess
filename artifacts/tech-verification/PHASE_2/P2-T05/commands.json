@@ -1,0 +1,54 @@
+{
+  "task": "P2-T05",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npm test -- --run scripts/validate-puzzle-corpus.test.mjs scripts/import-lichess-puzzles.test.mjs src/test/puzzleRecord.test.ts",
+      "exitCode": 0,
+      "result": "3 files, 42 tests passed"
+    },
+    {
+      "command": "node scripts/validate-puzzle-corpus.mjs --input %TEMP%\\chess-p2t04\\mini-import-final-1\\accepted.jsonl --manifest %TEMP%\\chess-p2t04\\mini-import-final-1\\manifest.json --quarantine-output artifacts/tech-verification/PHASE_2/P2-T05/quarantine.jsonl --report-output artifacts/tech-verification/PHASE_2/P2-T05/validation-report.json",
+      "exitCode": 0,
+      "result": "PASS: 1,000/1,000 records, 3,732 solution moves, zero quarantine or duplicate"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 0,
+      "result": "37 files, 692 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "4,103 modules transformed"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T05/imported-puzzle-flow.mjs %TEMP%\\chess-p2t04\\mini-import-final-1\\accepted.jsonl",
+      "exitCode": 0,
+      "result": "PASS: real Lichess 0000D legal wrong attempt, reset, and complete three-ply solution replay in the non-production corpus harness"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T04/self-play.mjs http://127.0.0.1:4196 artifacts/tech-verification/PHASE_2/P2-T05",
+      "exitCode": 0,
+      "result": "PASS: six legal plies through production Stockfish WASM; zero browser errors"
+    }
+  ],
+  "commitOrPushPerformed": false
+}

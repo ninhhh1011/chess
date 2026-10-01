@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-09-06T08:36:00.000Z",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "diffCheck": "PASS"
+  },
+  "full": {
+    "files": 56,
+    "passedFiles": 56,
+    "tests": 760,
+    "passed": 760,
+    "failed": 0
+  },
+  "lint": "PASS",
+  "typecheck": "PASS",
+  "build": {
+    "result": "PASS",
+    "modules": 4107,
+    "pwaEntries": 45
+  },
+  "productionFlow": {
+    "result": "PASS",
+    "legalPlies": 14,
+    "engineSource": "stockfish_wasm",
+    "puzzleEvents": 5,
+    "exactReload": true,
+    "uploadStatuses": [201, 200],
+    "rowCounts": [1, 1],
+    "sameRowAfterRetry": true,
+    "sameProfileAfterRetry": true,
+    "cleanup": "PASS",
+    "runtimeErrors": 0
+  },
+  "independentVerification": {
+    "result": "PASS",
+    "focused": "138/138",
+    "full": "760/760",
+    "legalPlies": 12,
+    "stockfishBestmoves": 22,
+    "uploadStatuses": [201, 200],
+    "cleanup": "PASS",
+    "runtimeErrors": 0
+  }
+}

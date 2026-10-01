@@ -65,6 +65,7 @@ export interface EngineInfo {
  */
 export interface AnalysisFactV1 {
   schemaVersion: 'analysis.v1';
+  /** Stable evidence ID is derived as `${gameId}:ply:${ply}`. */
   gameId: string;
   ply: number;        // Half-move number (1 = white's first move)
   turn: 'w' | 'b';   // Side that played

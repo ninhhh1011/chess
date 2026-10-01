@@ -1,154 +1,40 @@
-# Corpus Deployment and Reproducibility
+# Corpus Deployment
 
-## Status: DEPENDENCY DOCUMENTED
+**Current state:** a verified 20,000-puzzle Lichess corpus is shipped as repo-native static assets.
 
-The corpus file `src/data/generated/generatedPuzzles.json` is **gitignored** and must be regenerated during build/deploy.
+Production reads `public/corpus/current.json`, then the selected versioned manifest and chunks under `public/corpus/runs/<content-identity>/`. Vite copies these files to `dist/corpus`; JSON remains outside the PWA precache glob. The application verifies the pointer and manifest contracts, official source/license metadata, every chunk SHA-256, every `PuzzleRecord`, record provenance, and the final record count before activation. Any missing, malformed, altered, or incomplete artifact fails closed and leaves the five bundled exercises as a truthfully labelled fallback.
 
----
+## Active corpus
 
-## Deployment Architecture
+- source: `https://database.lichess.org/lichess_db_puzzle.csv.zst`
+- license: CC0-1.0
+- dataset version: `2026-08-02`
+- source SHA-256: `a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073`
+- content identity: `474266a1953635fef5a03406a2dcd5831cc891085104d19e39c8f2470a40e75f`
+- accepted/validated: 20,000/20,000; 71,916 solution moves replayed
+- delivery: 20 chunks of 1,000 records; prior verified 1,000-puzzle run retained for rollback
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Build Process                          │
-├─────────────────────────────────────────────────────────┤
-│  npm install                                             │
-│  ↓                                                      │
-│  node scripts/ingest-corpus.cjs  ← Generates 40k puzzles│
-│  ↓                                                      │
-│  Vite build                                             │
-│  ↓                                                      │
-│  Output: dist/                                          │
-│          └── assets/                                    │
-│              └── generatedPuzzles.json (bundled)        │
-└─────────────────────────────────────────────────────────┘
-```
+## Build and publish
 
----
+Run the full validator first, then build delivery assets only from its PASS report:
 
-## Gitignore Configuration
-
-```gitignore
-# Generated corpus (too large for repo)
-src/data/generated/
+```powershell
+node scripts/build-corpus-delivery.mjs build `
+  --input <accepted.jsonl> `
+  --manifest <import-manifest.json> `
+  --validation-report <validation-report.json> `
+  --output-root public/corpus `
+  --chunk-size 1000
 ```
 
----
+The builder refuses non-PASS evidence and any input/source/count mismatch. It writes chunks and a manifest into a temporary run directory, renames the completed run into place, then atomically replaces only `current.json`. Existing runs are immutable and verified before reuse.
 
-## Build Failure Without Corpus
+Rollback keeps every prior run and atomically selects the previous verified version:
 
-**Current behavior:** Build will fail if `src/data/generated/generatedPuzzles.json` does not exist.
-
-**Reason:** The corpus loader imports the JSON file directly:
-```typescript
-import generatedPuzzlesData from '../data/generated/generatedPuzzles.json';
+```powershell
+node scripts/build-corpus-delivery.mjs rollback --output-root public/corpus
 ```
 
----
+Rollback rechecks the prior manifest and every chunk checksum before changing the pointer. A corrupt or incomplete target leaves `current.json` untouched.
 
-## Reproduction Steps
-
-### Option 1: Generate on Build
-Add to `package.json`:
-```json
-{
-  "scripts": {
-    "prebuild": "node scripts/ingest-corpus.cjs",
-    "build": "vite build"
-  }
-}
-```
-
-### Option 2: Generate and Commit (Smaller Corpus)
-For CI/CD, generate a minimal corpus (1000 puzzles) and commit:
-```bash
-CORPUS_SIZE=1000 node scripts/ingest-corpus.cjs
-git add src/data/generated/corpusManifest.json
-```
-
-### Option 3: External Artifact
-Store corpus in external storage (S3, etc.) and download during build:
-```bash
-curl -o src/data/generated/generatedPuzzles.json $CORPUS_URL
-```
-
----
-
-## Reproducibility Verification
-
-### Test 1: Clean Clone
-```bash
-git clone <repo>
-npm ci
-npm run build  # Must generate corpus or fail gracefully
-```
-
-### Test 2: Idempotent Import
-```bash
-# Run twice, should produce same result
-node scripts/ingest-corpus.cjs
-node scripts/ingest-corpus.cjs
-# Verify: diff should show no changes
-```
-
-### Test 3: Manifest Checksum
-```bash
-node scripts/ingest-corpus.cjs
-# Check: src/data/generated/corpusManifest.json
-# Verify checksum matches generated puzzles
-```
-
----
-
-## Corpus Metadata
-
-```json
-{
-  "version": "1.0.0",
-  "generated": "2026-09-03T00:00:00.000Z",
-  "source": "generated-corpus-v2",
-  "license": "CC0",
-  "targetPuzzles": 20000,
-  "generatedPuzzles": 40000,
-  "acceptedPuzzles": 25320,
-  "motifs": 16,
-  "schema": "corpus.v1"
-}
-```
-
----
-
-## Current Limitations
-
-1. **No committed corpus:** Gitignored, regenerated on each build
-2. **Build dependency:** Build requires node and corpus script
-3. **Time cost:** ~5 seconds to generate 40k puzzles
-
----
-
-## Recommendations
-
-### Short-term (Current)
-- Document as build dependency ✅
-- Ensure `ingest-corpus.cjs` runs on build
-
-### Medium-term
-- Add prebuild script to package.json
-- Add `--size` flag to control puzzle count
-- Commit manifest only (not full dataset)
-
-### Long-term
-- Move corpus to external storage
-- Download during CI/CD
-- Use corpus version tag for reproducibility
-
----
-
-## Verification Checklist
-
-- [x] Corpus generator script exists
-- [x] Generated puzzles validate correctly
-- [x] Manifest with checksum generated
-- [x] Build includes generated data
-- [ ] Clean clone build succeeds (manual verification)
-- [ ] CI/CD pipeline verified
+`src/data/generated/generatedPuzzles.json` remains ignored and is neither read nor required by build or runtime. A clean candidate assembled from tracked plus unignored files builds with the corpus and without that hidden local artifact.

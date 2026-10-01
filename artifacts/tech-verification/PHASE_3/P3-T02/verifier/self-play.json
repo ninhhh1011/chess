@@ -1,0 +1,144 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4272",
+  "playedPlies": 14,
+  "played": [
+    "a3",
+    "c5",
+    "b4",
+    "d6",
+    "Nh3",
+    "Bxh3",
+    "g3",
+    "Bc8",
+    "Bh3",
+    "g6",
+    "b5",
+    "Bxh3",
+    "Rf1",
+    "Bh6"
+  ],
+  "finalFen": "rn1qk1nr/pp2pp1p/3p2pb/1Pp5/8/P5Pb/2PPPP1P/RNBQKR2 w Qkq - 2 8",
+  "selected": {
+    "evidenceId": "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9:ply:7",
+    "engineSource": "stockfish_wasm",
+    "skillTags": "tactical_oversight",
+    "turn": "w",
+    "centipawnLoss": "447",
+    "classification": "blunder",
+    "evalBefore": "cp:-30",
+    "evalAfter": "cp:-477",
+    "playedUci": "g2g3",
+    "bestUci": "g2h3",
+    "text": "Blunder#7: g3, Ninh mách gxh3"
+  },
+  "trace": {
+    "profileId": "profile:93da2512-eb01-4098-a4dc-07b20c568575",
+    "reviewId": "review:6a715c80-2e43-4668-8e0d-d2b10ef4f4c1",
+    "gameId": "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9",
+    "evidenceId": "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9:ply:7",
+    "ply": 7,
+    "engineSource": "stockfish_wasm",
+    "analyzedAt": "2026-09-06T05:20:40.913Z"
+  },
+  "review": {
+    "schemaVersion": "gameReview.v1",
+    "reviewId": "review:6a715c80-2e43-4668-8e0d-d2b10ef4f4c1",
+    "gameId": "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9",
+    "factIds": [
+      "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9:ply:7",
+      "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9:ply:11",
+      "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9:ply:9"
+    ],
+    "createdAt": "2026-09-06T05:20:41.851Z",
+    "updatedAt": "2026-09-06T05:20:41.851Z"
+  },
+  "fact": {
+    "schemaVersion": "analysis.v1",
+    "gameId": "game:f1a43b9c-527a-4fe5-8edd-f2ebef5d66a9",
+    "ply": 7,
+    "turn": "w",
+    "fenBefore": "rn1qkbnr/pp2pppp/3p4/2p5/1P6/P6b/2PPPPPP/RNBQKB1R w KQkq - 0 4",
+    "fenAfter": "rn1qkbnr/pp2pppp/3p4/2p5/1P6/P5Pb/2PPPP1P/RNBQKB1R b KQkq - 0 4",
+    "playedMove": {
+      "uci": "g2g3",
+      "san": "g3",
+      "fen": "rn1qkbnr/pp2pppp/3p4/2p5/1P6/P5Pb/2PPPP1P/RNBQKB1R b KQkq - 0 4"
+    },
+    "bestMove": {
+      "uci": "g2h3",
+      "san": "gxh3",
+      "fen": "rn1qkbnr/pp2pppp/3p4/2p5/1P6/P6P/2PPPP1P/RNBQKB1R b KQkq - 0 4"
+    },
+    "evalBefore": {
+      "type": "cp",
+      "value": -30,
+      "display": "-0.30"
+    },
+    "evalAfter": {
+      "type": "cp",
+      "value": -477,
+      "display": "-4.77"
+    },
+    "centipawnLoss": 447,
+    "classification": "blunder",
+    "candidates": [
+      {
+        "uci": "g2h3",
+        "san": "gxh3",
+        "eval": {
+          "type": "cp",
+          "value": -30,
+          "display": "-0.30"
+        },
+        "pv": [
+          "g2h3",
+          "b8c6",
+          "f1g2",
+          "e7e6",
+          "b4c5",
+          "d6c5",
+          "d2d3",
+          "f8e7",
+          "b1d2",
+          "d8c7",
+          "a1b1",
+          "e7f6",
+          "d2e4",
+          "b7b6",
+          "c1d2"
+        ]
+      }
+    ],
+    "skillTags": [
+      "tactical_oversight"
+    ],
+    "engine": {
+      "source": "stockfish_wasm",
+      "version": "unknown",
+      "depth": 18,
+      "movetimeMs": 450,
+      "multiPv": 1
+    },
+    "analyzedAt": "2026-09-06T05:20:40.913Z"
+  },
+  "selectedStockfishSearches": [
+    {
+      "fen": "rn1qkbnr/pp2pppp/3p4/2p5/1P6/P6b/2PPPPPP/RNBQKB1R w KQkq - 0 4",
+      "command": "go movetime 450",
+      "bestmove": "g2h3",
+      "source": "stockfish_wasm"
+    },
+    {
+      "fen": "rn1qkbnr/pp2pppp/3p4/2p5/1P6/P6b/2PPPPPP/RNBQKB1R w KQkq - 0 4",
+      "command": "go movetime 450",
+      "bestmove": "g2h3",
+      "source": "stockfish_wasm"
+    }
+  ],
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

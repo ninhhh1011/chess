@@ -1,0 +1,60 @@
+{
+  "task": "P4-T01",
+  "verdict": "PASS",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/coach.test.ts --reporter=dot",
+      "exitCode": 0,
+      "result": "1 file, 33/33 tests PASS",
+      "durationSeconds": 2.34
+    },
+    {
+      "command": "npm test -- --run --reporter=dot",
+      "exitCode": 0,
+      "result": "56 files, 760/760 tests PASS",
+      "durationSeconds": 53.9
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS; Vite 8.0.10 transformed 4,107 modules and emitted 45 PWA entries",
+      "durationSeconds": 12.04
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS; pre-existing LF/CRLF notices only"
+    },
+    {
+      "command": "node --check artifacts/tech-verification/PHASE_4/P4-T01/verifier/verify.mjs",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_4/P4-T01/verifier/verify.mjs http://127.0.0.1:4175",
+      "exitCode": 0,
+      "result": "PASS; Edge, Express, and hashed-production Chromium"
+    }
+  ],
+  "historicalVerifierRun": {
+    "result": "FAIL",
+    "classification": "verifier harness defect, not product defect",
+    "detail": "The first browser assertion expected a mojibake question string while the product correctly sent canonical Unicode `Nhận xét nhanh`. The failed JSON and screenshot were preserved before fixing only the owned verifier assertion."
+  }
+}

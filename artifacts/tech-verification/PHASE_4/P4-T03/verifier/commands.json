@@ -1,0 +1,51 @@
+{
+  "task": "P4-T03",
+  "verdict": "PASS",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/coach.test.ts --reporter=dot",
+      "result": "PASS",
+      "counts": "1 file, 33 tests",
+      "duration": "2.05s"
+    },
+    {
+      "command": "npm test -- --run --reporter=dot",
+      "result": "PASS",
+      "counts": "57 files, 761 tests",
+      "duration": "55.01s"
+    },
+    {
+      "command": "npm run lint",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS",
+      "detail": "Vite 8.0.10, 4107 modules, 45 PWA entries, 11.28s"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "detail": "No whitespace errors; existing line-ending notices only"
+    },
+    {
+      "command": "node --check artifacts/tech-verification/PHASE_4/P4-T03/verifier/verify.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_4/P4-T03/verifier/verify.mjs http://127.0.0.1:4175",
+      "result": "PASS",
+      "detail": "5 deterministic cases, 10 real HTTP responses, 2 hashed-production browser requests"
+    }
+  ]
+}

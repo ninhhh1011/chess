@@ -1,0 +1,23 @@
+{
+  "taskId": "P0-T04",
+  "toolchain": {
+    "nvmrc": "22",
+    "resolvedNode22": "v22.23.2",
+    "declaredEngine": "^20.19.0 || >=22.12.0",
+    "localNode": "v24.15.0",
+    "localNpm": "11.12.1",
+    "lockfileVersion": 3
+  },
+  "workflowSequence": [
+    { "command": "npm ci", "exitCode": 0, "result": "689 packages; inherited audit 1 low, 1 moderate, 8 high, 2 critical" },
+    { "command": "npm run lint", "exitCode": 0, "result": "PASS, zero warnings" },
+    { "command": "npm run typecheck", "exitCode": 0, "result": "PASS" },
+    { "command": "npm run test", "exitCode": 0, "result": "31 files, 563/563 PASS, 0 skipped" },
+    { "command": "npm run build", "exitCode": 0, "result": "production/PWA build PASS" },
+    { "command": "npx playwright install chromium", "exitCode": 0, "result": "PASS" },
+    { "command": "npm run test:e2e -- --list", "exitCode": 0, "result": "68 tests in 4 files" },
+    { "command": "npm run test:e2e -- --reporter=line --output=artifacts/tech-verification/PHASE_0/P0-T04/workflow-e2e", "exitCode": 0, "result": "68/68 PASS, 0 failed/skipped/filtered, 2.5m" },
+    { "command": "git diff --check", "exitCode": 0, "result": "PASS" },
+    { "command": "P0-T02 parameterized self-play harness against production preview :4178", "exitCode": 0, "result": "6 legal plies, replay/FEN/turn order PASS, stockfish_wasm, clean telemetry" }
+  ]
+}

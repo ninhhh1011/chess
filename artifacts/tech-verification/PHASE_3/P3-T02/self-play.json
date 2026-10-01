@@ -1,0 +1,57 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4174",
+  "playedPlies": 14,
+  "played": [
+    "a3",
+    "d5",
+    "Nh3",
+    "Bxh3",
+    "g3",
+    "Bd7",
+    "Bh3",
+    "Bxh3",
+    "Rf1",
+    "d4",
+    "a4",
+    "Nf6",
+    "a5",
+    "Bd7"
+  ],
+  "finalFen": "rn1qkb1r/pppbpppp/5n2/P7/3p4/6P1/1PPPPP1P/RNBQKR2 w Qkq - 1 8",
+  "selected": {
+    "evidenceId": "game:b63c1c33-a61b-418c-a736-9640c2f9429a:ply:5",
+    "engineSource": "stockfish_wasm",
+    "playedUci": "g2g3",
+    "bestUci": "g2h3",
+    "text": "Blunder#5: g3, Ninh mách gxh3"
+  },
+  "trace": {
+    "profileId": "profile:e99757e7-883c-4311-9805-f9c4c77a6fee",
+    "reviewId": "review:e270c0d6-301c-411c-b358-6520dfee85e9",
+    "gameId": "game:b63c1c33-a61b-418c-a736-9640c2f9429a",
+    "evidenceId": "game:b63c1c33-a61b-418c-a736-9640c2f9429a:ply:5",
+    "ply": 5,
+    "engineSource": "stockfish_wasm",
+    "analyzedAt": "2026-09-06T05:10:17.816Z"
+  },
+  "selectedStockfishSearches": [
+    {
+      "fen": "rn1qkbnr/ppp1pppp/8/3p4/8/P6b/1PPPPPPP/RNBQKB1R w KQkq - 0 3",
+      "command": "go movetime 450",
+      "bestmove": "g2h3",
+      "source": "stockfish_wasm"
+    },
+    {
+      "fen": "rn1qkbnr/ppp1pppp/8/3p4/8/P6b/1PPPPPPP/RNBQKB1R w KQkq - 0 3",
+      "command": "go movetime 450",
+      "bestmove": "g2h3",
+      "source": "stockfish_wasm"
+    }
+  ],
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

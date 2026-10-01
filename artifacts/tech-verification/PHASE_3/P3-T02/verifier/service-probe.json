@@ -1,0 +1,23 @@
+{
+  "task": "P3-T02",
+  "verdict": "PASS",
+  "evidenceId": "game:probe:ply:1",
+  "reviewId": "review:probe",
+  "revisionBefore": 1,
+  "revisionAfter": 2,
+  "revisionAfterExactRepeat": 2,
+  "persistedBytesStableAfterExactRepeat": true,
+  "reviewCountAfterExactRepeat": 1,
+  "factCountAfterExactRepeat": 1,
+  "rejectedWithoutStorageMutation": [
+    "empty-review-id",
+    "empty-facts",
+    "cross-game-fact",
+    "invalid-engine-source",
+    "conflicting-fact",
+    "conflicting-review",
+    "empty-reference-list",
+    "orphan-reference",
+    "cross-game-reference"
+  ]
+}

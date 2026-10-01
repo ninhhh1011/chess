@@ -1,0 +1,50 @@
+{
+  "task": "P2-T02",
+  "verifiedAt": "2026-09-06T03:35:54+07:00",
+  "branch": "main",
+  "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+  "runtime": {
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T02/verifier/isolation.mjs",
+      "result": "PASS: fresh rebuilt bundle; 141 production files and 32 bundle JS files scanned"
+    },
+    {
+      "command": "npm test -- --run src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts src/test/exercisesValidator.test.js src/test/learningLoop.test.ts",
+      "result": "PASS: 4 files, 34 tests"
+    },
+    {
+      "command": "npm run lint",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "npm test -- --run",
+      "result": "PASS: 33 files, 592 tests"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS: Vite 8.0.10, 4103 modules transformed, PWA 45-entry precache"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T02/verifier/self-play.mjs http://127.0.0.1:4192",
+      "result": "PASS: production Chromium /exercises and /play, 6 legal plies, stockfish_wasm, PGN replay, zero error arrays"
+    },
+    {
+      "command": "npx eslint artifacts/tech-verification/PHASE_2/P2-T02/verifier/isolation.mjs artifacts/tech-verification/PHASE_2/P2-T02/verifier/self-play.mjs --report-unused-disable-directives --max-warnings 0",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS (line-ending warnings only)"
+    }
+  ],
+  "verdict": "PASS",
+  "decisionGateRequired": false
+}

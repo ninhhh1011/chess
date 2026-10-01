@@ -1,4 +1,4 @@
-import { getUserProfile, saveUserProfile } from './userProfileService';
+import { getUserProfile, migrateUserProfile, saveUserProfile } from './userProfileService';
 import { getCloudProfile, createCloudProfile, saveCloudProfile } from './cloudProfileService';
 
 const SYNC_STATUS = {
@@ -50,9 +50,9 @@ export async function loadCloudProfileToLocal(userId) {
     const cloudProfile = await getCloudProfile(userId);
 
     if (cloudProfile?.profile_data) {
-      saveUserProfile(cloudProfile.profile_data);
+      const profile = saveUserProfile(migrateUserProfile(cloudProfile.profile_data), { preserveTimestamps: true });
       setSyncStatus(SYNC_STATUS.SYNCED);
-      return cloudProfile.profile_data;
+      return profile;
     }
 
     setSyncStatus(SYNC_STATUS.LOCAL_ONLY);
@@ -65,26 +65,35 @@ export async function loadCloudProfileToLocal(userId) {
 }
 
 export function mergeLocalAndCloudProfile(localProfile, cloudProfile) {
-  if (!cloudProfile?.profile_data) return localProfile;
+  const local = migrateUserProfile(localProfile);
+  if (!cloudProfile?.profile_data) return local;
+  const cloud = migrateUserProfile(cloudProfile.profile_data);
 
-  const localDate = new Date(localProfile?.updatedAt || 0);
-  const cloudDate = new Date(cloudProfile?.updated_at || 0);
+  const localDate = new Date(local.updatedAt);
+  const cloudDate = new Date(cloudProfile.updated_at || cloud.updatedAt);
 
   if (cloudDate > localDate) {
-    return { ...cloudProfile.profile_data, updatedAt: cloudDate.toISOString() };
+    const updatedAt = cloudDate.toISOString();
+    return migrateUserProfile({
+      ...cloud,
+      updatedAt,
+      persistence: { ...cloud.persistence, sync: { ...cloud.persistence.sync, updatedAt } },
+    });
   }
 
-  return localProfile;
+  return local;
 }
 
 export function shouldAskToSync(localProfile, cloudProfile) {
   if (!cloudProfile?.profile_data) return false;
+  const local = migrateUserProfile(localProfile);
+  const cloud = migrateUserProfile(cloudProfile.profile_data);
 
-  const localDate = new Date(localProfile?.updatedAt || 0);
-  const cloudDate = new Date(cloudProfile?.updated_at || 0);
+  const localDate = new Date(local.updatedAt);
+  const cloudDate = new Date(cloudProfile.updated_at || cloud.updatedAt);
 
-  const hasLocalProgress = localProfile.gamesPlayed > 0 || localProfile.lessonsCompleted.length > 0;
-  const hasCloudProgress = cloudProfile.games_played > 0 || cloudProfile.profile_data?.lessonsCompleted?.length > 0;
+  const hasLocalProgress = local.gamesPlayed > 0 || local.lessonsCompleted.length > 0;
+  const hasCloudProgress = cloud.gamesPlayed > 0 || cloud.lessonsCompleted.length > 0;
 
   return hasLocalProgress && hasCloudProgress && Math.abs(cloudDate - localDate) > 60000;
 }
@@ -94,8 +103,10 @@ export async function handleSyncPrompt(userId) {
   const cloudProfile = await getCloudProfile(userId);
 
   if (!cloudProfile?.profile_data) {
-    await syncLocalProfileToCloud(userId);
-    return { action: 'created', profile: localProfile };
+    const saved = await syncLocalProfileToCloud(userId);
+    return saved
+      ? { action: 'created', profile: localProfile }
+      : { action: 'error', profile: localProfile };
   }
 
   if (shouldAskToSync(localProfile, cloudProfile)) {
@@ -108,7 +119,7 @@ export async function handleSyncPrompt(userId) {
 }
 
 export async function syncOnLogin(userId) {
-  if (!userId) return;
+  if (!userId) return null;
 
   setSyncStatus(SYNC_STATUS.SYNCING);
 
@@ -116,17 +127,18 @@ export async function syncOnLogin(userId) {
     const cloudProfile = await getCloudProfile(userId);
 
     if (!cloudProfile?.profile_data) {
-      await syncLocalProfileToCloud(userId);
+      return await syncLocalProfileToCloud(userId);
     } else {
       const localProfile = getUserProfile();
       const merged = mergeLocalAndCloudProfile(localProfile, cloudProfile);
       saveUserProfile(merged);
+      setSyncStatus(SYNC_STATUS.SYNCED);
+      return merged;
     }
-
-    setSyncStatus(SYNC_STATUS.SYNCED);
   } catch (err) {
     console.warn('[sync] Sync on login error:', err);
     setSyncStatus(SYNC_STATUS.ERROR);
+    return null;
   }
 }
 
@@ -135,14 +147,18 @@ export async function syncOnLogout() {
 }
 
 export async function syncOnAction(userId, actionType) {
-  if (!userId) return;
+  if (!userId) return null;
+
+  setSyncStatus(SYNC_STATUS.SYNCING);
 
   try {
     const localProfile = getUserProfile();
-    await saveCloudProfile(userId, localProfile);
-    setSyncStatus(SYNC_STATUS.SYNCED);
+    const saved = await saveCloudProfile(userId, localProfile);
+    setSyncStatus(saved ? SYNC_STATUS.SYNCED : SYNC_STATUS.ERROR);
+    return saved || null;
   } catch (err) {
     console.warn('[sync] Sync on action error:', err);
     setSyncStatus(SYNC_STATUS.ERROR);
+    return null;
   }
 }

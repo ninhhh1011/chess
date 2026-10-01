@@ -3,9 +3,11 @@ import { useChessGame } from '../contexts/ChessGameContext';
 import { useBotMove } from '../hooks/useBotMove';
 import { useGameTimer } from '../hooks/useGameTimer';
 import { analyzeFen } from '../services/stockfishService';
-import { getSanFromUci, classifyMoveLoss } from '../utils/chessMoveUtils';
+import { analyzeGame } from '../services/analysis/gameAnalyzer';
+import { getAnalysisFactEvidenceId } from '../services/analysis/analysisFact';
+import { getSanFromUci } from '../utils/chessMoveUtils';
 import { classifyMoveAnnotation } from '../utils/moveQuality';
-import { addMistake, updateAfterGame } from '../services/userProfileService';
+import { recordGameReview, updateAfterGame } from '../services/userProfileService';
 import { playCheckSound, playVictorySound, playDefeatSound, playDrawSound, playMoveSound, playCaptureSound } from '../utils/sound';
 import { recordGameResult } from '../hooks/useGameStats';
 import { BRAND_NAMES, UI_COPY } from '../config/brand';
@@ -26,6 +28,8 @@ export default function ChessGameBoard() {
     analysisMode,
     isBotThinking,
     setIsBotThinking,
+    botRequestId,
+    botRequestIdRef,
     botElo,
     playerColor,
     gameMode,
@@ -45,6 +49,7 @@ export default function ChessGameBoard() {
     makeMove,
     currentTurn,
     playState,
+    goToAnalysisPly,
   } = useChessGame();
 
   const [autoAnalyze, setAutoAnalyze] = useState(false);
@@ -55,19 +60,11 @@ export default function ChessGameBoard() {
   const [liveEvalStatus, setLiveEvalStatus] = useState('Đang tải');
   const [showStartNotice, setShowStartNotice] = useState(true);
 
-  // Game generation ID - incremented on new game to invalidate old requests
-  const [gameGenId, setGameGenId] = useState(0);
-  const gameGenIdRef = useRef(0);
-
   // Refs
   const liveAnalysisRequestRef = useRef(0);
   const lastCheckFenRef = useRef(null);
   const gameStartFenRef = useRef(null);
-  const isBotTurnRef = useRef(false);
-  const lastMoveCountRef = useRef(0);
-
-  // Track playState changes to detect new game
-  const prevPlayStateRef = useRef(playState);
+  const botPositionKeyRef = useRef(null);
 
   // Game timer
   const { elapsed: gameTime } = useGameTimer(playState === 'playing');
@@ -82,7 +79,7 @@ export default function ChessGameBoard() {
       setIsBotThinking(false);
 
       // Check if this response is from the current game
-      if (responseGameGenId !== gameGenIdRef.current) {
+      if (responseGameGenId !== botRequestIdRef.current) {
         // This is a stale response from an old game - ignore it
         return;
       }
@@ -112,7 +109,7 @@ export default function ChessGameBoard() {
         }
       }
     },
-    [activeGame, makeMove, setIsBotThinking]
+    [activeGame, botRequestIdRef, makeMove, setIsBotThinking]
   );
 
   // Bot move hook
@@ -122,28 +119,13 @@ export default function ChessGameBoard() {
     onMoveComplete: handleBotMoveComplete,
   });
 
-  // Detect new game - increment game generation ID
+  const previousBotRequestIdRef = useRef(botRequestId);
   useEffect(() => {
-    if (prevPlayStateRef.current === 'playing' && playState !== 'playing') {
-      // Game ended or left
-    }
-    if (prevPlayStateRef.current !== 'lobby' && playState === 'lobby') {
-      // Returned to lobby - increment gen ID
-      gameGenIdRef.current += 1;
-      setGameGenId(gameGenIdRef.current);
-    }
-    prevPlayStateRef.current = playState;
-  }, [playState]);
-
-  // Also increment on newGame
-  useEffect(() => {
-    if (moveHistory.length === 0 && lastMoveCountRef.current > 0) {
-      // Move count went back to 0 (new game started)
-      gameGenIdRef.current += 1;
-      setGameGenId(gameGenIdRef.current);
-    }
-    lastMoveCountRef.current = moveHistory.length;
-  }, [moveHistory.length]);
+    if (previousBotRequestIdRef.current === botRequestId) return;
+    previousBotRequestIdRef.current = botRequestId;
+    botPositionKeyRef.current = null;
+    cancelMove();
+  }, [botRequestId, cancelMove]);
 
   // Trigger bot move when it's bot's turn
   useEffect(() => {
@@ -155,24 +137,14 @@ export default function ChessGameBoard() {
     // It's bot's turn if the current turn doesn't match player's color
     const isBotTurn = currentTurn !== playerColor;
 
-    // Check if this is a new turn (player just moved) by comparing move count
-    const didPlayerJustMove = moveHistory.length > lastMoveCountRef.current;
+    const positionKey = `${botRequestId}:${currentFen}`;
 
-    // If it's bot's turn and not already thinking
-    if (isBotTurn && !isBotThinking) {
-      // Check if this is a valid trigger (player moved, or initial position)
-      const isInitialPosition = moveHistory.length === 0 && !isBotTurnRef.current;
-
-      if (didPlayerJustMove || isInitialPosition) {
-        isBotTurnRef.current = true;
-        gameStartFenRef.current = currentFen;
-        // Pass current gameGenId so callback can validate
-        getMove(currentFen, gameGenIdRef.current);
-      }
-    } else if (!isBotTurn) {
-      isBotTurnRef.current = false;
+    if (isBotTurn && !isBotThinking && botPositionKeyRef.current !== positionKey) {
+      botPositionKeyRef.current = positionKey;
+      gameStartFenRef.current = currentFen;
+      getMove(currentFen, botRequestId);
     }
-  }, [currentTurn, playerColor, isGameOver, analysisMode, gameMode, GAME_MODES.BOT, isBotThinking, currentFen, moveHistory.length, getMove]);
+  }, [currentTurn, playerColor, isGameOver, analysisMode, gameMode, GAME_MODES.BOT, isBotThinking, currentFen, botRequestId, getMove]);
 
   // Cancel bot move on game state changes
   useEffect(() => {
@@ -323,35 +295,63 @@ export default function ChessGameBoard() {
 
   // Game review
   async function reviewGameWithEngine() {
-    const moves = game.history({ verbose: true }).slice(-12);
-    if (!moves.length) return;
+    if (!moveHistory.length) return;
 
     setIsReviewing(true);
-    const replay = new (await import('chess.js')).Chess();
-    const results = [];
 
     try {
-      for (let index = 0; index < moves.length; index += 1) {
-        const beforeFen = replay.fen();
-        const played = moves[index];
-        const before = await analyzeFen({ fen: beforeFen, depth: 6, movetime: 450, purpose: 'review' });
-        replay.move(played.san);
-        const after = await analyzeFen({ fen: replay.fen(), depth: 5, movetime: 350, purpose: 'review' });
-        const classification = classifyMoveLoss(before.evaluation, after.evaluation);
-        const bestSan = before.bestMove ? getSanFromUci(beforeFen, before.bestMove) : 'không rõ';
-        results.push({ index, playedSan: played.san, bestSan, classification });
+      const gameId = `game:${globalThis.crypto.randomUUID()}`;
+      const analysis = await analyzeGame({
+        gameId,
+        pgn: currentPgn || game.pgn(),
+        playerSide: playerColor,
+        options: { maxDepth: 10, movetimeMs: 450, multiPv: 1, analyzeTopMistakes: 3 },
+      });
+      const counts = { good: 0, inaccuracy: 0, mistake: 0, blunder: 0 };
+      const topMistakes = analysis.topMistakes
+        .map(ply => analysis.analysis.find(fact => fact.ply === Number(ply)))
+        .filter(Boolean);
+
+      topMistakes.forEach((fact) => { counts[fact.classification] += 1; });
+      counts.good = analysis.summary.totalMoves - topMistakes.length;
+      const worstMoves = topMistakes.map(fact => ({
+        evidenceId: getAnalysisFactEvidenceId(fact),
+        engineSource: fact.engine.source,
+        skillTags: fact.skillTags,
+        turn: fact.turn,
+        centipawnLoss: fact.centipawnLoss,
+        evalBefore: `${fact.evalBefore.type}:${fact.evalBefore.value}`,
+        evalAfter: `${fact.evalAfter.type}:${fact.evalAfter.value}`,
+        index: fact.ply - 1,
+        playedUci: fact.playedMove.uci,
+        bestUci: fact.bestMove.uci,
+        playedSan: fact.playedMove.san,
+        bestSan: fact.bestMove.san || 'không rõ',
+        classification: {
+          type: fact.classification,
+          label: fact.classification === 'blunder' ? 'Blunder' : fact.classification === 'mistake' ? 'Sai lầm' : 'Thiếu chính xác',
+          loss: (fact.centipawnLoss || 0) / 100,
+        },
+      }));
+
+      if (topMistakes.length) {
+        recordGameReview({
+          reviewId: `review:${globalThis.crypto.randomUUID()}`,
+          gameId: analysis.gameId,
+          facts: topMistakes,
+        });
       }
 
-      const counts = { good: 0, inaccuracy: 0, mistake: 0, blunder: 0 };
-      results.forEach((item) => {
-        counts[item.classification.type] = (counts[item.classification.type] || 0) + 1;
+      setReview({
+        total: analysis.summary.totalMoves,
+        counts,
+        worstMoves,
+        analysis: analysis.analysis,
+        topMistakes: analysis.topMistakes,
+        playerSide: analysis.playerSide || playerColor,
+        focusedPly: null,
+        focusedEvidenceId: null,
       });
-      const worstMoves = results.filter((item) => item.classification.type !== 'good').slice(-3);
-
-      if (counts.blunder) addMistake('engine_blunder');
-      if (counts.mistake || counts.inaccuracy) addMistake('engine_mistake');
-
-      setReview({ total: results.length, counts, worstMoves });
     } finally {
       setIsReviewing(false);
     }
@@ -403,6 +403,14 @@ export default function ChessGameBoard() {
       engineMove={engineMove}
       showStartNotice={showStartNotice}
       onRequestHint={requestHint}
+      onReviewFact={(item) => {
+        setReview((current) => current ? {
+          ...current,
+          focusedPly: item.index + 1,
+          focusedEvidenceId: item.evidenceId,
+        } : current);
+        goToAnalysisPly(item.index + 1);
+      }}
     />
   );
 }

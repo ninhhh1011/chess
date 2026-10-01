@@ -1,7 +1,9 @@
 # Phase 1 Implementation Report
 
+> **Historical snapshot — superseded.** The status and counts below are not current evidence. The current sequential execution has not re-verified Phase 1. See [CURRENT_RUNTIME.md](CURRENT_RUNTIME.md).
+
 **Date**: 2026-09-03
-**Status**: PHASE 1: PASS
+**Status**: HISTORICAL SNAPSHOT
 
 ---
 
@@ -89,16 +91,16 @@ The three Phase 1 E2E spec files demonstrate:
 - `src/services/analysis/gameAnalyzer.ts` - Pass 1 (shallow) + Pass 2 (deep)
 - `src/services/analysis/pgnFixtures.ts` - Test fixtures
 
-### Latency Benchmark (40-move game)
-- `src/test/gameLatency.test.ts` - Full 40-move / 80-ply benchmark
+### Deterministic coverage contract (40-move game)
+- `src/test/gameLatency.test.ts` - Mocked 40-move / 80-ply unit contract; it makes no real-WASM latency claim
 
-**Benchmark Results (2026-09-03):**
+**Superseded benchmark record (2026-09-03; non-current):** These historical numbers are not evidence from the current mocked test. P1-T08 owns fresh real-`stockfish_wasm` latency evidence.
 
 | Metric | Value |
 |--------|-------|
-| PGN/game | lichess rklpc7mk (Caro-Kann Defense) |
-| Full moves | 40 |
-| Plies | 80 |
+| PGN/game | first-40 benchmark prefix of lichess rklpc7mk (official source: 47 moves/94 plies) |
+| Full moves | 40 (prefix) |
+| Plies | 80 (prefix) |
 | Final FEN | 8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 |
 | Engine source | stockfish_wasm |
 | Cold run | 5772 ms |

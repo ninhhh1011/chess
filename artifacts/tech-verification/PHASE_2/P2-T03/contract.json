@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "schemaVersion": "puzzle-record.v1",
+  "requiredFields": [
+    "schemaVersion", "puzzleId", "sourceId", "sourcePuzzleId", "sourceUrl",
+    "sourceVersion", "sourcePublishedAt", "retrievedAt", "licenseId", "licenseUrl",
+    "rawSha256", "recordSha256", "fen", "moves", "rating", "themes"
+  ],
+  "canonicalFixtureSha256": "b29075acbedc3d20dbb3c3e77672c10f8bb2d86b387c28ea0e641a8cefd751db",
+  "missingFieldCases": 16,
+  "inheritedRequiredFieldsRejected": true,
+  "malformedProvenanceRejected": true,
+  "postHashTamperingRejected": true,
+  "unknownFieldsRejected": true,
+  "hashImplementation": "Web Crypto SHA-256",
+  "productionExternalCorpusAvailable": false
+}

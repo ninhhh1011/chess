@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    { "command": "npm test -- --run src/test/puzzleRecord.test.ts (red, before implementation)", "exitCode": 1, "result": "EXPECTED FAIL: contract module missing" },
+    { "command": "npm test -- --run src/test/puzzleRecord.test.ts (unknown-field red case)", "exitCode": 1, "result": "EXPECTED FAIL: unknown field initially accepted" },
+    { "command": "npm test -- --run src/test/puzzleRecord.test.ts (prototype-chain red case)", "exitCode": 1, "result": "EXPECTED FAIL: inherited required fields were not reported as missing" },
+    { "command": "npm test -- --run src/test/puzzleRecord.test.ts", "exitCode": 0, "result": "PASS: 22/22" },
+    { "command": "npm test -- --run src/test/puzzleRecord.test.ts artifacts/tech-verification/PHASE_2/P2-T03/verifier/adversarial.test.ts", "exitCode": 0, "result": "PASS: 80/80" },
+    { "command": "npm test -- --run src/test/puzzleRecord.test.ts src/test/corpus.test.ts src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts", "exitCode": 0, "result": "PASS: 60/60 before final unknown-field case" },
+    { "command": "npm test -- --run", "exitCode": 0, "result": "PASS: 35 files, 672/672 including independent adversarial suite" },
+    { "command": "npm run lint", "exitCode": 0, "result": "PASS" },
+    { "command": "npm run typecheck", "exitCode": 0, "result": "PASS" },
+    { "command": "npm run build", "exitCode": 0, "result": "PASS: 4,103 modules" },
+    { "command": "production Chromium self-play via artifacts/tech-verification/PHASE_0/P0-T02/self-play.mjs", "exitCode": 0, "result": "PASS: 6 plies, real Stockfish WASM, truthful unavailable metadata, zero browser/page/network errors" },
+    { "command": "git diff --check", "exitCode": 0, "result": "PASS" }
+  ]
+}

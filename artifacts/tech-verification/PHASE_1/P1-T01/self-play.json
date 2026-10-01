@@ -1,0 +1,615 @@
+{
+  "verdict": "PASS",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "white": {
+    "color": "w",
+    "plies": 10,
+    "sanMoves": [
+      "a3",
+      "e5",
+      "a4",
+      "Nc6",
+      "a5",
+      "d5",
+      "a6",
+      "Nf6",
+      "b3",
+      "b5"
+    ],
+    "finalFen": "r1bqkb1r/p1p2ppp/P1n2n2/1p1pp3/8/1P6/2PPPPPP/RNBQKBNR w KQkq - 0 6",
+    "pgnReplay": "PASS",
+    "searches": [
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 1601.5,
+        "depth": 14,
+        "engineTimeMs": 513,
+        "wallTimeMs": 524,
+        "bestmove": "e7e5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 2133.7999999523163,
+        "depth": 13,
+        "engineTimeMs": 508,
+        "wallTimeMs": 534,
+        "bestmove": "e2e4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 2671.5999999046326,
+        "depth": 12,
+        "engineTimeMs": 502,
+        "wallTimeMs": 512,
+        "bestmove": "d7d5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 3186.399999856949,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 522,
+        "bestmove": "b8c6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 3712.899999856949,
+        "depth": 13,
+        "engineTimeMs": 500,
+        "wallTimeMs": 512,
+        "bestmove": "g1f3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 4228.799999952316,
+        "depth": 12,
+        "engineTimeMs": 500,
+        "wallTimeMs": 516,
+        "bestmove": "b8c6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 4748.200000047684,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 516,
+        "bestmove": "d7d5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 5278.299999952316,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 522,
+        "bestmove": "g1f3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 5806.399999856949,
+        "depth": 13,
+        "engineTimeMs": 502,
+        "wallTimeMs": 521,
+        "bestmove": "e5e4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 6331.099999904633,
+        "depth": 12,
+        "engineTimeMs": 500,
+        "wallTimeMs": 525,
+        "bestmove": "g8f6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 6867,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 515,
+        "bestmove": "a5a6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 7386.399999856949,
+        "depth": 12,
+        "engineTimeMs": 500,
+        "wallTimeMs": 520,
+        "bestmove": "f8d6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 7909.299999952316,
+        "depth": 13,
+        "engineTimeMs": 521,
+        "wallTimeMs": 559,
+        "bestmove": "b7b5",
+        "source": "stockfish_wasm"
+      }
+    ]
+  },
+  "black": {
+    "color": "b",
+    "plies": 10,
+    "sanMoves": [
+      "e4",
+      "Nc6",
+      "Nc3",
+      "Rb8",
+      "d4",
+      "Ra8",
+      "d5",
+      "Rb8",
+      "dxc6",
+      "Ra8"
+    ],
+    "finalFen": "r1bqkbnr/pppppppp/2P5/8/4P3/2N5/PPP2PPP/R1BQKBNR w KQk - 1 6",
+    "pgnReplay": "PASS",
+    "searches": [
+      {
+        "workerId": 1,
+        "command": "go movetime 400",
+        "startedAt": 10613.700000047684,
+        "depth": 11,
+        "engineTimeMs": 402,
+        "wallTimeMs": 434,
+        "bestmove": "g8f6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 11052.899999856949,
+        "depth": 11,
+        "engineTimeMs": 501,
+        "wallTimeMs": 533,
+        "bestmove": "b1c3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 11590.700000047684,
+        "depth": 11,
+        "engineTimeMs": 500,
+        "wallTimeMs": 520,
+        "bestmove": "e7e5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 12112.099999904633,
+        "depth": 11,
+        "engineTimeMs": 502,
+        "wallTimeMs": 525,
+        "bestmove": "g1f3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 12639.599999904633,
+        "depth": 12,
+        "engineTimeMs": 501,
+        "wallTimeMs": 522,
+        "bestmove": "d2d4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 13166.200000047684,
+        "depth": 11,
+        "engineTimeMs": 501,
+        "wallTimeMs": 521,
+        "bestmove": "g8f6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 13689,
+        "depth": 12,
+        "engineTimeMs": 502,
+        "wallTimeMs": 523,
+        "bestmove": "f2f4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 14217.700000047684,
+        "depth": 13,
+        "engineTimeMs": 504,
+        "wallTimeMs": 529,
+        "bestmove": "d4d5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 14766.899999856949,
+        "depth": 12,
+        "engineTimeMs": 501,
+        "wallTimeMs": 524,
+        "bestmove": "e7e6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 15292.899999856949,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 530,
+        "bestmove": "g1h3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 15827.299999952316,
+        "depth": 13,
+        "engineTimeMs": 500,
+        "wallTimeMs": 525,
+        "bestmove": "d5c6",
+        "source": "stockfish_wasm"
+      }
+    ]
+  },
+  "engine": {
+    "workers": [
+      {
+        "id": 1,
+        "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+      }
+    ],
+    "terminated": [],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "searches": [
+      {
+        "workerId": 1,
+        "command": "go movetime 400",
+        "startedAt": 1190.2999999523163,
+        "depth": 13,
+        "engineTimeMs": 400,
+        "wallTimeMs": 408,
+        "bestmove": "g1f3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 1601.5,
+        "depth": 14,
+        "engineTimeMs": 513,
+        "wallTimeMs": 524,
+        "bestmove": "e7e5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 2133.7999999523163,
+        "depth": 13,
+        "engineTimeMs": 508,
+        "wallTimeMs": 534,
+        "bestmove": "e2e4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 2671.5999999046326,
+        "depth": 12,
+        "engineTimeMs": 502,
+        "wallTimeMs": 512,
+        "bestmove": "d7d5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 3186.399999856949,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 522,
+        "bestmove": "b8c6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 3712.899999856949,
+        "depth": 13,
+        "engineTimeMs": 500,
+        "wallTimeMs": 512,
+        "bestmove": "g1f3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 4228.799999952316,
+        "depth": 12,
+        "engineTimeMs": 500,
+        "wallTimeMs": 516,
+        "bestmove": "b8c6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 4748.200000047684,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 516,
+        "bestmove": "d7d5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 5278.299999952316,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 522,
+        "bestmove": "g1f3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 5806.399999856949,
+        "depth": 13,
+        "engineTimeMs": 502,
+        "wallTimeMs": 521,
+        "bestmove": "e5e4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 6331.099999904633,
+        "depth": 12,
+        "engineTimeMs": 500,
+        "wallTimeMs": 525,
+        "bestmove": "g8f6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 6867,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 515,
+        "bestmove": "a5a6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 7386.399999856949,
+        "depth": 12,
+        "engineTimeMs": 500,
+        "wallTimeMs": 520,
+        "bestmove": "f8d6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 7909.299999952316,
+        "depth": 13,
+        "engineTimeMs": 521,
+        "wallTimeMs": 559,
+        "bestmove": "b7b5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 8476.299999952316,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 518,
+        "bestmove": "e2e3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 8995.599999904633,
+        "depth": 12,
+        "engineTimeMs": 500,
+        "wallTimeMs": 514,
+        "bestmove": "b7b5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 9517.799999952316,
+        "depth": 12,
+        "engineTimeMs": 502,
+        "wallTimeMs": 528,
+        "bestmove": "e2e4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 10077.200000047684,
+        "depth": 11,
+        "engineTimeMs": 500,
+        "wallTimeMs": 534,
+        "bestmove": "e2e3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 400",
+        "startedAt": 10613.700000047684,
+        "depth": 11,
+        "engineTimeMs": 402,
+        "wallTimeMs": 434,
+        "bestmove": "g8f6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 11052.899999856949,
+        "depth": 11,
+        "engineTimeMs": 501,
+        "wallTimeMs": 533,
+        "bestmove": "b1c3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 11590.700000047684,
+        "depth": 11,
+        "engineTimeMs": 500,
+        "wallTimeMs": 520,
+        "bestmove": "e7e5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 12112.099999904633,
+        "depth": 11,
+        "engineTimeMs": 502,
+        "wallTimeMs": 525,
+        "bestmove": "g1f3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 12639.599999904633,
+        "depth": 12,
+        "engineTimeMs": 501,
+        "wallTimeMs": 522,
+        "bestmove": "d2d4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 13166.200000047684,
+        "depth": 11,
+        "engineTimeMs": 501,
+        "wallTimeMs": 521,
+        "bestmove": "g8f6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 13689,
+        "depth": 12,
+        "engineTimeMs": 502,
+        "wallTimeMs": 523,
+        "bestmove": "f2f4",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 14217.700000047684,
+        "depth": 13,
+        "engineTimeMs": 504,
+        "wallTimeMs": 529,
+        "bestmove": "d4d5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 14766.899999856949,
+        "depth": 12,
+        "engineTimeMs": 501,
+        "wallTimeMs": 524,
+        "bestmove": "e7e6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 15292.899999856949,
+        "depth": 13,
+        "engineTimeMs": 501,
+        "wallTimeMs": 530,
+        "bestmove": "g1h3",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 15827.299999952316,
+        "depth": 13,
+        "engineTimeMs": 500,
+        "wallTimeMs": 525,
+        "bestmove": "d5c6",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 16371.299999952316,
+        "depth": 13,
+        "engineTimeMs": 500,
+        "wallTimeMs": 527,
+        "bestmove": "c6e5",
+        "source": "stockfish_wasm"
+      },
+      {
+        "workerId": 1,
+        "command": "go movetime 500",
+        "startedAt": 16901.89999985695,
+        "depth": 11,
+        "engineTimeMs": 163,
+        "wallTimeMs": null,
+        "bestmove": null,
+        "source": null
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

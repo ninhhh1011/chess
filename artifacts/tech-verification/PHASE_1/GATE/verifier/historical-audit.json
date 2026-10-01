@@ -1,0 +1,26 @@
+{
+  "verdict": "COMPARATOR_NOT_LIKE_FOR_LIKE",
+  "historicalCommit": "c5a33af",
+  "requestedPreviousMedianMs": 5365,
+  "freshMedianMs": 42810,
+  "nominalChangePercent": 697.9,
+  "verifiedFacts": [
+    "The historical benchmark ran in Vitest jsdom and installed no Worker implementation.",
+    "Historical stockfishService.initEngine returned false when Worker was unavailable and analyzeFen used fallbackAnalysis.",
+    "Historical gameAnalyzer stamped placeholder facts and the aggregate result with source stockfish_wasm regardless of the fallback source.",
+    "The historical test printed Engine source: stockfish_wasm as a literal and asserted only the aggregate hardcoded source; it captured no Worker commands or bestmoves.",
+    "Historical pass one did not forward request.options.movetimeMs to analyzeFen.",
+    "The historical report recorded 80 pass-one positions and zero pass-two positions.",
+    "The historical Phase 1 report records a 5772 ms median, while the requested comparator is 5365 ms; neither has native Worker evidence."
+  ],
+  "freshWorkload": {
+    "runs": 3,
+    "searchesPerRun": 83,
+    "movetimeMsPerSearch": 500,
+    "nominalEngineWorkFloorMs": 41500,
+    "workerEvidence": "native Chromium Worker plus worker bridge, Stockfish JS and WASM HTTP 200",
+    "bestmoves": "83/83 legal per run",
+    "facts": "80/80 ordered stockfish_wasm facts per run"
+  },
+  "conclusion": "The apparent increase is caused by replacing fallback plus hardcoded provenance with 83 real 500 ms Stockfish searches. The fresh maximum remains below the historical 60000 ms per-run gate, so there is no evidenced like-for-like performance regression."
+}

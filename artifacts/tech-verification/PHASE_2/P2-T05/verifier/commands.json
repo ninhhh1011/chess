@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS",
+  "runDate": "2026-09-06",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T05/verifier/verify-validator.mjs", "exitCode": 0, "result": "18 adversarial cases plus actual 1000-record corpus PASS" },
+    { "command": "npx vitest run scripts/validate-puzzle-corpus.test.mjs src/test/puzzleRecord.test.ts src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts", "exitCode": 0, "result": "4 files, 31 tests PASS" },
+    { "command": "npm test -- --run", "exitCode": 0, "result": "37 files, 692 tests PASS" },
+    { "command": "npm run lint", "exitCode": 0, "result": "PASS, zero warnings" },
+    { "command": "npm run typecheck", "exitCode": 0, "result": "PASS" },
+    { "command": "npm run build", "exitCode": 0, "result": "PASS; Vite 8.0.10, 4103 modules, PWA 45 precache entries" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T05/verifier/self-play.mjs http://127.0.0.1:4205", "exitCode": 1, "result": "Harness-only onboarding overlay timeout preserved in browser-failure.json" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T05/verifier/self-play.mjs http://127.0.0.1:4205", "exitCode": 0, "result": "Complete corrected production scenario PASS, 6 plies, real WASM, zero errors" },
+    { "command": "Get-FileHash -Algorithm SHA256 %TEMP%\\chess-p2t04\\lichess_db_puzzle.csv.zst", "exitCode": 0, "result": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073" },
+    { "command": "live comparison of LICHESS_PUZZLE_THEMES with pinned official PuzzleTheme.scala", "exitCode": 0, "result": "75 official, 75 local, zero missing, zero extra" },
+    { "command": "git diff --check", "exitCode": 0, "result": "PASS" }
+  ]
+}

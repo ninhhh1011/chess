@@ -1,0 +1,218 @@
+{
+  "verdict": "PASS",
+  "buildUrl": "http://127.0.0.1:4195",
+  "playedPlies": 14,
+  "playedHistory": [
+    "a3",
+    "d5",
+    "Nh3",
+    "Bxh3",
+    "g3",
+    "Bxf1",
+    "a4",
+    "Bh3",
+    "Rf1",
+    "Qc8",
+    "a5",
+    "Bg4",
+    "e3",
+    "Nf6"
+  ],
+  "finalFen": "rnq1kb1r/ppp1pppp/5n2/P2p4/6b1/4P1P1/1PPP1P1P/RNBQKR2 w Qkq - 1 8",
+  "workerUrls": [
+    "/stockfish-worker.js?v=2026-05-30-simplified"
+  ],
+  "passOnePositionCount": 15,
+  "expectedPassOnePositionCount": 15,
+  "passTwoPositionCount": 3,
+  "facts": [
+    {
+      "id": "review-1788633256755:ply:5",
+      "engineSource": "stockfish_wasm",
+      "skillTags": [
+        "unclassified"
+      ],
+      "playedUci": "g2g3",
+      "bestUci": "g2h3",
+      "text": "Blunder#5: g3, Ninh mách gxh3",
+      "ply": 5,
+      "fenBefore": "rn1qkbnr/ppp1pppp/8/3p4/8/P6b/1PPPPPPP/RNBQKB1R w KQkq - 0 3",
+      "matchingSearches": [
+        {
+          "fen": "rn1qkbnr/ppp1pppp/8/3p4/8/P6b/1PPPPPPP/RNBQKB1R w KQkq - 0 3",
+          "command": "go movetime 450",
+          "bestmove": "d2d4",
+          "infoPvHeads": [
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3"
+          ]
+        },
+        {
+          "fen": "rn1qkbnr/ppp1pppp/8/3p4/8/P6b/1PPPPPPP/RNBQKB1R w KQkq - 0 3",
+          "command": "go movetime 450",
+          "bestmove": "g2h3",
+          "infoPvHeads": [
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3",
+            "g2h3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review-1788633256755:ply:13",
+      "engineSource": "stockfish_wasm",
+      "skillTags": [
+        "unclassified"
+      ],
+      "playedUci": "e2e3",
+      "bestUci": "d2d4",
+      "text": "Blunder#13: e3, Ninh mách d4",
+      "ply": 13,
+      "fenBefore": "rnq1kbnr/ppp1pppp/8/P2p4/6b1/6P1/1PPPPP1P/RNBQKR2 w Qkq - 1 7",
+      "matchingSearches": [
+        {
+          "fen": "rnq1kbnr/ppp1pppp/8/P2p4/6b1/6P1/1PPPPP1P/RNBQKR2 w Qkq - 1 7",
+          "command": "go movetime 450",
+          "bestmove": "d2d3",
+          "infoPvHeads": [
+            "d2d3",
+            "d2d3",
+            "b1c3",
+            "d2d3",
+            "b1c3",
+            "a5a6",
+            "d2d3",
+            "a5a6",
+            "b1c3",
+            "d2d4",
+            "d2d4",
+            "d2d4",
+            "d2d4",
+            "f2f3",
+            "f2f3"
+          ]
+        },
+        {
+          "fen": "rnq1kbnr/ppp1pppp/8/P2p4/6b1/6P1/1PPPPP1P/RNBQKR2 w Qkq - 1 7",
+          "command": "go movetime 450",
+          "bestmove": "d2d4",
+          "infoPvHeads": [
+            "d2d3",
+            "d2d3",
+            "b1c3",
+            "d2d3",
+            "b1c3",
+            "a5a6",
+            "d2d3",
+            "a5a6",
+            "b1c3",
+            "d2d4",
+            "d2d4",
+            "d2d4",
+            "d2d4",
+            "f2f3",
+            "f2f3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review-1788633256755:ply:14",
+      "engineSource": "stockfish_wasm",
+      "skillTags": [
+        "unclassified"
+      ],
+      "playedUci": "g8f6",
+      "bestUci": "g4d1",
+      "text": "Sai lầm#14: Nf6, Ninh mách Bxd1",
+      "ply": 14,
+      "fenBefore": "rnq1kbnr/ppp1pppp/8/P2p4/6b1/4P1P1/1PPP1P1P/RNBQKR2 b Qkq - 0 7",
+      "matchingSearches": [
+        {
+          "fen": "rnq1kbnr/ppp1pppp/8/P2p4/6b1/4P1P1/1PPP1P1P/RNBQKR2 b Qkq - 0 7",
+          "command": "go movetime 450",
+          "bestmove": "b8c6",
+          "infoPvHeads": [
+            "g8f6",
+            "h7h5",
+            "b8c6",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "e7e5",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1"
+          ]
+        },
+        {
+          "fen": "rnq1kbnr/ppp1pppp/8/P2p4/6b1/4P1P1/1PPP1P1P/RNBQKR2 b Qkq - 0 7",
+          "command": "go movetime 450",
+          "bestmove": "g4d1",
+          "infoPvHeads": [
+            "g8f6",
+            "h7h5",
+            "b8c6",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "e7e5",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1",
+            "g4d1"
+          ]
+        }
+      ]
+    }
+  ],
+  "stalePvFactId": "review-1788633256755:ply:13",
+  "canonicalTags": [],
+  "profileCommonMistakes": [],
+  "navigation": "13 / 14",
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  },
+  "failures": []
+}

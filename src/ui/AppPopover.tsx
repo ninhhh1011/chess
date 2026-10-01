@@ -1,87 +1,60 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+import { Popover as HeroUIPopover } from '@heroui/react';
 
 export interface AppPopoverProps {
   trigger: React.ReactNode;
   children: React.ReactNode;
-  placement?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
+  placement?:
+    | 'bottom'
+    | 'bottom start'
+    | 'bottom end'
+    | 'top'
+    | 'top start'
+    | 'top end'
+    | 'left'
+    | 'right'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'top-start'
+    | 'top-end';
   title?: string;
   className?: string;
+  isOpen?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 export function AppPopover({
   trigger,
   children,
-  placement = 'bottom-end',
+  placement = 'bottom end',
   title,
   className = '',
+  isOpen,
+  onOpenChange,
 }: AppPopoverProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const popoverRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-    }
-
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const placementStyles: Record<string, string> = {
-    'bottom-end': 'top-full right-0 mt-2',
-    'bottom-start': 'top-full left-0 mt-2',
-    'top-end': 'bottom-full right-0 mb-2',
-    'top-start': 'bottom-full left-0 mb-2',
-  };
+  // Normalize legacy placement prop values if passed with hyphen
+  const normalizedPlacement = String(placement).replace('-', ' ') as any;
 
   return (
-    <div className="relative inline-block">
-      <div
-        ref={triggerRef}
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="inline-flex cursor-pointer select-none"
-      >
+    <HeroUIPopover isOpen={isOpen} onOpenChange={onOpenChange}>
+      <HeroUIPopover.Trigger className="inline-flex cursor-pointer select-none">
         {trigger}
-      </div>
+      </HeroUIPopover.Trigger>
 
-      {isOpen && (
-        <div
-          ref={popoverRef}
-          role="dialog"
-          aria-modal="false"
-          className={`absolute z-50 min-w-[240px] rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 shadow-lg transition-all duration-150 ${placementStyles[placement] || placementStyles['bottom-end']} ${className}`}
-          style={{ borderRadius: '12px' }}
-        >
+      <HeroUIPopover.Content
+        placement={normalizedPlacement}
+        className={`z-50 min-w-[240px] rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 shadow-xl outline-none ${className}`}
+        style={{ borderRadius: '10px' }}
+      >
+        <HeroUIPopover.Dialog className="outline-none text-xs text-[var(--app-foreground)]">
           {title && (
-            <div className="mb-2 border-b border-[var(--app-border)] pb-2 text-xs font-bold text-[var(--app-foreground)]">
+            <HeroUIPopover.Heading className="mb-2 border-b border-[var(--app-border)] pb-2 text-xs font-bold text-[var(--app-foreground)]">
               {title}
-            </div>
+            </HeroUIPopover.Heading>
           )}
-          <div className="text-xs text-[var(--app-foreground)]">
-            {children}
-          </div>
-        </div>
-      )}
-    </div>
+          {children}
+        </HeroUIPopover.Dialog>
+      </HeroUIPopover.Content>
+    </HeroUIPopover>
   );
 }

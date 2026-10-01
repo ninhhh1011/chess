@@ -1,0 +1,70 @@
+{
+  "verifier": "/root/p0_t04_verifier",
+  "runtime": {
+    "hostNode": "v24.15.0",
+    "workflowNode": "v22.23.2",
+    "npm": "11.12.1",
+    "nodePin": "22",
+    "packageEngine": "^20.19.0 || >=22.12.0",
+    "lockEngine": "^20.19.0 || >=22.12.0",
+    "lockfileVersion": 3
+  },
+  "commands": [
+    {
+      "command": "Node 22.23.2 npm 11.12.1 ci",
+      "exitCode": 0,
+      "summary": "added 689 packages; audited 690 packages; 12 vulnerabilities (1 low, 1 moderate, 8 high, 2 critical)"
+    },
+    {
+      "command": "Node 22.23.2 npm run lint",
+      "exitCode": 0,
+      "summary": "0 errors and 0 warnings"
+    },
+    {
+      "command": "Node 22.23.2 npm run typecheck",
+      "exitCode": 0,
+      "summary": "tsc --noEmit passed"
+    },
+    {
+      "command": "Node 22.23.2 npm run test",
+      "exitCode": 0,
+      "summary": "31 files passed; 563 tests passed; 0 failed/skipped; duration 99.43s"
+    },
+    {
+      "command": "Node 22.23.2 npm run build",
+      "exitCode": 0,
+      "summary": "Vite built 4097 modules and PWA generated service-worker assets"
+    },
+    {
+      "command": "Node 22.23.2 npx playwright install --with-deps chromium",
+      "exitCode": 0,
+      "summary": "Chromium installation check completed"
+    },
+    {
+      "command": "Node 22.23.2 npm run test:e2e -- --list",
+      "exitCode": 0,
+      "summary": "68 tests in 4 files"
+    },
+    {
+      "command": "CI=true Node 22.23.2 npm run test:e2e",
+      "exitCode": 0,
+      "summary": "68 passed; 0 failed/skipped/filtered; 1 worker; duration 3.7m"
+    },
+    {
+      "command": "Node 22.23.2 artifacts/tech-verification/PHASE_0/P0-T04/verifier/self-play.mjs against vite preview :4184",
+      "exitCode": 0,
+      "summary": "6 legal plies; Stockfish worker ready/bestmove; replay passed; no browser errors"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "summary": "no whitespace errors"
+    }
+  ],
+  "lockfile": {
+    "workingBlob": "052c70a68c1e216b551db12b7f3b8237f3638e52",
+    "headBlob": "052c70a68c1e216b551db12b7f3b8237f3638e52",
+    "diffExitCode": 0
+  },
+  "verdict": "PASS"
+}

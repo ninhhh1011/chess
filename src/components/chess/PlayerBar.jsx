@@ -1,6 +1,8 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import coachAvatar from '../../assets/avatarcoach.webp';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
+import { AppAvatar } from '@/ui/AppAvatar';
+import { AppStatus } from '@/ui/AppStatus';
 
 /**
  * PlayerBar - compact player/opponent identity strip.
@@ -27,7 +29,7 @@ export default function PlayerBar({ position = 'top' }) {
     isActive = currentTurn === playerColor;
   } else if (gameMode === GAME_MODES.BOT) {
     displayName = BRAND_NAMES.bot;
-    displayBadge = botElo;
+    displayBadge = `ELO ${botElo}`;
     avatarSrc = coachAvatar;
     isActive = currentTurn !== playerColor;
   } else {
@@ -39,42 +41,38 @@ export default function PlayerBar({ position = 'top' }) {
 
   return (
     <div
-      className={`flex items-center justify-between rounded-lg px-3 py-2 transition-all ${
+      className={`flex items-center justify-between rounded-[8px] px-3 py-2 transition-all ${
         isActive
-          ? 'bg-bg-surface border border-border'
-          : 'bg-bg-base border border-border/50'
+          ? 'bg-[var(--app-surface-raised)] border border-[var(--app-border-strong)]'
+          : 'bg-[var(--app-surface)] border border-[var(--app-border)]'
       }`}
     >
       <div className="flex min-w-0 items-center gap-2">
-        {avatarSrc ? (
-          <img
-            src={avatarSrc}
-            alt={displayName}
-            className="h-8 w-8 rounded-lg border border-border/60 object-cover"
-          />
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 bg-bg-surface text-sm">
-            {isPlayer ? 'B' : 'AI'}
-          </div>
-        )}
+        <AppAvatar
+          src={avatarSrc}
+          alt={displayName}
+          fallback={isPlayer ? 'B' : 'AI'}
+          size="sm"
+          className="rounded-[6px]"
+        />
 
-        <span className={`min-w-0 truncate text-sm font-semibold ${isActive ? 'text-primary-400' : 'text-text-primary'}`}>
+        <span className={`min-w-0 truncate text-xs font-semibold ${isActive ? 'text-[var(--app-accent)]' : 'text-[var(--app-foreground)]'}`}>
           {displayName}
         </span>
 
-        <span className="rounded border border-border bg-bg-surface px-2 py-0.5 text-xs font-medium text-text-secondary">
+        <AppStatus variant="basic" size="sm">
           {displayBadge}
-        </span>
+        </AppStatus>
       </div>
 
       {isActive && (
         <div className="flex items-center gap-1.5">
           <span
-            className={`h-2 w-2 rounded-full bg-primary-400 ${!isPlayer && isBotThinking ? 'animate-pulse' : ''}`}
+            className={`h-2 w-2 rounded-full bg-[var(--app-accent)] ${!isPlayer && isBotThinking ? 'animate-pulse' : ''}`}
             title={!isPlayer && isBotThinking ? UI_COPY.botThinking : undefined}
           />
           {!isPlayer && isBotThinking && (
-            <span className="hidden text-xs font-medium text-text-secondary sm:inline">{UI_COPY.botThinking}</span>
+            <span className="hidden text-[11px] font-medium text-[var(--app-muted)] sm:inline">{UI_COPY.botThinking}</span>
           )}
         </div>
       )}

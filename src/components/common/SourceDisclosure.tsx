@@ -1,6 +1,7 @@
 import { Info } from 'lucide-react';
 import { AppTooltip } from '@/ui/AppTooltip';
 import { AppPopover } from '@/ui/AppPopover';
+import { AppButton } from '@/ui/AppButton';
 
 export interface SourceDisclosureProps {
   source?: 'stockfish' | 'coach-basic' | 'coach-llm' | 'unavailable';
@@ -10,9 +11,7 @@ export interface SourceDisclosureProps {
 
 /**
  * SourceDisclosure component (Sections 14 & 16 Requirement):
- * Replaces the distracting multi-badge cluster (Engine / AI / Knowledge off)
- * with a clean, truthful line: "Nguồn: Stockfish 18 · Diễn giải cơ bản"
- * with deep technical details accessible via AppTooltip or AppPopover.
+ * Displays the source that actually produced the current result.
  */
 export function SourceDisclosure({
   source = 'coach-basic',
@@ -21,12 +20,17 @@ export function SourceDisclosure({
 }: SourceDisclosureProps) {
   const sourceText = {
     stockfish: 'Nguồn: Stockfish 18 · Độ sâu tính toán',
-    'coach-basic': 'Nguồn: Stockfish 18 · Diễn giải cơ bản',
-    'coach-llm': 'Nguồn: Stockfish 18 · AI Coach',
+    'coach-basic': 'Nguồn: Diễn giải cơ bản · Không dùng AI',
+    'coach-llm': 'Nguồn: AI Coach',
     unavailable: 'Nguồn: Ngoại tuyến · Tạm dừng trực tuyến',
   }[source];
 
-  const tooltipDetail = `Độ sâu tính toán: ${engineDepth} ply. Động cơ Stockfish WebAssembly chạy ngoại tuyến cục bộ trên trình duyệt.`;
+  const tooltipDetail = {
+    stockfish: `Độ sâu tính toán: ${engineDepth} ply. Động cơ Stockfish WebAssembly chạy cục bộ trên trình duyệt.`,
+    'coach-basic': 'Phản hồi theo quy tắc cơ bản, không phải nội dung từ nhà cung cấp AI.',
+    'coach-llm': 'Phản hồi do nhà cung cấp AI tạo qua endpoint Coach.',
+    unavailable: 'Dịch vụ trực tuyến hiện không khả dụng.',
+  }[source];
 
   if (compact) {
     return (
@@ -50,14 +54,15 @@ export function SourceDisclosure({
       <AppPopover
         title="Chi tiết nguồn dữ liệu"
         trigger={
-          <button
-            type="button"
-            className="flex items-center gap-1 text-[10px] text-[var(--app-subtle)] hover:text-[var(--app-foreground)] transition-colors"
+          <AppButton
+            variant="ghost"
+            size="sm"
+            className="h-auto p-0 text-[10px] text-[var(--app-subtle)] hover:text-[var(--app-foreground)] flex items-center gap-1 min-h-0"
             aria-label="Xem chi tiết nguồn dữ liệu phân tích"
           >
             <span>Chi tiết</span>
             <Info className="h-3 w-3" />
-          </button>
+          </AppButton>
         }
       >
         <div className="space-y-1.5 leading-relaxed text-[11px]">

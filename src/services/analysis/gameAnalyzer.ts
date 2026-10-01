@@ -9,20 +9,19 @@ import { Chess } from 'chess.js';
 import { analyzeFen, isEngineReady } from '../stockfishService';
 import {
   normalizeEvalToWhite,
-  calculateCPL,
+  calculateMoverCPL,
   classifyMove,
   determineSkillTags,
-  parseEngineEval,
 } from './orientation';
 import { replayPgn, parsePgn } from './pgnParser';
-import type { Evaluation } from '../../types/ChessTypes';
+import { assertGameAnalysisV1 } from './analysisFact';
+import type { AnalysisResult } from '../../types/ChessTypes';
 import type {
   AnalysisFactV1,
   GameAnalysis,
   AnalyzeGameRequest,
   AnalysisProgress,
   CandidateLine,
-  MoveNotation,
 } from '../../types/analysis';
 
 /**
@@ -77,6 +76,9 @@ export async function analyzeGame(
   if (!gameReplay) {
     throw new Error('Failed to replay PGN');
   }
+  if (gameReplay.moves.length === 0) {
+    throw new Error('PGN contains no moves');
+  }
 
   // Check for cancellation
   if (onCancel()) {
@@ -95,62 +97,79 @@ export async function analyzeGame(
   const candidateMistakes: Array<{
     ply: number;
     evalSwing: number;
+    evalBefore: InternalEval;
+    evalAfter: InternalEval;
   }> = [];
+  const shallowFacts: AnalysisFactV1[] = [];
 
-  // Shallow analysis - quick eval at key positions
+  let beforeResult;
+  try {
+    beforeResult = await analyzeFen({
+      fen: gameReplay.moves[0].fenBefore,
+      depth: Math.min(8, request.options.maxDepth),
+      movetime: Math.min(500, request.options.movetimeMs),
+      elo: 1500,
+      purpose: 'review',
+    });
+  } catch (error) {
+    throw new Error(
+      `Pass 1 failed before ply 1/${gameReplay.moves.length}: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error }
+    );
+  }
+
+  // Shallow analysis - one new position per ply; the prior result is reused.
   for (let i = 0; i < gameReplay.moves.length; i++) {
     const move = gameReplay.moves[i];
-    const game = new Chess(move.fen);
-
-    // Skip if game ended
-    if (game.isGameOver()) continue;
 
     try {
-      const result = await analyzeFen({
+      const afterResult = await analyzeFen({
         fen: move.fen,
         depth: Math.min(8, request.options.maxDepth),
+        movetime: Math.min(500, request.options.movetimeMs),
         elo: 1500,
+        purpose: 'review',
       });
 
-      if (result.evaluation) {
-        // Normalize to white
-        const turn = move.fen.split(' ')[1] as 'w' | 'b';
-        const normalizedEval: InternalEval = {
-          type: result.evaluation.type,
-          value: result.evaluation.value,
-          depth: result.depth,
-        };
-        const normalized = normalizeEvalToWhite(normalizedEval, turn);
-
-        // Check if this is a potential mistake
-        if (result.source === 'stockfish_wasm' && result.bestMove) {
-          // Compare played vs best
-          const bestResult = await analyzeFen({
-            fen: move.fen,
-            depth: Math.min(8, request.options.maxDepth),
-            elo: 2850, // Higher level for best move comparison
-          });
-
-          if (bestResult.evaluation && bestResult.source === 'stockfish_wasm') {
-            const bestEvalNormalized: InternalEval = {
-              type: bestResult.evaluation.type,
-              value: bestResult.evaluation.value,
-              depth: bestResult.depth,
-            };
-            const bestNormalized = normalizeEvalToWhite(bestEvalNormalized, turn);
-            const cpl = calculateCPL(normalized, bestNormalized);
-
-            if (cpl !== null && cpl > 80) {
-              candidateMistakes.push({
-                ply: move.ply,
-                evalSwing: cpl,
-              });
-            }
-          }
-        }
+      if (!beforeResult.evaluation || beforeResult.source !== 'stockfish_wasm') {
+        throw new Error(`invalid Stockfish result for position before ply ${move.ply}`);
       }
-    } catch {
-      // Skip on error
+      if (!afterResult.evaluation || afterResult.source !== 'stockfish_wasm') {
+        throw new Error(`invalid Stockfish result for position after ply ${move.ply}`);
+      }
+
+      const evalBefore = normalizeEvalToWhite(
+        { ...beforeResult.evaluation, depth: beforeResult.depth },
+        move.fenBefore.split(' ')[1] as 'w' | 'b'
+      );
+      const evalAfter = normalizeEvalToWhite(
+        { ...afterResult.evaluation, depth: afterResult.depth },
+        move.fen.split(' ')[1] as 'w' | 'b'
+      );
+      const cpl = calculateMoverCPL(
+        evalBefore,
+        evalAfter,
+        move.fenBefore.split(' ')[1] as 'w' | 'b'
+      );
+
+      shallowFacts.push(buildAnalysisFact(
+        request.gameId,
+        move,
+        request.options,
+        { evalSwing: cpl, evalBefore, evalAfter },
+        beforeResult,
+        Math.min(500, request.options.movetimeMs)
+      ));
+
+      if (cpl !== null && cpl > 80) {
+        candidateMistakes.push({ ply: move.ply, evalSwing: cpl, evalBefore, evalAfter });
+      }
+      beforeResult = afterResult;
+    } catch (error) {
+      throw new Error(
+        `Pass 1 failed at ply ${move.ply}/${gameReplay.moves.length}: ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error }
+      );
     }
 
     onProgress({
@@ -162,17 +181,16 @@ export async function analyzeGame(
     });
 
     if (onCancel()) {
-      throw new Error('Analysis cancelled');
+      throw new Error(`Analysis cancelled during shallow pass at ply ${i + 1}/${gameReplay.moves.length}`);
     }
   }
 
   // Sort by severity
-  candidateMistakes.sort((a, b) => b.evalSwing - a.evalSwing);
+  candidateMistakes.sort((a, b) => b.evalSwing - a.evalSwing || a.ply - b.ply);
 
   // Take top N for deep analysis
-  const topMistakePlies = candidateMistakes
-    .slice(0, request.options.analyzeTopMistakes)
-    .map(m => m.ply);
+  const topMistakes = candidateMistakes.slice(0, request.options.analyzeTopMistakes);
+  const topMistakePlies = topMistakes.map(m => m.ply);
 
   // === PASS 2: Deep analysis of mistakes ===
   onProgress({
@@ -185,23 +203,25 @@ export async function analyzeGame(
 
   const analysisFacts: AnalysisFactV1[] = [];
 
-  for (let i = 0; i < topMistakePlies.length; i++) {
-    const ply = topMistakePlies[i];
-    const move = gameReplay.moves.find(m => m.ply === ply);
+  for (let i = 0; i < topMistakes.length; i++) {
+    const candidate = topMistakes[i];
+    const move = gameReplay.moves.find(m => m.ply === candidate.ply);
 
-    if (!move) continue;
+    if (!move) throw new Error(`Pass 2 could not resolve ply ${candidate.ply}`);
 
     try {
       const fact = await analyzeSingleMove(
         request.gameId,
-        ply,
         move,
         request.options,
-        topMistakePlies
+        candidate
       );
       analysisFacts.push(fact);
-    } catch {
-      // Skip on error
+    } catch (error) {
+      throw new Error(
+        `Pass 2 failed at candidate ${i + 1}/${topMistakes.length} (ply ${candidate.ply}): ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error }
+      );
     }
 
     onProgress({
@@ -213,45 +233,11 @@ export async function analyzeGame(
     });
 
     if (onCancel()) {
-      throw new Error('Analysis cancelled');
+      throw new Error(`Analysis cancelled during deep pass at candidate ${i + 1}/${topMistakes.length}`);
     }
   }
 
-  // Fill in non-mistake moves with basic info
-  for (const move of gameReplay.moves) {
-    if (!topMistakePlies.includes(move.ply)) {
-      analysisFacts.push({
-        schemaVersion: 'analysis.v1',
-        gameId: request.gameId,
-        ply: move.ply,
-        turn: move.ply % 2 === 1 ? 'w' : 'b',
-        fenBefore: move.fen, // Simplified - actual previous FEN would need tracking
-        fenAfter: move.fen,
-        playedMove: {
-          uci: '', // Would need to compute
-          san: move.san,
-          fen: move.fen,
-        },
-        bestMove: {
-          uci: '',
-          san: '',
-          fen: move.fen,
-        },
-        evalBefore: { type: 'cp', value: 0, display: '0.00' },
-        evalAfter: { type: 'cp', value: 0, display: '0.00' },
-        centipawnLoss: null,
-        classification: 'unclassified',
-        candidates: [],
-        skillTags: ['unclassified'],
-        engine: {
-          source: 'stockfish_wasm',
-          version: 'unknown',
-          multiPv: request.options.multiPv,
-        },
-        analyzedAt: new Date().toISOString(),
-      });
-    }
-  }
+  analysisFacts.push(...shallowFacts.filter(fact => !topMistakePlies.includes(fact.ply)));
 
   // Sort by ply
   analysisFacts.sort((a, b) => a.ply - b.ply);
@@ -279,7 +265,7 @@ export async function analyzeGame(
     message: 'Analysis complete!',
   });
 
-  return {
+  return assertGameAnalysisV1({
     schemaVersion: 'gameAnalysis.v1',
     gameId: request.gameId,
     pgn: request.pgn,
@@ -300,7 +286,7 @@ export async function analyzeGame(
     },
     analyzedAt: new Date().toISOString(),
     durationMs,
-  };
+  });
 }
 
 /**
@@ -308,61 +294,63 @@ export async function analyzeGame(
  */
 async function analyzeSingleMove(
   gameId: string,
-  ply: number,
-  move: { san: string; fen: string; ply: number },
+  move: { san: string; uci: string; fenBefore: string; fen: string; ply: number },
   options: AnalyzeGameRequest['options'],
-  _allMistakePlies: number[]
+  candidate: { evalSwing: number; evalBefore: InternalEval; evalAfter: InternalEval }
 ): Promise<AnalysisFactV1> {
-  const turn = ply % 2 === 1 ? 'w' : 'b';
-
-  // Analyze current position with MultiPV
   const result = await analyzeFen({
-    fen: move.fen,
+    fen: move.fenBefore,
     depth: options.maxDepth,
+    movetime: options.movetimeMs,
     elo: 2850,
+    purpose: 'review',
   });
 
-  const eval_: InternalEval = {
-    type: result.evaluation?.type || 'cp',
-    value: result.evaluation?.value || 0,
-    depth: result.depth,
-  };
-  const normalizedEval = normalizeEvalToWhite(eval_, turn);
+  if (!result.evaluation || result.source !== 'stockfish_wasm') {
+    throw new Error('invalid Stockfish result');
+  }
 
-  // Get best move
+  return buildAnalysisFact(gameId, move, options, candidate, result, options.movetimeMs);
+}
+
+function buildAnalysisFact(
+  gameId: string,
+  move: { san: string; uci: string; fenBefore: string; fen: string; ply: number },
+  options: AnalyzeGameRequest['options'],
+  candidate: { evalSwing: number | null; evalBefore: InternalEval; evalAfter: InternalEval },
+  result: AnalysisResult,
+  movetimeMs: number
+): AnalysisFactV1 {
+  const ply = move.ply;
+  const turn = move.fenBefore.split(' ')[1] as 'w' | 'b';
   const bestMove = result.bestMove || '';
-  const game = new Chess(move.fen);
+  const game = new Chess(move.fenBefore);
   const bestMoveObj = bestMove ? game.move({
     from: bestMove.slice(0, 2),
     to: bestMove.slice(2, 4),
     promotion: bestMove[4],
   }) : null;
-
-  // Get candidates (simplified - would need multiPV support)
-  const candidates: CandidateLine[] = [];
-  if (bestMove && bestMoveObj) {
-    const bestEval = parseEngineEval(`cp ${result.evaluation?.value || 0}`);
-    const normalizedBestEval = normalizeEvalToWhite(bestEval || { type: 'cp', value: 0 }, turn);
-    candidates.push({
-      uci: bestMove,
-      san: bestMoveObj.san,
-      eval: {
-        type: normalizedBestEval.type,
-        value: normalizedBestEval.value,
-        display: normalizedBestEval.type === 'mate'
-          ? `Mate in ${Math.abs(normalizedBestEval.value)}`
-          : `${normalizedBestEval.value >= 0 ? '+' : ''}${(normalizedBestEval.value / 100).toFixed(2)}`,
-      },
-      pv: [bestMove],
-    });
+  if (!result.evaluation || result.source !== 'stockfish_wasm' || !bestMoveObj) {
+    throw new Error('invalid Stockfish move evidence');
   }
 
-  // Calculate CPL
-  const bestEvalNormalized = candidates[0]?.eval || normalizedEval;
-  const cpl = calculateCPL(normalizedEval, bestEvalNormalized);
+  const eval_: InternalEval = {
+    type: result.evaluation.type,
+    value: result.evaluation.value,
+    depth: result.depth,
+  };
+  const normalizedEval = normalizeEvalToWhite(eval_, turn);
+  const candidates: CandidateLine[] = [{
+    uci: bestMove,
+    san: bestMoveObj.san,
+    eval: formatEvaluation(normalizedEval),
+    pv: result.pv[0] === bestMove ? result.pv : [bestMove],
+  }];
+
+  const cpl = candidate.evalSwing;
 
   // Classify move
-  const classification = classifyMove(cpl, normalizedEval);
+  const classification = classifyMove(cpl, candidate.evalBefore);
 
   // Determine skill tags
   const tags = determineSkillTags(
@@ -387,25 +375,23 @@ async function analyzeSingleMove(
     gameId,
     ply,
     turn,
-    fenBefore: move.fen,
+    fenBefore: move.fenBefore,
     fenAfter: move.fen,
     playedMove: {
-      uci: '',
+      uci: move.uci,
       san: move.san,
       fen: move.fen,
     },
     bestMove: {
       uci: bestMove,
       san: bestMoveObj?.san || '',
-      fen: move.fen,
+      fen: bestMoveObj?.after || move.fenBefore,
     },
-    evalBefore: { type: 'cp', value: 0, display: '0.00' },
+    evalBefore: {
+      ...formatEvaluation(candidate.evalBefore),
+    },
     evalAfter: {
-      type: normalizedEval.type,
-      value: normalizedEval.value,
-      display: normalizedEval.type === 'mate'
-        ? `Mate in ${Math.abs(normalizedEval.value)}`
-        : `${normalizedEval.value >= 0 ? '+' : ''}${(normalizedEval.value / 100).toFixed(2)}`,
+      ...formatEvaluation(candidate.evalAfter),
     },
     centipawnLoss: cpl,
     classification,
@@ -415,9 +401,20 @@ async function analyzeSingleMove(
       source: 'stockfish_wasm',
       version: 'unknown',
       depth: result.depth,
+      movetimeMs,
       multiPv: options.multiPv,
     },
     analyzedAt: new Date().toISOString(),
+  };
+}
+
+function formatEvaluation(eval_: InternalEval) {
+  return {
+    type: eval_.type,
+    value: eval_.value,
+    display: eval_.type === 'mate'
+      ? `Mate in ${Math.abs(eval_.value)}`
+      : `${eval_.value >= 0 ? '+' : ''}${(eval_.value / 100).toFixed(2)}`,
   };
 }
 

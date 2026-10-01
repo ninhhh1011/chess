@@ -1,0 +1,54 @@
+{
+  "verdict": "PASS",
+  "route": "/play",
+  "server": "vite preview (production dist)",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "difficulty": "easy",
+  "playerColor": "white",
+  "counts": [
+    2,
+    4,
+    6
+  ],
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nf6",
+    "d3",
+    "Nc6"
+  ],
+  "finalFen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove d2d4 ponder d7d5",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove g1f3 ponder d7d5",
+      "bestmove g8f6 ponder e4e5",
+      "bestmove d2d4 ponder e5d4",
+      "bestmove d2d4 ponder e5d4",
+      "bestmove g8f6 ponder d2d4",
+      "bestmove g1f3 ponder b8c6",
+      "bestmove b8c6 ponder d2d4",
+      "bestmove d2d3 ponder b8c6",
+      "bestmove b8c6 ponder f1e2",
+      "bestmove b1c3 ponder b8c6"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

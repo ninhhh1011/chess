@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "taskReports": 8,
+  "independentTaskVerifications": 8,
+  "phase1JsonEvidenceFilesParsed": 91,
+  "invalidJsonEvidenceFiles": 0,
+  "tasks": {
+    "P1-T01": "worker init/dispose/re-init and real stockfish_wasm source covered by focused tests, Stockfish E2E and production evidence",
+    "P1-T02": "four displayed levels map monotonically to pinned Skill/Elo constraints and real UCI commands",
+    "P1-T03": "AbortSignal, timeout ownership, pending-search termination and stale-response isolation covered",
+    "P1-T04": "official 47/94 source and fixed first-40/80 prefix are distinguished; PGN parsing and legal replay covered",
+    "P1-T05": "N+1 pass-one positions, deterministic deep candidates, exact failures and production review routing covered",
+    "P1-T06": "analysis.v1 runtime validation, stable evidence identity and Review/Learning/Coach consumers covered",
+    "P1-T07": "mover orientation, signed mate ordering, nonnegative CPL, unchanged thresholds and complete legal PV replay covered",
+    "P1-T08": "three real-browser benchmark runs and full hashed-production phase scenario independently rerun"
+  },
+  "dependencyOrProviderChanges": "none; package.json changed only the existing Playwright scripts to discover the full e2e directory, and package-lock.json is unchanged",
+  "unresolvedPhase1Inconsistencies": [],
+  "roadmapBoundary": "Corpus, cloud learning, live Coach provider and RAG acceptance remain later-phase TODO items and are not represented as Phase 1 PASS evidence."
+}

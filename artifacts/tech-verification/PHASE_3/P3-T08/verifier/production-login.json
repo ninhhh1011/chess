@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-09-06T07:40:03.642Z",
+  "baseUrl": "http://127.0.0.1:4294",
+  "formAvailable": true,
+  "errorVisible": true,
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "TypeError: Failed to fetch\n    at http://127.0.0.1:4294/assets/vendor-supabase-C5-3GuJb.js:1:105917\n    at http://127.0.0.1:4294/assets/vendor-supabase-C5-3GuJb.js:1:110947\n    at $r (http://127.0.0.1:4294/assets/vendor-supabase-C5-3GuJb.js:1:111129)\n    at As.signInWithPassword (http://127.0.0.1:4294/assets/vendor-supabase-C5-3GuJb.js:1:144822)\n    at signIn (http://127.0.0.1:4294/assets/AuthContext-DGj80fFG.js:1:948)\n    at r (http://127.0.0.1:4294/assets/authService-t-n0Fy4P.js:1:803)\n    at onSubmit (http://127.0.0.1:4294/assets/Login-_CcYsFxr.js:1:2414)\n    at Yc (http://127.0.0.1:4294/assets/vendor-react-C6juNK5L.js:1:140648)\n    at http://127.0.0.1:4294/assets/vendor-react-C6juNK5L.js:1:146726\n    at It (http://127.0.0.1:4294/assets/vendor-react-C6juNK5L.js:1:23662)"
+  ],
+  "failedRequests": [
+    {
+      "hostname": "fiacddwzfsjvidjjxurt.supabase.co",
+      "path": "/auth/v1/token",
+      "error": "net::ERR_NAME_NOT_RESOLVED"
+    }
+  ],
+  "verdict": "LIVE_CLOUD_BLOCKED"
+}

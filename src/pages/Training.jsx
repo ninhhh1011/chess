@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserProfile, updateDailyTrainingPlan } from '../services/userProfileService';
 import { signOutUser } from '../services/authService';
-import { syncLocalProfileToCloud, loadCloudProfileToLocal, handleSyncPrompt } from '../services/syncService';
+import { syncLocalProfileToCloud, loadCloudProfileToLocal } from '../services/syncService';
 import SyncStatusBadge from '../components/SyncStatusBadge';
 import { AppButton } from '@/ui/AppButton';
 import { AppProgress } from '@/ui/AppProgress';
+import { AppStatus } from '@/ui/AppStatus';
+import { AppSurface } from '@/ui/AppSurface';
 import {
   CheckCircle2,
   Circle,
@@ -24,11 +26,9 @@ import {
 export default function Training() {
   const [profile, setProfile] = useState(null);
   const [syncing, setSyncing] = useState(false);
-  const [showSyncPrompt, setShowSyncPrompt] = useState(false);
-  const [syncAction, setSyncAction] = useState(null);
 
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
 
   useEffect(() => {
     setProfile(getUserProfile());
@@ -39,18 +39,16 @@ export default function Training() {
     setProfile(getUserProfile());
   }
 
-  async function handleSync() {
+  async function handleSync(action) {
     if (!user?.id) return;
     setSyncing(true);
     try {
-      if (syncAction === 'upload') {
+      if (action === 'upload') {
         await syncLocalProfileToCloud(user.id);
-      } else if (syncAction === 'download') {
+      } else if (action === 'download') {
         await loadCloudProfileToLocal(user.id);
       }
       setProfile(getUserProfile());
-      setShowSyncPrompt(false);
-      setSyncAction(null);
     } catch (error) {
       console.warn('[training] Sync error:', error);
     } finally {
@@ -59,7 +57,7 @@ export default function Training() {
   }
 
   async function handleLogout() {
-    const result = await signOutUser();
+    const result = await signOutUser(signOut);
     if (result.success) {
       navigate('/');
     }
@@ -75,31 +73,39 @@ export default function Training() {
     switch (type) {
       case 'lesson':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--app-accent)] bg-[var(--app-accent-soft)] px-2 py-0.5 rounded-[4px]">
-            <BookOpen className="h-3 w-3" />
-            <span>Bài học</span>
-          </span>
+          <AppStatus variant="teal" size="sm">
+            <span className="flex items-center gap-1">
+              <BookOpen className="h-3 w-3" />
+              <span>Bài học</span>
+            </span>
+          </AppStatus>
         );
       case 'exercise':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--app-success)] bg-[var(--app-surface)] border border-[var(--app-border)] px-2 py-0.5 rounded-[4px]">
-            <Puzzle className="h-3 w-3" />
-            <span>Bài tập</span>
-          </span>
+          <AppStatus variant="basic" size="sm">
+            <span className="flex items-center gap-1">
+              <Puzzle className="h-3 w-3" />
+              <span>Bài tập</span>
+            </span>
+          </AppStatus>
         );
       case 'challenge':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--app-copper)] bg-[var(--app-copper-soft)] px-2 py-0.5 rounded-[4px]">
-            <Swords className="h-3 w-3" />
-            <span>Thực chiến</span>
-          </span>
+          <AppStatus variant="copper" size="sm">
+            <span className="flex items-center gap-1">
+              <Swords className="h-3 w-3" />
+              <span>Thực chiến</span>
+            </span>
+          </AppStatus>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--app-muted)] bg-[var(--app-surface)] px-2 py-0.5 rounded-[4px]">
-            <Target className="h-3 w-3" />
-            <span>Rèn luyện</span>
-          </span>
+          <AppStatus variant="basic" size="sm">
+            <span className="flex items-center gap-1">
+              <Target className="h-3 w-3" />
+              <span>Rèn luyện</span>
+            </span>
+          </AppStatus>
         );
     }
   };
@@ -337,7 +343,7 @@ export default function Training() {
               </p>
             )}
 
-            {isAuthenticated && showSyncPrompt && (
+            {isAuthenticated && (
               <div className="rounded-[8px] bg-[var(--app-surface)] p-3 border border-[var(--app-border)] space-y-2">
                 <p className="text-xs text-[var(--app-foreground)]">
                   Phát hiện dữ liệu cần đồng bộ lên tài khoản:
@@ -346,7 +352,7 @@ export default function Training() {
                   <AppButton
                     size="sm"
                     variant="primary"
-                    onClick={() => { setSyncAction('upload'); handleSync(); }}
+                    onClick={() => handleSync('upload')}
                     disabled={syncing}
                     className="flex-1"
                   >
@@ -355,7 +361,7 @@ export default function Training() {
                   <AppButton
                     size="sm"
                     variant="secondary"
-                    onClick={() => { setSyncAction('download'); handleSync(); }}
+                    onClick={() => handleSync('download')}
                     disabled={syncing}
                     className="flex-1"
                   >

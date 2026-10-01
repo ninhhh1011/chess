@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS",
+  "target": "Chromium/Vite browser transform",
+  "webCryptoSubtle": true,
+  "sha256": "b29075acbedc3d20dbb3c3e77672c10f8bb2d86b387c28ea0e641a8cefd751db",
+  "reorderedSha256": "b29075acbedc3d20dbb3c3e77672c10f8bb2d86b387c28ea0e641a8cefd751db",
+  "deterministic": true,
+  "validAccepted": true,
+  "tamperedRejected": true,
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

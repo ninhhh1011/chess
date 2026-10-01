@@ -2,7 +2,7 @@ import MoveClassificationBadge from './MoveClassificationBadge';
 import { BRAND_NAMES } from '../../config/brand';
 import { AppButton } from '../../ui';
 
-export default function GameReviewPanel({ review, isReviewing, onReview }) {
+export default function GameReviewPanel({ review, isReviewing, onReview, onSelectFact }) {
   return (
     <article className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -44,12 +44,27 @@ export default function GameReviewPanel({ review, isReviewing, onReview }) {
             <div className="mt-2 space-y-1.5">
               {review.worstMoves.length ? (
                 review.worstMoves.map((item) => (
-                  <div key={item.index} className="flex items-center gap-2 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-xs">
+                  <button
+                    type="button"
+                    key={item.evidenceId}
+                    data-evidence-id={item.evidenceId}
+                    data-engine-source={item.engineSource}
+                    data-skill-tags={item.skillTags.join(',')}
+                    data-turn={item.turn}
+                    data-centipawn-loss={item.centipawnLoss}
+                    data-classification={item.classification.type}
+                    data-eval-before={item.evalBefore}
+                    data-eval-after={item.evalAfter}
+                    data-played-uci={item.playedUci}
+                    data-best-uci={item.bestUci}
+                    onClick={() => onSelectFact?.(item)}
+                    className="flex w-full items-center gap-2 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-left text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-accent)]"
+                  >
                     <MoveClassificationBadge type={item.classification.type} label={item.classification.label} />
                     <span className="text-[var(--app-muted)]">
                       #{item.index + 1}: <span className="font-mono font-medium text-[var(--app-foreground)]">{item.playedSan}</span>, Ninh mách <span className="font-mono font-medium text-[var(--app-copper)]">{item.bestSan}</span>
                     </span>
-                  </div>
+                  </button>
                 ))
               ) : (
                 <p className="text-xs text-[var(--app-muted)]">Chưa thấy pha tự hủy lớn trong phần đã mổ.</p>

@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-09-06T08:35:54.000Z",
+  "verdict": "PASS",
+  "tasks": [
+    { "task": "P3-T01", "report": "VERIFIED", "independentVerification": "PASS" },
+    { "task": "P3-T02", "report": "VERIFIED", "independentVerification": "PASS" },
+    { "task": "P3-T03", "report": "VERIFIED", "independentVerification": "PASS" },
+    { "task": "P3-T04", "report": "VERIFIED", "independentVerification": "PASS" },
+    { "task": "P3-T05", "report": "VERIFIED", "independentVerification": "PASS" },
+    { "task": "P3-T06", "report": "VERIFIED", "independentVerification": "PASS" },
+    { "task": "P3-T07", "report": "VERIFIED", "independentVerification": "PASS" },
+    { "task": "P3-T08", "report": "VERIFIED", "independentVerification": "PASS", "resolvedHistory": "initial live ENOTFOUND followed by fresh authenticated live PASS" }
+  ]
+}

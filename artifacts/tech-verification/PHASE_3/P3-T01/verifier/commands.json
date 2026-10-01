@@ -1,0 +1,112 @@
+{
+  "task": "P3-T01",
+  "role": "independent-verifier",
+  "date": "2026-09-06",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "remote": "https://github.com/ninhhh1011/chess",
+    "diffCheck": "PASS (exit 0; line-ending warnings only)"
+  },
+  "history": [
+    {
+      "stage": "initial-focused",
+      "command": "npx vitest run src/test/persistenceContract.test.ts src/test/learningLoop.test.ts src/test/dailyPlan.test.js --reporter=dot",
+      "result": "PASS",
+      "files": 3,
+      "passed": 50,
+      "failed": 0
+    },
+    {
+      "stage": "initial-full",
+      "command": "npx vitest run --reporter=dot",
+      "result": "PASS",
+      "files": 43,
+      "passed": 709,
+      "failed": 0,
+      "note": "Pre-adversarial-validator-regression baseline."
+    },
+    {
+      "stage": "adversarial-timestamp",
+      "command": "direct assertAnalysisFactV1 probe with analyzedAt=September 6, 2026",
+      "result": "FAIL",
+      "output": "ACCEPTED_NON_ISO_TIMESTAMP",
+      "classification": "product defect reported to executor"
+    },
+    {
+      "stage": "first-correction-focused",
+      "command": "focused persistence and AnalysisFact tests",
+      "result": "PASS",
+      "files": 4,
+      "passed": 57,
+      "failed": 0
+    },
+    {
+      "stage": "first-correction-full",
+      "command": "npx vitest run --reporter=dot",
+      "result": "FAIL",
+      "filesPassed": 42,
+      "filesFailed": 1,
+      "passed": 700,
+      "failed": 10,
+      "failure": "src/test/coach.test.ts rejected valid UTC ISO 2024-01-01T00:00:00Z",
+      "classification": "regression reported to executor"
+    },
+    {
+      "stage": "final-iso-boundary",
+      "command": "direct assertAnalysisFactV1 probe accepting 2026-09-06T00:00:00Z and rejecting September 6, 2026",
+      "result": "PASS",
+      "output": "ISO_BOUNDARY_PASS"
+    },
+    {
+      "stage": "final-focused",
+      "command": "npx vitest run src/test/persistenceContract.test.ts src/test/analysisFactContract.test.ts src/test/learningLoop.test.ts src/test/dailyPlan.test.js src/test/coach.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 5,
+      "passed": 90,
+      "failed": 0
+    },
+    {
+      "stage": "final-full-standalone",
+      "command": "npx vitest run --reporter=dot",
+      "result": "PASS",
+      "files": 43,
+      "passed": 710,
+      "failed": 0,
+      "durationSeconds": 35.58
+    },
+    {
+      "stage": "quality-gates",
+      "commands": ["npm run lint", "npm run typecheck", "npm run build", "git diff --check"],
+      "result": "PASS",
+      "workspaceBuild": { "modules": 4105, "pwaEntries": 45, "durationSeconds": 8.43 }
+    },
+    {
+      "stage": "clean-candidate-setup",
+      "command": "New-Item -ItemType Directory -LiteralPath <generated-parent>",
+      "result": "HARNESS_CONFIGURATION_FAILURE",
+      "failure": "New-Item does not support -LiteralPath",
+      "recovery": "Used an explicit validated parent path; final candidate assembly and all gates passed."
+    },
+    {
+      "stage": "clean-candidate-final",
+      "commands": ["git ls-files --cached --others --exclude-standard", "npm run typecheck", "npm run build"],
+      "result": "PASS",
+      "files": 1023,
+      "ignoredGeneratedPuzzlesPresent": false,
+      "build": { "modules": 4064, "pwaEntries": 34, "durationSeconds": 7.95 }
+    },
+    {
+      "stage": "production-browser-final",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T01/self-play.mjs http://127.0.0.1:4270",
+      "result": "PASS",
+      "plies": 6,
+      "engineSource": "stockfish_wasm",
+      "bytesStableAcrossReadReload": true,
+      "errors": { "console": 0, "page": 0, "network": 0 }
+    }
+  ],
+  "verdict": "PASS"
+}

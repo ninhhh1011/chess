@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS",
+  "sourceFile": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t04\\lichess_db_puzzle.csv.zst",
+  "sourceBytes": 304384407,
+  "sourceSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+  "officialSourceUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+  "licenseId": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "datasetVersion": "2026-08-02",
+  "builderPinsExactValues": true,
+  "runtimeLoaderPinsExactValues": true,
+  "runtimeRecordChecks": ["rawSha256", "sourceVersion", "sourceId", "sourcePuzzleId", "sourceUrl", "licenseId", "licenseUrl"]
+}

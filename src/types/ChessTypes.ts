@@ -27,6 +27,7 @@ export interface EngineConfig {
   skillLevel?: number | null;
   useSkillLevelOnly?: boolean;
   purpose?: string;
+  signal?: AbortSignal;
 }
 
 // Bot types

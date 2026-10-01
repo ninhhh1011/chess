@@ -1,0 +1,44 @@
+{
+  "verdict": "PASS_ONLY_FOR_EXACT_EXCLUDE_ZUGZWANG_CONFIGURATION",
+  "sourceSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+  "attempts": [
+    {
+      "name": "rating-1400-1600",
+      "result": "REJECTED",
+      "filters": { "ratingMin": 1400, "ratingMax": 1600, "themes": [], "excludedThemes": [], "limit": 20000 },
+      "parsed": 170833,
+      "filtered": 150827,
+      "accepted": 20000,
+      "quarantined": 6,
+      "duplicates": 6,
+      "solutionMovesReplayed": 74364,
+      "duplicateSourceIds": ["0B1GK", "0gcW1", "0p3J3", "0uwi5", "1Qrvw", "1iARm"],
+      "validatorResult": "FAIL: manifest_accepted_output_not_clean"
+    },
+    {
+      "name": "rating-0-4000",
+      "result": "REJECTED",
+      "filters": { "ratingMin": 0, "ratingMax": 4000, "themes": [], "excludedThemes": [], "limit": 20000 },
+      "parsed": 20001,
+      "filtered": 0,
+      "accepted": 20000,
+      "quarantined": 1,
+      "duplicates": 1,
+      "duplicateSourceIds": ["0B1GK"]
+    },
+    {
+      "name": "rating-0-4000-exclude-zugzwang",
+      "result": "PASS_AND_PROMOTED",
+      "filters": { "ratingMin": 0, "ratingMax": 4000, "themes": [], "excludedThemes": ["zugzwang"], "limit": 20000 },
+      "parsed": 20217,
+      "filtered": 217,
+      "accepted": 20000,
+      "rejected": 0,
+      "quarantined": 0,
+      "duplicates": 0,
+      "solutionMovesReplayed": 71916,
+      "themeCount": 72,
+      "contentIdentitySha256": "474266a1953635fef5a03406a2dcd5831cc891085104d19e39c8f2470a40e75f"
+    }
+  ]
+}

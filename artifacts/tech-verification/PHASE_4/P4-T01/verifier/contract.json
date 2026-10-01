@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-09-06T08:50:16.033Z",
+  "verdict": "PASS",
+  "edge": {
+    "validStatus": 200,
+    "invalidSchemaStatus": 400,
+    "responseKeys": [
+      "engineSource",
+      "knowledgeSource",
+      "reply",
+      "schemaVersion",
+      "source",
+      "suggestedActions"
+    ],
+    "source": "basic"
+  },
+  "express": {
+    "validStatus": 200,
+    "invalidSchemaStatus": 400,
+    "responseKeys": [
+      "engineSource",
+      "knowledgeSource",
+      "reply",
+      "schemaVersion",
+      "source",
+      "suggestedActions"
+    ],
+    "source": "basic"
+  },
+  "browser": {
+    "hashedProduction": true,
+    "requestCount": 1,
+    "requestKeys": [
+      "fen",
+      "history",
+      "pgn",
+      "playerLevel",
+      "question",
+      "responseStyle",
+      "schemaVersion"
+    ],
+    "requestSchema": "coach.v1",
+    "responseStatus": 200,
+    "responseSchema": "coach.v1",
+    "responseSource": "basic",
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c",
+    "truthfulBasicLabel": true,
+    "aiProviderClaimed": false
+  },
+  "runtime": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "unexpectedHttp": []
+  }
+}

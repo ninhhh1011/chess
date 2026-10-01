@@ -1,0 +1,12 @@
+{
+  "fen": "rnbqk1nr/ppp1bppp/3pp3/8/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+  "sanMoves": [
+    "e4",
+    "e6",
+    "Nf3",
+    "d6",
+    "d3",
+    "Be7"
+  ],
+  "legalReplay": true
+}

@@ -74,7 +74,7 @@ describe('Stockfish Happy Path', () => {
       expect(move).not.toBeNull();
 
       if (result.evaluation) {
-        expect(result.evaluation.type).toBe('mate' | 'cp');
+        expect(['mate', 'cp']).toContain(result.evaluation.type);
         if (result.evaluation.type === 'mate') {
           expect(result.evaluation.value).toBeLessThanOrEqual(1);
         }

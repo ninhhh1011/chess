@@ -1,0 +1,107 @@
+{
+  "verdict": "PASS",
+  "browser": "Chromium",
+  "buildUrl": "http://127.0.0.1:4180",
+  "plies": 10,
+  "displayedHistory": [
+    "a3",
+    "e5",
+    "a4",
+    "Nf6",
+    "a5",
+    "d5",
+    "a6",
+    "Nxa6",
+    "b3",
+    "Bf5"
+  ],
+  "exportedPgn": "[Event \"?\"]\r\n[Site \"?\"]\r\n[Date \"????.??.??\"]\r\n[Round \"?\"]\r\n[White \"?\"]\r\n[Black \"?\"]\r\n[Result \"*\"]\r\n\r\n1. a3 e5 2. a4 Nf6 3. a5 d5 4. a6 Nxa6 5. b3 Bf5 *",
+  "replayedHistory": [
+    "a3",
+    "e5",
+    "a4",
+    "Nf6",
+    "a5",
+    "d5",
+    "a6",
+    "Nxa6",
+    "b3",
+    "Bf5"
+  ],
+  "finalFen": "r2qkb1r/ppp2ppp/n4n2/3ppb2/8/1P6/2PPPPPP/RNBQKBNR w KQkq - 1 6",
+  "realEngineSearches": [
+    {
+      "command": "go movetime 400",
+      "bestmove": "e2e4",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 800",
+      "bestmove": "e7e5",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "e2e4",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "e7e5",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 800",
+      "bestmove": "g8f6",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "e2e4",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "d7d5",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 800",
+      "bestmove": "d7d5",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "e2e3",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "d7d5",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 800",
+      "bestmove": "b8a6",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "e2e3",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 500",
+      "bestmove": "b8a6",
+      "source": "stockfish_wasm"
+    },
+    {
+      "command": "go movetime 800",
+      "bestmove": "c8f5",
+      "source": "stockfish_wasm"
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

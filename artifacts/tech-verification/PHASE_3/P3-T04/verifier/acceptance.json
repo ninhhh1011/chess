@@ -1,0 +1,23 @@
+{
+  "task": "P3-T04",
+  "verdict": "PASS",
+  "checks": {
+    "reviewMistakeUsesExactAnalysisFactEvidenceId": true,
+    "reviewReplayByteAndRevisionStable": true,
+    "wrongDeltaPerCorpusTag": -1,
+    "retrySkillInflation": 0,
+    "intermediateCorrectSkillInflation": 0,
+    "finalSolvedDeltaPerCorpusTag": 1,
+    "exactDuplicateEventByteAndRevisionStable": true,
+    "everySkillEvidenceUniquelyResolvesAndMatchesTag": true,
+    "danglingEvidenceRejectedWithoutMutation": true,
+    "duplicateEvidenceRejectedWithoutMutation": true,
+    "mismatchedTagEvidenceRejectedWithoutMutation": true,
+    "crossAttemptEvidenceRejectedWithoutMutation": true,
+    "crossKindEvidenceRejectedWithoutMutation": true,
+    "invalidScoreRejectedWithoutMutation": true,
+    "invalidTagsRejectedWithoutMutation": true,
+    "invalidTimestampsRejectedWithoutMutation": true,
+    "legacyOmittedEventsAndTagsNormalize": true
+  }
+}

@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+import { Dropdown as HeroUIDropdown } from '@heroui/react';
 
 export interface MenuItem {
   id: string;
   label: string;
   icon?: React.ReactNode;
   onClick?: () => void;
+  onAction?: () => void;
   href?: string;
   variant?: 'default' | 'danger';
   divider?: boolean;
@@ -13,109 +15,68 @@ export interface MenuItem {
 export interface AppMenuProps {
   trigger: React.ReactNode;
   items: MenuItem[];
-  placement?: 'bottom-start' | 'bottom-end';
+  placement?:
+    | 'bottom'
+    | 'bottom start'
+    | 'bottom end'
+    | 'top'
+    | 'top start'
+    | 'top end'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'top-start'
+    | 'top-end';
   className?: string;
+  ariaLabel?: string;
 }
 
 export function AppMenu({
   trigger,
   items,
-  placement = 'bottom-end',
+  placement = 'bottom end',
   className = '',
+  ariaLabel = 'Menu tùy chọn',
 }: AppMenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-    }
-
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const placementStyles = {
-    'bottom-end': 'top-full right-0 mt-1.5',
-    'bottom-start': 'top-full left-0 mt-1.5',
-  }[placement];
+  const normalizedPlacement = String(placement).replace('-', ' ') as any;
 
   return (
-    <div className="relative inline-block">
-      <div
-        ref={triggerRef}
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="inline-flex cursor-pointer select-none"
-      >
+    <HeroUIDropdown>
+      <HeroUIDropdown.Trigger className="inline-flex cursor-pointer select-none outline-none">
         {trigger}
-      </div>
+      </HeroUIDropdown.Trigger>
 
-      {isOpen && (
-        <div
-          ref={menuRef}
-          role="menu"
-          className={`absolute z-50 min-w-[180px] rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-1.5 shadow-xl transition-all duration-150 ${placementStyles} ${className}`}
-          style={{ borderRadius: '12px' }}
+      <HeroUIDropdown.Popover
+        placement={normalizedPlacement}
+        className={`z-50 min-w-[180px] rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-1.5 shadow-xl outline-none ${className}`}
+        style={{ borderRadius: '10px' }}
+      >
+        <HeroUIDropdown.Menu
+          aria-label={ariaLabel}
+          className="outline-none flex flex-col gap-0.5 p-0"
+          onAction={(key) => {
+            const item = items.find((i) => i.id === key);
+            item?.onClick?.();
+            item?.onAction?.();
+          }}
         >
           {items.map((item) => (
-            <React.Fragment key={item.id}>
-              {item.divider && <div className="my-1 border-t border-[var(--app-border)]" />}
-              {item.href ? (
-                <a
-                  href={item.href}
-                  role="menuitem"
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-xs font-medium transition-colors ${
-                    item.variant === 'danger'
-                      ? 'text-[var(--app-danger)] hover:bg-[var(--app-danger)]/10'
-                      : 'text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
-                  }`}
-                >
-                  {item.icon && <span className="shrink-0">{item.icon}</span>}
-                  <span>{item.label}</span>
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => {
-                    item.onClick?.();
-                    setIsOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-xs font-medium text-left transition-colors ${
-                    item.variant === 'danger'
-                      ? 'text-[var(--app-danger)] hover:bg-[var(--app-danger)]/10'
-                      : 'text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
-                  }`}
-                >
-                  {item.icon && <span className="shrink-0">{item.icon}</span>}
-                  <span>{item.label}</span>
-                </button>
-              )}
-            </React.Fragment>
+            <HeroUIDropdown.Item
+              key={item.id}
+              id={item.id}
+              textValue={item.label}
+              href={item.href}
+              className={`flex items-center gap-2.5 rounded-[6px] px-3 py-2 text-xs font-medium cursor-pointer outline-none transition-colors select-none ${
+                item.variant === 'danger'
+                  ? 'text-[var(--app-danger)] hover:bg-[var(--app-danger)]/12 focus:bg-[var(--app-danger)]/12'
+                  : 'text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] focus:bg-[var(--app-surface-hover)]'
+              }`}
+            >
+              {item.icon && <span className="shrink-0">{item.icon}</span>}
+              <span>{item.label}</span>
+            </HeroUIDropdown.Item>
           ))}
-        </div>
-      )}
-    </div>
+        </HeroUIDropdown.Menu>
+      </HeroUIDropdown.Popover>
+    </HeroUIDropdown>
   );
 }

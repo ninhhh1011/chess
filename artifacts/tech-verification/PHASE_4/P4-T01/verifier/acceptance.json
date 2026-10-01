@@ -1,0 +1,57 @@
+{
+  "task": "P4-T01",
+  "checkedAt": "2026-09-06T08:50:16.033Z",
+  "verdict": "PASS",
+  "checks": {
+    "singleVersionedContract": "PASS",
+    "clientRequestFields": "PASS",
+    "canonicalResponseShape": "PASS",
+    "edgeAdapter": "PASS",
+    "expressAdapter": "PASS",
+    "invalidSchemaRejected": "PASS",
+    "enumeratedSourceStates": "PASS",
+    "truthfulBasicDisclosure": "PASS",
+    "hashedProductionRequest": "PASS",
+    "runtimeClean": "PASS"
+  },
+  "request": {
+    "schemaVersion": "coach.v1",
+    "keys": [
+      "fen",
+      "history",
+      "pgn",
+      "playerLevel",
+      "question",
+      "responseStyle",
+      "schemaVersion"
+    ]
+  },
+  "response": {
+    "schemaVersion": "coach.v1",
+    "keys": [
+      "engineSource",
+      "knowledgeSource",
+      "reply",
+      "schemaVersion",
+      "source",
+      "suggestedActions"
+    ],
+    "allowedSource": ["llm", "basic", "unavailable"],
+    "allowedEngineSource": ["stockfish_wasm", "fallback", "none"],
+    "allowedKnowledgeSource": ["none"]
+  },
+  "browser": {
+    "endpoint": "/api/coach",
+    "requestCount": 1,
+    "httpStatus": 200,
+    "source": "basic",
+    "engineSource": "none",
+    "truthfulBasicLabel": true,
+    "aiProviderClaimed": false,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 0,
+    "unexpectedHttpErrors": 0
+  },
+  "scopeNote": "This gate verifies the P4-T01 transport contract and truthful degraded source state. Persisted evidence-ID resolution and live provider success remain later Phase 4 gates."
+}

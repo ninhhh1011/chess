@@ -307,7 +307,7 @@ describe('Coach Benchmark - 200+ Scenarios', () => {
         const latencyMs = performance.now() - start;
 
         // Schema validation
-        expect(response.schemaVersion).toBe('v1');
+        expect(response.schemaVersion).toBe('coach.v1');
         expect(typeof response.reply).toBe('string');
         expect(['basic', 'llm', 'unavailable']).toContain(response.source);
         expect(['stockfish_wasm', 'fallback', 'none']).toContain(response.engineSource);
@@ -317,10 +317,8 @@ describe('Coach Benchmark - 200+ Scenarios', () => {
         // Source validation
         expect(response.source).toBeDefined();
 
-        // Engine source validation
-        if ((scenario as {fen?: string}).fen) {
-          expect(['stockfish_wasm', 'fallback']).toContain(response.engineSource);
-        }
+        // A FEN is position context, not proof that an engine ran.
+        expect(response.engineSource).toBe('none');
 
         // No prompt leakage
         const leakagePatterns = [
@@ -339,7 +337,7 @@ describe('Coach Benchmark - 200+ Scenarios', () => {
           hasValidSchema: true,
           sourceValid: true,
           noPromptLeakage: true,
-          engineSourceValid: (scenario as {fen?: string}).fen ? ['stockfish_wasm', 'fallback'].includes(response.engineSource) : true,
+          engineSourceValid: response.engineSource === 'none',
           latencyMs,
           replyLength: response.reply.length,
           hasIllegalMove: false, // Basic service doesn't generate moves
@@ -378,7 +376,7 @@ describe('Coach Benchmark - 200+ Scenarios', () => {
         });
 
         // Should return valid response
-        expect(response.schemaVersion).toBe('v1');
+        expect(response.schemaVersion).toBe('coach.v1');
         expect(response.reply.length).toBeGreaterThan(0);
 
         // Should be basic source

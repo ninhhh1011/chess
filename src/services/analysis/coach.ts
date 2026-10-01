@@ -6,6 +6,7 @@
  */
 
 import type { AnalysisFactV1, GameAnalysis } from '../../types/analysis';
+import { assertAnalysisFactV1, getAnalysisFactEvidenceId } from './analysisFact';
 
 interface CoachContext {
   /** Facts from engine analysis */
@@ -20,6 +21,7 @@ interface CoachContext {
     best: string;
     ply: number;
     fen: string;
+    evidenceId: string;
   };
 }
 
@@ -63,7 +65,7 @@ function explainMistake(
   moveContext: NonNullable<CoachContext['moveContext']>,
   facts: AnalysisFactV1[]
 ): CoachResponse {
-  const { played, best, ply } = moveContext;
+  const { ply } = moveContext;
   const fact = facts.find(f => f.ply === ply);
 
   if (!fact) {
@@ -72,6 +74,9 @@ function explainMistake(
       suggestions: [],
     };
   }
+
+  const played = fact.playedMove.san;
+  const best = fact.bestMove.san;
 
   const cpl = fact.centipawnLoss;
   const classification = fact.classification;
@@ -234,6 +239,10 @@ export function buildCoachContext(
   analysis: GameAnalysis,
   focusedPly?: number
 ): CoachContext {
+  analysis.analysis.forEach((fact) => {
+    assertAnalysisFactV1(fact);
+    if (fact.gameId !== analysis.gameId) throw new Error(`Invalid gameAnalysis.v1 gameId at ply ${fact.ply}`);
+  });
   return {
     facts: analysis.analysis,
     topMistakes: analysis.topMistakes,
@@ -258,6 +267,7 @@ function getMoveContext(
     ply,
     played: fact.playedMove.san,
     best: fact.bestMove.san,
-    fen: fact.fenAfter,
+    fen: fact.fenBefore,
+    evidenceId: getAnalysisFactEvidenceId(fact),
   };
 }

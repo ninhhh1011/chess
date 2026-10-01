@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "profileId": "profile:6c51ce17-1c84-47dd-86ea-0b73e23a0c2e",
+  "revision": 7,
+  "syncId": "sync:profile:6c51ce17-1c84-47dd-86ea-0b73e23a0c2e",
+  "attemptId": "attempt:83c951e5-0746-41d2-aebb-50d45542a727",
+  "attemptEvents": 5,
+  "skillEvidence": 2,
+  "uniquePlanHistory": true,
+  "reloadExact": true,
+  "repeatedReloadExact": true,
+  "newTabExact": true,
+  "malformedBytesPreserved": true,
+  "restoredExact": true,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

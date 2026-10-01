@@ -1,0 +1,32 @@
+{
+  "task": "P1-T07",
+  "verdict": "PASS",
+  "commands": [
+    {
+      "command": "npm test -- --run src/components/ChessGameBoard.integration.test.jsx src/test/analysisOrientation.test.ts src/test/analysisFactContract.test.ts src/test/gameAnalyzer.test.ts src/test/stockfish.test.js src/test/stockfishWorker.test.js",
+      "exitCode": 0,
+      "result": "6 files, 60 tests passed"
+    },
+    {
+      "command": "npm test -- --run",
+      "exitCode": 0,
+      "result": "33 files, 592 tests passed"
+    },
+    { "command": "npm run lint", "exitCode": 0 },
+    { "command": "npm run typecheck", "exitCode": 0 },
+    { "command": "npm run build", "exitCode": 0, "result": "4103 modules transformed" },
+    { "command": "npm run test:e2e -- e2e/stockfish.spec.js", "exitCode": 0, "result": "10 tests passed" },
+    { "command": "git diff --check", "exitCode": 0 },
+    {
+      "command": "$env:SELF_PLAY_BASE_URL='http://127.0.0.1:4197'; node artifacts/tech-verification/PHASE_1/P1-T07/self-play.mjs",
+      "exitCode": 0,
+      "result": "White 14 plies + Black 14 plies; 45/45 legal latest PVs; real stockfish_wasm; 0 console/page/network errors"
+    }
+  ],
+  "redEvidence": [
+    "Six mate/CPL/tag/PV assertions failed before the shared fixes.",
+    "The symmetric mover test failed because calculateMoverCPL did not exist.",
+    "The review evidence metadata test failed before orientation fields were exposed."
+  ],
+  "note": "A proposed playerSide-only top-mistake filter was removed after the full 80-ply contract correctly showed that review covers both sides. Thresholds were not changed."
+}

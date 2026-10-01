@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS",
+  "project": "chromium",
+  "npmCommand": "npm run test:e2e",
+  "directCommand": "npx playwright test",
+  "discovery": {
+    "npm": "68 tests in 4 files",
+    "direct": "68 tests in 4 files",
+    "normalizedExactMatch": true
+  },
+  "execution": {
+    "discovered": 68,
+    "executed": 68,
+    "passed": 68,
+    "failed": 0,
+    "skipped": 0,
+    "filtered": 0,
+    "duration": "2.5m",
+    "exitCode": 0,
+    "files": {
+      "e2e/chess.spec.js": 29,
+      "e2e/productFlow.spec.js": 24,
+      "e2e/smoke.spec.js": 9,
+      "e2e/stockfish.spec.js": 6
+    }
+  },
+  "filterMarkerSearch": {
+    "pattern": "test\\.(only|skip|fixme)|describe\\.(only|skip)",
+    "matches": 0,
+    "rgExitCode": 1
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-09-06T08:35:13.737Z",
+  "verdict": "PASS",
+  "production": {
+    "hashedAssets": true,
+    "scripts": 2
+  },
+  "initialPlan": {
+    "id": "plan:697596d7-401c-4a94-bafb-c3bca65924af",
+    "tasks": 4
+  },
+  "game": {
+    "plies": 12,
+    "legalReplay": true,
+    "finalFen": "rnbqkb1r/p1p1ppp1/p7/P6p/4p1n1/8/1PPP1PPP/RNB1K1NR w KQkq - 0 7",
+    "stockfishBestmoves": 22
+  },
+  "review": {
+    "evidenceId": "game:a3b563f2-e640-4cc6-8bd2-c76c04e92a5a:ply:5",
+    "ply": 5,
+    "playedSan": "Qg4",
+    "bestSan": "exd5",
+    "classification": "blunder",
+    "engineSource": "stockfish_wasm"
+  },
+  "coach": {
+    "evidenceId": "game:a3b563f2-e640-4cc6-8bd2-c76c04e92a5a:ply:5",
+    "groundedBestMove": "exd5",
+    "explanationVisible": true
+  },
+  "puzzle": {
+    "id": "lichess-00008",
+    "sourcePuzzleId": "00008",
+    "attemptHash": "cda24c5fe0ddaf7f153655a2762eca7a6c21683f8aa41b27d2b21b964fdd972b",
+    "events": [
+      "wrong",
+      "retry",
+      "correct",
+      "correct",
+      "correct"
+    ],
+    "uniqueEvents": true
+  },
+  "skills": {
+    "states": 5,
+    "evidenceIds": 11,
+    "allResolveUniquely": true
+  },
+  "finalPlan": {
+    "id": "plan:15fb63e4-b14b-4789-b6e8-6add4dedc345",
+    "changed": true,
+    "taskId": "skill:tactical_oversight",
+    "skillTag": "tactical_oversight",
+    "evidenceCount": 3,
+    "uniqueInHistory": true
+  },
+  "persistence": {
+    "byteExactReload": true,
+    "rawSha256": "c960aee65c1e3f81bb7c5e42c5931f9c0496e7060003b1873f3d6ff2641d77f1",
+    "revision": 8,
+    "profileIdHash": "e739398bc0a10e6063ef108c3aee1bc3c54cfd52fff6432a99820c5aa5eb6dd7"
+  },
+  "cloud": {
+    "statuses": [
+      201,
+      200
+    ],
+    "rowCounts": [
+      1,
+      1
+    ],
+    "rowHashes": [
+      "b159ad56b282739457e8904fa675fb9813b4ad8c916678702a76bf7d9cccb3db",
+      "b159ad56b282739457e8904fa675fb9813b4ad8c916678702a76bf7d9cccb3db"
+    ],
+    "profileHashes": [
+      "157c831c2bc8ad848761b34fb6a900f22ae84eb1bb12b1f752b4680f3acabbc4",
+      "157c831c2bc8ad848761b34fb6a900f22ae84eb1bb12b1f752b4680f3acabbc4"
+    ],
+    "cleanup": {
+      "eventsDelete": true,
+      "rowDelete": true,
+      "rowsRemaining": 0,
+      "accountDelete": true,
+      "accountAbsent": true
+    },
+    "accountCreated": true,
+    "userHash": "bfa7f1e85a7f2d42539a18f29062cf6d187dc018c9ac197ce9e79786fd172d77",
+    "sameRow": true,
+    "sameProfile": true
+  },
+  "runtime": {
+    "pageErrors": [],
+    "consoleErrors": [],
+    "failedRequests": [],
+    "unexpectedHttp": []
+  }
+}

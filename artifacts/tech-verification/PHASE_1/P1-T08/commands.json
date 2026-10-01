@@ -1,0 +1,43 @@
+{
+  "task": "P1-T08",
+  "status": "local-pass-awaiting-independent-verification",
+  "commands": [
+    {
+      "command": "npx eslint artifacts/tech-verification/PHASE_1/P1-T08/benchmark.mjs artifacts/tech-verification/PHASE_1/P1-T08/self-play.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run lint",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "npm test -- --run",
+      "result": "PASS: 33 files, 592 tests"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS: 4103 modules transformed"
+    },
+    {
+      "command": "npm run test:e2e",
+      "result": "PASS: 72/72 tests"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_1/P1-T08/benchmark.mjs",
+      "result": "PASS: exact 80-ply prefix, 80 ordered facts/run, real stockfish_wasm, 0 illegal moves/errors/timeouts; cold 42934 ms, warm 42676/42728 ms, median 42728 ms, max 42934 ms"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_1/P1-T08/self-play.mjs",
+      "result": "PASS: production preview; White click 20 plies plus Hint; Black drag 21 plies plus Undo and continuation; real Stockfish review; stale bot request discarded; resign, postgame navigation, and new-game reset; 0 console/page/network errors"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "rerun_note": "The first self-play harness attempt omitted the existing 500 ms board-settle interval after Undo and failed before making a product assertion. The harness was corrected, and the complete production scenario was rerun from the beginning and passed."
+}

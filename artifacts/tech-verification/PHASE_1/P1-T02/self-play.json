@@ -1,0 +1,285 @@
+{
+  "verdict": "PASS",
+  "browser": "Chromium",
+  "buildUrl": "http://127.0.0.1:4177",
+  "runs": [
+    {
+      "displayedLabel": "Dễ - Người mới",
+      "config": {
+        "elo": 400,
+        "label": "Dễ",
+        "description": "Người mới",
+        "depth": 4,
+        "movetime": 500,
+        "skillLevel": 0,
+        "useSkillLevelOnly": true,
+        "randomChance": 0
+      },
+      "legal": true,
+      "commands": [
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 0",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 500"
+      ],
+      "search": {
+        "command": "go movetime 500",
+        "startedAt": 1703.7999999523163,
+        "depth": 14,
+        "engineTimeMs": 503,
+        "wallTimeMs": 517,
+        "bestmove": "d2d4",
+        "source": "stockfish_wasm"
+      },
+      "ready": [
+        {
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "uciOptions": [
+        "option name Threads type spin default 1 min 1 max 1",
+        "option name Hash type spin default 16 min 1 max 33554432",
+        "option name Clear Hash type button",
+        "option name Ponder type check default false",
+        "option name MultiPV type spin default 1 min 1 max 256",
+        "option name Skill Level type spin default 20 min 0 max 20",
+        "option name Move Overhead type spin default 10 min 0 max 5000",
+        "option name nodestime type spin default 0 min 0 max 10000",
+        "option name UCI_Chess960 type check default false",
+        "option name UCI_LimitStrength type check default false",
+        "option name UCI_Elo type spin default 1320 min 1320 max 3190",
+        "option name UCI_ShowWDL type check default false",
+        "option name EvalFile type string default nn-9067e33176e8.nnue",
+        "option name EvalFileSmall type string default <empty>"
+      ],
+      "allCommands": [
+        "init",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 20",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 400",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 0",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 500",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 20",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 500"
+      ]
+    },
+    {
+      "displayedLabel": "Vừa - Cơ bản",
+      "config": {
+        "elo": 800,
+        "label": "Vừa",
+        "description": "Cơ bản",
+        "depth": 6,
+        "movetime": 600,
+        "skillLevel": 3,
+        "useSkillLevelOnly": true,
+        "randomChance": 0
+      },
+      "legal": true,
+      "commands": [
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 3",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 600"
+      ],
+      "search": {
+        "command": "go movetime 600",
+        "startedAt": 1658.2000000476837,
+        "depth": 13,
+        "engineTimeMs": 601,
+        "wallTimeMs": 653,
+        "bestmove": "e2e3",
+        "source": "stockfish_wasm"
+      },
+      "ready": [
+        {
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "uciOptions": [
+        "option name Threads type spin default 1 min 1 max 1",
+        "option name Hash type spin default 16 min 1 max 33554432",
+        "option name Clear Hash type button",
+        "option name Ponder type check default false",
+        "option name MultiPV type spin default 1 min 1 max 256",
+        "option name Skill Level type spin default 20 min 0 max 20",
+        "option name Move Overhead type spin default 10 min 0 max 5000",
+        "option name nodestime type spin default 0 min 0 max 10000",
+        "option name UCI_Chess960 type check default false",
+        "option name UCI_LimitStrength type check default false",
+        "option name UCI_Elo type spin default 1320 min 1320 max 3190",
+        "option name UCI_ShowWDL type check default false",
+        "option name EvalFile type string default nn-9067e33176e8.nnue",
+        "option name EvalFileSmall type string default <empty>"
+      ],
+      "allCommands": [
+        "init",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 20",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 400",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 3",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 600",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 20",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 500"
+      ]
+    },
+    {
+      "displayedLabel": "Khó - Trung bình",
+      "config": {
+        "elo": 1200,
+        "label": "Khó",
+        "description": "Sơ cấp",
+        "depth": 8,
+        "movetime": 800,
+        "skillLevel": 6,
+        "useSkillLevelOnly": true,
+        "randomChance": 0
+      },
+      "legal": true,
+      "commands": [
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 6",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 800"
+      ],
+      "search": {
+        "command": "go movetime 800",
+        "startedAt": 1682,
+        "depth": 15,
+        "engineTimeMs": 800,
+        "wallTimeMs": 810,
+        "bestmove": "e2e4",
+        "source": "stockfish_wasm"
+      },
+      "ready": [
+        {
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "uciOptions": [
+        "option name Threads type spin default 1 min 1 max 1",
+        "option name Hash type spin default 16 min 1 max 33554432",
+        "option name Clear Hash type button",
+        "option name Ponder type check default false",
+        "option name MultiPV type spin default 1 min 1 max 256",
+        "option name Skill Level type spin default 20 min 0 max 20",
+        "option name Move Overhead type spin default 10 min 0 max 5000",
+        "option name nodestime type spin default 0 min 0 max 10000",
+        "option name UCI_Chess960 type check default false",
+        "option name UCI_LimitStrength type check default false",
+        "option name UCI_Elo type spin default 1320 min 1320 max 3190",
+        "option name UCI_ShowWDL type check default false",
+        "option name EvalFile type string default nn-9067e33176e8.nnue",
+        "option name EvalFileSmall type string default <empty>"
+      ],
+      "allCommands": [
+        "init",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 20",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 400",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 6",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 800"
+      ]
+    },
+    {
+      "displayedLabel": "Thử thách - Nâng cao",
+      "config": {
+        "elo": 1600,
+        "label": "Thử thách",
+        "description": "Trung cấp",
+        "depth": 10,
+        "movetime": 1200,
+        "skillLevel": 10,
+        "useSkillLevelOnly": false,
+        "randomChance": 0
+      },
+      "legal": true,
+      "commands": [
+        "setoption name UCI_LimitStrength value true",
+        "setoption name UCI_Elo value 1600",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 1200"
+      ],
+      "search": {
+        "command": "go movetime 1200",
+        "startedAt": 1854.1000001430511,
+        "depth": 15,
+        "engineTimeMs": 1200,
+        "wallTimeMs": 1237,
+        "bestmove": "e2e3",
+        "source": "stockfish_wasm"
+      },
+      "ready": [
+        {
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "uciOptions": [
+        "option name Threads type spin default 1 min 1 max 1",
+        "option name Hash type spin default 16 min 1 max 33554432",
+        "option name Clear Hash type button",
+        "option name Ponder type check default false",
+        "option name MultiPV type spin default 1 min 1 max 256",
+        "option name Skill Level type spin default 20 min 0 max 20",
+        "option name Move Overhead type spin default 10 min 0 max 5000",
+        "option name nodestime type spin default 0 min 0 max 10000",
+        "option name UCI_Chess960 type check default false",
+        "option name UCI_LimitStrength type check default false",
+        "option name UCI_Elo type spin default 1320 min 1320 max 3190",
+        "option name UCI_ShowWDL type check default false",
+        "option name EvalFile type string default nn-9067e33176e8.nnue",
+        "option name EvalFileSmall type string default <empty>"
+      ],
+      "allCommands": [
+        "init",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 20",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 400",
+        "setoption name UCI_LimitStrength value true",
+        "setoption name UCI_Elo value 1600",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 1200",
+        "setoption name UCI_LimitStrength value false",
+        "setoption name Skill Level value 20",
+        "ucinewgame",
+        "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "go movetime 500"
+      ]
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

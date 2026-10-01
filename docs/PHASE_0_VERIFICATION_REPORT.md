@@ -1,7 +1,9 @@
 # Phase 0 Verification Report
 
+> **Historical snapshot — superseded.** The status and counts below are not current evidence. See [CURRENT_RUNTIME.md](CURRENT_RUNTIME.md), the active execution plan, and the newer P0 task/verifier reports.
+
 **Date**: 2026-08-27
-**Status**: PHASE 0: ✅ PASS
+**Status**: HISTORICAL SNAPSHOT
 
 ---
 

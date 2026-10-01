@@ -135,6 +135,49 @@ export type GamePhase = 'opening' | 'middlegame' | 'endgame' | 'transition';
 export type SideToMove = 'w' | 'b';
 
 /**
+ * Immutable source record accepted by the real-corpus importer.
+ * recordSha256 covers every other field in this contract.
+ */
+export interface PuzzleRecord {
+  schemaVersion: 'puzzle-record.v1';
+  puzzleId: string;
+  sourceId: string;
+  sourcePuzzleId: string;
+  sourceUrl: string;
+  sourceVersion: string;
+  sourcePublishedAt: string;
+  retrievedAt: string;
+  licenseId: string;
+  licenseUrl: string;
+  rawSha256: string;
+  recordSha256: string;
+  fen: string;
+  moves: string[];
+  rating: number;
+  themes: string[];
+
+  // Source-specific fields populated by a verified importer when available.
+  source?: 'lichess';
+  sourceFen?: string;
+  precedingMove?: string;
+  sideToMove?: SideToMove;
+  ratingDeviation?: number;
+  popularity?: number;
+  plays?: number;
+  openingTags?: string[];
+  gameUrl?: string;
+  dailyDate?: number | null;
+  importRunId?: string;
+  rawRecordSha256?: string;
+  normalizedPuzzleSha256?: string;
+  parserVersion?: string;
+  validatorVersion?: string;
+  validationStatus?: 'validated';
+}
+
+export type PuzzleRecordInput = Omit<PuzzleRecord, 'recordSha256'>;
+
+/**
  * A puzzle/motivation exercise
  */
 export interface Puzzle {

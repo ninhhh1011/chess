@@ -1,0 +1,47 @@
+{
+  "task": "P2-T06",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    {
+      "command": "npm test -- --run scripts/corpus-release.test.mjs",
+      "exitCode": 1,
+      "result": "TDD RED: junction escape resolved instead of rejecting"
+    },
+    {
+      "command": "npm test -- --run scripts/corpus-release.test.mjs",
+      "exitCode": 0,
+      "result": "3/3 PASS after lstat/realpath root fix"
+    },
+    {
+      "command": "npm test -- --run scripts/corpus-release.test.mjs scripts/import-lichess-puzzles.test.mjs scripts/validate-puzzle-corpus.test.mjs src/test/puzzleRecord.test.ts",
+      "exitCode": 0,
+      "result": "4 files, 45 tests passed"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T06/recovery-evidence.mjs %TEMP%\\chess-p2t04\\lichess_db_puzzle.csv.zst",
+      "exitCode": 0,
+      "result": "PASS: process restart, byte-identical recovery, idempotency, failed-run isolation, publish and rollback"
+    },
+    {
+      "command": "node scripts/manage-corpus-release.mjs status --release-root <task-temp-release>",
+      "exitCode": 0,
+      "result": "active clean run, empty history"
+    },
+    {
+      "command": "three production self-play runs after publish-clean, publish-resumed, and rollback",
+      "exitCode": 0,
+      "result": "each six legal plies with real Stockfish WASM and zero browser errors"
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 0,
+      "result": "38 files, 695 tests passed in standalone final run"
+    },
+    { "command": "npm run lint", "exitCode": 0 },
+    { "command": "npm run typecheck", "exitCode": 0 },
+    { "command": "npm run build", "exitCode": 0, "result": "4,103 modules transformed" },
+    { "command": "git diff --check", "exitCode": 0 }
+  ],
+  "harnessIncident": "One status invocation passed a malformed PowerShell-composed path and exited 1; Join-Path corrected the harness command and the complete status/publish/rollback CLI flow passed. Concurrent heavy full-test/build runs also caused timeout-only failures; the final standalone full suite passed 695/695 without code or timeout changes.",
+  "commitOrPushPerformed": false
+}

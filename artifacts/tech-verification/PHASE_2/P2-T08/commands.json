@@ -1,0 +1,22 @@
+{
+  "task": "P2-T08",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    { "command": "node scripts/import-lichess-puzzles.mjs ... --rating-min 1400 --rating-max 1600 --limit 20000", "exit": 0, "stage": "REJECTED by validation gate: 6 duplicates/quarantine" },
+    { "command": "node scripts/import-lichess-puzzles.mjs ... --rating-min 0 --rating-max 4000 --limit 20000", "exit": 0, "stage": "REJECTED: 1 duplicate/quarantine" },
+    { "command": "node scripts/import-lichess-puzzles.mjs ... --rating-min 0 --rating-max 4000 --exclude-themes zugzwang --limit 20000", "exit": 0, "accepted": 20000, "duplicates": 0, "quarantined": 0 },
+    { "command": "node scripts/validate-puzzle-corpus.mjs ...", "exit": 0, "verdict": "PASS", "valid": 20000, "solutionMovesReplayed": 71916 },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T08/recovery-evidence.mjs <official-source>", "exit": 0, "verdict": "PASS" },
+    { "command": "npx vitest run scripts/corpus-delivery.test.mjs", "stage": "RED sequential validation regression", "exit": 1 },
+    { "command": "npx vitest run scripts/corpus-delivery.test.mjs src/test/exerciseBoardRealSolution.test.jsx src/test/exercisesProductionCorpus.test.jsx", "exit": 0, "tests": "5/5" },
+    { "command": "npm test -- --run", "exit": 0, "files": "42/42", "tests": "702/702" },
+    { "command": "npm run lint", "exit": 0 },
+    { "command": "npm run typecheck", "exit": 0 },
+    { "command": "npm run build", "exit": 0, "modules": 4104, "pwaPrecacheEntries": 45 },
+    { "command": "clean-candidate typecheck and build", "exit": 0, "puzzleCount": 20000, "chunkCount": 20 },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T08/verify-production.mjs http://127.0.0.1:4174", "exit": 1, "stage": "Harness asserted before board animation completed" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T08/verify-production.mjs http://127.0.0.1:4174", "exit": 0, "verdict": "PASS", "corpusLoadMs": 2786, "selfPlayPlies": 6 },
+    { "command": "PHASE1_GATE_PRODUCTION_URL=http://127.0.0.1:4174 PHASE_GATE_OUTPUT_DIR=artifacts/tech-verification/PHASE_2/P2-T08/phase-gate node artifacts/tech-verification/PHASE_1/GATE/verifier/self-play.mjs", "exit": 0, "verdict": "PASS", "whitePlies": 20, "blackPlies": 21, "reviewPlies": 16, "legalBestmoves": "171/171" }
+  ],
+  "computerUseFallback": "CUA initialization failed before browser control: failed to write kernel assets (os error 3). Existing Playwright was used instead."
+}

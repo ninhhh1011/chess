@@ -1,0 +1,16 @@
+{
+  "task": "P1-T08",
+  "historical_commit": "c5a33af",
+  "reported_historical_median_ms": 5365,
+  "fresh_real_wasm_median_ms": 42728,
+  "nominal_change_percent": 696.4,
+  "comparable": false,
+  "findings": [
+    "The historical latency test ran src/test/gameLatency.test.ts under Vitest/jsdom, where Worker was undefined.",
+    "The historical stockfishService.initEngine() therefore returned false and analysis used the fallback path rather than a browser Stockfish worker.",
+    "The historical analyzer selected second-pass candidates only from facts whose source was real; consequently the historical run performed zero second-pass Stockfish searches.",
+    "The historical analyzer still stamped placeholder facts and the top-level result with stockfish_wasm, while the test printed and asserted that top-level label instead of observing worker searches.",
+    "The historical first pass did not forward the requested movetimeMs: 500 value into analyzeFen."
+  ],
+  "conclusion": "The 5365 ms number is a fallback/hardcoded-source result and is not a valid real-WASM comparator. The fresh browser benchmark is the first truthful baseline: median 42728 ms, max 42934 ms, with 83/83 observed real worker searches per run and all runs below the historical 60000 ms per-run gate. No product timing was weakened to manufacture a comparison."
+}

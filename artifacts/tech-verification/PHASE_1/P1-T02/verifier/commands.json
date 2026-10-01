@@ -1,0 +1,39 @@
+{
+  "verdict": "PASS",
+  "head": "7ecc6a6",
+  "commands": [
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm test -- --run src/test/botDifficulty.test.js src/test/botUCIProtocol.test.js",
+      "exitCode": 0,
+      "summary": "2 files, 30 tests passed"
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "summary": "31 files, 572 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "summary": "4098 modules transformed"
+    },
+    {
+      "command": "npx playwright test e2e/stockfish.spec.js --project=chromium",
+      "exitCode": 0,
+      "summary": "9 tests passed"
+    },
+    {
+      "command": "$env:VERIFIER_BASE_URL='http://127.0.0.1:4182'; node artifacts/tech-verification/PHASE_1/P1-T02/verifier/verify.mjs",
+      "exitCode": 0,
+      "summary": "production-build Chromium verifier PASS"
+    }
+  ]
+}

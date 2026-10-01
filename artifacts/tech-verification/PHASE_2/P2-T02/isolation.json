@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "productionSourceFilesScanned": 152,
+  "productionInitializationCalls": 0,
+  "syntheticMarkerHits": [],
+  "productionBundleFilesScanned": 32,
+  "productionBundleSyntheticMarkerHits": [],
+  "localIntegratedDrills": [
+    "mate_one_queen",
+    "knight_capture",
+    "promotion_queen",
+    "back_rank_mate",
+    "bishop_diagonal"
+  ],
+  "externalCorpusAvailable": false,
+  "unavailableState": "truthful",
+  "dormantDataPreserved": true
+}

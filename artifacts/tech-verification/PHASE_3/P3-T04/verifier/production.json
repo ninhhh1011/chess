@@ -1,0 +1,64 @@
+{
+  "verdict": "PASS",
+  "puzzleId": "lichess-00008",
+  "sourcePuzzleId": "00008",
+  "attemptId": "attempt:d4bf819d-08d9-4293-9627-8c98976a6b66",
+  "attemptSkillTags": [
+    "crushing",
+    "hangingPiece",
+    "long",
+    "middlegame"
+  ],
+  "skillStates": [
+    {
+      "schemaVersion": "skillState.v1",
+      "skillId": "crushing",
+      "score": 0,
+      "evidenceIds": [
+        "event:4289f293-83ac-499c-bf0b-e2736270d061",
+        "event:d1e09160-b351-4ae3-a7c8-dbad1b259ea6"
+      ],
+      "createdAt": "2026-09-06T06:13:56.223Z",
+      "updatedAt": "2026-09-06T06:13:57.456Z"
+    },
+    {
+      "schemaVersion": "skillState.v1",
+      "skillId": "hangingPiece",
+      "score": 0,
+      "evidenceIds": [
+        "event:4289f293-83ac-499c-bf0b-e2736270d061",
+        "event:d1e09160-b351-4ae3-a7c8-dbad1b259ea6"
+      ],
+      "createdAt": "2026-09-06T06:13:56.223Z",
+      "updatedAt": "2026-09-06T06:13:57.456Z"
+    },
+    {
+      "schemaVersion": "skillState.v1",
+      "skillId": "long",
+      "score": 0,
+      "evidenceIds": [
+        "event:4289f293-83ac-499c-bf0b-e2736270d061",
+        "event:d1e09160-b351-4ae3-a7c8-dbad1b259ea6"
+      ],
+      "createdAt": "2026-09-06T06:13:56.223Z",
+      "updatedAt": "2026-09-06T06:13:57.456Z"
+    },
+    {
+      "schemaVersion": "skillState.v1",
+      "skillId": "middlegame",
+      "score": 0,
+      "evidenceIds": [
+        "event:4289f293-83ac-499c-bf0b-e2736270d061",
+        "event:d1e09160-b351-4ae3-a7c8-dbad1b259ea6"
+      ],
+      "createdAt": "2026-09-06T06:13:56.223Z",
+      "updatedAt": "2026-09-06T06:13:57.456Z"
+    }
+  ],
+  "exactReloadBytes": true,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

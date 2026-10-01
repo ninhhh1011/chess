@@ -1,0 +1,39 @@
+{
+  "verdict": "PASS",
+  "controlledExitCode": 75,
+  "checkpoint": {
+    "checkpointSchemaVersion": "lichess-import-checkpoint.v1",
+    "datasetVersion": "2026-08-02",
+    "sourceUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+    "rawSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+    "importerVersion": "lichess-importer.v1",
+    "parserVersion": "lichess-csv.v1",
+    "validatorVersion": "puzzle-record.v1",
+    "configSha256": "b15f464931a742ad09291e78135cfbffc3cf53007005ab4c5eb029c954d68218",
+    "importRunId": "lichess-e6913b4e2cf421d29bbfe41c",
+    "retrievedAt": "2026-09-06T01:39:15.931Z",
+    "paths": {
+      "output": "C:\\Users\\nguye\\AppData\\Local\\Temp\\p2-t04-resume-audit-HZP1Zx\\accepted.jsonl",
+      "quarantineOutput": "C:\\Users\\nguye\\AppData\\Local\\Temp\\p2-t04-resume-audit-HZP1Zx\\quarantine.jsonl",
+      "manifestOutput": "C:\\Users\\nguye\\AppData\\Local\\Temp\\p2-t04-resume-audit-HZP1Zx\\manifest.json"
+    },
+    "sourceRowsCommitted": 3000,
+    "counts": {
+      "parsed": 3000,
+      "filtered": 2655,
+      "accepted": 345,
+      "invalid": 0,
+      "quarantined": 0,
+      "duplicate": 0
+    },
+    "parsedCount": 3000,
+    "filteredCount": 2655,
+    "acceptedCount": 345,
+    "quarantineCount": 0,
+    "duplicateCount": 0,
+    "acceptedBytes": 445773,
+    "quarantineBytes": 0,
+    "updatedAt": "2026-09-06T01:44:32.180Z",
+    "status": "interrupted"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "task": "P2-T04",
+  "verdict": "PASS",
+  "commands": [
+    {
+      "command": "official HEAD and license/schema inspection at https://database.lichess.org/",
+      "exitCode": 0,
+      "result": "HTTP 200; 304384407 bytes; Last-Modified 2026-08-02T07:23:55Z; CC0; official CSV schema confirmed"
+    },
+    {
+      "command": "Node 24 createZstdDecompress probe against full official file",
+      "exitCode": 0,
+      "result": "native streaming API decoded seekable-Zstd after its leading skippable frame"
+    },
+    {
+      "command": "npm test -- --run scripts/import-lichess-puzzles.test.mjs src/test/puzzleRecord.test.ts",
+      "exitCode": 0,
+      "result": "37/37 PASS"
+    },
+    {
+      "command": "node scripts/import-lichess-puzzles.mjs --input <official.zst> ... --limit 1000 --rating-min 1400 --rating-max 1600",
+      "exitCode": 0,
+      "result": "9362 parsed; 8362 filtered; 1000 accepted; 0 invalid/quarantine/duplicate"
+    },
+    {
+      "command": "same official mini-import in a second clean output directory",
+      "exitCode": 0,
+      "result": "matching content identity c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338"
+    },
+    {
+      "command": "official mini-import --abort-after 3000",
+      "exitCode": 75,
+      "result": "controlled interruption at 3000 parsed / 345 accepted with atomic checkpoint"
+    },
+    {
+      "command": "official mini-import --resume",
+      "exitCode": 0,
+      "result": "completed 1000 accepted, preserved retrievedAt/content identity, 0 duplicate"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T04/import-audit.mjs <official paths>",
+      "exitCode": 0,
+      "result": "1000/1000 contract and full solution replay; 66 themes; peak RSS below 128 MiB"
+    },
+    {
+      "command": "production Chromium self-play via P2-T04/self-play.mjs",
+      "exitCode": 0,
+      "result": "6 legal plies, real Stockfish WASM, legal FEN/PGN, zero console/page/network errors"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 0,
+      "result": "36 files; 687/687 PASS"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "4103 modules; production PWA build PASS"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS; CRLF advisory warnings only"
+    },
+    {
+      "command": "independent P2-T04 verifier",
+      "exitCode": 0,
+      "result": "PASS: focused 41/41, full 687/687, real import/resume/adversarial/browser gates"
+    }
+  ]
+}

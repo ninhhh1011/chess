@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-09-06T08:51:00.000Z",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "diffCheck": "PASS"
+  },
+  "focused": {
+    "files": 1,
+    "tests": 33,
+    "passed": 33,
+    "failed": 0
+  },
+  "directContract": {
+    "validStatus": 200,
+    "invalidSchemaStatus": 400,
+    "schemaVersion": "coach.v1",
+    "source": "basic"
+  },
+  "productionBrowser": {
+    "result": "PASS",
+    "requestCount": 1,
+    "responseStatus": 200,
+    "responseSchema": "coach.v1",
+    "responseSource": "basic",
+    "runtimeErrors": 0
+  },
+  "independentVerification": {
+    "result": "PASS",
+    "focused": "33/33",
+    "full": "760/760",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "buildModules": 4107,
+    "pwaEntries": 45,
+    "runtimeErrors": 0
+  }
+}

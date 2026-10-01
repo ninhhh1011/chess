@@ -1,7 +1,6 @@
-import { useAuth } from '../contexts/AuthContext';
 import { isSupabaseConfigured } from '../lib/supabaseClient';
 
-export function signUpWithEmail({ email, password, displayName }) {
+export async function signUpWithEmail({ email, password, displayName }, signUp) {
   if (!isSupabaseConfigured) {
     return {
       success: false,
@@ -23,8 +22,7 @@ export function signUpWithEmail({ email, password, displayName }) {
     };
   }
 
-  const { signUp } = useAuth();
-  const { data, error } = signUp({ email, password, displayName });
+  const { data, error } = await signUp({ email, password, displayName });
 
   if (error) {
     const message = error.message || 'Đăng ký thất bại. Vui lòng thử lại.';
@@ -45,7 +43,7 @@ export function signUpWithEmail({ email, password, displayName }) {
   };
 }
 
-export function signInWithEmail({ email, password }) {
+export async function signInWithEmail({ email, password }, signIn) {
   if (!isSupabaseConfigured) {
     return {
       success: false,
@@ -67,8 +65,7 @@ export function signInWithEmail({ email, password }) {
     };
   }
 
-  const { signIn } = useAuth();
-  const { data, error } = signIn({ email, password });
+  const { data, error } = await signIn({ email, password });
 
   if (error) {
     const message = error.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
@@ -89,7 +86,7 @@ export function signInWithEmail({ email, password }) {
   };
 }
 
-export function signOutUser() {
+export async function signOutUser(signOut) {
   if (!isSupabaseConfigured) {
     return {
       success: false,
@@ -97,8 +94,7 @@ export function signOutUser() {
     };
   }
 
-  const { signOut } = useAuth();
-  const { error } = signOut();
+  const { error } = await signOut();
 
   if (error) {
     return {
@@ -111,26 +107,4 @@ export function signOutUser() {
     success: true,
     message: 'Đăng xuất thành công!',
   };
-}
-
-export function getCurrentSession() {
-  if (!isSupabaseConfigured) return null;
-  const { session } = useAuth();
-  return session;
-}
-
-export function getCurrentUser() {
-  if (!isSupabaseConfigured) return null;
-  const { user } = useAuth();
-  return user;
-}
-
-export function useIsAuthenticated() {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated;
-}
-
-export function useCurrentUser() {
-  const { user } = useAuth();
-  return user;
 }

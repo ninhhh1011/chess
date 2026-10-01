@@ -1,0 +1,65 @@
+{
+  "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at waitForHistoryAtLeast (E:\\chess\\artifacts\\tech-verification\\PHASE_0\\GATE\\phase-gate.mjs:76:14)\n    at playToTwenty (E:\\chess\\artifacts\\tech-verification\\PHASE_0\\GATE\\phase-gate.mjs:107:11)\n    at async file:///E:/chess/artifacts/tech-verification/PHASE_0/GATE/phase-gate.mjs:152:17",
+  "history": [
+    "d4"
+  ],
+  "body": "Ninh Lốp Trưởng\nTrang chủ\nChơi cờ\nLuyện tập\nTiến bộ\nĐăng nhập\nĐăng ký\nĐang chơi\nLượt của bạn\n34s\nNinh Lốp Trưởng\n400\n1\n2\n3\n4\n5\n6\n7\nh\n8\ng\nf\ne\nd\nc\nb\na\nDraggable item b8 was dropped over droppable area c6\nB\nBạn\nĐen\nGợi ý\nHoàn tác\nVán mới\nVán đấu\nPhân tích\nHuấn luyện\nLịch sử nước đi · 1 nước\nSao chép PGN\n1. d4\n...",
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove e2e4 ponder e7e5",
+      "bestmove e7e5 ponder d2d4",
+      "bestmove d2d4 ponder g8f6",
+      "bestmove e7e5 ponder d2d4",
+      "bestmove b8c6 ponder e2e3",
+      "bestmove d2d4 ponder e5d4",
+      "bestmove b8c6 ponder e2e3",
+      "bestmove g8f6 ponder e2e3",
+      "bestmove d2d3 ponder d7d5",
+      "bestmove f8e7 ponder e2e3",
+      "bestmove b7b5 ponder b2b3",
+      "bestmove d2d3 ponder d7d5",
+      "bestmove d7d5 ponder e2e3",
+      "bestmove d7d5 ponder e2e3",
+      "bestmove d2d3 ponder d7d5",
+      "bestmove f8e7 ponder e2e3",
+      "bestmove c6b4 ponder g1f3",
+      "bestmove e2e3 ponder a8b8",
+      "bestmove c6b4 ponder g1f3",
+      "bestmove b4c6 ponder e2e3",
+      "bestmove c1b2 ponder f8d6",
+      "bestmove b4a6 ponder g1f3",
+      "bestmove b5c4 ponder d2d3",
+      "bestmove g1f3 ponder e5e4",
+      "bestmove b5c4 ponder d2d3",
+      "bestmove f8b4 ponder c1d2",
+      "bestmove e2e3 ponder f8d6",
+      "bestmove f8b4 ponder c1d2",
+      "bestmove b4c3 ponder c1d2",
+      "bestmove d1d2 ponder b4d2",
+      "bestmove e8g8 ponder c1d2",
+      "bestmove c1d2 ponder c3a1",
+      "bestmove c1d2 ponder c3a1",
+      "bestmove d2d4 ponder g8f6",
+      "bestmove d2d4 ponder g8f6",
+      "bestmove d7d5 ponder g1f3",
+      "bestmove g8f6 ponder c2c4",
+      "bestmove d4d5 ponder c6e5",
+      "bestmove e7e6 ponder e2e4",
+      "bestmove g1f3 ponder d7d5",
+      "bestmove d7d6 ponder e2e4",
+      "bestmove c6b4 ponder a2a3"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

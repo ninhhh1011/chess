@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-09-06T07:56:56.976Z",
+  "hostname": "fiacddwzfsjvidjjxurt.supabase.co",
+  "accountCreated": true,
+  "login": true,
+  "manualUploadStatuses": [
+    201,
+    200
+  ],
+  "rowCounts": [
+    1,
+    1
+  ],
+  "rowIdentityHashes": [
+    "0606a0fe5368af73fde0cec06da7aa7a2afcf97a40cf3b1d5abf4623d7f5b06f",
+    "0606a0fe5368af73fde0cec06da7aa7a2afcf97a40cf3b1d5abf4623d7f5b06f"
+  ],
+  "profileHashes": [
+    "4d582419ff4053591d3421ecb81ba9f6e6a47eb372badf461b6d20d2dce3da0c",
+    "4d582419ff4053591d3421ecb81ba9f6e6a47eb372badf461b6d20d2dce3da0c"
+  ],
+  "trainingEventCounts": [
+    0,
+    0
+  ],
+  "sameRowAfterRetry": true,
+  "sameProfileAfterRetry": true,
+  "pageErrors": [],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "unexpectedHttpResponses": [],
+  "cleanup": {
+    "profileDeleteSucceeded": true,
+    "profileRowsRemaining": 0,
+    "accountDeleteSucceeded": true,
+    "accountAbsentAfterDelete": true
+  },
+  "userIdentityHash": "ae1b9760e1e9aaf1acf64d9f4efe5ad91602f96034dbcb02cfa6c162e8c3caf3",
+  "pass": true
+}

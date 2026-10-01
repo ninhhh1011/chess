@@ -5,6 +5,8 @@ import type { AnalysisResult, EngineConfig, Evaluation } from '../types/ChessTyp
 const ENGINE_VERSION = '2026-05-30-simplified';
 const ENGINE_CRASH_BASE_COOLDOWN_MS = 60000;
 const ENGINE_CRASH_MAX_COOLDOWN_MS = 300000;
+const STOCKFISH_MIN_UCI_ELO = 1320;
+const STOCKFISH_MAX_UCI_ELO = 3190;
 
 let worker: Worker | null = null;
 let engineReady = false;
@@ -12,7 +14,10 @@ let engineState: 'idle' | 'loading' | 'ready' | 'analyzing' | 'error' = 'idle';
 let engineDisabledUntil = 0;
 let engineFailureCount = 0;
 let hasLoggedWorkerUnavailable = false;
-let currentAnalysis: { stopped: boolean; fen: string } | null = null;
+let engineInitPromise: Promise<boolean> | null = null;
+let cancelEngineInit: (() => void) | null = null;
+let currentAnalysis: { fen: string; cancel: (reason?: Error) => void } | null = null;
+let analysisQueue: Promise<void> = Promise.resolve();
 
 // Simple request ID for request cancellation
 let currentRequestId = 0;
@@ -42,9 +47,7 @@ export async function initEngine(): Promise<boolean> {
     return true;
   }
 
-  if (engineState === 'loading') {
-    return false;
-  }
+  if (engineInitPromise) return engineInitPromise;
 
   engineState = 'loading';
 
@@ -53,39 +56,62 @@ export async function initEngine(): Promise<boolean> {
       worker.terminate();
     }
 
-    worker = new Worker(`/stockfish-worker.js?v=${ENGINE_VERSION}`);
+    const initializingWorker = new Worker(`/stockfish-worker.js?v=${ENGINE_VERSION}`);
+    worker = initializingWorker;
 
-    return new Promise((resolve) => {
-      const timeout = setTimeout(() => {
-        disableEngine('Init timeout');
-        resolve(false);
+    engineInitPromise = new Promise((resolve) => {
+      let settled = false;
+      let timeout: ReturnType<typeof setTimeout> | null = null;
+      let cancel: () => void;
+
+      const finish = (success: boolean) => {
+        if (settled) return;
+        settled = true;
+        if (timeout !== null) clearTimeout(timeout);
+        if (cancelEngineInit === cancel) cancelEngineInit = null;
+        engineInitPromise = null;
+        resolve(success);
+      };
+
+      cancel = () => {
+        initializingWorker.onmessage = null;
+        initializingWorker.onerror = null;
+        finish(false);
+      };
+      cancelEngineInit = cancel;
+
+      timeout = setTimeout(() => {
+        if (worker === initializingWorker) disableEngine('Init timeout');
+        else initializingWorker.terminate();
+        finish(false);
       }, 10000);
 
-      worker!.onmessage = (event: MessageEvent) => {
+      initializingWorker.onmessage = (event: MessageEvent) => {
+        if (worker !== initializingWorker) return;
         if (event.data.type === 'ready') {
-          clearTimeout(timeout);
           if (event.data.success) {
             engineReady = true;
             engineState = 'ready';
             engineFailureCount = 0;
             hasLoggedWorkerUnavailable = false;
             debug('Engine ready!');
-            resolve(true);
+            finish(true);
           } else {
             disableEngine(event.data.error || 'Init failed');
-            resolve(false);
+            finish(false);
           }
         }
       };
 
-      worker!.onerror = () => {
-        clearTimeout(timeout);
+      initializingWorker.onerror = () => {
+        if (worker !== initializingWorker) return;
         disableEngine('Worker error');
-        resolve(false);
+        finish(false);
       };
 
-      worker!.postMessage('init');
+      initializingWorker.postMessage('init');
     });
+    return engineInitPromise;
   } catch (error) {
     disableEngine(String(error));
     return false;
@@ -125,19 +151,23 @@ export function getEngineState() {
 /**
  * Configure engine for specific ELO level
  */
-export async function configureEngine(elo: number): Promise<boolean> {
+export async function configureEngine(
+  elo: number,
+  skillLevel: number | null = null,
+  useSkillLevelOnly = false
+): Promise<boolean> {
   if (!isEngineReady()) return false;
 
   try {
-    if (elo < 1200) {
-      // Use Skill Level for low ELO
-      const skillLevel = Math.max(0, Math.floor((1200 - elo) / 50));
+    if (useSkillLevelOnly || elo < STOCKFISH_MIN_UCI_ELO) {
+      const effectiveSkillLevel = Math.max(0, Math.min(20, skillLevel ?? 20));
       worker!.postMessage('setoption name UCI_LimitStrength value false');
-      worker!.postMessage(`setoption name Skill Level value ${skillLevel}`);
+      worker!.postMessage(`setoption name Skill Level value ${effectiveSkillLevel}`);
     } else {
-      // Use UCI_Elo for mid-high ELO
+      // Use UCI_Elo only for levels inside the engine's supported range.
       worker!.postMessage('setoption name UCI_LimitStrength value true');
-      worker!.postMessage(`setoption name UCI_Elo value ${elo}`);
+      const effectiveElo = Math.max(STOCKFISH_MIN_UCI_ELO, Math.min(STOCKFISH_MAX_UCI_ELO, elo));
+      worker!.postMessage(`setoption name UCI_Elo value ${effectiveElo}`);
     }
     return true;
   } catch {
@@ -149,9 +179,6 @@ export async function configureEngine(elo: number): Promise<boolean> {
  * Stop current engine analysis
  */
 export function stopEngine() {
-  if (currentAnalysis) {
-    currentAnalysis.stopped = true;
-  }
   if (worker) {
     worker.postMessage('stop');
   }
@@ -161,7 +188,9 @@ export function stopEngine() {
  * Dispose of engine resources
  */
 export function disposeEngine() {
+  cancelEngineInit?.();
   stopEngine();
+  currentAnalysis?.cancel();
   if (worker) {
     worker.terminate();
     worker = null;
@@ -174,8 +203,7 @@ export function disposeEngine() {
  * Cancel any pending analysis requests
  */
 export function cancelPendingAnalysis() {
-  stopEngine();
-  currentAnalysis = null;
+  currentAnalysis?.cancel(new DOMException('Stockfish analysis cancelled', 'AbortError'));
 }
 
 async function fallbackAnalysis(fen: string, depth: number, elo: number, warning = 'Stockfish unavailable'): Promise<AnalysisResult> {
@@ -210,12 +238,19 @@ async function fallbackAnalysis(fen: string, depth: number, elo: number, warning
 /**
  * Analyze FEN position and return best move with evaluation
  */
-export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> {
-  const { fen, depth = 10, movetime = null, elo = 1200, skillLevel = null } = config;
+export function analyzeFen(config: EngineConfig): Promise<AnalysisResult> {
+  const result = analysisQueue.then(() => analyzeFenNow(config));
+  analysisQueue = result.then(() => undefined, () => undefined);
+  return result;
+}
+
+async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
+  const { fen, depth = 10, movetime = null, elo = 1200, skillLevel = null, useSkillLevelOnly, signal } = config;
 
   if (!fen) {
     throw new Error('FEN is required');
   }
+  signal?.throwIfAborted();
 
   const effectiveElo = elo ?? 1200;
 
@@ -226,23 +261,28 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
       return await fallbackAnalysis(fen, depth, effectiveElo);
     }
   }
+  signal?.throwIfAborted();
 
   // Configure ELO
   if (effectiveElo || skillLevel !== null) {
-    await configureEngine(effectiveElo);
+    await configureEngine(effectiveElo, skillLevel, useSkillLevelOnly);
   }
+  signal?.throwIfAborted();
 
   const requestId = ++currentRequestId;
-  const timeoutMs = depth <= 12 ? 1500 : depth <= 18 ? 3000 : 6000;
+  const timeoutMs = depth <= 12 ? 3000 : depth <= 18 ? 4500 : 6000;
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    const analysisWorker = worker!;
     const timeout = setTimeout(async () => {
-      if (currentAnalysis?.stopped || !currentAnalysis) return;
-      // Timeout - use fallback directly
-      resolve(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish timeout'));
+      if (settled) return;
+      analysisWorker.terminate();
+      if (worker === analysisWorker) worker = null;
+      engineReady = false;
+      finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish timeout'));
     }, timeoutMs);
 
-    currentAnalysis = { stopped: false, fen };
+    let settled = false;
     let bestMove: string | null = null;
     let evaluation: Evaluation | null = null;
     let lastDepth = 0;
@@ -250,19 +290,37 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
 
     function cleanup() {
       clearTimeout(timeout);
-      if (worker) {
-        worker.onmessage = null;
-      }
+      signal?.removeEventListener('abort', onAbort);
+      analysisWorker.onmessage = null;
+      analysisWorker.onerror = null;
     }
 
     function finish(result: AnalysisResult) {
+      if (settled) return;
+      settled = true;
       cleanup();
       currentAnalysis = null;
-      engineState = 'ready';
+      engineState = isEngineReady() ? 'ready' : 'idle';
       resolve(result);
     }
 
-    worker!.onmessage = async (event: MessageEvent) => {
+    function cancel(reason = new Error('Stockfish analysis disposed')) {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      analysisWorker.terminate();
+      if (worker === analysisWorker) worker = null;
+      engineReady = false;
+      currentAnalysis = null;
+      engineState = 'idle';
+      reject(reason);
+    }
+
+    const onAbort = () => cancel(new DOMException('Stockfish analysis cancelled', 'AbortError'));
+    signal?.addEventListener('abort', onAbort, { once: true });
+    currentAnalysis = { fen, cancel };
+
+    analysisWorker.onmessage = async (event: MessageEvent) => {
       const message = event.data;
 
       if (message.type === 'error') {
@@ -296,7 +354,7 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
       // Parse PV
       const pvMatch = line.match(/(?:^|\s)pv\s+(.+)/);
       if (pvMatch) {
-        pv.push(...pvMatch[1].split(' ').filter((m) => m.length >= 4));
+        pv.splice(0, pv.length, ...pvMatch[1].split(' ').filter((m) => m.length >= 4));
       }
 
       // Best move
@@ -324,15 +382,15 @@ export async function analyzeFen(config: EngineConfig): Promise<AnalysisResult> 
       }
     };
 
-    worker!.onerror = async () => {
+    analysisWorker.onerror = async () => {
       disableEngine('Worker error');
       finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Worker error'));
     };
 
     try {
-      worker!.postMessage('ucinewgame');
-      worker!.postMessage(`position fen ${fen}`);
-      worker!.postMessage(movetime ? `go movetime ${movetime}` : `go depth ${depth}`);
+      analysisWorker.postMessage('ucinewgame');
+      analysisWorker.postMessage(`position fen ${fen}`);
+      analysisWorker.postMessage(movetime ? `go movetime ${movetime}` : `go depth ${depth}`);
       engineState = 'analyzing';
     } catch {
       disableEngine('Command error');

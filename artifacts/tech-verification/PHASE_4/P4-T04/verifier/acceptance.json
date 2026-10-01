@@ -1,0 +1,42 @@
+{
+  "task": "P4-T04",
+  "checkedAt": "2026-09-06T09:37:46.372Z",
+  "verdict": "VERIFIED",
+  "historical": {
+    "initialVerdict": "REJECTED",
+    "findingRetained": "failure.json",
+    "correctedRerun": true
+  },
+  "checks": {
+    "validPersistedFactResolves": true,
+    "owningGameReviewReferencesFact": true,
+    "missingPersistedEvidenceFailsClosed": true,
+    "deletedOwningReviewFailsClosed": true,
+    "forgedMoveContextIgnored": true,
+    "bestMoveInCandidates": true,
+    "uiMatchesPersistedEvidence": true,
+    "coachGroundedInPersistedFact": true,
+    "forgedDomIgnored": true,
+    "exactReload": true,
+    "realStockfishWasm": true,
+    "hashedProduction": true,
+    "cloudReachable": true,
+    "cleanupComplete": true,
+    "runtimeErrorsZero": true
+  },
+  "counts": {
+    "adversarialTests": 3,
+    "focusedTests": 59,
+    "fullTests": 765,
+    "plies": 12,
+    "stockfishSearches": 42,
+    "stockfishCompleted": 42,
+    "analysisFacts": 3,
+    "gameReviews": 1,
+    "rowsRemainingAfterCleanup": 0,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 0,
+    "unexpectedHttpErrors": 0
+  }
+}

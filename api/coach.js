@@ -25,7 +25,7 @@ export default async function handler(req) {
     const { schemaVersion, question, fen, playerLevel } = body;
 
     // Validate schema version
-    if (schemaVersion && schemaVersion !== 'coach.v1') {
+    if (schemaVersion !== 'coach.v1') {
       return new Response(JSON.stringify({
         error: 'Unsupported schema version',
         supported: 'coach.v1'

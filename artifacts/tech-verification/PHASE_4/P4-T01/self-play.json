@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-09-06T08:44:17.068Z",
+  "verdict": "PASS",
+  "production": true,
+  "directContract": {
+    "status": 200,
+    "requestSchema": "coach.v1",
+    "responseSchema": "coach.v1",
+    "source": "basic"
+  },
+  "invalidVersionStatus": 400,
+  "browserContract": {
+    "requests": 1,
+    "status": 200,
+    "schemaVersion": "coach.v1",
+    "source": "basic",
+    "sourceLabel": "basic"
+  },
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

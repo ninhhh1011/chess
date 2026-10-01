@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { act } from 'react';
 import { useBotMove } from './useBotMove';
 import * as botService from '../services/botService';
+import type { BotMoveResult } from '../types/ChessTypes';
 
 vi.mock('../services/botService', () => ({
   getBotMove: vi.fn(),
@@ -107,7 +108,8 @@ describe('useBotMove', () => {
 
       expect(botService.getBotMove).toHaveBeenCalledWith(
         'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-        1200 // default
+        1200, // default
+        expect.any(AbortSignal)
       );
     });
 
@@ -277,6 +279,57 @@ describe('useBotMove', () => {
 
       // isThinking should be false (timeout handled)
       expect(result.current.isThinking).toBe(false);
+    });
+
+    it('aborts the engine request when cancelled', async () => {
+      let signal: AbortSignal | undefined;
+      (botService.getBotMove as ReturnType<typeof vi.fn>).mockImplementation(
+        (_fen, _elo, requestSignal: AbortSignal) => new Promise((_, reject) => {
+          signal = requestSignal;
+          requestSignal.addEventListener('abort', () => reject(requestSignal.reason), { once: true });
+        })
+      );
+
+      const onMoveComplete = vi.fn();
+      const { result } = renderHook(() => useBotMove({ onMoveComplete }));
+      let pending: Promise<unknown>;
+      act(() => {
+        pending = result.current.getMove('test', 1);
+      });
+      act(() => result.current.cancelMove());
+
+      await act(async () => { await pending; });
+      expect(signal?.aborted).toBe(true);
+      expect(onMoveComplete).not.toHaveBeenCalled();
+      expect(result.current.isThinking).toBe(false);
+    });
+
+    it('keeps the current timeout when a stale request settles later', async () => {
+      let resolveFirst!: (value: BotMoveResult) => void;
+      const first = new Promise<BotMoveResult>((resolve) => { resolveFirst = resolve; });
+      (botService.getBotMove as ReturnType<typeof vi.fn>)
+        .mockImplementationOnce(() => first)
+        .mockImplementationOnce((_fen, _elo, signal: AbortSignal) => new Promise((_, reject) => {
+          signal.addEventListener('abort', () => reject(signal.reason), { once: true });
+        }));
+
+      const onMoveComplete = vi.fn();
+      const { result } = renderHook(() => useBotMove({ onMoveComplete, timeoutMs: 50 }));
+      let stale!: Promise<BotMoveResult>;
+      let current!: Promise<BotMoveResult>;
+      act(() => {
+        stale = result.current.getMove('first', 1);
+        current = result.current.getMove('second', 2);
+        resolveFirst({ move: 'e7e5', source: 'stockfish', elo: 1200, depth: 8, movetime: 800, skillLevel: 6 });
+      });
+
+      await act(async () => {
+        await stale;
+        await new Promise((resolve) => setTimeout(resolve, 80));
+      });
+      await expect(current).resolves.toMatchObject({ source: 'timeout' });
+      expect(onMoveComplete).toHaveBeenCalledTimes(1);
+      expect(onMoveComplete).toHaveBeenCalledWith(expect.objectContaining({ source: 'timeout' }), 2);
     });
 
     it('does not apply timeout result to subsequent valid request', async () => {

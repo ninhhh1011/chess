@@ -7,7 +7,7 @@ import OnboardingModal from './components/OnboardingModal';
 import MobileControls from './components/MobileControls';
 import PerformanceOptimizer from './components/PerformanceOptimizer';
 
-const Home = lazy(() => import('./pages/Home'));
+const Home = lazy(() => import('./pages/Home.jsx'));
 const Learn = lazy(() => import('./pages/Learn'));
 const Play = lazy(() => import('./pages/Play'));
 const OnlinePlay = lazy(() => import('./pages/OnlinePlay'));

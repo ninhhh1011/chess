@@ -1,0 +1,57 @@
+{
+  "verdict": "PASS",
+  "route": "/play → /training → /exercises",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "c5",
+    "Nf3",
+    "e6",
+    "d3",
+    "d5"
+  ],
+  "finalFen": "rnbqkbnr/pp3ppp/4p3/2pp4/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "profileSchemaVersion": "profile.v1",
+  "planSchemaVersion": "training.v1",
+  "taskTypes": [
+    "lesson",
+    "exercise",
+    "opening",
+    "challenge"
+  ],
+  "taskCount": 4,
+  "exerciseId": "mate_one_queen",
+  "exerciseResult": "correct",
+  "persistedExerciseTotal": 1,
+  "persistedCompletedExercises": [
+    "mate_one_queen"
+  ],
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove e2e4 ponder e7e5",
+      "bestmove c7c5 ponder g1f3",
+      "bestmove g1f3 ponder d7d5",
+      "bestmove d7d5 ponder e4d5",
+      "bestmove e7e6 ponder d2d4",
+      "bestmove d2d4 ponder c5d4",
+      "bestmove d7d6 ponder d2d4",
+      "bestmove d7d5 ponder e4d5"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

@@ -1,0 +1,105 @@
+{
+  "reviewedAt": "2026-09-05T22:39:41+07:00",
+  "branch": "main",
+  "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+  "node": "v24.15.0",
+  "npm": "11.12.1",
+  "currentWorkspace": [
+    {
+      "command": "npm run lint",
+      "exit": 0,
+      "result": "PASS; 0 warning/error"
+    },
+    {
+      "command": "npm run typecheck",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm test",
+      "exit": 0,
+      "result": "PASS; 31/31 files; 572/572 tests; 0 failed"
+    },
+    {
+      "command": "npm run build",
+      "exit": 0,
+      "result": "PASS; 4098 modules transformed"
+    },
+    {
+      "command": "npx playwright test --list",
+      "exit": 0,
+      "result": "PASS; 68 tests in 4 files"
+    },
+    {
+      "command": "npm run test:e2e",
+      "exit": 0,
+      "result": "PASS; Chromium; 68/68; 0 failed/skipped; 1 worker; 3.8m"
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0,
+      "result": "PASS; only Git LF-to-CRLF notices"
+    },
+    {
+      "command": "git diff --stat",
+      "exit": 0,
+      "result": "35 tracked files; 570 insertions; 2041 deletions before verifier report"
+    },
+    {
+      "command": "git status --short --untracked-files=all",
+      "exit": 0,
+      "result": "PASS; dirty candidate tree recorded; verifier did not alter files outside owned paths"
+    }
+  ],
+  "cleanCandidateCheckout": [
+    {
+      "command": "npm ci",
+      "exit": 0,
+      "result": "PASS; 689 packages added; 690 audited"
+    },
+    {
+      "command": "npm run lint",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exit": 0,
+      "result": "PASS without generatedPuzzles.json"
+    },
+    {
+      "command": "npm test",
+      "exit": 0,
+      "result": "PASS; 31/31 files; 572/572 tests"
+    },
+    {
+      "command": "npm run build",
+      "exit": 0,
+      "result": "PASS; 4057 modules transformed"
+    },
+    {
+      "command": "npm run preview -- --host 127.0.0.1 --port 4192",
+      "exit": 0,
+      "result": "PASS; clean production build served for independent Chromium verification, then stopped"
+    }
+  ],
+  "sourceAudits": [
+    {
+      "command": "rg -n generatedPuzzles|generated-corpus-v2|mockCoachService|synthetic src --glob !**/*.test.*",
+      "exit": 1,
+      "result": "PASS; no production-source match"
+    },
+    {
+      "command": "rg test.only|describe.only|test.skip|describe.skip|test.fixme across e2e/src",
+      "exit": 1,
+      "result": "PASS; no test filter marker; the only textual test.only occurrence is the Playwright forbidOnly comment"
+    },
+    {
+      "command": "git diff --exit-code -- package-lock.json",
+      "exit": 0,
+      "result": "PASS; lockfile unchanged"
+    }
+  ],
+  "browserEvidence": "browser.json",
+  "verdict": "PASS"
+}

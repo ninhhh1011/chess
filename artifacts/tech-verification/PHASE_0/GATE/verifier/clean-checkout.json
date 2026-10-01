@@ -1,0 +1,55 @@
+{
+  "method": "Candidate-tree reconstruction from git archive HEAD plus the candidate tracked diff and the two intentional untracked source files",
+  "temporaryPath": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-phase0-verifier-20260905-222318",
+  "base": "git archive --format=zip HEAD",
+  "overlay": {
+    "tracked": "Every path reported by git diff --name-only HEAD, preserving the candidate changes under review",
+    "intentionalUntrackedSource": [
+      "src/services/exerciseValidator.js",
+      "src/test/corpusAvailability.test.ts"
+    ]
+  },
+  "explicitlyNotCopied": [
+    "node_modules",
+    "dist",
+    "artifacts",
+    "src/data/generated/generatedPuzzles.json",
+    "ignored generated corpus files",
+    "real .env files",
+    "secrets"
+  ],
+  "beforeInstall": {
+    "nodeModulesPresent": false,
+    "distPresent": false,
+    "generatedPuzzlesPresent": false,
+    "envFiles": [
+      ".env.example"
+    ]
+  },
+  "afterVerification": {
+    "nodeModulesPresent": true,
+    "distPresent": true,
+    "generatedPuzzlesPresent": false,
+    "onlyEnvFile": ".env.example",
+    "previewUrl": "http://127.0.0.1:4192",
+    "previewStopped": true
+  },
+  "commands": {
+    "npmCi": 0,
+    "lint": 0,
+    "typecheck": 0,
+    "unitIntegration": {
+      "exit": 0,
+      "files": 31,
+      "passed": 572,
+      "failed": 0
+    },
+    "build": {
+      "exit": 0,
+      "modulesTransformed": 4057
+    },
+    "productionBrowser": 0
+  },
+  "note": "npm ci reported the already documented audit inventory of 12 advisories (1 low, 1 moderate, 8 high, 2 critical); no dependency or lockfile mutation was authorized or performed.",
+  "verdict": "PASS"
+}

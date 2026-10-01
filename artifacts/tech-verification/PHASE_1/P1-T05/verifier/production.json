@@ -1,0 +1,152 @@
+{
+  "verdict": "PASS",
+  "browser": "Chromium",
+  "buildUrl": "http://127.0.0.1:4193",
+  "playedPlies": 14,
+  "playedHistory": [
+    "e4",
+    "e6",
+    "Na3",
+    "Bxa3",
+    "b3",
+    "Bc5",
+    "f3",
+    "d6",
+    "e5",
+    "Nc6",
+    "exd6",
+    "cxd6",
+    "b4",
+    "Bb6"
+  ],
+  "finalFen": "r1bqk1nr/pp3ppp/1bnpp3/8/1P6/5P2/P1PP2PP/R1BQKBNR w KQkq - 1 8",
+  "productionSource": "stockfish_wasm",
+  "workerUrls": [
+    "/stockfish-worker.js?v=2026-05-30-simplified"
+  ],
+  "passOnePositionCount": 15,
+  "expectedPassOnePositionCount": 15,
+  "passOneFens": [
+    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+    "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+    "rnbqkbnr/pppp1ppp/4p3/8/4P3/N7/PPPP1PPP/R1BQKBNR b KQkq - 1 2",
+    "rnbqk1nr/pppp1ppp/4p3/8/4P3/b7/PPPP1PPP/R1BQKBNR w KQkq - 0 3",
+    "rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3",
+    "rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P6/P1PP1PPP/R1BQKBNR w KQkq - 1 4",
+    "rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 4",
+    "rnbqk1nr/ppp2ppp/3pp3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 5",
+    "rnbqk1nr/ppp2ppp/3pp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 5",
+    "r1bqk1nr/ppp2ppp/2npp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 1 6",
+    "r1bqk1nr/ppp2ppp/2nPp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 6",
+    "r1bqk1nr/pp3ppp/2npp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 7",
+    "r1bqk1nr/pp3ppp/2npp3/2b5/1P6/5P2/P1PP2PP/R1BQKBNR b KQkq - 0 7",
+    "r1bqk1nr/pp3ppp/1bnpp3/8/1P6/5P2/P1PP2PP/R1BQKBNR w KQkq - 1 8"
+  ],
+  "passTwoPositionCount": 3,
+  "passTwoFens": [
+    "rnbqk1nr/pppp1ppp/4p3/8/4P3/b7/PPPP1PPP/R1BQKBNR w KQkq - 0 3",
+    "rnbqk1nr/ppp2ppp/3pp3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 5",
+    "rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3"
+  ],
+  "reviewText": "REVIEW\n\nPhân tích\nMổ ván cờ\n14\n\nNước\n\n11\n\nỔn\n\n0\n\nThiếu lực\n\n1\n\nTự hủy\n\nPha cần xem lại\nBLUNDER\n#5: b3, Ninh mách bxa3\nSAI LẦM\n#9: e5, Ninh mách f4\nSAI LẦM\n#6: Bc5, Ninh mách Bxc1",
+  "navigation": "1 / 14",
+  "navigatedFen": null,
+  "reviewSearches": [
+    {
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "command": "go movetime 450",
+      "bestmove": "g1f3"
+    },
+    {
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+      "command": "go movetime 450",
+      "bestmove": "e7e6"
+    },
+    {
+      "fen": "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "command": "go movetime 450",
+      "bestmove": "d2d4"
+    },
+    {
+      "fen": "rnbqkbnr/pppp1ppp/4p3/8/4P3/N7/PPPP1PPP/R1BQKBNR b KQkq - 1 2",
+      "command": "go movetime 450",
+      "bestmove": "d7d5"
+    },
+    {
+      "fen": "rnbqk1nr/pppp1ppp/4p3/8/4P3/b7/PPPP1PPP/R1BQKBNR w KQkq - 0 3",
+      "command": "go movetime 450",
+      "bestmove": "d2d4"
+    },
+    {
+      "fen": "rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3",
+      "command": "go movetime 450",
+      "bestmove": "a3f8"
+    },
+    {
+      "fen": "rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P6/P1PP1PPP/R1BQKBNR w KQkq - 1 4",
+      "command": "go movetime 450",
+      "bestmove": "d1h5"
+    },
+    {
+      "fen": "rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 4",
+      "command": "go movetime 450",
+      "bestmove": "d7d6"
+    },
+    {
+      "fen": "rnbqk1nr/ppp2ppp/3pp3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 5",
+      "command": "go movetime 450",
+      "bestmove": "f3f4"
+    },
+    {
+      "fen": "rnbqk1nr/ppp2ppp/3pp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 5",
+      "command": "go movetime 450",
+      "bestmove": "g8e7"
+    },
+    {
+      "fen": "r1bqk1nr/ppp2ppp/2npp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 1 6",
+      "command": "go movetime 450",
+      "bestmove": "f3f4"
+    },
+    {
+      "fen": "r1bqk1nr/ppp2ppp/2nPp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 6",
+      "command": "go movetime 450",
+      "bestmove": "c5d6"
+    },
+    {
+      "fen": "r1bqk1nr/pp3ppp/2npp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 7",
+      "command": "go movetime 450",
+      "bestmove": "c1b2"
+    },
+    {
+      "fen": "r1bqk1nr/pp3ppp/2npp3/2b5/1P6/5P2/P1PP2PP/R1BQKBNR b KQkq - 0 7",
+      "command": "go movetime 450",
+      "bestmove": "c5g1"
+    },
+    {
+      "fen": "r1bqk1nr/pp3ppp/1bnpp3/8/1P6/5P2/P1PP2PP/R1BQKBNR w KQkq - 1 8",
+      "command": "go movetime 450",
+      "bestmove": "a2a4"
+    },
+    {
+      "fen": "rnbqk1nr/pppp1ppp/4p3/8/4P3/b7/PPPP1PPP/R1BQKBNR w KQkq - 0 3",
+      "command": "go movetime 450",
+      "bestmove": "b2a3"
+    },
+    {
+      "fen": "rnbqk1nr/ppp2ppp/3pp3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 5",
+      "command": "go movetime 450",
+      "bestmove": "f3f4"
+    },
+    {
+      "fen": "rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3",
+      "command": "go movetime 450",
+      "bestmove": "a3c1"
+    }
+  ],
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

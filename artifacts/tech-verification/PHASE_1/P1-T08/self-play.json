@@ -1,0 +1,102 @@
+{
+  "verdict": "PASS",
+  "buildUrl": "http://127.0.0.1:4198",
+  "productionScripts": [
+    "http://127.0.0.1:4198/assets/index-CozSBo6p.js",
+    "http://127.0.0.1:4198/registerSW.js"
+  ],
+  "gameA": {
+    "side": "w",
+    "input": "click",
+    "plies": 20,
+    "moves": [
+      "a3",
+      "d5",
+      "a4",
+      "c5",
+      "a5",
+      "Nf6",
+      "a6",
+      "Nxa6",
+      "b3",
+      "e5",
+      "b4",
+      "cxb4",
+      "c3",
+      "Bd6",
+      "c4",
+      "O-O",
+      "c5",
+      "Nxc5",
+      "d3",
+      "a5"
+    ],
+    "finalFen": "r1bq1rk1/1p3ppp/3b1n2/p1npp3/1p6/3P4/4PPPP/RNBQKBNR w KQ - 0 11",
+    "undoEvidence": null,
+    "hint": "PASS"
+  },
+  "gameB": {
+    "side": "b",
+    "input": "drag",
+    "plies": 21,
+    "moves": [
+      "d4",
+      "Nc6",
+      "Nf3",
+      "Rb8",
+      "e3",
+      "Ra8",
+      "c4",
+      "Rb8",
+      "Nc3",
+      "Ra8",
+      "a3",
+      "Rb8",
+      "d5",
+      "Ra8",
+      "dxc6",
+      "Rb8",
+      "e4",
+      "Ra8",
+      "h3",
+      "Rb8",
+      "Be3"
+    ],
+    "finalFen": "1rbqkbnr/pppppppp/2P5/8/2P1P3/P1N1BN1P/1P3PP1/R2QKB1R b KQk - 2 11",
+    "undoEvidence": {
+      "before": 3,
+      "after": 1
+    }
+  },
+  "review": {
+    "fact": {
+      "id": "review-1788635641427:ply:12",
+      "source": "stockfish_wasm",
+      "turn": "b",
+      "cpl": 311,
+      "classification": "blunder",
+      "playedUci": "a8b8",
+      "bestUci": "d7d6"
+    },
+    "searches": 28,
+    "navigation": "0/2 -> 1/2"
+  },
+  "lifecycle": {
+    "staleMoveDiscarded": true,
+    "pendingWorkerId": 1,
+    "pendingWorkerTerminated": true,
+    "newGameAfterReview": true
+  },
+  "worker": {
+    "urls": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "count": 2,
+    "searches": 113
+  },
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

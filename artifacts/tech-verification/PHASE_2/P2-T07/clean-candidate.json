@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS",
+  "candidate": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t07-clean-aa335e9b01c7440a8abb31937655c4e6",
+  "sourceSelection": "git ls-files --cached --others --exclude-standard, filtered to build inputs; api/coach.js added after the initial harness omission",
+  "ignoredGeneratedPresent": false,
+  "publicCorpusPointerPresent": true,
+  "distCorpusPointerPresent": true,
+  "typecheckExit": 0,
+  "buildExit": 0,
+  "initialHarnessIncident": {
+    "typecheckExit": 2,
+    "cause": "The first candidate filter omitted tracked api/coach.js required by src/test/coach.test.ts.",
+    "resolution": "Copied that tracked build input; typecheck passed without a product change."
+  }
+}

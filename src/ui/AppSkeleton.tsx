@@ -1,10 +1,12 @@
 import React from 'react';
+import { Skeleton as HeroUISkeleton } from '@heroui/react';
 
 export interface AppSkeletonProps {
   className?: string;
   width?: string | number;
   height?: string | number;
   radius?: 'sm' | 'md' | 'lg' | 'full';
+  animationType?: 'pulse' | 'shimmer' | 'none';
 }
 
 export function AppSkeleton({
@@ -12,6 +14,7 @@ export function AppSkeleton({
   width,
   height,
   radius = 'md',
+  animationType = 'pulse',
 }: AppSkeletonProps) {
   const radiusClasses = {
     sm: 'rounded-[6px]',
@@ -26,9 +29,9 @@ export function AppSkeleton({
   };
 
   return (
-    <div
-      aria-hidden="true"
-      className={`bg-[var(--app-surface-hover)] opacity-70 animate-pulse ${radiusClasses} ${className}`}
+    <HeroUISkeleton
+      animationType={animationType}
+      className={`bg-[var(--app-surface-hover)] opacity-70 ${radiusClasses} ${className}`}
       style={style}
     />
   );

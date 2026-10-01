@@ -1,0 +1,90 @@
+{
+  "verdict": "PASS",
+  "harness": "Vite browser module graph with real Worker; no mocks",
+  "baseUrl": "http://127.0.0.1:4188",
+  "gameId": "rklpc7mk",
+  "fixture": "deliberately fixed first-40/full-move prefix",
+  "pgnParse": "PASS",
+  "legalReplay": "PASS",
+  "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+  "runs": [
+    {
+      "label": "cold",
+      "durationMs": 42934,
+      "analyzerDurationMs": 42848,
+      "fullMoves": 40,
+      "plies": 80,
+      "facts": 80,
+      "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+      "topMistakes": [
+        "25",
+        "62"
+      ],
+      "pass1Positions": 81,
+      "pass2Positions": 2,
+      "workerSearches": 83,
+      "completedWorkerSearches": 83,
+      "engineSource": "stockfish_wasm",
+      "sourceViolations": 0,
+      "illegalMoves": 0,
+      "errors": 0,
+      "timeouts": 0
+    },
+    {
+      "label": "warm-1",
+      "durationMs": 42676,
+      "analyzerDurationMs": 42617,
+      "fullMoves": 40,
+      "plies": 80,
+      "facts": 80,
+      "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+      "topMistakes": [
+        "25",
+        "62"
+      ],
+      "pass1Positions": 81,
+      "pass2Positions": 2,
+      "workerSearches": 83,
+      "completedWorkerSearches": 83,
+      "engineSource": "stockfish_wasm",
+      "sourceViolations": 0,
+      "illegalMoves": 0,
+      "errors": 0,
+      "timeouts": 0
+    },
+    {
+      "label": "warm-2",
+      "durationMs": 42728,
+      "analyzerDurationMs": 42657,
+      "fullMoves": 40,
+      "plies": 80,
+      "facts": 80,
+      "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+      "topMistakes": [
+        "25",
+        "62"
+      ],
+      "pass1Positions": 81,
+      "pass2Positions": 2,
+      "workerSearches": 83,
+      "completedWorkerSearches": 83,
+      "engineSource": "stockfish_wasm",
+      "sourceViolations": 0,
+      "illegalMoves": 0,
+      "errors": 0,
+      "timeouts": 0
+    }
+  ],
+  "medianMs": 42728,
+  "maxMs": 42934,
+  "previousMedianMs": 5365,
+  "changePercent": 696.4,
+  "workerUrls": [
+    "/stockfish-worker.js?v=2026-05-30-simplified"
+  ],
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

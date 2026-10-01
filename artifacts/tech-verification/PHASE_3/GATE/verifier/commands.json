@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-09-06T08:35:54.000Z",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/persistenceContract.test.ts src/test/analysisFactContract.test.ts src/test/puzzleAttemptPersistence.test.ts src/test/dailyPlan.test.js src/test/learningLoop.test.ts src/test/localPersistence.test.ts src/test/authService.test.js src/test/syncService.test.js src/test/cloudProfileService.test.js src/test/trainingSyncControls.test.jsx src/test/exerciseBoardRealSolution.test.jsx src/test/exercisesProductionCorpus.test.jsx src/test/gameAnalyzer.test.ts src/test/coach.test.ts src/components/ChessGameBoard.integration.test.jsx --reporter=dot",
+      "result": "PASS",
+      "summary": "15 files, 138 tests"
+    },
+    { "command": "npm test -- --run --reporter=dot", "result": "PASS", "summary": "56 files, 760 tests" },
+    { "command": "npm run lint", "result": "PASS" },
+    { "command": "npm run typecheck", "result": "PASS" },
+    { "command": "npm run build", "result": "PASS", "summary": "4107 modules, 45 PWA entries" },
+    { "command": "git diff --check", "result": "PASS", "summary": "line-ending warnings only" },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/GATE/verifier/phase3-gate.mjs http://127.0.0.1:4175",
+      "result": "FAIL",
+      "summary": "verifier-only field-name error: checked gameReview.evidenceIds instead of contract factIds; cleanup and runtime clean",
+      "evidence": "initial-harness-failure.json"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/GATE/verifier/phase3-gate.mjs http://127.0.0.1:4175",
+      "result": "FAIL",
+      "summary": "verifier-only schema assumption: checked attemptId on child events although the contract stores it on the parent attempt; cleanup and runtime clean",
+      "evidence": "second-harness-failure.json"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/GATE/verifier/phase3-gate.mjs http://127.0.0.1:4175",
+      "result": "PASS",
+      "summary": "independent hashed-production game/review/Coach/puzzle/learning/reload/live-cloud flow and exact cleanup"
+    }
+  ]
+}

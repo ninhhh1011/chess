@@ -1,0 +1,48 @@
+{
+  "verdict": "PASS",
+  "productionSourceFilesScanned": 141,
+  "forbiddenImports": [],
+  "productionInitializationCallers": [],
+  "loaderContract": {
+    "externalAvailable": false,
+    "puzzleCount": 0,
+    "source": "unavailable",
+    "resetsCorpus": true,
+    "importsBundledExercises": false,
+    "importsDormantSeed": false,
+    "importsGeneratedArtifact": false
+  },
+  "localBundledDrills": {
+    "count": 5,
+    "ids": [
+      "mate_one_queen",
+      "knight_capture",
+      "promotion_queen",
+      "back_rank_mate",
+      "bishop_diagonal"
+    ],
+    "pageImportsLocalData": true,
+    "pageLabelsLocalNotExternal": true
+  },
+  "buildPath": {
+    "packageRunsGenerator": false,
+    "productionBundleFilesScanned": 32,
+    "syntheticMarkerHits": [],
+    "localDrillIdsPresent": [
+      "mate_one_queen",
+      "knight_capture",
+      "promotion_queen",
+      "back_rank_mate",
+      "bishop_diagonal"
+    ],
+    "truthfulNoticePresent": true
+  },
+  "dormantData": {
+    "preserved": true,
+    "trackedDiffExitCode": 0,
+    "generatedIgnored": true,
+    "generatedSha256": "e9e12f397bad4b6ab9dd9180cfc3f6c402fcc1f0875cccdaea4a9b607a1ee6ad",
+    "manifestSha256": "183232fac3d727e07f4a1281b4b2ed8c8c211c31eab7cf83108b6311aa169ac8",
+    "seedSha256": "010c4419b4695638c5def827110bdcace6feac7fd0ed415ec60b0572c35ccd2a"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "task": "P3-T06",
+  "verdict": "PASS",
+  "checks": {
+    "wrongMoveRemainsOffBoard": true,
+    "retryRestoresInitialFen": true,
+    "oneStableAttemptThroughFirstSolve": true,
+    "orderedUniqueFirstAttemptEvents": true,
+    "retryIsNonScoring": true,
+    "retryIsPlanStable": true,
+    "intermediateCorrectIsNonScoring": true,
+    "intermediateCorrectIsPlanStable": true,
+    "exactSolvedReplayByteAndRevisionStable": true,
+    "appendToSolvedRejectedWithoutMutation": true,
+    "solvedResetEmitsNothing": true,
+    "newPlayedSolutionCreatesDistinctAttempt": true,
+    "malformedOrderingRejected": true,
+    "conflictingIdentityRejected": true,
+    "invalidProvenanceRejected": true,
+    "conflictingEventRejected": true,
+    "nextTraversesAvailableSequenceBeforeWrap": true,
+    "productionNextUsesDistinctRealPuzzles": true,
+    "exactReloadBytes": true,
+    "productionErrors": { "console": 0, "page": 0, "network": 0 }
+  }
+}

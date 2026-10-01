@@ -1,0 +1,96 @@
+{
+  "task": "P3-T01",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/persistenceContract.test.ts src/test/dailyPlan.test.js src/test/learningLoop.test.ts",
+      "stage": "RED: persistence contract module absent",
+      "exit": 1
+    },
+    {
+      "command": "npx vitest run src/test/persistenceContract.test.ts src/test/dailyPlan.test.js src/test/learningLoop.test.ts",
+      "stage": "RED: cloud/local conflict returned legacy profile.v1",
+      "exit": 1
+    },
+    {
+      "command": "npx vitest run src/test/persistenceContract.test.ts src/test/dailyPlan.test.js src/test/learningLoop.test.ts",
+      "exit": 0,
+      "files": "3/3",
+      "tests": "50/50"
+    },
+    {
+      "command": "verifier adversarial AnalysisFact analyzedAt probe",
+      "exit": 0,
+      "stage": "DEFECT FOUND: locale timestamp `September 6, 2026` was accepted"
+    },
+    {
+      "command": "npx vitest run src/test/analysisFactContract.test.ts",
+      "exit": 1,
+      "stage": "RED: non-ISO analyzedAt regression",
+      "tests": "1 failed, 6 passed"
+    },
+    {
+      "command": "npm test -- --run",
+      "exit": 1,
+      "stage": "FIRST FIX REJECTED: exact toISOString equality rejected valid ISO without milliseconds",
+      "tests": "10 Coach grounding regressions"
+    },
+    {
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/persistenceContract.test.ts src/test/dailyPlan.test.js src/test/learningLoop.test.ts src/test/coach.test.ts",
+      "exit": 0,
+      "files": "5/5",
+      "tests": "90/90"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T01/self-play.mjs http://127.0.0.1:4174",
+      "stage": "HARNESS FAIL: addInitScript cleared localStorage again on reload",
+      "exit": 1
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T01/self-play.mjs http://127.0.0.1:4174",
+      "exit": 0,
+      "verdict": "PASS",
+      "plies": 6,
+      "profileBytesStableAcrossReadReload": true,
+      "engineSource": "stockfish_wasm",
+      "runtimeErrors": 0
+    },
+    {
+      "command": "npm run lint",
+      "exit": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "npm test -- --run",
+      "exit": 0,
+      "files": "43/43",
+      "tests": "709/709 before the later ISO regression test was added"
+    },
+    {
+      "command": "npm test -- --run",
+      "exit": 0,
+      "stage": "FINAL after ISO boundary correction",
+      "files": "43/43",
+      "tests": "710/710"
+    },
+    {
+      "command": "npm run build",
+      "exit": 0,
+      "modules": 4105,
+      "pwaPrecacheEntries": 45
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    }
+  ],
+  "computerUseFallback": "CUA initialization failed before browser control: failed to write kernel assets (os error 3). Existing Playwright was used instead."
+}

@@ -1,0 +1,44 @@
+{
+  "task": "P3-T04",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts src/test/exerciseBoardRealSolution.test.jsx",
+      "exit": 1,
+      "stage": "RED: no skill updates, no puzzle skill tags, no referential skill evidence validation",
+      "tests": "5 failed, 20 passed"
+    },
+    {
+      "command": "npx vitest run src/test/persistenceContract.test.ts",
+      "exit": 1,
+      "stage": "RED: cross-kind evidence identity collision accepted",
+      "tests": "1 failed, 9 passed"
+    },
+    {
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts src/test/exerciseBoardRealSolution.test.jsx",
+      "exit": 0,
+      "files": "4/4",
+      "tests": "26/26"
+    },
+    { "command": "npm run lint", "exit": 0 },
+    { "command": "npm run typecheck", "exit": 0 },
+    { "command": "npm run build", "exit": 0, "modules": 4105, "pwaPrecacheEntries": 45 },
+    {
+      "command": "npx vitest run --reporter=json --outputFile=artifacts/tech-verification/PHASE_3/P3-T04/vitest-full.json",
+      "exit": 0,
+      "suites": "189/189",
+      "tests": "721/721"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T04/self-play.mjs http://127.0.0.1:4175",
+      "exit": 0,
+      "verdict": "PASS",
+      "puzzleId": "lichess-00008",
+      "skillStates": 4,
+      "evidencePerSkill": 2,
+      "exactReloadBytes": true,
+      "runtimeErrors": 0
+    },
+    { "command": "git diff --check", "exit": 0 }
+  ]
+}

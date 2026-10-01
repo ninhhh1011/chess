@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS",
+  "headersPreserved": true,
+  "mainlineSansRav": ["e4", "e5", "Nf3", "Nc6"],
+  "mainlineCommentPreserved": "main comment",
+  "nagAcceptedWithoutMovePollution": true,
+  "contiguousPlies": [1, 2, 3, 4],
+  "setUpFenApplied": true,
+  "setUpMove": "Bxf7+",
+  "setUpFinalFen": "r1bqkb1r/pppp1Bpp/2n2n2/4p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 4",
+  "invalidPgn": {
+    "success": false,
+    "error": "Invalid move in PGN: invalidmove"
+  }
+}

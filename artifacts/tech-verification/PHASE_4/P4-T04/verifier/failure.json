@@ -1,0 +1,26 @@
+{
+  "task": "P4-T04",
+  "checkedAt": "2026-09-06T09:28:35.000Z",
+  "verdict": "REJECTED",
+  "finding": "Coach accepts an in-memory selected AnalysisFact when no matching persisted analysisFact or gameReview exists",
+  "expected": "Missing persisted evidence must fail closed and produce no move hint",
+  "observed": "With localStorage cleared, AnalysisCoach accepted the fact prop and rendered `Nước gợi ý: d4`",
+  "adversarial": {
+    "testFiles": 1,
+    "passed": 1,
+    "failed": 1,
+    "forgedMoveContextIgnored": true,
+    "missingPersistedFactRejected": false,
+    "exitCode": 1
+  },
+  "sourceTrace": [
+    "src/components/ChessGameBoard.jsx:405",
+    "src/components/chess/GameLayout.jsx:220",
+    "src/components/review/AnalysisCoach.tsx:32"
+  ],
+  "productionBrowser": "not run after blocking acceptance failure",
+  "supabase": {
+    "accountCreated": false,
+    "cleanupRequired": false
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-09-06T08:31:58.240Z",
+  "verdict": "FAIL",
+  "production": {
+    "hashedAssets": true,
+    "scripts": 2
+  },
+  "initialPlan": {
+    "id": "plan:a9f01d3c-d287-4286-8197-53d58414e308",
+    "tasks": 4
+  },
+  "game": {
+    "plies": 12,
+    "legalReplay": true,
+    "finalFen": "r1bqkb1r/pppppp1p/n4n2/7p/P7/2N5/1PPP1PPP/R1B1K1NR w KQkq - 2 7",
+    "stockfishBestmoves": 20
+  },
+  "review": {},
+  "coach": {},
+  "puzzle": {},
+  "skills": {},
+  "finalPlan": {},
+  "persistence": {},
+  "cloud": {
+    "statuses": [],
+    "rowCounts": [],
+    "rowHashes": [],
+    "profileHashes": [],
+    "cleanup": {
+      "eventsDelete": true,
+      "rowDelete": true,
+      "rowsRemaining": 0,
+      "accountDelete": true,
+      "accountAbsent": true
+    },
+    "accountCreated": true,
+    "userHash": "c1bc5d84af7c2e0fbb6345fd0fd6506ae1eb55c7b5962491fdaab0bdf43df384"
+  },
+  "runtime": {
+    "pageErrors": [],
+    "consoleErrors": [],
+    "failedRequests": [],
+    "unexpectedHttp": []
+  },
+  "failure": "TypeError: Cannot read properties of undefined (reading 'includes')\n    at file:///E:/chess/artifacts/tech-verification/PHASE_3/GATE/verifier/phase3-gate.mjs:190:112\n    at Array.some (<anonymous>)\n    at file:///E:/chess/artifacts/tech-verification/PHASE_3/GATE/verifier/phase3-gate.mjs:190:43",
+  "failureContext": {
+    "url": "http://127.0.0.1:4175/play",
+    "profileAvailable": true
+  }
+}

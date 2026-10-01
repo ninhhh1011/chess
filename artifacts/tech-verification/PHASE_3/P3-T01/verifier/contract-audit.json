@@ -1,0 +1,34 @@
+{
+  "task": "P3-T01",
+  "result": "PASS",
+  "schemas": [
+    "profile.v2",
+    "learningPersistence.v1",
+    "gameReview.v1",
+    "analysis.v1",
+    "puzzleAttempt.v1",
+    "skillState.v1",
+    "training.v1",
+    "sync.v1"
+  ],
+  "checks": {
+    "serializableRoundTrip": true,
+    "nativeUuidProfileId": true,
+    "nativeUuidPlanId": true,
+    "deterministicSyncId": true,
+    "utcIsoTimestamps": true,
+    "v1ToV2ProgressPreserved": true,
+    "malformedBytesPreserved": true,
+    "unsupportedBytesPreserved": true,
+    "duplicateIdsRejected": true,
+    "orphanReferencesRejected": true,
+    "mutationRevisionExactlyOnce": true,
+    "readRevisionStable": true,
+    "syncNormalizationBeforeConflict": true,
+    "invalidCloudCandidateRejected": true
+  },
+  "timestampBoundary": {
+    "accepted": ["2026-09-06T00:00:00Z", "2026-09-06T00:00:00.123Z"],
+    "rejected": ["September 6, 2026", "2026-09-06T07:00:00+07:00", "non-equivalent or invalid timestamp strings"]
+  }
+}

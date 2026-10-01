@@ -39,6 +39,14 @@ let index: PuzzleIndex = {
   bySource: {},
 };
 
+export function resetCorpus(): void {
+  puzzles.clear();
+  quarantined.clear();
+  importRuns = [];
+  sources.clear();
+  rebuildIndex();
+}
+
 /**
  * Initialize corpus with existing exercises as seed data
  */

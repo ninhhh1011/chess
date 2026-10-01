@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS",
+  "fetchedAt": "2026-09-06",
+  "url": "https://lichess.org/game/export/rklpc7mk?clocks=false&evals=false&literate=true",
+  "requestAccept": "application/x-chess-pgn",
+  "httpStatus": 200,
+  "contentType": "application/x-chess-pgn",
+  "normalization": "CRLF converted to LF, then outer whitespace trimmed",
+  "officialSha256": "26588cdc4a69df0c2e3108ff707ddb37e18bf402bd96fbbc5295708025b63a8a",
+  "fixtureSha256": "26588cdc4a69df0c2e3108ff707ddb37e18bf402bd96fbbc5295708025b63a8a",
+  "normalizedExactMatch": true,
+  "officialFullGame": {
+    "fullMoves": 47,
+    "plies": 94,
+    "result": "0-1",
+    "finalFen": "8/p5p1/6P1/6bP/K1pk4/8/8/8 w - - 0 48"
+  },
+  "benchmarkPrefix": {
+    "sha256": "58c884a98978340064f2e5cb8eb48cca48b530c6121690a93ab6f62d881e55fe",
+    "fullMoves": 40,
+    "plies": 80,
+    "result": "*",
+    "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41"
+  },
+  "representationNote": "The unparameterized export currently includes engine-evaluation comments and therefore has a different checksum. The fixture contract is the exact parameterized URL above."
+}

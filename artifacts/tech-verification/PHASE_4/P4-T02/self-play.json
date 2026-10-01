@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-09-06T08:58:05.474Z",
+  "verdict": "PASS",
+  "endpoint": "/api/coach",
+  "http": {
+    "valid": {
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "source": "basic"
+    },
+    "invalidSchema": {
+      "status": 400,
+      "contentType": "application/json; charset=utf-8",
+      "source": null
+    },
+    "missingQuestion": {
+      "status": 400,
+      "contentType": "application/json; charset=utf-8",
+      "source": null
+    },
+    "invalidMethod": {
+      "status": 405,
+      "contentType": "application/json; charset=utf-8",
+      "source": null
+    }
+  },
+  "browser": {
+    "production": true,
+    "status": 200,
+    "schemaVersion": "coach.v1",
+    "source": "basic"
+  },
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "http": []
+  }
+}

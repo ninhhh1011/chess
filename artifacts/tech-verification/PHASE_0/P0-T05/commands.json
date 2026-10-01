@@ -1,0 +1,13 @@
+{
+  "task": "P0-T05",
+  "date": "2026-09-05",
+  "commands": [
+    { "command": "npm run lint", "exitCode": 0 },
+    { "command": "npm run typecheck", "exitCode": 0 },
+    { "command": "npm test -- --run", "exitCode": 0, "testFiles": 31, "tests": 563 },
+    { "command": "npm run build", "exitCode": 0 },
+    { "command": "node artifacts/tech-verification/PHASE_0/P0-T02/self-play.mjs", "exitCode": 0, "plies": 6 },
+    { "command": "local Markdown link check (12 updated files)", "exitCode": 0 },
+    { "command": "git diff --check", "exitCode": 0 }
+  ]
+}

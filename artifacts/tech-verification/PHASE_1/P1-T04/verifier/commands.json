@@ -1,0 +1,37 @@
+{
+  "verdict": "PASS",
+  "commands": [
+    {
+      "command": "npx vitest run src/test/pgnParser.test.js src/test/pgnCorpus.test.ts src/test/gameLatency.test.ts --reporter=verbose",
+      "exitCode": 0,
+      "result": "3 files, 44 tests passed; latency cold 5382 ms, warm 5286 ms and 5275 ms"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 0,
+      "result": "31 files, 577 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "4098 modules transformed"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "$env:VERIFIER_BASE_URL='http://127.0.0.1:4181'; node artifacts/tech-verification/PHASE_1/P1-T04/verifier/verify-production.mjs",
+      "exitCode": 0,
+      "result": "10-ply production game, real Stockfish worker, clipboard PGN exact SAN replay, clean console/page/network"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "productionExternalCorpus": {
+    "classification": "unavailable",
+    "records": 0,
+    "truthfulContract": true
+  },
+  "bundledExercises": {
+    "classification": "local-seed-drills",
+    "records": 5,
+    "externalCorpus": false
+  },
+  "dormantLegacySeed": {
+    "classification": "synthetic-seed",
+    "records": 28,
+    "externalCorpus": false,
+    "placeholderSource": true,
+    "placeholderChecksum": true
+  },
+  "ignoredGeneratedArtifact": {
+    "classification": "synthetic-generated",
+    "bytes": 11781202,
+    "sha256": "e9e12f397bad4b6ab9dd9180cfc3f6c402fcc1f0875cccdaea4a9b607a1ee6ad",
+    "records": 40000,
+    "uniqueIds": 40000,
+    "uniqueFullFen": 285,
+    "uniqueNormalizedFen": 23,
+    "normalizedDuplicates": 39977,
+    "missingExternalFields": {
+      "sourceId": 40000,
+      "sourcePuzzleId": 40000,
+      "licenseId": 40000,
+      "rawSha256": 40000,
+      "recordSha256": 40000,
+      "rating": 40000
+    },
+    "selfAssignedManifestSource": "generated-corpus-v2",
+    "selfAssignedManifestLicense": "CC0 Public Domain",
+    "externalCorpus": false
+  }
+}

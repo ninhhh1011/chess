@@ -1,0 +1,39 @@
+{
+  "verdict": "PASS",
+  "route": "/play",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "difficulty": "easy",
+  "playerColor": "white",
+  "plies": 6,
+  "sanMoves": ["e4", "c5", "Nf3", "e6", "d3", "d5"],
+  "finalFen": "rnbqkbnr/pp3ppp/4p3/2pp4/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "coachRequest": {
+    "schemaVersion": "coach.v1",
+    "question": "Nhận xét nhanh",
+    "fen": "rnbqkbnr/pp3ppp/4p3/2pp4/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+    "history": ["e4", "c5", "Nf3", "e6", "d3", "d5"],
+    "pgn": "1. e4 c5 2. Nf3 e6 3. d3 d5",
+    "playerLevel": "noob",
+    "responseStyle": "short"
+  },
+  "coachResponse": {
+    "schemaVersion": "coach.v1",
+    "reply": "Hãy tập trung vào nguyên tắc cơ bản: an toàn vua, phát triển quân, kiểm soát trung tâm.",
+    "source": "basic",
+    "engineSource": "none",
+    "knowledgeSource": "none",
+    "suggestedActions": [
+      { "type": "exercise", "label": "Luyện bài tập cơ bản" }
+    ]
+  },
+  "providerFailure": "unsupported configured provider degraded to basic",
+  "disclosure": "Nguồn: Diễn giải cơ bản · Không dùng AI",
+  "falseAiSourceVisible": false,
+  "workerReady": true,
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

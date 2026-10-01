@@ -11,7 +11,13 @@ import {
   validatePgnCorpus,
   generatePgn,
 } from '../services/analysis/pgnParser';
-import { PGN_CORPUS_VALID, PGN_CORPUS_INVALID } from '../services/analysis/pgnFixtures';
+import {
+  PGN_CORPUS_VALID,
+  PGN_CORPUS_INVALID,
+  PGN_WITH_FEN,
+  RKLPC7MK_FULL_PGN,
+  RKLPC7MK_FIRST_40_PGN,
+} from '../services/analysis/pgnFixtures';
 
 describe('PGN Parser', () => {
   describe('parsePgn', () => {
@@ -80,6 +86,41 @@ describe('PGN Parser', () => {
       const result = replayPgn('1. e4 e5 2. Nf3 Nc6 3. Bb5 *');
       expect(result).not.toBeNull();
       expect(result?.moves.length).toBeGreaterThan(0);
+    });
+
+    test('replays mainline comments and ignores recursive annotation variations', () => {
+      const result = replayPgn(`[Event "Variation"]
+
+1. e4 {main comment} e5 (1... c5 2. Nf3 d6) 2. Nf3 $1 Nc6 *`);
+
+      expect(result?.moves.map((move) => move.san)).toEqual(['e4', 'e5', 'Nf3', 'Nc6']);
+      expect(result?.moves.map((move) => move.ply)).toEqual([1, 2, 3, 4]);
+      expect(result?.moves[0].comment?.trim()).toBe('main comment');
+    });
+
+    test('replays a SetUp/FEN game from its declared initial position', () => {
+      const result = replayPgn(PGN_WITH_FEN);
+
+      expect(result?.moves).toHaveLength(1);
+      expect(result?.moves[0].san).toBe('Bxf7+');
+      expect(result?.finalFen).toBe('r1bqkb1r/pppp1Bpp/2n2n2/4p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 4');
+    });
+
+    test('replays the exact Lichess source and the named 80-ply benchmark prefix', () => {
+      const full = replayPgn(RKLPC7MK_FULL_PGN);
+      const prefix = replayPgn(RKLPC7MK_FIRST_40_PGN);
+
+      expect(full?.headers.GameId).toBe('rklpc7mk');
+      expect(full?.moves).toHaveLength(94);
+      expect(full?.moves.at(-1)?.ply).toBe(94);
+      expect(full?.moves[4].comment?.trim()).toBe('B10 Caro-Kann Defense: Goldman Variation');
+      expect(full?.moves.at(-1)?.comment?.trim()).toBe('White resigns.');
+      expect(full?.finalFen).toBe('8/p5p1/6P1/6bP/K1pk4/8/8/8 w - - 0 48');
+
+      expect(prefix?.headers.SourcePlies).toBe('80');
+      expect(prefix?.moves).toHaveLength(80);
+      expect(prefix?.moves.at(-1)?.ply).toBe(80);
+      expect(prefix?.finalFen).toBe('8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41');
     });
 
     test('returns null for invalid PGN', () => {

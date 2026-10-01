@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-05",
+  "node": "v24.15.0",
+  "npm": "11.12.1",
+  "commands": [
+    { "command": "npm run lint", "exitCode": 0, "result": "PASS, zero warnings" },
+    { "command": "npm run typecheck", "exitCode": 0, "result": "PASS" },
+    { "command": "npm test", "exitCode": 0, "result": "31 files, 572 tests passed" },
+    { "command": "npm run build", "exitCode": 0, "result": "PASS, 4098 modules transformed" },
+    { "command": "npx playwright test --list", "exitCode": 0, "result": "68 tests in 4 files" },
+    { "command": "npm run test:e2e", "exitCode": 0, "result": "68 passed, Chromium, 1 worker, 3.9m" },
+    { "command": "npx playwright test e2e/stockfish.spec.js -g concurrent --repeat-each=4 --workers=4", "exitCode": 0, "result": "4 passed; all three results per test used stockfish_wasm" },
+    { "command": "node artifacts/tech-verification/PHASE_0/GATE/phase-gate.mjs", "exitCode": 0, "result": "White 20 plies click+hint; Black 21 plies drag+undo; lifecycle PASS" }
+  ]
+}

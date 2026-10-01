@@ -1,0 +1,50 @@
+{
+  "verdict": "PASS",
+  "schemaVersion": "puzzle-record.v1",
+  "requiredFieldCount": 16,
+  "fields": [
+    "schemaVersion",
+    "puzzleId",
+    "sourceId",
+    "sourcePuzzleId",
+    "sourceUrl",
+    "sourceVersion",
+    "sourcePublishedAt",
+    "retrievedAt",
+    "licenseId",
+    "licenseUrl",
+    "rawSha256",
+    "recordSha256",
+    "fen",
+    "moves",
+    "rating",
+    "themes"
+  ],
+  "missingFields": [],
+  "types": {
+    "moves": "string[] (UCI runtime pattern)",
+    "rating": "number (non-negative integer runtime)",
+    "themes": "string[]"
+  },
+  "validation": {
+    "rejectsUnknownFields": true,
+    "requiresOwnProperties": true,
+    "webCryptoSha256": true,
+    "canonicalFieldOrder": true,
+    "verifiesCanonicalMismatch": true
+  },
+  "changeControl": {
+    "dependenciesUnchanged": true,
+    "packageLockUnchanged": true,
+    "newDependencies": [],
+    "providerChanged": false,
+    "approvedSourceChanged": false,
+    "licenseChanged": false
+  },
+  "production": {
+    "externalCorpusAvailable": false,
+    "externalPuzzleCount": 0,
+    "unavailableReasonPresent": true,
+    "fakePuzzleRecordImported": false
+  }
+}

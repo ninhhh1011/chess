@@ -1,0 +1,13 @@
+{
+  "task": "P1-T06",
+  "verdict": "PASS",
+  "commands": [
+    { "command": "npm test -- --run src/test/analysisFactContract.test.ts src/test/gameAnalyzer.test.ts src/test/coach.test.ts src/test/learningLoop.test.ts src/components/ChessGameBoard.integration.test.jsx", "exitCode": 0, "result": "5 files, 81 tests" },
+    { "command": "npm test -- --run", "exitCode": 0, "result": "33 files, 587 tests" },
+    { "command": "npm run lint", "exitCode": 0 },
+    { "command": "npm run typecheck", "exitCode": 0 },
+    { "command": "npm run build", "exitCode": 0, "result": "4103 modules" },
+    { "command": "git diff --check", "exitCode": 0 },
+    { "command": "node artifacts/tech-verification/PHASE_1/P1-T06/self-play.mjs", "exitCode": 0, "result": "14 plies, selected ply 9, real stockfish_wasm, zero browser errors" }
+  ]
+}

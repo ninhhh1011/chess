@@ -34,7 +34,7 @@ export const BOT_ELO_LEVELS = [
     depth: 8,
     movetime: 800,
     skillLevel: 6,
-    useSkillLevelOnly: false,
+    useSkillLevelOnly: true,
     randomChance: 0
   },
   {

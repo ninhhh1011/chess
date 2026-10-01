@@ -1,0 +1,77 @@
+{
+  "task": "P0-T07",
+  "verdict": "PASS",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/exercisesValidator.test.js src/test/dailyPlan.test.js src/test/learningLoop.test.ts",
+      "exitCode": 0,
+      "result": "3 files, 48 tests passed"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npm test -- --run",
+      "exitCode": 0,
+      "result": "31 files, 572 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "passed; 4098 modules transformed"
+    },
+    {
+      "command": "npm run test:e2e -- --list",
+      "exitCode": 0,
+      "result": "68 tests in 4 files"
+    },
+    {
+      "command": "npx playwright test e2e/productFlow.spec.js -g \"new user sees\"",
+      "exitCode": 0,
+      "result": "1 Chromium test passed"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_0/P0-T07/verifier/contract-check.mjs",
+      "exitCode": 0,
+      "result": "all five shipped exercises valid; malformed false-promotion record rejected; artifact verdict PASS"
+    },
+    {
+      "command": "npm run preview -- --host 127.0.0.1 --port 4182; node artifacts/tech-verification/PHASE_0/P0-T07/verifier/self-play.mjs",
+      "exitCode": 0,
+      "result": "built-production Chromium browser flow passed; 6 legal plies, real Stockfish, versioned canonical plan, four rendered shapes, real board exercise solved and persisted, zero errors"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "clean (line-ending warnings only)"
+    },
+    {
+      "command": "npx vitest run src/test/exercisesValidator.test.js src/test/dailyPlan.test.js src/test/learningLoop.test.ts",
+      "exitCode": 0,
+      "result": "post-fix re-verification: 3 files, 48 tests passed"
+    },
+    {
+      "command": "npm test -- --run",
+      "exitCode": 0,
+      "result": "post-fix canonical suite: 31 files, 572 tests passed; verifier script is not auto-discovered"
+    },
+    {
+      "command": "npm run lint && npm run typecheck && npm run build",
+      "exitCode": 0,
+      "result": "post-fix proportional gates passed; build transformed 4098 modules"
+    }
+  ]
+}

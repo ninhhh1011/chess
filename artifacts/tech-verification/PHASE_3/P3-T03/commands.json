@@ -1,0 +1,55 @@
+{
+  "task": "P3-T03",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts",
+      "exit": 1,
+      "stage": "RED: attempt event writer absent and legacy events not materialized",
+      "tests": "3 failed"
+    },
+    {
+      "command": "npx vitest run src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts",
+      "exit": 1,
+      "stage": "RED: intermediate correct move incorrectly closed a multi-ply attempt",
+      "tests": "1 failed, 10 passed"
+    },
+    {
+      "command": "npx vitest run src/test/exerciseBoardRealSolution.test.jsx src/test/exercisesProductionCorpus.test.jsx scripts/corpus-delivery.test.mjs",
+      "exit": 1,
+      "stage": "RED: board events, page persistence wiring, and sourcePuzzleId delivery absent",
+      "tests": "3 failed, 2 passed"
+    },
+    {
+      "command": "npx vitest run src/test/puzzleAttemptPersistence.test.ts",
+      "exit": 1,
+      "stage": "Verifier-driven RED: terminal solved ordering, monotonic event time, single solved event, and non-inverted attempt range",
+      "tests": "4 failed, 3 passed"
+    },
+    {
+      "command": "npx vitest run src/test/exerciseBoardRealSolution.test.jsx src/test/exercisesProductionCorpus.test.jsx scripts/corpus-delivery.test.mjs src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts",
+      "exit": 0,
+      "files": "5/5",
+      "tests": "20/20"
+    },
+    { "command": "npm run lint", "exit": 0 },
+    { "command": "npm run typecheck", "exit": 0 },
+    { "command": "npm run build", "exit": 0, "modules": 4105, "pwaPrecacheEntries": 45 },
+    {
+      "command": "npx vitest run --reporter=json --outputFile=artifacts/tech-verification/PHASE_3/P3-T03/vitest-full.json",
+      "exit": 0,
+      "suites": "189/189",
+      "tests": "719/719"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T03/self-play.mjs http://127.0.0.1:4175",
+      "exit": 0,
+      "verdict": "PASS",
+      "puzzleId": "lichess-00008",
+      "events": ["wrong:e6f6", "retry", "correct:e6e7", "correct:b3c1", "correct:h6c1:solved"],
+      "exactReloadBytes": true,
+      "runtimeErrors": 0
+    },
+    { "command": "git diff --check", "exit": 0 }
+  ]
+}

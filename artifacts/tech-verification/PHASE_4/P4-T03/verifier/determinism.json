@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-09-06T09:15:47.123Z",
+  "verdict": "PASS",
+  "environment": {
+    "hasClaudeApiKey": false,
+    "hasViteClaudeApiKey": false,
+    "hasAiProvider": false
+  },
+  "pureAndShared": [
+    {
+      "id": "move-noob",
+      "clientHash": "4ef0abbc355f98de1e54fd25f8038025b846db10121ee37ef25e300d9468c7c3",
+      "pureReplyHash": "f91e5299f7b13f9a2bb49154ece180d5106cedcbe6d28c8d6cba81d848f61f6a",
+      "sharedHash": "4ef0abbc355f98de1e54fd25f8038025b846db10121ee37ef25e300d9468c7c3",
+      "exactCrossLayerMatch": true,
+      "words": 17
+    },
+    {
+      "id": "opening-beginner",
+      "clientHash": "329389c2ccff468f60d28eb0ac6de2e96c99aec0712148b98b01ca9ec8862780",
+      "pureReplyHash": "7fe07749d613f3a8855fec0fc621b544fed94347cdc12e85625a7d47b22618a3",
+      "sharedHash": "329389c2ccff468f60d28eb0ac6de2e96c99aec0712148b98b01ca9ec8862780",
+      "exactCrossLayerMatch": true,
+      "words": 20
+    },
+    {
+      "id": "tactic-intermediate",
+      "clientHash": "450d28106e817e901fd0958bf9b2ba169c6069f44e274ca081f2d27354e87dcd",
+      "pureReplyHash": "16fc08e2403236d711ad5f1a41b9af6b3f75791042fd4a4c7b023815d2bf3369",
+      "sharedHash": "450d28106e817e901fd0958bf9b2ba169c6069f44e274ca081f2d27354e87dcd",
+      "exactCrossLayerMatch": true,
+      "words": 12
+    },
+    {
+      "id": "endgame-advanced",
+      "clientHash": "a2be851a199afc024a327b5ba0da1d4672e766cd30dca45053c46f990115786f",
+      "pureReplyHash": "05c7fea260785910656a2c17127a5e38e9aa9a41e5561373e53a00d3b08d9478",
+      "sharedHash": "a2be851a199afc024a327b5ba0da1d4672e766cd30dca45053c46f990115786f",
+      "exactCrossLayerMatch": true,
+      "words": 15
+    },
+    {
+      "id": "general-beginner",
+      "clientHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c",
+      "pureReplyHash": "4c7cd48c89b9494b4a4b7fe0aee2132d87f4c7ef18e98eecdb2079dfa116c2c2",
+      "sharedHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c",
+      "exactCrossLayerMatch": true,
+      "words": 18
+    }
+  ],
+  "http": [
+    {
+      "id": "move-noob",
+      "repeats": 2,
+      "exactBytes": true,
+      "hash": "4ef0abbc355f98de1e54fd25f8038025b846db10121ee37ef25e300d9468c7c3",
+      "status": 200,
+      "source": "basic"
+    },
+    {
+      "id": "opening-beginner",
+      "repeats": 2,
+      "exactBytes": true,
+      "hash": "329389c2ccff468f60d28eb0ac6de2e96c99aec0712148b98b01ca9ec8862780",
+      "status": 200,
+      "source": "basic"
+    },
+    {
+      "id": "tactic-intermediate",
+      "repeats": 2,
+      "exactBytes": true,
+      "hash": "450d28106e817e901fd0958bf9b2ba169c6069f44e274ca081f2d27354e87dcd",
+      "status": 200,
+      "source": "basic"
+    },
+    {
+      "id": "endgame-advanced",
+      "repeats": 2,
+      "exactBytes": true,
+      "hash": "a2be851a199afc024a327b5ba0da1d4672e766cd30dca45053c46f990115786f",
+      "status": 200,
+      "source": "basic"
+    },
+    {
+      "id": "general-beginner",
+      "repeats": 2,
+      "exactBytes": true,
+      "hash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c",
+      "status": 200,
+      "source": "basic"
+    }
+  ],
+  "browser": {
+    "hashedProduction": true,
+    "repeats": 2,
+    "exactRequestBytes": true,
+    "requestHash": "ed91b5ede3046fcecb61179a2a13068280c69346b1f9b91de7e82b91a1e3a571",
+    "exactResponseBytes": true,
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c",
+    "source": "basic",
+    "engineSource": "none",
+    "knowledgeSource": "none",
+    "truthfulBasicLabel": true,
+    "aiProviderClaimed": false
+  },
+  "runtime": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "unexpectedHttp": []
+  }
+}

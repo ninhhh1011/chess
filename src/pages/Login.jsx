@@ -6,6 +6,8 @@ import { AppButton } from '@/ui/AppButton';
 import { AppField } from '@/ui/AppField';
 import { ChessKnight } from 'lucide-react';
 
+import { AppSurface } from '@/ui/AppSurface';
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +16,7 @@ export default function Login() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, signIn } = useAuth();
   const isSupabaseConfigured = useIsSupabaseConfigured();
 
   const from = location.state?.from?.pathname || '/training';
@@ -27,7 +29,7 @@ export default function Login() {
   if (!isSupabaseConfigured) {
     return (
       <div className="grid place-items-center py-12 px-4 min-h-[70vh]">
-        <div className="w-full max-w-md rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-8 text-center space-y-6 shadow-sm">
+        <AppSurface className="w-full max-w-md border border-[var(--app-border)] p-8 text-center space-y-6 shadow-sm">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[10px] bg-[var(--app-surface-raised)] border border-[var(--app-border)] text-[var(--app-accent)]">
             <ChessKnight className="h-7 w-7" />
           </div>
@@ -40,7 +42,7 @@ export default function Login() {
           <AppButton variant="secondary" onClick={() => navigate('/')} className="w-full">
             Quay về trang chủ
           </AppButton>
-        </div>
+        </AppSurface>
       </div>
     );
   }
@@ -50,7 +52,7 @@ export default function Login() {
     setError('');
     setLoading(true);
 
-    const result = await signInWithEmail({ email, password });
+    const result = await signInWithEmail({ email, password }, signIn);
 
     if (result.success) {
       navigate(from, { replace: true });
@@ -63,7 +65,7 @@ export default function Login() {
 
   return (
     <div className="grid place-items-center py-8 px-4 min-h-[75vh]">
-      <div className="w-full max-w-md rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8 shadow-sm space-y-6">
+      <AppSurface className="w-full max-w-md border border-[var(--app-border)] p-6 sm:p-8 shadow-sm space-y-6">
         <div className="text-center space-y-2">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[10px] bg-[var(--app-accent)] text-[#0C100E] shadow-sm">
             <ChessKnight className="h-6 w-6" />
@@ -83,7 +85,7 @@ export default function Login() {
             type="email"
             label="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(val) => setEmail(typeof val === 'string' ? val : val?.target?.value || '')}
             placeholder="email@example.com"
             required
             disabled={loading}
@@ -93,7 +95,7 @@ export default function Login() {
             type="password"
             label="Mật khẩu"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(val) => setPassword(typeof val === 'string' ? val : val?.target?.value || '')}
             placeholder="••••••••"
             required
             disabled={loading}
@@ -123,7 +125,7 @@ export default function Login() {
             Đăng ký ngay
           </button>
         </div>
-      </div>
+      </AppSurface>
     </div>
   );
 }

@@ -1,0 +1,3 @@
+{"rowNumber":2,"sourceId":"malformed","reason":"malformed_row","detail":"expected 11 fields, received 2","rawRecordSha256":"10dc21f73da3867cf64c2aaa0d4cce5e3c3aa542381e77975d007d650be6e9bf"}
+{"rowNumber":3,"sourceId":"00sHx","reason":"duplicate_source_id","rawRecordSha256":"bac77b37545b742a65748b54bb389b6e736e9049c1d333c15a8aed3b7005cc8c"}
+{"rowNumber":4,"sourceId":"other","reason":"duplicate_normalized_puzzle","rawRecordSha256":"acfe204796cfe6eeab3c321bab7e9c4537c99c97591ec387f867235eb2567312"}

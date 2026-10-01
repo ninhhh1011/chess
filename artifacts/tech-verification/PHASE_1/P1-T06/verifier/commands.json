@@ -1,0 +1,47 @@
+{
+  "verdict": "PASS",
+  "date": "2026-09-06",
+  "branch": "main",
+  "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+  "runtime": {
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npm test -- --run src/test/analysisFactContract.test.ts src/test/gameAnalyzer.test.ts src/test/coach.test.ts src/test/learningLoop.test.ts src/components/ChessGameBoard.integration.test.jsx",
+      "exitCode": 0,
+      "result": "5 files, 81 tests passed"
+    },
+    {
+      "command": "npm test -- --run",
+      "exitCode": 0,
+      "result": "33 files, 587 tests passed"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "0 errors, 0 warnings"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "tsc --noEmit passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "Vite 8 production build passed; 4103 modules transformed"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed; line-ending notices only"
+    },
+    {
+      "command": "$env:VERIFIER_BASE_URL='http://127.0.0.1:4195'; node artifacts/tech-verification/PHASE_1/P1-T06/verifier/verify-production.mjs",
+      "exitCode": 0,
+      "result": "14-ply real Stockfish production self-play passed"
+    }
+  ]
+}

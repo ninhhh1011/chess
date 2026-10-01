@@ -1,0 +1,74 @@
+{
+  "task": "P1-T08 independent verification",
+  "verdict": "PASS",
+  "verifiedAt": "2026-09-06T02:47:46.0111002+07:00",
+  "runtime": {
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "branch": "main",
+    "head": "7ecc6a6"
+  },
+  "commands": [
+    {
+      "command": "npx eslint artifacts/tech-verification/PHASE_1/P1-T08/verifier/benchmark.mjs artifacts/tech-verification/PHASE_1/P1-T08/verifier/self-play.mjs --max-warnings 0",
+      "result": "PASS (0 errors, 0 warnings)"
+    },
+    {
+      "command": "npm run lint",
+      "result": "PASS (0 errors, 0 warnings)"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "npm test -- --run",
+      "result": "PASS (33 files, 592 tests)"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS (4103 modules; built in 7.33s; main asset /assets/index-CozSBo6p.js)"
+    },
+    {
+      "command": "npx playwright test --list",
+      "result": "PASS (72 tests in 4 files discovered)"
+    },
+    {
+      "command": "npx playwright test --project=chromium",
+      "result": "PASS (72/72 in 3.7m)"
+    },
+    {
+      "command": "Get-NetTCPConnection -LocalPort 4218,4219 -State Listen -ErrorAction SilentlyContinue",
+      "result": "PASS (no listeners; both selected ports confirmed free)"
+    },
+    {
+      "command": "npm run dev -- --host 127.0.0.1 --port 4219",
+      "result": "PASS (benchmark-only Vite browser module graph served on distinct free port 4219)"
+    },
+    {
+      "command": "$env:VERIFIER_BENCHMARK_URL='http://127.0.0.1:4219'; node artifacts/tech-verification/PHASE_1/P1-T08/verifier/benchmark.mjs",
+      "result": "PASS (one cold plus two warm browser runs; all required assertions passed)"
+    },
+    {
+      "command": "npm run preview -- --host 127.0.0.1 --port 4218",
+      "result": "PASS (fresh hashed production build served on distinct free port 4218)"
+    },
+    {
+      "command": "$env:VERIFIER_PRODUCTION_URL='http://127.0.0.1:4218'; node artifacts/tech-verification/PHASE_1/P1-T08/verifier/self-play.mjs",
+      "result": "PASS (complete production self-play and lifecycle gate)"
+    },
+    {
+      "command": "view_image white-20-click-hint.png; view_image black-20-drag-undo-review.png; view_image lifecycle-resign-review.png",
+      "result": "PASS (visual inspection corroborated the interaction/review evidence)"
+    },
+    {
+      "command": "npx eslint artifacts/tech-verification/PHASE_1/P1-T08/verifier/benchmark.mjs artifacts/tech-verification/PHASE_1/P1-T08/verifier/self-play.mjs --max-warnings 0; node -e <parse all verifier JSON evidence>; git diff --check",
+      "result": "PASS (harness lint clean; all seven JSON evidence files parse; completed workspace diff has no whitespace errors; existing line-ending notices only)"
+    }
+  ],
+  "mandatoryWorkspaceBaseline": {
+    "command": "git status --short --untracked-files=all; git branch --show-current; git log -1 --oneline; git diff --stat; git diff --check; git remote -v; node --version; npm --version",
+    "result": "Run immediately before every verifier-owned workspace change; branch main, HEAD 7ecc6a6, Node v24.15.0, npm 11.12.1; unrelated dirty files were observed and preserved"
+  },
+  "commitOrPush": "NONE"
+}

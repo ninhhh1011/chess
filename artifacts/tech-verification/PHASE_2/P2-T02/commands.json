@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T02/isolation.mjs", "result": "PASS" },
+    { "command": "npx eslint artifacts/tech-verification/PHASE_2/P2-T02/isolation.mjs", "result": "PASS" },
+    { "command": "npm test -- --run src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts src/test/exercisesValidator.test.js", "result": "PASS: 9/9" },
+    { "command": "npm run typecheck", "result": "PASS" },
+    { "command": "npm run build", "result": "PASS" },
+    { "command": "npm test -- --run", "result": "PASS: 592/592" },
+    { "command": "npm run lint", "result": "PASS" },
+    { "command": "production Chromium self-play via artifacts/tech-verification/PHASE_0/P0-T02/self-play.mjs", "result": "PASS: 6 plies, real Stockfish WASM, truthful exercises notice, zero browser/page/network errors" },
+    { "command": "git diff --check", "result": "PASS" }
+  ]
+}

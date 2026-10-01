@@ -1,0 +1,71 @@
+{
+  "verdict": "PASS",
+  "date": "2026-09-06",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "workingTree": "dirty with preserved roadmap changes; verifier wrote only its owned Phase 1 gate paths",
+    "remote": "origin https://github.com/ninhhh1011/chess"
+  },
+  "gates": [
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS - 0 warnings/errors"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS - tsc --noEmit"
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 0,
+      "result": "PASS - 33 files, 592 tests"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS - Vite 8.0.10, 4103 modules, hashed production assets"
+    },
+    {
+      "command": "npx playwright test --list",
+      "exitCode": 0,
+      "result": "PASS - 72 tests in 4 files"
+    },
+    {
+      "command": "rg -n \"test\\.(skip|fixme)|describe\\.(skip|fixme)|\\.skip\\(\" e2e",
+      "exitCode": 1,
+      "result": "PASS - no skip/fixme markers found"
+    },
+    {
+      "command": "npm run test:e2e",
+      "exitCode": 0,
+      "result": "PASS - 72/72 Chromium tests in 3.7 minutes"
+    },
+    {
+      "command": "npx eslint artifacts/tech-verification/PHASE_1/GATE/verifier/benchmark.mjs artifacts/tech-verification/PHASE_1/GATE/verifier/self-play.mjs --max-warnings 0",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_1/GATE/verifier/benchmark.mjs",
+      "exitCode": 0,
+      "result": "PASS - cold/warm/warm 43011/42810/42721 ms; median 42810 ms; max 43011 ms"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_1/GATE/verifier/self-play.mjs",
+      "exitCode": 0,
+      "result": "PASS - hashed production White/Black/lifecycle/resign/review/reset flow"
+    },
+    {
+      "command": "parse all Phase 1 task JSON evidence with ConvertFrom-Json",
+      "exitCode": 0,
+      "result": "PASS - 91 files parsed, 0 invalid"
+    }
+  ],
+  "harnessFailures": [],
+  "commitOrPush": false
+}

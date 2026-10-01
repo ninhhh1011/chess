@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS",
+  "puzzleId": "lichess-00008",
+  "firstAttempt": {
+    "attemptId": "attempt:959c2fc0-4598-46af-958c-6584b77d3692",
+    "events": 5,
+    "status": "solved"
+  },
+  "secondAttempt": {
+    "attemptId": "attempt:78117689-b31c-4c74-8fcb-a9469e20acd6",
+    "events": 3,
+    "status": "solved"
+  },
+  "distinctAttemptIds": true,
+  "solvedResetEmittedNoEvent": true,
+  "nextPuzzles": [
+    "lichess-0000D",
+    "lichess-0008Q"
+  ],
+  "exactReloadBytes": true,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

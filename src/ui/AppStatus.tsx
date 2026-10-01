@@ -1,4 +1,5 @@
 import React from 'react';
+import { Chip as HeroUIChip } from '@heroui/react';
 
 export interface AppStatusProps {
   variant?: 'engine' | 'ai' | 'basic' | 'warning' | 'danger' | 'copper' | 'teal';
@@ -28,13 +29,13 @@ export function AppStatus({
   }[variant];
 
   return (
-    <span
+    <HeroUIChip
       className={`inline-flex items-center gap-1.5 font-medium rounded-[6px] border ${variantStyles} ${sizeClasses} ${className}`}
       style={{ borderRadius: '6px' }}
     >
-      {icon && <span className="shrink-0">{icon}</span>}
-      <span>{children}</span>
-    </span>
+      {icon && <span className="shrink-0 flex items-center">{icon}</span>}
+      <HeroUIChip.Label>{children}</HeroUIChip.Label>
+    </HeroUIChip>
   );
 }
 

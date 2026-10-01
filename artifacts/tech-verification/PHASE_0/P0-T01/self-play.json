@@ -1,0 +1,54 @@
+{
+  "route": "/play",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "difficulty": "Dễ",
+  "playerColor": "white",
+  "moves": [
+    {
+      "actor": "player",
+      "from": "e2",
+      "to": "e4"
+    },
+    {
+      "actor": "player",
+      "from": "g1",
+      "to": "f3"
+    },
+    {
+      "actor": "player",
+      "from": "d2",
+      "to": "d3"
+    }
+  ],
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "c5",
+    "Nf3",
+    "Nc6",
+    "d3",
+    "Nf6"
+  ],
+  "finalFen": "r1bqkb1r/pp1ppppp/2n2n2/2p5/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+  "pgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. e4 c5 2. Nf3 Nc6 3. d3 Nf6 *",
+  "pgnReplay": "PASS",
+  "engineSourceEvidence": {
+    "source": "stockfish_wasm",
+    "workerStarts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "bestMoves": [
+      "bestmove d2d4 ponder g8f6",
+      "bestmove c7c5 ponder g1f3",
+      "bestmove g1f3 ponder d7d5",
+      "bestmove d7d5 ponder e4d5",
+      "bestmove b8c6 ponder f1b5",
+      "bestmove b1c3 ponder b8c6",
+      "bestmove d7d6 ponder d2d4",
+      "bestmove g8f6 ponder e4e5"
+    ]
+  },
+  "turnOrder": "PASS",
+  "status": "PASS"
+}

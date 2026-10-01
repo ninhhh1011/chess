@@ -8,41 +8,63 @@
 import { useState } from 'react';
 import type { AnalysisFactV1, CoachResponse } from '../../types/analysis';
 import { generateCoachExplanation } from '../../services/analysis/coach';
-import { AppButton } from '../../ui';
+import { getAnalysisFactEvidenceId } from '../../services/analysis/analysisFact';
+import { getUserProfile } from '../../services/userProfileService';
+import { AppButton } from '../../ui/AppButton';
+import { AppSurface } from '../../ui/AppSurface';
+import { AppStatus } from '../../ui/AppStatus';
+import { Bot, Lightbulb } from 'lucide-react';
 
 interface AnalysisCoachProps {
-  facts: AnalysisFactV1[];
-  topMistakes: string[];
   playerSide: 'w' | 'b';
-  focusedPly?: number;
-  focusedFact?: AnalysisFactV1 | null;
+  focusedEvidenceId: string;
+}
+
+function loadTrustedContext(focusedEvidenceId: string) {
+  const persistence = getUserProfile().persistence;
+  const review = persistence.gameReviews.find((item: { factIds: string[] }) =>
+    item.factIds.includes(focusedEvidenceId));
+  if (!review) return null;
+
+  const factsById = new Map<string, AnalysisFactV1>(persistence.analysisFacts.map((fact: AnalysisFactV1) =>
+    [getAnalysisFactEvidenceId(fact), fact]));
+  const facts = review.factIds.map((evidenceId: string) => factsById.get(evidenceId));
+  const focusedFact = factsById.get(focusedEvidenceId);
+  if (!focusedFact || facts.some((fact: AnalysisFactV1 | undefined) => !fact)) return null;
+
+  return {
+    facts: facts as AnalysisFactV1[],
+    focusedFact,
+    topMistakes: (facts as AnalysisFactV1[]).map((fact) => String(fact.ply)),
+  };
 }
 
 export default function AnalysisCoach({
-  facts,
-  topMistakes,
   playerSide,
-  focusedPly,
-  focusedFact,
+  focusedEvidenceId,
 }: AnalysisCoachProps) {
   const [coachResponse, setCoachResponse] = useState<CoachResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const trustedContext = loadTrustedContext(focusedEvidenceId);
+  const focusedFact = trustedContext?.focusedFact;
 
   const handleAskCoach = async () => {
     setIsLoading(true);
 
     try {
-      // Build context from analysis facts
+      const current = loadTrustedContext(focusedEvidenceId);
+      if (!current) throw new Error('Trusted review fact unavailable');
       const context = {
-        facts,
-        topMistakes,
+        facts: current.facts,
+        topMistakes: current.topMistakes,
         playerSide,
-        moveContext: focusedFact ? {
-          played: focusedFact.playedMove.san,
-          best: focusedFact.bestMove.san,
-          ply: focusedFact.ply,
-          fen: focusedFact.fenAfter,
-        } : undefined,
+        moveContext: {
+          played: current.focusedFact.playedMove.san,
+          best: current.focusedFact.bestMove.san,
+          ply: current.focusedFact.ply,
+          fen: current.focusedFact.fenBefore,
+          evidenceId: focusedEvidenceId,
+        },
       };
 
       const response = generateCoachExplanation(context);
@@ -58,46 +80,60 @@ export default function AnalysisCoach({
     }
   };
 
-  if (!facts || facts.length === 0) {
+  if (!trustedContext) {
     return (
-      <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
-        <p className="text-sm text-slate-400">
+      <AppSurface variant="raised" radius="sm" className="p-4">
+        <p className="text-xs text-[var(--app-muted)]">
           Chưa có dữ liệu phân tích engine. Hoàn thành một ván để nhận gợi ý cá nhân.
         </p>
-      </div>
+      </AppSurface>
     );
   }
 
+  const classificationVariant =
+    focusedFact?.classification === 'blunder'
+      ? 'danger'
+      : focusedFact?.classification === 'mistake'
+        ? 'copper'
+        : focusedFact?.classification === 'inaccuracy'
+          ? 'warning'
+          : 'basic';
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Coach Button */}
       <AppButton
         onClick={handleAskCoach}
-        disabled={isLoading}
+        isLoading={isLoading}
         variant="primary"
-        className="w-full"
+        className="w-full text-xs font-semibold"
+        leftIcon={<Bot className="h-4 w-4" />}
       >
-        {isLoading ? 'Đang phân tích...' : 'Hỏi Quân sư về ván này'}
+        Hỏi Quân sư về ván này
       </AppButton>
 
       {/* Coach Response */}
       {coachResponse && (
-        <div className="rounded-lg border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--app-accent-soft)] text-lg">
-              🤖
+        <AppSurface
+          variant="base"
+          radius="sm"
+          className="border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-3.5 space-y-2.5"
+        >
+          <div className="flex items-start gap-2.5">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] bg-[var(--app-accent)] text-[#0C100E]">
+              <Bot className="h-4 w-4" />
             </div>
-            <div className="flex-1">
-              <p className="text-sm text-white">{coachResponse.reply}</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-[var(--app-foreground)] leading-relaxed">{coachResponse.reply}</p>
 
               {coachResponse.suggestions.length > 0 && (
-                <div className="mt-3">
-                  <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                <div className="mt-2.5">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--app-subtle)]">
                     Gợi ý:
                   </p>
                   <ul className="mt-1 space-y-1">
                     {coachResponse.suggestions.map((s, i) => (
-                      <li key={i} className="text-sm text-slate-300">
+                      <li key={i} className="text-xs text-[var(--app-muted)]">
                         • {s}
                       </li>
                     ))}
@@ -106,56 +142,55 @@ export default function AnalysisCoach({
               )}
 
               {coachResponse.moveHint && (
-                <div className="mt-3 rounded bg-slate-700/50 p-2">
-                  <p className="text-xs text-slate-400">
-                    Nước gợi ý: <span className="font-mono font-bold text-emerald-400">{coachResponse.moveHint}</span>
+                <div className="mt-2 rounded-[6px] bg-[var(--app-surface-raised)] p-2 border border-[var(--app-border)]">
+                  <p className="text-xs text-[var(--app-muted)] flex items-center gap-1.5">
+                    <Lightbulb className="h-3.5 w-3.5 text-[var(--app-accent)] shrink-0" />
+                    Nước gợi ý: <span className="font-mono font-bold text-[var(--app-accent)]">{coachResponse.moveHint}</span>
                   </p>
                 </div>
               )}
             </div>
           </div>
-        </div>
+        </AppSurface>
       )}
 
       {/* Focused Move Context */}
       {focusedFact && (
-        <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
-          <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+        <AppSurface variant="raised" radius="sm" className="p-3.5 space-y-2">
+          <p className="text-xs font-bold uppercase tracking-wide text-[var(--app-subtle)]">
             Đang xem nước {focusedFact.ply}
           </p>
-          <div className="mt-2 grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-2 gap-3 text-xs">
             <div>
-              <p className="text-slate-500">Đã đi</p>
-              <p className="font-mono text-white">{focusedFact.playedMove.san}</p>
+              <p className="text-[var(--app-muted)]">Đã đi</p>
+              <p className="font-mono font-bold text-[var(--app-foreground)]">{focusedFact.playedMove.san}</p>
             </div>
             <div>
-              <p className="text-slate-500">Nên đi</p>
-              <p className="font-mono text-emerald-400">{focusedFact.bestMove.san || 'N/A'}</p>
+              <p className="text-[var(--app-muted)]">Nên đi</p>
+              <p className="font-mono font-bold text-[var(--app-accent)]">{focusedFact.bestMove.san || 'N/A'}</p>
             </div>
           </div>
 
           {focusedFact.centipawnLoss !== null && (
-            <p className="mt-2 text-sm text-slate-400">
-              Centipawn loss: <span className="font-mono text-white">{focusedFact.centipawnLoss}</span>
+            <p className="text-xs text-[var(--app-muted)]">
+              Centipawn loss: <span className="font-mono text-[var(--app-foreground)]">{focusedFact.centipawnLoss}</span>
             </p>
           )}
 
-          <div className="mt-2">
-            <span className={`inline-block rounded px-2 py-1 text-xs font-bold ${
-              focusedFact.classification === 'blunder' ? 'bg-red-500/20 text-red-400' :
-              focusedFact.classification === 'mistake' ? 'bg-orange-500/20 text-orange-400' :
-              focusedFact.classification === 'inaccuracy' ? 'bg-yellow-500/20 text-yellow-400' :
-              'bg-slate-600 text-slate-300'
-            }`}>
+          <div className="pt-1">
+            <AppStatus variant={classificationVariant} size="sm">
               {focusedFact.classification}
-            </span>
+            </AppStatus>
           </div>
 
           {/* Tags */}
           {focusedFact.skillTags.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {focusedFact.skillTags.map(tag => (
-                <span key={tag} className="rounded bg-slate-600 px-2 py-1 text-xs text-slate-300">
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {focusedFact.skillTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-[4px] bg-[var(--app-surface)] border border-[var(--app-border)] px-1.5 py-0.5 text-[10px] text-[var(--app-muted)]"
+                >
                   {tag.replace(/_/g, ' ')}
                 </span>
               ))}
@@ -163,11 +198,11 @@ export default function AnalysisCoach({
           )}
 
           {/* Engine Source */}
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="text-[11px] text-[var(--app-subtle)] pt-1 border-t border-[var(--app-border)]">
             Nguồn: {focusedFact.engine.source}
             {focusedFact.engine.depth && ` @ depth ${focusedFact.engine.depth}`}
           </p>
-        </div>
+        </AppSurface>
       )}
     </div>
   );

@@ -1,0 +1,72 @@
+{
+  "task": "P4-T04",
+  "verdict": "VERIFIED",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "history": [
+    {
+      "stage": "initial-independent-verification",
+      "result": "REJECTED",
+      "command": "npx vitest run artifacts/tech-verification/PHASE_4/P4-T04/verifier/persisted-resolution.adversarial.test.jsx --reporter=verbose",
+      "counts": "1 file; 1 passed, 1 failed",
+      "duration": "5.45s",
+      "failure": "Coach rendered a d4 hint with no persisted profile, analysisFact, or owning gameReview"
+    },
+    {
+      "stage": "post-fix-harness-adaptation",
+      "result": "VERIFIER_HARNESS_MISMATCH",
+      "detail": "The obsolete verifier attempted to click Coach after the corrected component had already failed closed and omitted the button; no product failure."
+    }
+  ],
+  "commands": [
+    {
+      "command": "npx vitest run artifacts/tech-verification/PHASE_4/P4-T04/verifier/persisted-resolution.adversarial.test.jsx --reporter=verbose",
+      "result": "PASS",
+      "counts": "1 file, 3 tests",
+      "duration": "8.90s"
+    },
+    {
+      "command": "npx vitest run src/test/coach.test.ts src/test/analysisFactContract.test.ts src/components/ChessGameBoard.integration.test.jsx artifacts/tech-verification/PHASE_4/P4-T04/verifier/persisted-resolution.adversarial.test.jsx --reporter=dot",
+      "result": "PASS",
+      "counts": "4 files, 59 tests",
+      "duration": "37.78s"
+    },
+    {
+      "command": "npm test -- --run --reporter=dot",
+      "result": "PASS",
+      "counts": "58 files, 765 tests",
+      "duration": "62.29s"
+    },
+    {
+      "command": "npm run lint",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS",
+      "detail": "Vite 8.0.10; 4,107 modules; 45 PWA entries; 10.32s"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "detail": "No whitespace errors; pre-existing line-ending warnings only"
+    },
+    {
+      "command": "node --check artifacts/tech-verification/PHASE_4/P4-T04/verifier/production.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_4/P4-T04/verifier/production.mjs http://127.0.0.1:4175",
+      "result": "PASS",
+      "detail": "Hashed production; 12 legal plies; 42/42 Stockfish searches; persisted fact/review trace; exact reload; live Supabase cleanup; zero error buckets"
+    }
+  ]
+}

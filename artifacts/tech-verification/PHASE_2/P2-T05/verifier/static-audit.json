@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS",
+  "validator": {
+    "streaming": "createReadStream + fatal TextDecoder; every JSONL line consumed; no sampling option/path",
+    "checks": [
+      "PuzzleRecord v1 runtime contract and canonical recordSha256",
+      "official Lichess provenance, CC0-1.0 license, source and per-row SHA-256",
+      "sourceFen plus precedingMove exact FEN semantics and sideToMove",
+      "full chess.js solution replay for every accepted record",
+      "rating and themes against a pinned 75-theme official taxonomy",
+      "normalized checksum and duplicate source/normalized keys",
+      "manifest schema/source/license/completion/source digest/output digest/count cleanliness"
+    ],
+    "exitCodes": { "pass": 0, "validationFailure": 2, "fatalOrUsage": 1 }
+  },
+  "legacyWrapper": "Forwards all args to the canonical validator and propagates exact status; no legacy sample or false-positive path remains.",
+  "taxonomy": {
+    "source": "https://github.com/lichess-org/lila/blob/50139702e66d67747e5ac0a6482b275f348f0dcd/modules/puzzle/src/main/PuzzleTheme.scala",
+    "officialCount": 75,
+    "localCount": 75,
+    "missing": [],
+    "extra": []
+  },
+  "productionSearch": {
+    "query": "synthetic|fake|mock|generatedPuzzles|corpusPuzzles|sample",
+    "scopedFiles": "canonical validator/wrapper plus non-test production corpus loader/service/exercises/components",
+    "matches": [],
+    "newDependencies": false
+  }
+}

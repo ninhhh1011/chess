@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-09-06T07:40:54.246Z",
+  "candidate": "C:/Users/nguye/AppData/Local/Temp/chess-p3t08-verifier-d848a4809e6448c89cdc985055bed6f3",
+  "sourceSelection": "git ls-files --cached --others --exclude-standard",
+  "sourceFileCount": 1163,
+  "generatedPuzzlesPresent": false,
+  "publicCorpusPresent": true,
+  "typecheck": "PASS",
+  "build": "PASS",
+  "buildModules": 4064,
+  "pwaEntries": 34,
+  "distCorpusPresent": true
+}

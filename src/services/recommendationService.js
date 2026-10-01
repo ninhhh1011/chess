@@ -28,6 +28,9 @@ const ADVANCED_TOPICS = [
   { id: 'opening_repertoire', title: 'Opening repertoire', tags: ['opening'] },
 ];
 
+const TRAINING_PLAN_SCHEMA_VERSION = 'training.v1';
+const TRAINING_TASK_TYPES = new Set(['lesson', 'exercise', 'opening', 'challenge']);
+
 function uniqueById(items) {
   const seen = new Set();
   return items.filter((item) => {
@@ -41,6 +44,7 @@ function uniqueById(items) {
 function safeProfile(profile) {
   if (!profile) profile = {};
   return {
+    profileId: typeof profile.profileId === 'string' ? profile.profileId : 'anonymous',
     currentLevel: profile.currentLevel || 'noob',
     gamesPlayed: Number(profile.gamesPlayed) || 0,
     lessonsCompleted: Array.isArray(profile.lessonsCompleted) ? profile.lessonsCompleted : [],
@@ -54,6 +58,9 @@ function safeProfile(profile) {
     commonMistakes: Array.isArray(profile.commonMistakes) ? profile.commonMistakes : [],
     strengths: Array.isArray(profile.strengths) ? profile.strengths : [],
     weaknesses: Array.isArray(profile.weaknesses) ? profile.weaknesses : [],
+    skillStates: Array.isArray(profile.skillStates)
+      ? profile.skillStates
+      : Array.isArray(profile.persistence?.skillStates) ? profile.persistence.skillStates : [],
     openingStats: {
       totalAttempts: Number(profile.openingStats?.totalAttempts) || 0,
       completedOpenings: Array.isArray(profile.openingStats?.completedOpenings) ? profile.openingStats.completedOpenings : [],
@@ -61,6 +68,53 @@ function safeProfile(profile) {
       weakOpenings: Array.isArray(profile.openingStats?.weakOpenings) ? profile.openingStats.weakOpenings : [],
       favoriteOpenings: Array.isArray(profile.openingStats?.favoriteOpenings) ? profile.openingStats.favoriteOpenings : [],
     },
+  };
+}
+
+function normalizeTrainingTask(task) {
+  if (!task || typeof task !== 'object' || !TRAINING_TASK_TYPES.has(task.type)) return null;
+  if (![task.id, task.title, task.reason].every((value) => typeof value === 'string' && value.trim())) return null;
+  return { ...task };
+}
+
+function legacyTask(type, value, index = 0) {
+  if (type === 'challenge' && typeof value === 'string' && value.trim()) {
+    return { type, id: 'daily_challenge', title: 'Ván cờ thực hành', reason: value };
+  }
+  if (!value || typeof value !== 'object') return null;
+  return normalizeTrainingTask({
+    type,
+    id: value.id || `${type}-${index + 1}`,
+    title: value.title || value.reason,
+    reason: value.reason || value.title,
+    ...(value.skillTag || value.tag ? { skillTag: value.skillTag || value.tag } : {}),
+  });
+}
+
+export function normalizeDailyTrainingPlan(plan) {
+  if (!plan || typeof plan !== 'object') return null;
+
+  const tasks = Array.isArray(plan.tasks)
+    ? plan.tasks.map(normalizeTrainingTask).filter(Boolean)
+    : [
+        legacyTask('lesson', plan.lesson),
+        ...(Array.isArray(plan.exercises) ? plan.exercises.map((item, index) => legacyTask('exercise', item, index)) : []),
+        legacyTask('opening', plan.opening),
+        legacyTask('challenge', plan.challenge),
+      ].filter(Boolean);
+
+  if (!tasks.length) return null;
+  const generatedAt = typeof plan.generatedAt === 'string' && !Number.isNaN(Date.parse(plan.generatedAt))
+    ? new Date(plan.generatedAt).toISOString()
+    : new Date().toISOString();
+  return {
+    schemaVersion: TRAINING_PLAN_SCHEMA_VERSION,
+    planId: typeof plan.planId === 'string' && plan.planId.trim() ? plan.planId : `plan:${generatedAt}`,
+    generatedAt,
+    updatedAt: typeof plan.updatedAt === 'string' && !Number.isNaN(Date.parse(plan.updatedAt))
+      ? new Date(plan.updatedAt).toISOString()
+      : generatedAt,
+    tasks,
   };
 }
 
@@ -133,6 +187,20 @@ export function getRecommendedExercises(profile) {
   const p = safeProfile(profile);
   const exercises = [];
 
+  const weakestSkill = [...p.skillStates]
+    .filter((state) => typeof state?.skillId === 'string' && Number.isFinite(state.score)
+      && Array.isArray(state.evidenceIds) && state.evidenceIds.length)
+    .sort((a, b) => a.score - b.score || a.skillId.localeCompare(b.skillId))[0];
+  if (weakestSkill) {
+    exercises.push({
+      id: `skill:${weakestSkill.skillId}`,
+      title: `Bài tập: ${weakestSkill.skillId}`,
+      tag: weakestSkill.skillId,
+      reason: `Ưu tiên kỹ năng có điểm thấp nhất từ ${weakestSkill.evidenceIds.length} bằng chứng đã lưu.`,
+      evidenceIds: [...weakestSkill.evidenceIds],
+    });
+  }
+
   p.commonMistakes.forEach((tag) => {
     const rule = getRuleByMistake(tag);
     if (rule) {
@@ -178,7 +246,10 @@ export function shouldLevelUp(profile) {
  * @property {string} [skillTag]
  *
  * @typedef {Object} DailyTrainingPlan
+ * @property {'training.v1'} schemaVersion
+ * @property {string} planId
  * @property {string} generatedAt
+ * @property {string} updatedAt
  * @property {TrainingTask[]} tasks
  */
 export function generateDailyTrainingPlan(profile) {
@@ -204,6 +275,7 @@ export function generateDailyTrainingPlan(profile) {
         title: ex.title,
         reason: ex.reason || 'Luyện kỹ năng.',
         skillTag: ex.tag,
+        ...(ex.evidenceIds?.length ? { evidenceIds: ex.evidenceIds } : {}),
       });
     });
   } else {
@@ -239,8 +311,12 @@ export function generateDailyTrainingPlan(profile) {
     reason: challengeText,
   });
 
+  const generatedAt = new Date().toISOString();
   return {
-    generatedAt: new Date().toISOString(),
+    schemaVersion: TRAINING_PLAN_SCHEMA_VERSION,
+    planId: `plan:${globalThis.crypto.randomUUID()}`,
+    generatedAt,
+    updatedAt: generatedAt,
     tasks,
   };
 }

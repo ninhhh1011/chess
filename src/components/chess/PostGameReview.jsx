@@ -263,14 +263,14 @@ export default function PostGameReview() {
 
         {/* 3. Collapsible Game Statistics (Collapsed by default) */}
         <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)]/70 overflow-hidden">
-          <button
-            type="button"
+          <AppButton
+            variant="ghost"
             onClick={() => setShowStats(!showStats)}
-            className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-raised)] transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-raised)] transition-colors rounded-none"
           >
             <span>Thống kê chi tiết ({moveHistory?.length || 0} nước đi)</span>
             {showStats ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          </button>
+          </AppButton>
 
           {showStats && (
             <div className="p-3 border-t border-[var(--app-border)] space-y-2.5">

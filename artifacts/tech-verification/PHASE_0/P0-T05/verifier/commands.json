@@ -1,0 +1,61 @@
+{
+  "verdict": "PASS",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm test -- --run",
+      "exitCode": 0,
+      "result": "31 files, 563 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS; 4097 modules transformed"
+    },
+    {
+      "command": "npm run test:e2e -- --list",
+      "exitCode": 0,
+      "result": "68 tests in 4 files"
+    },
+    {
+      "command": "local Markdown link check for 12 updated documents",
+      "exitCode": 0,
+      "result": "all discovered local Markdown targets exist"
+    },
+    {
+      "command": "readiness-token scan excluding archive/spec/plan guard text",
+      "exitCode": 0,
+      "result": "no positive current whole-product READY/NOT READY contradiction"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS; Git emitted only LF-to-CRLF conversion notices"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_0/P0-T05/verifier/self-play.mjs",
+      "exitCode": 0,
+      "result": "6 legal plies in production Chromium via real Stockfish; zero console/page/network errors"
+    }
+  ],
+  "resolvedFinding": {
+    "file": "docs/CURRENT_RUNTIME.md",
+    "lines": "6, 46-50",
+    "summary": "The corrected disclaimer and hierarchy now place runtime/current source first, fresh tests/contracts second, roadmap third, reports fourth, and documentation/history last."
+  }
+}

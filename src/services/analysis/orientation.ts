@@ -47,21 +47,21 @@ export function calculateCPL(
   playedEval: { type: 'cp' | 'mate'; value: number; depth?: number },
   bestEval: { type: 'cp' | 'mate'; value: number; depth?: number }
 ): number | null {
-  // If either is mate, we can't compute simple CPL
-  if (playedEval.type === 'mate' || bestEval.type === 'mate') {
-    // Special case: mate found vs mate missed
-    if (playedEval.type === 'mate' && bestEval.type === 'mate') {
-      // Both find mate, but different distances
-      return Math.abs(playedEval.value - bestEval.value) * 100;
-    }
-    // One found mate, other didn't - big difference
-    if (playedEval.type === 'mate') return 0; // Best move missed mate
-    if (bestEval.type === 'mate') return 900; // Played move missed mate
-    return null;
-  }
+  const score = (eval_: typeof playedEval) => eval_.type === 'cp'
+    ? eval_.value
+    : (eval_.value > 0 ? 100_000 - eval_.value * 100 : -100_000 - eval_.value * 100);
 
-  // Simple case: both centipawn
-  return Math.round(bestEval.value - playedEval.value);
+  return Math.max(0, Math.round(score(bestEval) - score(playedEval)));
+}
+
+export function calculateMoverCPL(
+  evalBefore: { type: 'cp' | 'mate'; value: number; depth?: number },
+  evalAfter: { type: 'cp' | 'mate'; value: number; depth?: number },
+  mover: 'w' | 'b'
+): number | null {
+  return mover === 'w'
+    ? calculateCPL(evalAfter, evalBefore)
+    : calculateCPL(evalBefore, evalAfter);
 }
 
 /**
@@ -98,7 +98,7 @@ export function determineSkillTags(
     isCheck: boolean;
     isMate: boolean;
   },
-  evalDelta: number,
+  centipawnLoss: number,
   position: {
     isBackRank: boolean;
     isHanging: boolean;
@@ -130,7 +130,7 @@ export function determineSkillTags(
     tags.push('back_rank');
   }
 
-  if (position.isEndgame && evalDelta < -100) {
+  if (position.isEndgame && centipawnLoss > 100) {
     tags.push('endgame_conversion');
   }
 
@@ -138,7 +138,7 @@ export function determineSkillTags(
     tags.push('hung_piece');
   }
 
-  if (evalDelta < -150 && !move.isCapture) {
+  if (centipawnLoss > 150 && !move.isCapture) {
     tags.push('tactical_oversight');
   }
 

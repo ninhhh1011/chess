@@ -1,0 +1,95 @@
+{
+  "verdict": "PASS",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "dirtyTreePreserved": true,
+    "diffCheck": "PASS (exit 0; line-ending notices only)"
+  },
+  "commands": [
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npx vitest run src/test/stockfishWorker.test.js src/test/stockfish.test.js src/hooks/useEngineAnalysis.test.js",
+      "exitCode": 0,
+      "result": "3 files, 13 tests passed"
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "result": "31 files, 572 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS; 4098 modules transformed; PWA assets generated"
+    },
+    {
+      "command": "npx playwright test e2e/stockfish.spec.js",
+      "exitCode": 0,
+      "result": "8 Playwright tests passed in 27.5s"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_1/P1-T01/verifier/verify.mjs",
+      "host": "Vite development host used to import the service module directly for lifecycle instrumentation",
+      "exitCode": 0,
+      "result": "PASS; active dispose/re-init, cold-init dispose across 10.5s horizon, and native-worker self-play"
+    },
+    {
+      "command": "$env:P1_T01_BASE_URL='http://127.0.0.1:4182'; $env:P1_T01_MODE='preview-self-play'; node artifacts/tech-verification/PHASE_1/P1-T01/verifier/verify.mjs",
+      "host": "npm run preview serving freshly built dist",
+      "exitCode": 0,
+      "result": "PASS; White and Black production-preview games reached 10 legal plies with real worker telemetry and zero browser/network errors"
+    }
+  ],
+  "lifecycle": {
+    "activeDispose": {
+      "settled": true,
+      "error": "Stockfish analysis disposed",
+      "createdWorkers": [1, 2],
+      "terminatedWorkers": [1],
+      "replacementSource": "stockfish_wasm",
+      "replacementBestMove": "d2d4",
+      "replacementDepth": 11,
+      "replacementEngineTimeMs": 100
+    },
+    "coldInitDispose": {
+      "firstSettlementValue": false,
+      "firstSettlementMs": 0,
+      "observedStaleTimeoutHorizonMs": 10500,
+      "createdWorkers": [1, 2],
+      "terminatedWorkers": [1],
+      "replacementReadyAfterHorizon": true,
+      "replacementTerminated": false
+    }
+  },
+  "assets": [
+    {
+      "path": "public/stockfish-worker.js",
+      "bytes": 4407,
+      "sha256": "E7B39F6C9FE44CACB5BA06486AA614508FA88F4FE4D076A8BA956C7EFA942431"
+    },
+    {
+      "path": "public/stockfish/stockfish.js",
+      "bytes": 20670,
+      "sha256": "2278005057F381491F1C9BB3E44C9F5920B3A00BEF9759E33CC6582769A1F1FE",
+      "matches": "node_modules/stockfish/bin/stockfish-18-lite-single.js"
+    },
+    {
+      "path": "public/stockfish/stockfish.wasm",
+      "bytes": 7295411,
+      "sha256": "A8FBC05EC6920B56D7485826DCB02C5FFD2826BCBF751CF973046F237A9096F1",
+      "matches": "node_modules/stockfish/bin/stockfish-18-lite-single.wasm"
+    }
+  ]
+}

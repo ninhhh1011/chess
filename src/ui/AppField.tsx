@@ -1,4 +1,11 @@
 import React from 'react';
+import {
+  TextField as HeroUITextField,
+  Label as HeroUILabel,
+  InputGroup as HeroUIInputGroup,
+  Description as HeroUIDescription,
+  FieldError as HeroUIFieldError,
+} from '@heroui/react';
 
 export interface AppFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -6,6 +13,7 @@ export interface AppFieldProps extends React.InputHTMLAttributes<HTMLInputElemen
   error?: string;
   leftIcon?: React.ReactNode;
   rightAction?: React.ReactNode;
+  containerClassName?: string;
 }
 
 export const AppField = React.forwardRef<HTMLInputElement, AppFieldProps>(
@@ -17,55 +25,76 @@ export const AppField = React.forwardRef<HTMLInputElement, AppFieldProps>(
       leftIcon,
       rightAction,
       className = '',
+      containerClassName = '',
       id,
-      ...rest
+      disabled,
+      required,
+      ...inputProps
     },
     ref
   ) => {
-    const inputId = id || (label ? `field-${label.toLowerCase().replace(/\s+/g, '-')}` : undefined);
+    const inputId = id || (label ? `field-${label.toLowerCase().replace(/[^a-z0-9]/g, '-')}` : undefined);
+
+    const inputBaseClasses = `w-full h-9 bg-[var(--app-surface)] text-sm text-[var(--app-foreground)] placeholder-[var(--app-subtle)] focus:outline-none transition-colors duration-150`;
 
     return (
-      <div className="w-full flex flex-col gap-1.5">
+      <HeroUITextField
+        isInvalid={Boolean(error)}
+        isDisabled={disabled}
+        isRequired={required}
+        className={`w-full flex flex-col gap-1.5 ${containerClassName}`}
+      >
         {label && (
-          <label
+          <HeroUILabel
             htmlFor={inputId}
             className="text-xs font-semibold text-[var(--app-muted)] select-none"
           >
             {label}
-          </label>
+          </HeroUILabel>
         )}
-        <div className="relative flex items-center">
+
+        <HeroUIInputGroup
+          className={`relative flex items-center w-full rounded-[8px] border bg-[var(--app-surface)] px-2.5 transition-colors duration-150 ${
+            error
+              ? 'border-[var(--app-danger)] ring-1 ring-[var(--app-danger)]/30'
+              : 'border-[var(--app-border)] focus-within:border-[var(--app-accent)] focus-within:ring-2 focus-within:ring-[var(--app-accent)]/20'
+          }`}
+          style={{ borderRadius: '8px' }}
+        >
           {leftIcon && (
-            <span className="absolute left-3 text-[var(--app-subtle)] pointer-events-none">
+            <HeroUIInputGroup.Prefix className="mr-2 text-[var(--app-subtle)] shrink-0 flex items-center">
               {leftIcon}
-            </span>
+            </HeroUIInputGroup.Prefix>
           )}
-          <input
+
+          <HeroUIInputGroup.Input
             ref={ref}
             id={inputId}
-            className={`w-full h-9 rounded-[8px] border bg-[var(--app-surface)] text-sm text-[var(--app-foreground)] placeholder-[var(--app-subtle)] transition-colors duration-150 ${
-              leftIcon ? 'pl-9' : 'pl-3'
-            } ${rightAction ? 'pr-12' : 'pr-3'} ${
-              error
-                ? 'border-[var(--app-danger)] focus:border-[var(--app-danger)] focus:ring-1 focus:ring-[var(--app-danger)]'
-                : 'border-[var(--app-border)] focus:border-[var(--app-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)]'
-            } ${className}`}
-            style={{ borderRadius: '8px' }}
-            {...rest}
+            disabled={disabled}
+            required={required}
+            className={`${inputBaseClasses} ${className}`}
+            {...inputProps}
           />
+
           {rightAction && (
-            <div className="absolute right-2 flex items-center">
+            <HeroUIInputGroup.Suffix className="ml-2 flex items-center shrink-0">
               {rightAction}
-            </div>
+            </HeroUIInputGroup.Suffix>
           )}
-        </div>
+        </HeroUIInputGroup>
+
         {description && !error && (
-          <p className="text-[11px] text-[var(--app-subtle)]">{description}</p>
+          <HeroUIDescription className="text-[11px] text-[var(--app-subtle)]">
+            {description}
+          </HeroUIDescription>
         )}
+
         {error && (
-          <p className="text-[11px] text-[var(--app-danger)] font-medium">{error}</p>
+          <HeroUIFieldError className="text-[11px] text-[var(--app-danger)] font-medium">
+            {error}
+          </HeroUIFieldError>
         )}
-      </div>
+      </HeroUITextField>
     );
   }
 );

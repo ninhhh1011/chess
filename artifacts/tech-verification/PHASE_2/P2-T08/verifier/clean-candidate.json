@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "candidate": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-phase2-verifier-2304ef022daa4b9d9f56777c5caa8ecd",
+  "sourceSelection": "git ls-files --cached --others --exclude-standard",
+  "listedFilesCopied": 994,
+  "dependencySetup": "node_modules junction to the existing workspace install; no package change",
+  "ignoredGeneratedPresent": false,
+  "publicCorpusPresent": true,
+  "distCorpusPresent": true,
+  "activeRun": "474266a1953635fef5a03406a2dcd5831cc891085104d19e39c8f2470a40e75f",
+  "historyRun": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338",
+  "puzzleCount": 20000,
+  "chunkCount": 20,
+  "badChunkHashes": [],
+  "typecheckExitCode": 0,
+  "buildExitCode": 0,
+  "buildModules": 4063,
+  "pwaPrecacheEntries": 34
+}

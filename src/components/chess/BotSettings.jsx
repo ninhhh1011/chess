@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { BOT_ELO_LEVELS } from '../../data/botLevels';
 import { BRAND_NAMES } from '../../config/brand';
+import { AppSelect } from '@/ui/AppSelect';
+import { AppTabs } from '@/ui/AppTabs';
+import { AppSurface } from '@/ui/AppSurface';
 import BoardThemeSelector from '../BoardThemeSelector';
 import OpeningExplorer from '../OpeningExplorer';
 import PgnImport from '../PgnImport';
@@ -30,88 +33,79 @@ export default function BotSettings() {
     { id: 'pgn', label: 'PGN' },
   ];
 
+  const gameModeOptions = [
+    { value: GAME_MODES.LOCAL, label: '2 người chơi tại chỗ' },
+    { value: GAME_MODES.BOT, label: `Đấu với ${BOT_NAME}` },
+  ];
+
+  const playerColorOptions = [
+    { value: PLAYER_COLORS.WHITE, label: 'Bạn cầm quân Trắng (Đi trước)' },
+    { value: PLAYER_COLORS.BLACK, label: 'Bạn cầm quân Đen (Máy đi trước)' },
+  ];
+
+  const botEloOptions = BOT_ELO_LEVELS.map((level) => ({
+    value: String(level.elo),
+    label: level.label,
+    hint: level.description,
+  }));
+
   return (
     <section className="space-y-4">
       {/* Game Mode Settings */}
-      <div className="rounded-lg border border-border bg-bg-surface p-4">
-        <label className="text-xs font-bold uppercase tracking-wider text-text-tertiary" htmlFor="game-mode">
-          Chế độ chơi
+      <AppSurface variant="raised" radius="md" className="p-4 space-y-3">
+        <label className="text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)] block">
+          Chế độ chơi & Cấu hình Bot
         </label>
 
-        <div className="mt-3 grid gap-3">
-          <select
-            id="game-mode"
+        <div className="grid gap-3 pt-1">
+          <AppSelect
+            label="Chế độ chơi"
+            options={gameModeOptions}
             value={gameMode}
-            onChange={(event) => changeGameMode(event.target.value)}
-            className="w-full rounded-md border border-border bg-bg-base px-3 py-2 text-sm font-medium text-text-primary outline-none transition focus:border-primary-400"
-          >
-            <option value={GAME_MODES.LOCAL}>2 người chơi</option>
-            <option value={GAME_MODES.BOT}>Đấu với {BOT_NAME}</option>
-          </select>
+            onChange={(val) => changeGameMode(val)}
+          />
 
           {gameMode === GAME_MODES.BOT && (
             <>
-              <select
-                id="player-color"
+              <AppSelect
+                label="Màu quân của bạn"
+                options={playerColorOptions}
                 value={playerColor}
-                onChange={(event) => changePlayerColor(event.target.value)}
-                className="w-full rounded-md border border-border bg-bg-base px-3 py-2 text-sm font-medium text-text-primary outline-none transition focus:border-primary-400"
-              >
-                <option value={PLAYER_COLORS.WHITE}>Bạn cầm trắng</option>
-                <option value={PLAYER_COLORS.BLACK}>Bạn cầm đen</option>
-              </select>
+                onChange={(val) => changePlayerColor(val)}
+              />
 
-              <select
-                id="bot-elo"
-                value={botElo}
-                onChange={(event) => changeBotElo(Number(event.target.value))}
-                className="w-full rounded-md border border-border bg-bg-base px-3 py-2 text-sm font-medium text-text-primary outline-none transition focus:border-primary-400"
-              >
-                {BOT_ELO_LEVELS.map((level) => (
-                  <option key={level.elo} value={level.elo}>
-                    {level.label} - {level.description}
-                  </option>
-                ))}
-              </select>
+              <AppSelect
+                label={`Độ khó của ${BOT_NAME}`}
+                options={botEloOptions}
+                value={String(botElo)}
+                onChange={(val) => changeBotElo(Number(val))}
+              />
             </>
           )}
         </div>
 
-        <p className="mt-3 text-xs text-text-tertiary">Các thay đổi sẽ áp dụng từ ván mới.</p>
-      </div>
+        <p className="text-xs text-[var(--app-muted)] pt-1">
+          Các thay đổi cấu hình sẽ áp dụng khi bạn tạo hoặc bắt đầu ván mới.
+        </p>
+      </AppSurface>
 
       {/* Tabs for additional features */}
-      <div className="rounded-lg border border-border bg-bg-surface">
-        <nav className="flex border-b border-border">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-3 py-2.5 text-xs font-medium transition ${
-                activeTab === tab.id
-                  ? 'border-b-2 border-primary-400 bg-bg-base text-primary-300'
-                  : 'text-text-tertiary hover:bg-bg-base hover:text-text-secondary'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+      <AppSurface variant="raised" radius="md" className="overflow-hidden">
+        <AppTabs
+          tabs={tabs}
+          selectedId={activeTab}
+          onSelectionChange={setActiveTab}
+          variant="underline"
+          ariaLabel="Tùy chọn mở rộng ván cờ"
+        />
 
         <div className="p-4">
           {activeTab === 'settings' && <BoardThemeSelector />}
-
           {activeTab === 'stats' && <GameStats />}
-
-          {activeTab === 'openings' && (
-            <OpeningExplorer />
-          )}
-
-          {activeTab === 'pgn' && (
-            <PgnImport />
-          )}
+          {activeTab === 'openings' && <OpeningExplorer />}
+          {activeTab === 'pgn' && <PgnImport />}
         </div>
-      </div>
+      </AppSurface>
     </section>
   );
 }

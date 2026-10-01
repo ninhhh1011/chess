@@ -1,0 +1,51 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4274",
+  "puzzleId": "lichess-00008",
+  "sourcePuzzleId": "00008",
+  "attemptId": "attempt:f337ddbb-7dec-4d20-9238-c5749b683118",
+  "status": "solved",
+  "events": [
+    {
+      "eventId": "event:ebae42cb-fcc2-440a-a50e-a709e6c7d632",
+      "type": "wrong",
+      "moveUci": "e6f6",
+      "solved": false,
+      "at": "2026-09-06T05:51:02.275Z"
+    },
+    {
+      "eventId": "event:cc4ccd3f-391e-4d3d-8111-dd343c78aa66",
+      "type": "retry",
+      "moveUci": null,
+      "solved": false,
+      "at": "2026-09-06T05:51:02.330Z"
+    },
+    {
+      "eventId": "event:564754fb-243c-44ae-b6bc-31f9dbd73f88",
+      "type": "correct",
+      "moveUci": "e6e7",
+      "solved": false,
+      "at": "2026-09-06T05:51:02.826Z"
+    },
+    {
+      "eventId": "event:f691ec57-4c5c-454a-b080-aef4a8045e6f",
+      "type": "correct",
+      "moveUci": "b3c1",
+      "solved": false,
+      "at": "2026-09-06T05:51:03.042Z"
+    },
+    {
+      "eventId": "event:0b436740-6903-4897-a03e-344f47587619",
+      "type": "correct",
+      "moveUci": "h6c1",
+      "solved": true,
+      "at": "2026-09-06T05:51:03.260Z"
+    }
+  ],
+  "exactReloadBytes": true,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

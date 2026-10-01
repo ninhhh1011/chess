@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-09-06T07:52:05.845Z",
+  "configured": true,
+  "hostname": "fiacddwzfsjvidjjxurt.supabase.co",
+  "dns": {
+    "ok": true,
+    "family": 4
+  },
+  "query": {
+    "ok": true
+  }
+}

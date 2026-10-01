@@ -1,0 +1,179 @@
+{
+  "verdict": "PASS",
+  "productionExternalCorpus": {
+    "classification": "unavailable",
+    "records": 0,
+    "contract": {
+      "availableFalse": true,
+      "puzzleCountZero": true,
+      "resetsRuntimeStore": true,
+      "generatedArtifactImported": false
+    }
+  },
+  "paths": [
+    {
+      "path": "src/data/generated/generatedPuzzles.json",
+      "classification": "synthetic-generated",
+      "productionImported": false
+    },
+    {
+      "path": "src/data/generated/corpusManifest.json",
+      "classification": "synthetic-generated",
+      "productionImported": false
+    },
+    {
+      "path": "scripts/ingest-corpus.cjs",
+      "classification": "synthetic-generated",
+      "productionImported": false
+    },
+    {
+      "path": "src/data/corpusPuzzles.ts",
+      "classification": "synthetic-seed",
+      "productionImported": false
+    },
+    {
+      "path": "src/data/exercises.js",
+      "classification": "local-bundled-drill",
+      "productionImported": true
+    },
+    {
+      "path": "src/services/corpusService.ts#initializeCorpus",
+      "classification": "synthetic-seed-adapter",
+      "productionImported": false
+    },
+    {
+      "path": "src/test/corpus.test.ts",
+      "classification": "test-fixture",
+      "productionImported": false
+    },
+    {
+      "path": "src/test/benchmarkCorpus.ts",
+      "classification": "test-fixture",
+      "productionImported": false
+    },
+    {
+      "path": "src/services/analysis/pgnFixtures.ts",
+      "classification": "test-fixture",
+      "sourceReexportedByProductionParser": true,
+      "productionBundled": false
+    },
+    {
+      "path": "src/services/corpusLoader.ts",
+      "classification": "unavailable",
+      "productionImported": true
+    },
+    {
+      "path": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+      "classification": "external-real",
+      "productionImported": false
+    }
+  ],
+  "importGraph": {
+    "generatedPuzzles": [],
+    "corpusPuzzles": [],
+    "bundledExercises": [
+      "src/pages/Exercises.jsx",
+      "src/test/exercisesValidator.test.js"
+    ],
+    "corpusLoader": [
+      "src/pages/Exercises.jsx",
+      "src/test/corpusAvailability.test.ts",
+      "src/test/corpusIntegration.test.ts",
+      "src/test/learningLoop.test.ts"
+    ],
+    "initializeCorpus": [
+      "src/services/corpusService.ts",
+      "src/test/corpus.test.ts"
+    ],
+    "pgnFixtures": [
+      "src/test/gameLatency.test.ts",
+      "src/test/pgnCorpus.test.ts",
+      "src/test/pgnParser.test.js",
+      "src/services/analysis/pgnParser.ts"
+    ],
+    "benchmarkCorpus": []
+  },
+  "ignoredGeneratedArtifact": {
+    "gitCheckIgnoreExitCode": 0,
+    "gitIgnoreEvidence": [
+      ".gitignore:15:src/data/generated/\tsrc/data/generated/generatedPuzzles.json",
+      ".gitignore:15:src/data/generated/\tsrc/data/generated/corpusManifest.json"
+    ],
+    "records": 40000,
+    "uniqueIds": 40000,
+    "uniqueFullFen": 285,
+    "uniqueNormalizedFen": 23,
+    "normalizedDuplicates": 39977,
+    "bytes": 11781202,
+    "sha256": "e9e12f397bad4b6ab9dd9180cfc3f6c402fcc1f0875cccdaea4a9b607a1ee6ad",
+    "missingExternalFields": {
+      "sourceId": 40000,
+      "sourcePuzzleId": 40000,
+      "licenseId": 40000,
+      "rawSha256": 40000,
+      "recordSha256": 40000,
+      "rating": 40000
+    },
+    "manifestBytes": 1369,
+    "manifestSha256": "183232fac3d727e07f4a1281b4b2ed8c8c211c31eab7cf83108b6311aa169ac8",
+    "manifestSource": {
+      "sourceId": "generated-corpus-v2",
+      "sourceName": "Generated Puzzles v2",
+      "license": {
+        "id": "cc0",
+        "name": "CC0 Public Domain",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "generatedAt": "2026-09-03T11:16:25.155Z"
+    },
+    "manifestHasRawChecksum": false,
+    "generatorChangesOnlyFullmoveClock": true,
+    "generatorSelfAssignsSourceAndLicense": true
+  },
+  "dormantLegacySeed": {
+    "records": 28,
+    "placeholderSource": true,
+    "placeholderChecksum": true
+  },
+  "bundledExercises": {
+    "records": 5,
+    "productionRoute": "src/pages/Exercises.jsx",
+    "externalCorpus": false
+  },
+  "corpusServiceTestSeeds": {
+    "recordCounts": [
+      3,
+      12
+    ],
+    "placeholderFields": {
+      "source": true,
+      "rawChecksum": true,
+      "recordChecksum": true
+    }
+  },
+  "legacyValidator": {
+    "exitCode": 0,
+    "saysAllPassed": true,
+    "warnsMissingChecksum": true,
+    "sampledProvenance": [
+      0,
+      10
+    ],
+    "duplicateCount": 39977,
+    "solutionCheck": "string length only on first 100 records"
+  },
+  "approvedSource": {
+    "pageUrl": "https://database.lichess.org/",
+    "pageStatus": 200,
+    "downloadUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+    "downloadHeadStatus": 200,
+    "contentType": "application/octet-stream",
+    "contentLength": 304384407,
+    "lastModified": "Sun, 02 Aug 2026 07:23:55 GMT",
+    "license": "Creative Commons CC0",
+    "licenseStatementPresent": true,
+    "publishedPuzzleCount": 6057356,
+    "schema": "PuzzleId,FEN,Moves,Rating,RatingDeviation,Popularity,NbPlays,Themes,GameUrl,OpeningTags,DailyDate",
+    "schemaPresent": true
+  }
+}

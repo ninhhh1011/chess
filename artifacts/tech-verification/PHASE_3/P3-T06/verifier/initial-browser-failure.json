@@ -1,0 +1,9 @@
+{
+  "result": "FAIL",
+  "classification": "VERIFIER_HARNESS_ONLY",
+  "stage": "wait for wrong-move feedback",
+  "error": "locator.waitFor: Timeout 30000ms exceeded",
+  "cause": "The verifier copied a mojibake localized-text regex that could not match the rendered Vietnamese feedback.",
+  "correction": "Wait for the persisted wrong event, then assert the original FEN remains visible.",
+  "productChanged": false
+}

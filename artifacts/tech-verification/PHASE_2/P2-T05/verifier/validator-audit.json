@@ -1,0 +1,325 @@
+{
+  "verdict": "PASS",
+  "generatedAt": "2026-09-06T02:24:46.690Z",
+  "runRoot": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t05-verifier-1788661483073",
+  "taxonomy": {
+    "count": 75,
+    "source": "https://github.com/lichess-org/lila/blob/50139702e66d67747e5ac0a6482b275f348f0dcd/modules/puzzle/src/main/PuzzleTheme.scala"
+  },
+  "cases": [
+    {
+      "name": "valid",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "reasons": [],
+      "gateErrors": []
+    },
+    {
+      "name": "malformed-json",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "malformed_json"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "illegal-fen",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "contract_violation"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "illegal-solution",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "illegal_solution"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "side-mismatch",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "side_to_move_mismatch"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "unknown-theme",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "unknown_theme"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "rating-contract",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "contract_violation"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "provenance",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "provenance_mismatch"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "license",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "license_mismatch"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "source-checksum",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "source_checksum_mismatch"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "output-checksum",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [],
+      "gateErrors": [
+        "manifest_output_checksum_mismatch"
+      ]
+    },
+    {
+      "name": "record-checksum",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "contract_violation"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "normalized-checksum",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "normalized_checksum_mismatch"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "duplicate-source-id",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "duplicate_source_id"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "duplicate-normalized",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "duplicate_normalized_puzzle"
+      ],
+      "gateErrors": []
+    },
+    {
+      "name": "count-mismatch",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [],
+      "gateErrors": [
+        "manifest_accepted_count_mismatch"
+      ]
+    },
+    {
+      "name": "manifest-source-url",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [],
+      "gateErrors": [
+        "manifest_officialSourceUrl_mismatch"
+      ]
+    },
+    {
+      "name": "manifest-source-sha-format",
+      "verdict": "FAIL",
+      "exitCode": 2,
+      "reasons": [
+        "contract_violation"
+      ],
+      "gateErrors": [
+        "manifest_source_checksum_invalid"
+      ]
+    }
+  ],
+  "invalidUtf8": {
+    "fatal": true,
+    "error": "TypeError: The encoded data was not valid for encoding utf-8"
+  },
+  "cli": {
+    "pass": 0,
+    "validationFail": 2,
+    "fatal": 1,
+    "unknownFlag": 1,
+    "wrapperPass": 0,
+    "wrapperValidationFail": 2,
+    "wrapperFatal": 1
+  },
+  "actual": {
+    "report": {
+      "reportSchemaVersion": "lichess-corpus-validation-report.v1",
+      "validatorVersion": "lichess-corpus-validator.v1",
+      "themeTaxonomySource": "https://github.com/lichess-org/lila/blob/50139702e66d67747e5ac0a6482b275f348f0dcd/modules/puzzle/src/main/PuzzleTheme.scala",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "input": "accepted.jsonl",
+      "manifest": "manifest.json",
+      "inputSha256": "e23ec11296bfb650805c08a23056df9ea8d267887ffe43181d412a0baaacf8d7",
+      "sourceSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+      "counts": {
+        "lines": 1000,
+        "valid": 1000,
+        "quarantined": 0,
+        "totalReasons": 0,
+        "solutionMovesReplayed": 3732
+      },
+      "uniqueSourceIds": 1000,
+      "uniqueNormalizedKeys": 1000,
+      "quarantineReasons": {},
+      "themeDistribution": {
+        "advantage": 336,
+        "endgame": 445,
+        "short": 570,
+        "crushing": 402,
+        "fork": 134,
+        "long": 292,
+        "pawnEndgame": 27,
+        "master": 124,
+        "middlegame": 505,
+        "mate": 253,
+        "mateIn2": 124,
+        "bishopEndgame": 12,
+        "mateIn1": 71,
+        "oneMove": 71,
+        "skewer": 23,
+        "opening": 50,
+        "pin": 81,
+        "backRankMate": 9,
+        "queenEndgame": 12,
+        "attraction": 62,
+        "deflection": 67,
+        "sacrifice": 90,
+        "exposedKing": 32,
+        "kingsideAttack": 80,
+        "discoveredAttack": 73,
+        "discoveredCheck": 18,
+        "mateIn3": 49,
+        "trappedPiece": 16,
+        "equality": 3,
+        "defensiveMove": 48,
+        "rookEndgame": 63,
+        "hangingPiece": 35,
+        "knightEndgame": 8,
+        "operaMate": 13,
+        "intermezzo": 14,
+        "advancedPawn": 54,
+        "queensideAttack": 19,
+        "morphysMate": 2,
+        "queenRookEndgame": 5,
+        "promotion": 19,
+        "veryLong": 61,
+        "hookMate": 2,
+        "doubleCheck": 3,
+        "quietMove": 30,
+        "mateIn4": 8,
+        "dovetailMate": 1,
+        "masterVsMaster": 10,
+        "smotheredMate": 2,
+        "balestraMate": 1,
+        "epauletteMate": 3,
+        "clearance": 12,
+        "xRayAttack": 4,
+        "swallowstailMate": 1,
+        "zugzwang": 12,
+        "capturingDefender": 4,
+        "triangleMate": 1,
+        "cornerMate": 3,
+        "interference": 2,
+        "attackingF2F7": 4,
+        "doubleBishopMate": 1,
+        "pillsburysMate": 11,
+        "enPassant": 1,
+        "anastasiaMate": 1,
+        "arabianMate": 1,
+        "mateIn5": 1,
+        "vukovicMate": 1
+      },
+      "gateErrors": []
+    },
+    "independent": {
+      "records": 1000,
+      "solutionMoves": 3732,
+      "uniqueSourceIds": 1000,
+      "uniqueNormalizedKeys": 1000,
+      "inputSha256": "e23ec11296bfb650805c08a23056df9ea8d267887ffe43181d412a0baaacf8d7",
+      "contentIdentitySha256": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338"
+    },
+    "manifest": {
+      "manifestSchemaVersion": "lichess-import-manifest.v1",
+      "corpusSchemaVersion": "puzzle-record.v1",
+      "sourceName": "Lichess puzzle database",
+      "officialSourceUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+      "licenseId": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "datasetVersion": "2026-08-02",
+      "sourcePublishedAt": "2026-08-02T07:23:55.000Z",
+      "retrievedAt": "2026-09-06T01:39:15.931Z",
+      "importerVersion": "lichess-importer.v1",
+      "parserVersion": "lichess-csv.v1",
+      "validatorVersion": "puzzle-record.v1",
+      "importRunId": "lichess-e6913b4e2cf421d29bbfe41c",
+      "inputFilename": "lichess_db_puzzle.csv.zst",
+      "inputCompressedSize": 304384407,
+      "sourceSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+      "filters": {
+        "ratingMin": 1400,
+        "ratingMax": 1600,
+        "themes": [],
+        "excludedThemes": [],
+        "popularityMin": null,
+        "limit": 1000
+      },
+      "parsedCount": 9362,
+      "filteredCount": 8362,
+      "acceptedCount": 1000,
+      "rejectedCount": 0,
+      "quarantinedCount": 0,
+      "duplicateCount": 0,
+      "elapsedMs": 1112,
+      "peakRss": 97206272,
+      "outputSha256": "e23ec11296bfb650805c08a23056df9ea8d267887ffe43181d412a0baaacf8d7",
+      "quarantineSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentIdentitySha256": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338",
+      "checkpointResumeStatus": "fresh",
+      "completionStatus": "completed"
+    }
+  }
+}

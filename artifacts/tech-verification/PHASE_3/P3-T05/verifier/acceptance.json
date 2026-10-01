@@ -1,0 +1,29 @@
+{
+  "task": "P3-T05",
+  "verdict": "PASS",
+  "checks": {
+    "zeroDataPlanCanonicalNonempty": true,
+    "zeroDataReloadByteStable": true,
+    "lowestSkillIsFirstExercise": true,
+    "firstExerciseUsesExactMatchingEvidenceIds": true,
+    "deterministicTieOrder": true,
+    "reviewMutationRegeneratesPlan": true,
+    "wrongPuzzleMutationRegeneratesPlan": true,
+    "retryDoesNotRegeneratePlan": true,
+    "intermediateCorrectDoesNotRegeneratePlan": true,
+    "finalSolvedRegeneratesPlan": true,
+    "currentPlanIsInUniqueHistory": true,
+    "exactReviewReplayByteAndRevisionStable": true,
+    "exactEventReplayByteAndRevisionStable": true,
+    "malformedTaskTypeRejectedWithoutMutation": true,
+    "invalidTimestampsRejectedWithoutMutation": true,
+    "danglingEvidenceRejectedWithoutMutation": true,
+    "duplicateEvidenceRejectedWithoutMutation": true,
+    "mismatchedEvidenceRejectedWithoutMutation": true,
+    "duplicatePlanIdRejectedWithoutMutation": true,
+    "productionRealPuzzleTrace": true,
+    "productionTrainingRouteEvidenceBacked": true,
+    "productionReloadByteStable": true,
+    "productionErrors": { "console": 0, "page": 0, "network": 0 }
+  }
+}

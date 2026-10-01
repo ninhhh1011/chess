@@ -1,0 +1,16 @@
+{
+  "capturedAt": "2026-09-05T19:58:18+07:00",
+  "commands": [
+    { "command": "npm run test:e2e -- --list", "exitCode": 0, "result": "68 tests in 4 files" },
+    { "command": "npx playwright test --list", "exitCode": 0, "result": "68 tests in 4 files" },
+    { "command": "normalized npm/direct listing comparison", "exitCode": 0, "result": "69/69 retained lines; exact match true" },
+    { "command": "npm run test:e2e", "exitCode": 0, "result": "68 passed (2.5m); 0 failed/skipped/filtered" },
+    { "command": "npm run build", "exitCode": 0, "result": "Vite production build generated dist and PWA assets" },
+    { "command": "node artifacts/tech-verification/PHASE_0/P0-T03/verifier/self-play.mjs", "exitCode": 0, "result": "6 legal plies; Stockfish ready plus 11 bestmove messages; clean browser telemetry" },
+    { "command": "npm run lint", "exitCode": 0 },
+    { "command": "npm run typecheck", "exitCode": 0 },
+    { "command": "git diff --check", "exitCode": 0 },
+    { "command": "git diff --exit-code -- package-lock.json playwright.config.js .github/workflows/ci.yml", "exitCode": 0 },
+    { "command": "rg -n test\\.(only|skip|fixme)|describe\\.(only|skip) e2e", "exitCode": 1, "result": "no markers" }
+  ]
+}

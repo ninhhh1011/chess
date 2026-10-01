@@ -1,0 +1,96 @@
+{
+  "task": "P3-T03",
+  "role": "independent-verifier",
+  "date": "2026-09-06",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "remote": "https://github.com/ninhhh1011/chess",
+    "diffCheck": "PASS (exit 0; line-ending warnings only)"
+  },
+  "history": [
+    {
+      "stage": "initial-focused",
+      "command": "npx vitest run src/test/exerciseBoardRealSolution.test.jsx src/test/exercisesProductionCorpus.test.jsx scripts/corpus-delivery.test.mjs src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 5,
+      "passed": 16,
+      "failed": 0
+    },
+    {
+      "stage": "initial-adversarial-probe-harness",
+      "result": "HARNESS_ASSERTION_FAILURE",
+      "detail": "Expected /puzzleAttempts/ but the correctly rejected noncanonical timestamp surfaced as sync.updatedAt."
+    },
+    {
+      "stage": "initial-adversarial-product",
+      "command": "npx vite-node --root E:\\chess C:\\Users\\nguye\\AppData\\Local\\Temp\\p3t03-verifier-probe.mts",
+      "result": "FAIL",
+      "malformedAccepted": ["solved-event-not-final", "non-monotonic-event-time", "multiple-solved-events", "inverted-empty-legacy-range"]
+    },
+    {
+      "stage": "corrected-adversarial",
+      "command": "npx vite-node --root E:\\chess C:\\Users\\nguye\\AppData\\Local\\Temp\\p3t03-verifier-probe.mts",
+      "result": "PASS",
+      "malformedAccepted": [],
+      "exactReplayStable": true
+    },
+    {
+      "stage": "corrected-focused",
+      "command": "npx vitest run src/test/exerciseBoardRealSolution.test.jsx src/test/exercisesProductionCorpus.test.jsx scripts/corpus-delivery.test.mjs src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 5,
+      "passed": 20,
+      "failed": 0,
+      "durationSeconds": 8.96
+    },
+    {
+      "stage": "corrected-full-standalone",
+      "command": "npx vitest run --reporter=dot",
+      "result": "PASS",
+      "files": 44,
+      "passed": 719,
+      "failed": 0,
+      "durationSeconds": 39.73
+    },
+    {
+      "stage": "quality",
+      "commands": ["npm run lint", "npm run typecheck", "npm run build", "git diff --check"],
+      "result": "PASS",
+      "workspaceBuild": { "modules": 4105, "pwaEntries": 45, "durationSeconds": 8.69 }
+    },
+    {
+      "stage": "clean-candidate",
+      "commands": ["git ls-files --cached --others --exclude-standard", "npm run typecheck", "npm run build"],
+      "result": "PASS",
+      "files": 1051,
+      "ignoredGeneratedPuzzlesPresent": false,
+      "build": { "modules": 4064, "pwaEntries": 34, "durationSeconds": 7.84 }
+    },
+    {
+      "stage": "production-browser-first",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T03/self-play.mjs http://127.0.0.1:4273",
+      "result": "FAIL",
+      "detail": "Retry check observed 1 event instead of 2; no console/page/network error."
+    },
+    {
+      "stage": "production-browser-unchanged-rerun-1",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T03/self-play.mjs http://127.0.0.1:4273",
+      "result": "PASS",
+      "events": 5,
+      "exactReloadBytes": true,
+      "errors": { "console": 0, "page": 0, "network": 0 }
+    },
+    {
+      "stage": "production-browser-unchanged-rerun-2",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T03/self-play.mjs http://127.0.0.1:4274",
+      "result": "PASS",
+      "events": 5,
+      "exactReloadBytes": true,
+      "errors": { "console": 0, "page": 0, "network": 0 }
+    }
+  ],
+  "verdict": "PASS"
+}

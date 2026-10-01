@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { AppButton } from '@/ui/AppButton';
+import { AppRadioGroup, AppRadioCard } from '@/ui/AppRadioGroup';
+import { AppSurface } from '@/ui/AppSurface';
 import { Shield, Sparkles, Swords, Flame, Check } from 'lucide-react';
 
 const DIFFICULTIES = [
@@ -63,9 +65,10 @@ export default function PreGameLobby() {
 
   return (
     <div className="flex w-full items-center justify-center p-4 min-h-[75vh]">
-      <div
-        className="w-full max-w-lg rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 sm:p-8 space-y-6 shadow-sm"
-        style={{ borderRadius: '12px' }}
+      <AppSurface
+        variant="base"
+        radius="lg"
+        className="w-full max-w-lg p-6 sm:p-8 space-y-6 shadow-sm"
       >
         {/* Header */}
         <div className="text-center space-y-1.5">
@@ -77,106 +80,110 @@ export default function PreGameLobby() {
           </p>
         </div>
 
-        {/* Difficulty Selection: 4 segmented buttons with NO Elo displayed */}
+        {/* Difficulty Selection: HeroUI RadioGroup with Card-style Options */}
         <div className="space-y-2.5">
           <label className="block text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">
             Mức độ
           </label>
 
-          <div
-            aria-label="Chọn mức độ"
-            className="grid grid-cols-4 gap-1.5 p-1 rounded-[8px] bg-[var(--app-bg)] border border-[var(--app-border)]"
+          <AppRadioGroup
+            value={String(selectedElo)}
+            onChange={(val) => setSelectedElo(Number(val))}
+            ariaLabel="Chọn mức độ chơi"
+            orientation="horizontal"
+            className="w-full"
           >
-            {DIFFICULTIES.map((diff) => {
-              const isSelected = selectedElo === diff.elo;
-              const Icon = diff.icon;
-              return (
-                <button
-                  key={diff.id}
-                  type="button"
-                  aria-pressed={isSelected}
-                  aria-label={diff.ariaLabel}
-                  onClick={() => setSelectedElo(diff.elo)}
-                  className={`flex flex-col items-center justify-center py-2.5 px-2 rounded-[6px] text-xs font-bold transition-all duration-150 min-h-[44px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)] ${
-                    isSelected
-                      ? 'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] border border-[var(--app-border)] shadow-xs'
-                      : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)]'
-                  }`}
-                >
-                  <Icon
-                    className={`h-4 w-4 mb-1 ${
-                      isSelected ? 'text-[var(--app-accent)]' : 'text-[var(--app-subtle)]'
-                    }`}
-                  />
-                  <span>{diff.label}</span>
-                </button>
-              );
-            })}
-          </div>
+            <div className="grid grid-cols-4 gap-2 w-full">
+              {DIFFICULTIES.map((diff) => {
+                const Icon = diff.icon;
+                const isSelected = selectedElo === diff.elo;
+                return (
+                  <AppRadioCard
+                    key={diff.id}
+                    value={String(diff.elo)}
+                    className="w-full"
+                  >
+                    <div className="flex flex-col items-center justify-center py-1 text-center">
+                      <Icon
+                        className={`h-4 w-4 mb-1.5 ${
+                          isSelected ? 'text-[var(--app-accent)]' : 'text-[var(--app-subtle)]'
+                        }`}
+                      />
+                      <span className="text-xs font-bold text-[var(--app-foreground)]">
+                        {diff.label}
+                      </span>
+                    </div>
+                  </AppRadioCard>
+                );
+              })}
+            </div>
+          </AppRadioGroup>
 
-          {/* Dynamic description box */}
-          <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3.5 text-xs text-[var(--app-foreground)] space-y-1">
+          {/* Dynamic description box using AppSurface */}
+          <AppSurface
+            variant="raised"
+            radius="sm"
+            className="p-3.5 text-xs text-[var(--app-foreground)] space-y-1"
+          >
             <p className="font-medium leading-relaxed">{currentDiff.description}</p>
             <p className="text-[11px] text-[var(--app-muted)]">
               <span className="font-semibold text-[var(--app-subtle)]">Đặc điểm Bot: </span>
               {currentDiff.botNotes}
             </p>
-          </div>
+          </AppSurface>
         </div>
 
-        {/* Color Selection */}
+        {/* Color Selection: HeroUI RadioGroup */}
         <div className="space-y-2.5">
           <label className="block text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">
             Màu quân
           </label>
 
-          <div className="grid grid-cols-2 gap-3">
-            {/* White Option */}
-            <button
-              type="button"
-              aria-label="Trắng - Bạn được đi trước"
-              onClick={() => setSelectedColor('w')}
-              className={`flex items-center gap-3 p-3 rounded-[8px] border transition-all duration-150 min-h-[52px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)] text-left ${
-                selectedColor === 'w'
-                  ? 'border-[var(--app-accent)] bg-[var(--app-accent-soft)] text-[var(--app-foreground)] ring-1 ring-[var(--app-accent)]'
-                  : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)]'
-              }`}
-            >
-              <span className="text-2xl select-none">♔</span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs text-[var(--app-foreground)]">Trắng</span>
-                  {selectedColor === 'w' && <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />}
+          <AppRadioGroup
+            value={selectedColor}
+            onChange={setSelectedColor}
+            ariaLabel="Chọn màu quân"
+            orientation="horizontal"
+            className="w-full"
+          >
+            <div className="grid grid-cols-2 gap-3 w-full">
+              {/* White Option */}
+              <AppRadioCard value="w" className="w-full">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl select-none">♔</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs text-[var(--app-foreground)]">Trắng</span>
+                      {selectedColor === 'w' && (
+                        <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />
+                      )}
+                    </div>
+                    <span className="text-[11px] text-[var(--app-muted)] block">
+                      Đi trước
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[11px] text-[var(--app-muted)] block">
-                  Đi trước
-                </span>
-              </div>
-            </button>
+              </AppRadioCard>
 
-            {/* Black Option */}
-            <button
-              type="button"
-              aria-label="Đen - Máy đi trước"
-              onClick={() => setSelectedColor('b')}
-              className={`flex items-center gap-3 p-3 rounded-[8px] border transition-all duration-150 min-h-[52px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)] text-left ${
-                selectedColor === 'b'
-                  ? 'border-[var(--app-accent)] bg-[var(--app-accent-soft)] text-[var(--app-foreground)] ring-1 ring-[var(--app-accent)]'
-                  : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)] hover:bg-[var(--app-surface-hover)]'
-              }`}
-            >
-              <span className="text-2xl select-none">♚</span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-xs text-[var(--app-foreground)]">Đen</span>
-                  {selectedColor === 'b' && <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />}
+              {/* Black Option */}
+              <AppRadioCard value="b" className="w-full">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl select-none">♚</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs text-[var(--app-foreground)]">Đen</span>
+                      {selectedColor === 'b' && (
+                        <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />
+                      )}
+                    </div>
+                    <span className="text-[11px] text-[var(--app-muted)] block">
+                      Máy đi trước
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[11px] text-[var(--app-muted)] block">
-                  Máy đi trước
-                </span>
-              </div>
-            </button>
-          </div>
+              </AppRadioCard>
+            </div>
+          </AppRadioGroup>
         </div>
 
         {/* Start Button - Single CTA */}
@@ -184,14 +191,14 @@ export default function PreGameLobby() {
           <AppButton
             variant="primary"
             size="lg"
-            className="w-full h-12 text-base font-bold shadow-sm"
+            className="w-full h-12 text-base font-bold shadow-xs"
             onClick={handleStart}
             leftIcon={<Swords className="h-4 w-4" />}
           >
             Bắt đầu ván
           </AppButton>
         </div>
-      </div>
+      </AppSurface>
     </div>
   );
 }

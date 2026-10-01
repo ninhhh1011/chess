@@ -17,6 +17,8 @@ import type { PgnImportResult } from '../../types/analysis';
 
 export interface ParsedMove {
   san: string;
+  uci: string;
+  fenBefore: string;
   fen: string;
   ply: number;
   comment?: string;
@@ -92,27 +94,15 @@ export function replayPgn(pgn: string): ParsedGame | null {
       if (value) headers[key] = value;
     }
 
-    // Reset and replay move by move
-    game.reset();
-    const moves: ParsedMove[] = [];
-
-    // Load just the moves part
-    const movesText = extractMovesFromPgn(pgn);
-    const moveTokens = tokenizeMoves(movesText);
-
-    for (let i = 0; i < moveTokens.length; i++) {
-      const token = moveTokens[i];
-      if (isMoveToken(token)) {
-        const move = game.move(token);
-        if (move) {
-          moves.push({
-            san: move.san,
-            fen: game.fen(),
-            ply: i + 1,
-          });
-        }
-      }
-    }
+    const comments = new Map(game.getComments().map(({ fen, comment }) => [fen, comment]));
+    const moves: ParsedMove[] = game.history({ verbose: true }).map((move, index) => ({
+      san: move.san,
+      uci: `${move.from}${move.to}${move.promotion || ''}`,
+      fenBefore: move.before,
+      fen: move.after,
+      ply: index + 1,
+      ...(comments.has(move.after) ? { comment: comments.get(move.after) } : {}),
+    }));
 
     return {
       headers,
@@ -123,65 +113,6 @@ export function replayPgn(pgn: string): ParsedGame | null {
   } catch {
     return null;
   }
-}
-
-/**
- * Extract moves text from PGN (strip headers and comments)
- */
-function extractMovesFromPgn(pgn: string): string {
-  const lines = pgn.split('\n');
-  const moveLines: string[] = [];
-  let inHeaders = true;
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (trimmed === '') continue;
-
-    if (inHeaders) {
-      if (trimmed.startsWith('[')) continue;
-      inHeaders = false;
-    }
-
-    if (!trimmed.startsWith('[')) {
-      moveLines.push(trimmed);
-    }
-  }
-
-  return moveLines.join(' ').replace(/\{[^}]*\}/g, ''); // Remove comments
-}
-
-/**
- * Tokenize PGN moves
- */
-function tokenizeMoves(text: string): string[] {
-  // Remove result at end
-  const clean = text
-    .replace(/1-0|0-1|1\/2-1\/2|\*/g, '')
-    .trim();
-
-  // Split by whitespace and parentheses markers
-  const tokens = clean.split(/\s+/);
-
-  return tokens.filter(token => {
-    if (token === '' || token === '(' || token === ')') return false;
-    if (token.startsWith('(') || token.endsWith(')')) return false;
-    return true;
-  });
-}
-
-/**
- * Check if token is a move
- */
-function isMoveToken(token: string): boolean {
-  if (!token) return false;
-  // Skip result markers
-  if (['1-0', '0-1', '1/2-1/2', '*'].includes(token)) return false;
-  // Skip move numbers
-  if (/^\d+\.+$/.test(token)) return false;
-  // Skip variations
-  if (token === '(' || token === ')') return false;
-  // Must be a chess move
-  return /^[KQRBNP]?[a-h]?[1-8]?x?[a-h][1-8](=[QRBN])?[+#]?$|^O-O(-O)?[+#]?$/.test(token);
 }
 
 /**

@@ -1,0 +1,44 @@
+{
+  "task": "P2-T03",
+  "verifiedAt": "2026-09-06T03:58:47+07:00",
+  "branch": "main",
+  "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+  "runtime": { "node": "v24.15.0", "npm": "11.12.1" },
+  "preservedFailures": [
+    "Initial verifier import path error: 0 tests executed; corrected only in owned harness",
+    "Pre-fix adversarial run: 57/58 passed; inherited required properties were accepted",
+    "Pre-fix full discovered run: 670/671 passed; same inherited-property failure"
+  ],
+  "postFixCommands": [
+    {
+      "command": "npx vitest run artifacts/tech-verification/PHASE_2/P2-T03/verifier/adversarial.test.ts",
+      "result": "PASS: 1 file, 58 tests"
+    },
+    {
+      "command": "npx vitest run src/test/puzzleRecord.test.ts src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts src/test/corpus.test.ts artifacts/tech-verification/PHASE_2/P2-T03/verifier/adversarial.test.ts",
+      "result": "PASS: 5 files, 121 tests"
+    },
+    { "command": "npm run lint", "result": "PASS" },
+    { "command": "npm run typecheck", "result": "PASS" },
+    { "command": "npm test -- --run", "result": "PASS: 35 files, 672 tests" },
+    {
+      "command": "npm run build",
+      "result": "PASS: Vite 8.0.10, 4103 modules transformed, PWA 45-entry precache"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T03/verifier/contract-audit.mjs",
+      "result": "PASS: 16 fields, strict own/unknown/checksum checks, dependencies and change-control assertions"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T03/verifier/browser-contract.mjs http://127.0.0.1:4193",
+      "result": "PASS: actual TypeScript module in Chromium, Web Crypto, pinned/deterministic hash, tamper rejection, zero errors"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T03/verifier/self-play.mjs http://127.0.0.1:4195",
+      "result": "PASS: fresh production Chromium, unavailable corpus, 6 legal Stockfish WASM plies, PGN replay, zero errors"
+    },
+    { "command": "git diff --check", "result": "PASS (Git line-ending advisories only)" }
+  ],
+  "verdict": "PASS",
+  "decisionGateRequired": false
+}

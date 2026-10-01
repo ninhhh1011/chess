@@ -1,0 +1,271 @@
+{
+  "verdict": "PASS",
+  "buildUrl": "http://127.0.0.1:4197",
+  "runs": [
+    {
+      "side": "w",
+      "plies": 14,
+      "finalFen": "r1bqk1nr/pp3ppp/2npp3/P7/1b6/5P2/2PPP1PP/1NBQKBNR w Kkq - 1 8",
+      "facts": [
+        {
+          "id": "review-1788634219172:ply:7",
+          "turn": "w",
+          "centipawnLoss": 469,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": 19
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": -450
+          },
+          "playedUci": "f2f3",
+          "bestUci": "d2d4",
+          "engineSource": "stockfish_wasm",
+          "text": "Blunder#7: f3, Ninh mách d4",
+          "ply": 7
+        },
+        {
+          "id": "review-1788634219172:ply:13",
+          "turn": "w",
+          "centipawnLoss": 395,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": -201
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": -596
+          },
+          "playedUci": "a4a5",
+          "bestUci": "b1a3",
+          "engineSource": "stockfish_wasm",
+          "text": "Blunder#13: a5, Ninh mách Nxa3",
+          "ply": 13
+        },
+        {
+          "id": "review-1788634219172:ply:8",
+          "turn": "b",
+          "centipawnLoss": 392,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": -450
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": -58
+          },
+          "playedUci": "d7d6",
+          "bestUci": "d8h4",
+          "engineSource": "stockfish_wasm",
+          "text": "Blunder#8: d6, Ninh mách Qh4+",
+          "ply": 8
+        }
+      ],
+      "selectedSideFact": {
+        "id": "review-1788634219172:ply:7",
+        "turn": "w",
+        "centipawnLoss": 469,
+        "classification": "blunder",
+        "evalBefore": {
+          "type": "cp",
+          "value": 19
+        },
+        "evalAfter": {
+          "type": "cp",
+          "value": -450
+        },
+        "playedUci": "f2f3",
+        "bestUci": "d2d4",
+        "engineSource": "stockfish_wasm",
+        "text": "Blunder#7: f3, Ninh mách d4",
+        "ply": 7
+      },
+      "reviewSearchCount": 21,
+      "legalLatestPvCount": 21,
+      "matchingSearches": [
+        {
+          "fen": "rnbqk1nr/pp1p1ppp/4p3/2b5/8/P7/2PPPPPP/RNBQKBNR w KQkq - 0 4",
+          "command": "go movetime 450",
+          "bestmove": "e2e3",
+          "latestInfo": {
+            "evaluation": {
+              "type": "cp",
+              "value": 19
+            },
+            "pv": [
+              "d2d4",
+              "c5b6",
+              "e2e3",
+              "b6a5",
+              "b1d2",
+              "d7d5",
+              "f1d3",
+              "g8f6",
+              "g1f3"
+            ]
+          }
+        },
+        {
+          "fen": "rnbqk1nr/pp1p1ppp/4p3/2b5/8/P7/2PPPPPP/RNBQKBNR w KQkq - 0 4",
+          "command": "go movetime 450",
+          "bestmove": "d2d4",
+          "latestInfo": {
+            "evaluation": {
+              "type": "cp",
+              "value": 15
+            },
+            "pv": [
+              "d2d4",
+              "c5b6"
+            ]
+          }
+        }
+      ],
+      "errors": {
+        "console": [],
+        "page": [],
+        "network": []
+      }
+    },
+    {
+      "side": "b",
+      "plies": 14,
+      "finalFen": "1nbqkr2/r1pppp1p/6p1/pp6/3PP3/2N5/PPPB1PPP/R2QKBNR w KQ - 1 8",
+      "facts": [
+        {
+          "id": "review-1788634245918:ply:4",
+          "turn": "b",
+          "centipawnLoss": 423,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": 79
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": 502
+          },
+          "playedUci": "g7g6",
+          "bestUci": "g7h6",
+          "engineSource": "stockfish_wasm",
+          "text": "Blunder#4: g6, Ninh mách gxh6",
+          "ply": 4
+        },
+        {
+          "id": "review-1788634245918:ply:6",
+          "turn": "b",
+          "centipawnLoss": 264,
+          "classification": "blunder",
+          "evalBefore": {
+            "type": "cp",
+            "value": 405
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": 669
+          },
+          "playedUci": "f8h6",
+          "bestUci": "e7e5",
+          "engineSource": "stockfish_wasm",
+          "text": "Blunder#6: Bh6, Ninh mách e5",
+          "ply": 6
+        },
+        {
+          "id": "review-1788634245918:ply:5",
+          "turn": "w",
+          "centipawnLoss": 97,
+          "classification": "mistake",
+          "evalBefore": {
+            "type": "cp",
+            "value": 502
+          },
+          "evalAfter": {
+            "type": "cp",
+            "value": 405
+          },
+          "playedUci": "h6c1",
+          "bestUci": "h6f8",
+          "engineSource": "stockfish_wasm",
+          "text": "Sai lầm#5: Bc1, Ninh mách Bxf8",
+          "ply": 5
+        }
+      ],
+      "selectedSideFact": {
+        "id": "review-1788634245918:ply:4",
+        "turn": "b",
+        "centipawnLoss": 423,
+        "classification": "blunder",
+        "evalBefore": {
+          "type": "cp",
+          "value": 79
+        },
+        "evalAfter": {
+          "type": "cp",
+          "value": 502
+        },
+        "playedUci": "g7g6",
+        "bestUci": "g7h6",
+        "engineSource": "stockfish_wasm",
+        "text": "Blunder#4: g6, Ninh mách gxh6",
+        "ply": 4
+      },
+      "reviewSearchCount": 24,
+      "legalLatestPvCount": 24,
+      "matchingSearches": [
+        {
+          "fen": "rnbqkb1r/pppppppp/7B/8/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2",
+          "command": "go movetime 450",
+          "bestmove": "c7c5",
+          "latestInfo": {
+            "evaluation": {
+              "type": "cp",
+              "value": -79
+            },
+            "pv": [
+              "g7h6",
+              "e2e3"
+            ]
+          }
+        },
+        {
+          "fen": "rnbqkb1r/pppppppp/7B/8/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2",
+          "command": "go movetime 450",
+          "bestmove": "g7h6",
+          "latestInfo": {
+            "evaluation": {
+              "type": "cp",
+              "value": -79
+            },
+            "pv": [
+              "g7h6",
+              "e2e3",
+              "f8g7",
+              "c2c3",
+              "d7d5",
+              "g1e2",
+              "e7e5",
+              "e2g3",
+              "e8g8",
+              "g3h5",
+              "d8e7",
+              "h5g7",
+              "g8g7",
+              "b1d2",
+              "e5d4",
+              "c3d4"
+            ]
+          }
+        }
+      ],
+      "errors": {
+        "console": [],
+        "page": [],
+        "network": []
+      }
+    }
+  ]
+}

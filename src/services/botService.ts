@@ -23,7 +23,7 @@ function getFallbackSource(botElo: number): string {
  * Get bot's move for given FEN position
  * Uses state machine pattern to prevent race conditions
  */
-export async function getBotMove(fen: string, botElo: number = 1200): Promise<BotMoveResult> {
+export async function getBotMove(fen: string, botElo: number = 1200, signal?: AbortSignal): Promise<BotMoveResult> {
   const config = getBotLevelByElo(botElo);
 
   if (!config) {
@@ -40,6 +40,8 @@ export async function getBotMove(fen: string, botElo: number = 1200): Promise<Bo
   state.currentFen = fen;
 
   try {
+    signal?.throwIfAborted();
+
     // Random weak move chance (for low ELO bots)
     if (config.randomChance > 0 && Math.random() < config.randomChance) {
       const weakMove = getSafeFallbackMove(fen, 800);
@@ -55,9 +57,11 @@ export async function getBotMove(fen: string, botElo: number = 1200): Promise<Bo
       skillLevel: config.skillLevel,
       useSkillLevelOnly: config.useSkillLevelOnly,
       purpose: 'bot_move',
+      signal,
     };
 
     const analysis: AnalysisResult = await analyzeFen(engineConfig);
+    signal?.throwIfAborted();
 
     // Check staleness (status check is redundant since requestId changes on cancel)
     if (state.currentFen !== fen || state.requestId !== thisRequestId) {
@@ -83,6 +87,9 @@ export async function getBotMove(fen: string, botElo: number = 1200): Promise<Bo
     // Invalid move or failed - use fallback
     return getFallbackBotMove(fen, botElo, config, 'Stockfish unavailable or invalid move');
   } catch (error) {
+    if (signal?.aborted || (error instanceof DOMException && error.name === 'AbortError')) {
+      throw error;
+    }
     console.error('[Bot] Error getting move:', error);
     return getFallbackBotMove(fen, botElo, config, 'Bot engine error');
   } finally {

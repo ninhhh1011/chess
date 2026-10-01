@@ -19,11 +19,13 @@ import PostGameReview from './PostGameReview';
 import ReviewNavigator from './ReviewNavigator';
 import EngineAnalysisPanel from '../analysis/EngineAnalysisPanel';
 import AICoachPanel from '../AICoachPanel';
-import coachAvatar from '../../assets/avatarcoach.webp';
-import { BRAND_NAMES } from '../../config/brand';
+import AnalysisCoach from '../review/AnalysisCoach';
 import { AppPopover } from '@/ui/AppPopover';
 import { AppTabs } from '@/ui/AppTabs';
-import { Settings, History, Activity, Sparkles } from 'lucide-react';
+import { AppSurface } from '@/ui/AppSurface';
+import { AppAlertDialog } from '@/ui/AppAlertDialog';
+import { AppButton } from '@/ui/AppButton';
+import { Settings, History, Activity, Sparkles, AlertTriangle } from 'lucide-react';
 
 /**
  * GameLayout - Option C layout
@@ -49,6 +51,7 @@ export default function GameLayout({
   engineMove,
   showStartNotice,
   onRequestHint,
+  onReviewFact,
 }) {
   const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState, resignGame } = useChessGame();
   const [activeTab, setActiveTab] = useState('moves');
@@ -80,34 +83,20 @@ export default function GameLayout({
           {/* Post-Game Review Modal */}
           {playState === 'review' && <PostGameReview />}
 
-          {/* Resign Confirmation Modal */}
-          {showResignConfirm && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="w-full max-w-sm rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-xl space-y-4">
-                <h2 className="text-base font-bold text-[var(--app-foreground)]">Xác nhận đầu hàng?</h2>
-                <p className="text-xs text-[var(--app-muted)] leading-relaxed">
-                  Bạn sẽ kết thúc ván cờ này với kết quả thua. Bạn có chắc không?
-                </p>
-                <div className="flex gap-2 justify-end pt-2">
-                  <button
-                    onClick={() => setShowResignConfirm(false)}
-                    className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] px-3 py-1.5 text-xs font-medium text-[var(--app-muted)] hover:text-[var(--app-foreground)] transition-colors cursor-pointer"
-                  >
-                    Hủy
-                  </button>
-                  <button
-                    onClick={() => {
-                      resignGame();
-                      setShowResignConfirm(false);
-                    }}
-                    className="rounded-[8px] bg-[var(--app-danger)] px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity cursor-pointer"
-                  >
-                    Đầu hàng
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Resign Confirmation Modal (HeroUI AlertDialog) */}
+          <AppAlertDialog
+            isOpen={showResignConfirm}
+            onOpenChange={setShowResignConfirm}
+            title="Xác nhận đầu hàng"
+            confirmLabel="Đầu hàng"
+            cancelLabel="Tiếp tục chơi"
+            confirmVariant="danger"
+            status="danger"
+            icon={<AlertTriangle className="h-5 w-5 text-[var(--app-danger)]" />}
+            onConfirm={resignGame}
+          >
+            Bạn có chắc chắn muốn đầu hàng ván cờ này không? Kết quả sẽ được ghi nhận là một trận thua.
+          </AppAlertDialog>
 
           {/* Modals */}
           {showStartNotice && playState === 'playing' && <StartNotice />}
@@ -117,7 +106,11 @@ export default function GameLayout({
           <div className="mx-auto grid w-full max-w-[1340px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]">
 
             {/* LEFT COLUMN: Board Area */}
-            <section className="min-w-0 rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5 sm:p-3 space-y-2">
+            <AppSurface
+              variant="base"
+              radius="md"
+              className="min-w-0 p-2.5 sm:p-3 space-y-2 shadow-xs"
+            >
               {/* Game status bar */}
               <GameInfoBar botElo={botElo} />
 
@@ -125,7 +118,11 @@ export default function GameLayout({
               <PlayerBar position="top" />
 
               {/* Board with evaluation bar */}
-              <div className="flex items-start justify-center gap-2 rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)]/40 p-2 sm:p-3">
+              <AppSurface
+                variant="raised"
+                radius="sm"
+                className="flex items-start justify-center gap-2 p-2 sm:p-3 bg-[var(--app-surface-raised)]/40"
+              >
                 <LiveEvaluationBar
                   analysis={liveAnalysis}
                   status={liveEvalStatus}
@@ -134,10 +131,18 @@ export default function GameLayout({
                 <div className="flex min-w-0 flex-1 justify-center">
                   <ChessBoardPanel engineHint={engineHint} />
                 </div>
-              </div>
+              </AppSurface>
 
               {/* Player strip - below board */}
               <PlayerBar position="bottom" />
+
+              {/* Controls visible directly under board on mobile */}
+              <div className="block lg:hidden pt-1">
+                <GameControls
+                  onHint={() => { setActiveTab('coach'); }}
+                  requestHint={onRequestHint}
+                />
+              </div>
 
               {/* Move hint */}
               {engineMove && (
@@ -145,19 +150,25 @@ export default function GameLayout({
                   <MoveHintDisplay engineMove={engineMove} />
                 </div>
               )}
-            </section>
+            </AppSurface>
 
             {/* RIGHT COLUMN: Sidebar (3 tabs + settings popover) */}
             <aside className="flex w-full flex-col gap-2.5 lg:sticky lg:top-20 lg:self-start">
-              {/* Controls */}
-              <GameControls
-                onHint={() => { setActiveTab('coach'); }}
-                requestHint={onRequestHint}
-              />
+              {/* Controls on desktop */}
+              <div className="hidden lg:block">
+                <GameControls
+                  onHint={() => { setActiveTab('coach'); }}
+                  requestHint={onRequestHint}
+                />
+              </div>
               <ReviewNavigator />
 
               {/* Tab Box */}
-              <div className="overflow-hidden rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface)] shadow-xs">
+              <AppSurface
+                variant="base"
+                radius="md"
+                className="overflow-hidden shadow-xs"
+              >
                 {/* Tab Header with 3 main tabs + settings popover */}
                 <div className="flex items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-surface-raised)] pr-2">
                   <div className="flex-1">
@@ -165,21 +176,23 @@ export default function GameLayout({
                       tabs={tabs}
                       selectedId={activeTab}
                       onSelectionChange={(id) => setActiveTab(id)}
+                      ariaLabel="Các chế độ thông tin ván đấu"
                     />
                   </div>
 
                   {/* Settings Popover */}
                   <AppPopover
                     title="Cài đặt ván đấu"
-                    placement="bottom-end"
+                    placement="bottom end"
                     trigger={
-                      <button
-                        type="button"
-                        aria-label="Cài đặt"
-                        className="flex h-7 w-7 items-center justify-center rounded-[6px] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] transition-colors cursor-pointer"
+                      <AppButton
+                        variant="ghost"
+                        size="sm"
+                        aria-label="Cài đặt ván cờ"
+                        className="h-7 w-7 p-0"
                       >
                         <Settings className="h-3.5 w-3.5" />
-                      </button>
+                      </AppButton>
                     }
                   >
                     <div className="w-64 p-1">
@@ -208,12 +221,19 @@ export default function GameLayout({
                       review={review}
                       isReviewing={isReviewing}
                       onReview={reviewGameWithEngine}
+                      onReviewFact={onReviewFact}
                     />
                   )}
 
                   {/* Tab 3: Huấn luyện (AI Coach) */}
                   {activeTab === 'coach' && (
                     <div className="space-y-3">
+                      {review?.focusedEvidenceId && (
+                        <AnalysisCoach
+                          playerSide={review.playerSide}
+                          focusedEvidenceId={review.focusedEvidenceId}
+                        />
+                      )}
                       <AICoachPanel
                         fen={currentFen}
                         pgn={currentPgn}
@@ -242,7 +262,7 @@ export default function GameLayout({
                     </div>
                   )}
                 </div>
-              </div>
+              </AppSurface>
             </aside>
           </div>
         </div>

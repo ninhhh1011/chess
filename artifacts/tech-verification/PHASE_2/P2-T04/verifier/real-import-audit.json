@@ -1,0 +1,43 @@
+{
+  "verdict": "PASS",
+  "failures": [],
+  "source": {
+    "input": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t04\\lichess_db_puzzle.csv.zst",
+    "bytes": 304384407,
+    "sha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+    "sourceRowsRead": 9363
+  },
+  "fresh": {
+    "counts": {
+      "parsed": 9362,
+      "filtered": 8362,
+      "accepted": 1000,
+      "duplicate": 0,
+      "quarantined": 0
+    },
+    "peakRss": 97488896
+  },
+  "repeat": {
+    "contentIdentitySha256": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338",
+    "peakRss": 95744000
+  },
+  "resume": {
+    "records": 1000,
+    "contentIdentitySha256": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338",
+    "peakRss": 95567872,
+    "checkpointResumeStatus": "resumed"
+  },
+  "validations": {
+    "contractValidated": 1000,
+    "canonicalChecksums": 1000,
+    "rawRowsValidated": 1000,
+    "solutionsReplayed": 1000,
+    "uniqueSourceIds": 1000,
+    "uniqueNormalizedKeys": 1000
+  },
+  "hashes": {
+    "contentIdentitySha256": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338",
+    "outputSha256": "906ab8cca5e690059e7b7c3b2842e6e7fa23aed165105cfeceeb47d5ce6c6eb6",
+    "quarantineSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

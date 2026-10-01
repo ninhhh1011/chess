@@ -1,0 +1,21 @@
+{
+  "task": "P2-T08 and Phase 2 independent verification",
+  "date": "2026-09-06",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    { "command": "Get-FileHash -Algorithm SHA256 %TEMP%\\chess-p2t04\\lichess_db_puzzle.csv.zst", "exitCode": 0, "bytes": 304384407, "sha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073" },
+    { "command": "node scripts/validate-puzzle-corpus.mjs --input <fresh-accepted> --manifest <fresh-manifest> --quarantine-output <temp> --report-output <temp>", "exitCode": 0, "verdict": "PASS", "valid": 20000, "solutionMovesReplayed": 71916, "uniqueSourceIds": 20000, "uniqueNormalizedKeys": 20000, "themes": 72 },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T08/recovery-evidence.mjs <official-source>", "exitCode": 0, "verdict": "PASS", "interruptedExitCode": 75, "resumedAccepted": 20000, "byteIdentical": true, "idempotent": true, "rollback": true },
+    { "command": "npx vitest run scripts/corpus-delivery.test.mjs src/test/exercisesProductionCorpus.test.jsx src/test/exerciseBoardRealSolution.test.jsx artifacts/tech-verification/PHASE_2/P2-T07/verifier/source-pin-adversarial.test.ts", "exitCode": 0, "files": 4, "tests": 7 },
+    { "command": "npx vitest run <12 P2 importer/validator/release/delivery/contract/UI files> --reporter=dot", "exitCode": 0, "files": 12, "tests": 117 },
+    { "command": "npx vitest run --reporter=dot", "exitCode": 0, "files": 42, "tests": 702, "durationSeconds": 39.14 },
+    { "command": "npm run lint", "exitCode": 0 },
+    { "command": "npm run typecheck", "exitCode": 0 },
+    { "command": "npm run build", "exitCode": 0, "modules": 4104, "pwaPrecacheEntries": 45 },
+    { "command": "clean candidate npm run typecheck", "exitCode": 0 },
+    { "command": "clean candidate npm run build", "exitCode": 0, "modules": 4063, "pwaPrecacheEntries": 34 },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T08/verify-production.mjs http://127.0.0.1:4268", "exitCode": 0, "verdict": "PASS", "puzzleCount": 20000, "corpusResponses200": 22, "selfPlayPlies": 6 },
+    { "command": "PHASE1_GATE_PRODUCTION_URL=http://127.0.0.1:4268 node artifacts/tech-verification/PHASE_1/GATE/verifier/self-play.mjs", "exitCode": 0, "verdict": "PASS", "whitePlies": 20, "blackPlies": 21, "legalBestmoves": 168 },
+    { "command": "git diff --check", "exitCode": 0, "note": "line-ending conversion warnings only" }
+  ]
+}

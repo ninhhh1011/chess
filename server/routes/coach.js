@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     const { schemaVersion, question, fen, playerLevel } = req.body || {};
 
     // Validate schema version
-    if (schemaVersion && schemaVersion !== 'coach.v1') {
+    if (schemaVersion !== 'coach.v1') {
       return res.status(400).json({
         error: 'Unsupported schema version',
         supported: 'coach.v1'
@@ -51,5 +51,7 @@ router.post('/', async (req, res) => {
     });
   }
 });
+
+router.all('/', (_req, res) => res.status(405).json({ error: 'Method not allowed' }));
 
 export default router;

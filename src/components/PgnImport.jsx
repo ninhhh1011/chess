@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { Chess } from 'chess.js';
+import { AppTextArea } from '@/ui/AppTextArea';
+import { AppButton } from '@/ui/AppButton';
+import { AppSurface } from '@/ui/AppSurface';
+import { AppStatus } from '@/ui/AppStatus';
 
 /**
  * PgnImport - Import PGN to review or analyze
@@ -62,53 +66,53 @@ export default function PgnImport({ onImport }) {
 
   return (
     <div className="space-y-3">
-      <h4 className="text-sm font-medium text-text-primary">Import PGN</h4>
-
-      <textarea
+      <AppTextArea
+        label="Import PGN"
         value={pgn}
-        onChange={e => {
-          setPgn(e.target.value);
+        onChange={(val) => {
+          setPgn(val);
           setError('');
           setPreview(null);
         }}
         onBlur={validatePgn}
         placeholder="Paste PGN here...&#10;ví dụ:&#10;1. e4 e5 2. Nf3 Nc6"
-        className="h-32 w-full resize-none rounded-lg border border-border bg-bg-base p-3 text-sm text-text-primary placeholder-text-tertiary focus:border-primary-400 focus:outline-none"
+        errorMessage={error}
+        rows={4}
       />
 
-      {error && (
-        <p className="text-xs text-red-400">{error}</p>
-      )}
-
       {preview && (
-        <div className="rounded-lg border border-border bg-bg-surface p-3">
-          <div className="mb-2 flex items-center gap-2">
-            <span className="text-sm font-medium text-text-primary">
+        <AppSurface className="p-3 border border-[var(--app-border)] space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-semibold text-[var(--app-foreground)]">
               {preview.white} vs {preview.black}
             </span>
-            <span className="rounded bg-bg-base px-2 py-0.5 text-xs text-text-secondary">
+            <AppStatus variant="teal" size="sm">
               {preview.moveCount} nước
-            </span>
+            </AppStatus>
           </div>
           {preview.event && (
-            <p className="mb-2 text-xs text-text-tertiary">{preview.event}</p>
+            <p className="text-[11px] text-[var(--app-muted)]">{preview.event}</p>
           )}
-          <button
+          <AppButton
+            variant="primary"
+            size="sm"
             onClick={handleImport}
-            className="w-full rounded-lg bg-primary-400 px-4 py-2 text-sm font-semibold text-bg-base transition hover:bg-primary-300"
+            className="w-full font-bold"
           >
             Xem lại ván cờ
-          </button>
-        </div>
+          </AppButton>
+        </AppSurface>
       )}
 
       {!preview && !error && pgn && (
-        <button
+        <AppButton
+          variant="outline"
+          size="sm"
           onClick={validatePgn}
-          className="w-full rounded-lg border border-border bg-bg-surface px-4 py-2 text-sm font-medium text-text-secondary transition hover:bg-bg-elevated hover:text-text-primary"
+          className="w-full"
         >
           Kiểm tra PGN
-        </button>
+        </AppButton>
       )}
     </div>
   );

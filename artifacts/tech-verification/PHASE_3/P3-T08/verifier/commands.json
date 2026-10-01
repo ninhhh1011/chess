@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-09-06T07:56:56.976Z",
+  "runtime": { "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/authService.test.js src/test/syncService.test.js src/test/cloudProfileService.test.js src/test/trainingSyncControls.test.jsx src/test/localPersistence.test.ts --reporter=dot",
+      "result": "PASS",
+      "summary": "5 files, 13 tests"
+    },
+    {
+      "command": "npx vitest run artifacts/tech-verification/PHASE_3/P3-T08/verifier/cloud-adversarial.test.js artifacts/tech-verification/PHASE_3/P3-T08/verifier/sync-adversarial.test.js --reporter=dot",
+      "result": "PASS",
+      "summary": "2 files, 5 tests"
+    },
+    {
+      "command": "npm test -- --run --reporter=dot",
+      "result": "PASS",
+      "summary": "56 files, 759 tests"
+    },
+    { "command": "npm run lint", "result": "PASS" },
+    { "command": "npm run typecheck", "result": "PASS" },
+    { "command": "npm run build", "result": "PASS", "summary": "4105 modules, 45 PWA entries" },
+    { "command": "git diff --check", "result": "PASS", "summary": "line-ending warnings only" },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T08/verifier/live-probe.mjs",
+      "result": "BLOCKED",
+      "summary": "control DNS PASS; configured project DNS/query ENOTFOUND"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T08/verifier/production-login-probe.mjs",
+      "result": "BLOCKED",
+      "summary": "login form/error rendered; /auth/v1/token ERR_NAME_NOT_RESOLVED; 0 page errors"
+    },
+    {
+      "command": "clean candidate typecheck and build",
+      "result": "PASS",
+      "summary": "1163 source files; generatedPuzzles absent; public/dist corpus present; 4064 modules"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T08/verifier/live-restored.mjs",
+      "result": "PASS",
+      "summary": "disposable real user; production Chromium login; manual uploads 201/200; one stable row and identical profile hash; zero events/errors; exact row/account cleanup confirmed"
+    }
+  ]
+}

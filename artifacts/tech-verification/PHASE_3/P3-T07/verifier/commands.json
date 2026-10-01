@@ -1,0 +1,84 @@
+{
+  "task": "P3-T07",
+  "role": "independent-verifier",
+  "date": "2026-09-06",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "remote": "https://github.com/ninhhh1011/chess",
+    "diffCheck": "PASS (exit 0; line-ending warnings only)"
+  },
+  "history": [
+    {
+      "stage": "focused",
+      "command": "npx vitest run src/test/localPersistence.test.ts src/test/persistenceContract.test.ts src/test/puzzleAttemptPersistence.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 3,
+      "passed": 21,
+      "failed": 0,
+      "durationSeconds": 1.54
+    },
+    {
+      "stage": "independent-adversarial",
+      "command": "npx vitest run artifacts/tech-verification/PHASE_3/P3-T07/verifier/adversarial.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 1,
+      "passed": 4,
+      "failed": 0,
+      "durationSeconds": 1.35
+    },
+    {
+      "stage": "full-standalone-including-verifiers",
+      "command": "npm test -- --run --reporter=dot",
+      "result": "PASS",
+      "files": 50,
+      "passed": 744,
+      "failed": 0,
+      "durationSeconds": 35.82
+    },
+    {
+      "stage": "quality",
+      "commands": ["npm run lint", "npm run typecheck", "npm run build", "git diff --check"],
+      "result": "PASS",
+      "workspaceBuild": { "modules": 4105, "pwaEntries": 45, "durationSeconds": 8.36 }
+    },
+    {
+      "stage": "clean-candidate",
+      "commands": ["git ls-files --cached --others --exclude-standard", "npm run typecheck", "npm run build"],
+      "result": "PASS",
+      "files": 1133,
+      "ignoredGeneratedPuzzlesPresent": false,
+      "publicCorpusCurrentPresent": true,
+      "distCorpusCurrentPresent": true,
+      "build": { "modules": 4064, "pwaEntries": 34, "durationSeconds": 7.46 }
+    },
+    {
+      "stage": "production-browser-initial",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T07/verifier/production-browser.mjs http://127.0.0.1:4293",
+      "result": "FAIL",
+      "classification": "VERIFIER_HARNESS_ONLY",
+      "reason": "drag started before the Retry reset animation settled, leaving a four-event partial trace",
+      "productChanged": false
+    },
+    {
+      "stage": "production-browser-corrected",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T07/verifier/production-browser.mjs http://127.0.0.1:4293",
+      "candidate": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p3t07-verifier-226cd9f62a404a21bcf8f7bb82c89ec6",
+      "result": "PASS",
+      "puzzleId": "lichess-00008",
+      "revision": 7,
+      "attemptEvents": 5,
+      "skillEvidence": 2,
+      "uniquePlanHistory": true,
+      "repeatedReloadExact": true,
+      "newTabExact": true,
+      "malformedBytesPreserved": true,
+      "restoredExact": true,
+      "errors": { "console": 0, "page": 0, "network": 0 },
+      "durationSeconds": 12.05
+    }
+  ],
+  "verdict": "PASS"
+}

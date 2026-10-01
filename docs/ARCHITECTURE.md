@@ -1,360 +1,73 @@
-# Stockfish Web Worker Integration - Technical Documentation
+# Runtime Architecture
 
-## Overview
+This document describes the current production import graph. See [CURRENT_RUNTIME.md](CURRENT_RUNTIME.md) for verification status and evidence precedence.
 
-This refactored architecture moves all Stockfish computation to a dedicated Web Worker, preventing main-thread blocking and providing robust request management with automatic fallback.
+## Browser application
 
-## Architecture Components
-
-### 1. **Web Worker** (`public/stockfish-worker-v2.js`)
-
-**Key Features:**
-- Runs Stockfish.js in a separate thread
-- Implements request cancellation for stale evaluations
-- 5-second hard timeout triggers deterministic fallback
-- Minimax with Alpha-Beta pruning (depth 2-3) as fallback engine
-
-**Request Flow:**
-```
-Main Thread → postMessage(analyze) → Worker Thread
-                                    ↓
-                            Stockfish Analysis
-                                    ↓
-                            (5s timeout check)
-                                    ↓
-                    Success: postMessage(result)
-                    Timeout: Minimax fallback
+```text
+src/main.jsx
+  → src/App.jsx
+      → route pages
+      → AuthProvider
+      → ChessGameProvider
+      → shared layout and error boundary
 ```
 
-**Message Protocol:**
-```javascript
-// Request
-{
-  type: 'analyze',
-  requestId: number,
-  fen: string,
-  depth?: number,
-  movetime?: number,
-  skillLevel?: number,
-  elo?: number
-}
+Routes are lazy-loaded from `src/pages`. State is primarily browser-local unless an authenticated Supabase path is configured.
 
-// Response
-{
-  type: 'analysis_complete',
-  requestId: number,
-  data: {
-    bestMove: string,
-    evaluation: { type: 'cp' | 'mate', value: number },
-    pv: string[],
-    depth: number,
-    source: 'stockfish' | 'fallback_minimax'
-  }
-}
+## Chess engine and bot
+
+```text
+Play / analysis UI
+  → ChessGameBoard / EngineAnalysisPanel
+  → useBotMove / useEngineAnalysis
+  → botService / stockfishService
+  → public/stockfish-worker.js
+  → Stockfish WASM
 ```
 
-### 2. **React Hook** (`src/hooks/useStockfishWorker.js`)
+`stockfishService.ts` owns the single worker and serializes analysis requests. `botService.ts` validates returned UCI moves. Both the engine service and bot service contain legal-move fallback paths for unavailable or failed Stockfish; those paths are not represented as Stockfish results.
 
-**API:**
-```javascript
-const {
-  bestMove,      // string | null - UCI format (e.g., "e2e4")
-  evaluation,    // { type, value } | null
-  isThinking,    // boolean - analysis in progress
-  error,         // string | null
-  source,        // 'stockfish' | 'fallback_minimax' | null
-  analyze,       // function - start analysis
-  stop,          // function - cancel current analysis
-  clear          // function - reset state
-} = useStockfishWorker();
+There is no active `stockfish-worker-v2.js` path.
+
+`App.jsx` disposes the engine when the application unmounts. Disposal settles any pending initialization or active analysis, terminates that worker, and lets the next request initialize a fresh worker; stale initialization handlers cannot change the replacement worker's state.
+
+Bot requests carry one `AbortSignal` from `useBotMove` through `botService` to the active Stockfish analysis. New-game generation changes and hook timeouts terminate that request's captured worker and settle its promise; request-owned timer/controller cleanup cannot clear a newer request, and cancelled analysis is never converted into a heuristic move.
+
+Displayed bot constraints are defined once in `src/data/botLevels.js`: Elo labels 400/800/1200 use Stockfish Skill Levels 0/3/6 with 500/600/800 ms searches, while 1600 uses `UCI_Elo 1600` with 1200 ms. Stockfish 18 advertises Skill Level 0–20 and `UCI_Elo` 1320–3190. The engine service never sends Elo outside that range; generic analysis uses full Skill Level 20.
+
+## PGN replay
+
+`src/services/analysis/pgnParser.ts` delegates PGN syntax, legality, variations, comments, NAGs, and SetUp/FEN handling to the installed chess.js parser. It exposes only chess.js verbose mainline history, using each move's `after` FEN and contiguous array index as the ply number; malformed input returns an explicit structured failure. The exact official 47-move/94-ply `rklpc7mk` export and its deliberately truncated first-40/80 benchmark input are separate fixtures with separate final FENs.
+
+## Post-game analysis
+
+The production `ChessGameBoard` review action calls `src/services/analysis/gameAnalyzer.ts`. Pass 1 asks the shared Stockfish service for the initial position and each post-move position exactly once, then compares each pre/post pair from the mover's perspective. Candidates are ordered by descending CPL and ascending ply. Pass 2 analyzes each selected move's pre-move FEN so the recommendation is an alternative to the played move; failures and cancellation identify the exact pass location instead of being skipped.
+
+Each analyzed ply is an `analysis.v1` fact validated by `src/services/analysis/analysisFact.ts` before it leaves the analyzer or enters review, learning, or Coach. Its stable evidence identity is `${gameId}:ply:${ply}`; no duplicate ID field or schema version was added. The validator checks legal pre/post FEN, exact SAN/UCI/resulting FEN for played and best moves, evaluations, non-empty candidates containing the best move, PV anchoring, engine source, and timestamp. If Stockfish's final `bestmove` differs from the last streamed PV head, the fact keeps the authoritative final move and a one-move PV instead of joining incompatible lines.
+
+Stockfish scores are normalized once to White's perspective, then CPL is calculated from the mover recorded in the pre-move FEN: White loses value when the score falls; Black loses value when it rises. Signed mate values share an ordered scalar with centipawn scores, and CPL is clamped at zero for engine noise. The existing 0/10/30/80/200 classification boundaries are unchanged. The worker retains the latest streamed PV line, and the fact boundary replays every PV move legally from `fenBefore`.
+
+## Exercises and corpus
+
+`src/pages/Exercises.jsx` renders the five bundled records from `src/data/exercises.js`. `src/services/corpusLoader.ts` exposes the external-corpus availability state and currently returns zero records with an explicit unavailable reason. The legacy `src/data/corpusPuzzles.ts` file is not imported by production code.
+
+## Training and persistence
+
+`src/services/userProfileService.js` is the local profile store. `recommendationService.js` derives local training recommendations. Authenticated sync routes through `syncService.js`, `cloudProfileService.js`, and the Supabase client; that deployed path requires separate credential and runtime verification.
+
+## Coach
+
+```text
+AICoachPanel.tsx
+  → coachService.ts
+  → POST /api/coach
+      → api/coach.js (Vercel) or server/routes/coach.js (local Express)
+      → api/coachHandler.js
 ```
 
-**Debouncing Strategy:**
-- Leading edge execution (300ms)
-- Immediate execution if not currently thinking
-- Automatic cancellation of stale requests
-- Only the latest request result is processed
+The client and both server adapters use the exact `coach.v1` request/response contract. `api/coachHandler.js` is shared by both server entry points. The UI derives its source label from the returned response: `llm` is labeled AI, while provider absence/failure degrades to `basic` and is labeled “Diễn giải cơ bản · Không dùng AI”. Live model/provider success is not claimed as verified here.
 
-**Example Usage:**
-```javascript
-// Live analysis
-useEffect(() => {
-  analyze({
-    fen: currentFen,
-    depth: 8,
-    movetime: 400
-  });
-}, [currentFen]);
+## Dormant modules
 
-// Bot move with ELO
-analyze({
-  fen: position,
-  depth: 10,
-  skillLevel: 15,
-  elo: 1800
-});
-```
-
-### 3. **Fallback Engine - Minimax with Alpha-Beta Pruning**
-
-**Why Deterministic vs Random:**
-- Consistent behavior for same position
-- Respects chess principles (material, position)
-- Provides reasonable moves even under timeout
-- Better user experience than random moves
-
-**Evaluation Function:**
-```javascript
-Material Values:
-- Pawn: 100
-- Knight: 320
-- Bishop: 330
-- Rook: 500
-- Queen: 900
-- King: 20000
-
-Position Bonuses:
-- Piece-square tables for each piece type
-- Center control bonus
-- King safety considerations
-```
-
-**Alpha-Beta Pruning:**
-- Reduces search space by ~50%
-- Depth 3 achieves ~1500 ELO strength
-- Completes in <500ms for typical positions
-
-**Thresholds:**
-```javascript
-Depth 2: ~1200 ELO (beginner)
-Depth 3: ~1500 ELO (intermediate)
-Depth 4: ~1800 ELO (advanced) - too slow for fallback
-```
-
-## Integration Guide
-
-### Step 1: Replace Old Service
-
-**Before:**
-```javascript
-import { analyzeFen } from '../services/stockfishService';
-
-const result = await analyzeFen({ fen, depth: 10 });
-```
-
-**After:**
-```javascript
-import { useStockfishWorker } from '../hooks/useStockfishWorker';
-
-const { analyze, bestMove, evaluation } = useStockfishWorker();
-
-useEffect(() => {
-  analyze({ fen, depth: 10 });
-}, [fen]);
-```
-
-### Step 2: Handle Results
-
-**Before:**
-```javascript
-const analysis = await analyzeFen({ fen });
-setEngineHint(analysis.bestMove);
-```
-
-**After:**
-```javascript
-useEffect(() => {
-  if (bestMove && evaluation) {
-    setEngineHint({ bestMove, evaluation, source });
-  }
-}, [bestMove, evaluation, source]);
-```
-
-### Step 3: Error Handling
-
-```javascript
-useEffect(() => {
-  if (error) {
-    console.error('Analysis error:', error);
-    // Show toast notification
-    showToast('Engine gặp sự cố, đang sử dụng fallback engine');
-  }
-}, [error]);
-
-useEffect(() => {
-  if (source === 'fallback_minimax') {
-    // Notify user that fallback is being used
-    showToast('Đang sử dụng engine dự phòng', 'warning');
-  }
-}, [source]);
-```
-
-## Performance Characteristics
-
-### Stockfish (Primary Engine)
-- **Depth 8:** ~400-800ms
-- **Depth 10:** ~800-1500ms
-- **Depth 15:** ~2000-4000ms
-- **Timeout:** 5000ms (hard limit)
-
-### Fallback Engine (Minimax)
-- **Depth 2:** ~50-100ms
-- **Depth 3:** ~200-500ms
-- **Strength:** ~1500 ELO
-- **Deterministic:** Same position = same move
-
-## Request Management
-
-### Automatic Cancellation
-```javascript
-// User makes rapid position changes
-analyze({ fen: 'position1' }); // Request ID: 1
-analyze({ fen: 'position2' }); // Request ID: 2 (cancels 1)
-analyze({ fen: 'position3' }); // Request ID: 3 (cancels 2)
-
-// Only result from request 3 is processed
-```
-
-### Debouncing
-```javascript
-// Leading edge: immediate execution
-analyze({ fen: 'pos1' }); // Executes immediately
-
-// Subsequent calls within 300ms are debounced
-analyze({ fen: 'pos2' }); // Debounced
-analyze({ fen: 'pos3' }); // Debounced
-// Only pos3 executes after 300ms
-```
-
-### Timeout Handling
-```javascript
-// Analysis starts
-analyze({ fen, depth: 15 });
-
-// After 5 seconds, if no result:
-// 1. Worker sends 'stop' to Stockfish
-// 2. Fallback engine runs (depth 3)
-// 3. Result returned with source: 'fallback_minimax'
-```
-
-## Migration Checklist
-
-- [ ] Copy `stockfish-worker-v2.js` to `public/` folder
-- [ ] Create `useStockfishWorker.js` hook
-- [ ] Replace `analyzeFen` calls with hook usage
-- [ ] Update `ChessGameBoard` to use new hook
-- [ ] Update bot move calculation to use worker
-- [ ] Update move annotation to use worker
-- [ ] Test fallback engine triggers correctly
-- [ ] Test request cancellation works
-- [ ] Test debouncing behavior
-- [ ] Remove old `stockfishService.js` (optional)
-
-## Testing
-
-### Test Fallback Trigger
-```javascript
-// Simulate slow Stockfish by setting very high depth
-analyze({ fen, depth: 30 });
-
-// After 5 seconds, should see:
-// source: 'fallback_minimax'
-// bestMove: valid move from Minimax
-```
-
-### Test Request Cancellation
-```javascript
-// Rapid position changes
-for (let i = 0; i < 10; i++) {
-  analyze({ fen: generateRandomFen() });
-}
-
-// Should only see 1 result (last position)
-```
-
-### Test Debouncing
-```javascript
-// Call analyze multiple times quickly
-analyze({ fen: 'pos1' });
-setTimeout(() => analyze({ fen: 'pos2' }), 50);
-setTimeout(() => analyze({ fen: 'pos3' }), 100);
-
-// Should execute pos1 immediately, then pos3 after 300ms
-// pos2 should be skipped
-```
-
-## Troubleshooting
-
-### Worker Not Loading
-```javascript
-// Check browser console for:
-// "Failed to load Stockfish"
-
-// Solution: Verify stockfish-worker-v2.js is in public/ folder
-// Check network tab for 404 errors
-```
-
-### Always Using Fallback
-```javascript
-// Check if Stockfish.js CDN is accessible
-// Try loading: https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js
-
-// Alternative: Download and host locally
-```
-
-### Memory Leaks
-```javascript
-// Ensure worker is terminated on unmount
-useEffect(() => {
-  return () => {
-    stop();
-    // Worker automatically terminated by hook
-  };
-}, []);
-```
-
-## Future Enhancements
-
-1. **Multi-PV Analysis:** Show top 3 moves
-2. **Cloud Engine:** Fallback to remote Stockfish API
-3. **Opening Book:** Instant moves for known positions
-4. **Endgame Tablebase:** Perfect play in endgames
-5. **Analysis Caching:** Store previous evaluations
-6. **Progressive Depth:** Show results as depth increases
-
-## Performance Monitoring
-
-```javascript
-const { analyze, isThinking, source } = useStockfishWorker();
-
-// Track analysis time
-const startTime = Date.now();
-analyze({ fen });
-
-useEffect(() => {
-  if (!isThinking && bestMove) {
-    const duration = Date.now() - startTime;
-    console.log(`Analysis completed in ${duration}ms`);
-    console.log(`Source: ${source}`);
-    
-    // Send to analytics
-    trackEvent('stockfish_analysis', {
-      duration,
-      source,
-      depth: 10
-    });
-  }
-}, [isThinking, bestMove, source]);
-```
-
-## Conclusion
-
-This architecture provides:
-- ✅ Non-blocking UI (worker thread)
-- ✅ Automatic request management
-- ✅ Deterministic fallback engine
-- ✅ Robust error handling
-- ✅ Easy integration via React hook
-- ✅ Production-ready performance
-
-The system gracefully degrades from Stockfish → Minimax → Error state, ensuring users always get a reasonable chess move suggestion.
+`mockCoachService.ts`, `embeddingService.js`, `vectorSearchService.js`, and `corpusPuzzles.ts` are not in the current production import graph. Keep or remove them only through a scoped task with fresh evidence.

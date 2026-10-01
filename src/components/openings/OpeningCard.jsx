@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom';
 import OpeningProgress from './OpeningProgress';
-import { AppButton } from '../../ui';
+import { AppButton, AppCard, AppStatus } from '../../ui';
 
 const sideLabel = { white: 'Cho Trắng', black: 'Cho Đen', both: 'Hai bên' };
 
 export default function OpeningCard({ opening, progress }) {
   return (
-    <article className="flex flex-col justify-between rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-5 transition-colors duration-150 hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-hover)]">
+    <AppCard className="flex flex-col justify-between p-5 hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-hover)]">
       <div>
         <div className="flex flex-wrap gap-2">
-          <span className="rounded px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider bg-[var(--app-accent-soft)] text-[var(--app-accent)] border border-[var(--app-accent)]/20">
+          <AppStatus variant="teal" size="sm">
             {sideLabel[opening.side]}
-          </span>
-          <span className="rounded px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider bg-[var(--app-surface-raised)] text-[var(--app-muted)] border border-[var(--app-border)]">
+          </AppStatus>
+          <AppStatus variant="basic" size="sm">
             {opening.level}
-          </span>
+          </AppStatus>
         </div>
         <h2 className="mt-3.5 text-xl font-bold text-[var(--app-foreground)]">{opening.name}</h2>
         <p className="mt-0.5 text-sm font-semibold text-[var(--app-accent)]">{opening.vietnameseName}</p>
@@ -28,6 +28,6 @@ export default function OpeningCard({ opening, progress }) {
           </AppButton>
         </Link>
       </div>
-    </article>
+    </AppCard>
   );
 }

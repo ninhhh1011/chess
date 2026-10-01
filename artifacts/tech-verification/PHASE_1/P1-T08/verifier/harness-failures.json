@@ -1,0 +1,47 @@
+{
+  "finalVerdict": "PASS_AFTER_FULL_RERUN",
+  "classification": "HARNESS_ONLY",
+  "failures": [
+    {
+      "stage": "benchmark import",
+      "symptom": "Dynamic import of chessMoveValidation.ts returned 404 before any worker search.",
+      "cause": "The browser module path uses .js, not .ts.",
+      "correction": "Corrected the verifier-only import and reran the entire exact cold/warm-1/warm-2 sequence.",
+      "rawEvidence": "benchmark-failure.json"
+    },
+    {
+      "stage": "Black Undo",
+      "symptom": "An early harness iteration observed the bot before the post-Undo state had settled.",
+      "cause": "The harness combined player and bot waits and did not include the UI settle interval.",
+      "correction": "Separated player/bot waits and added a 500 ms settle before asserting 3 plies became 1.",
+      "rawEvidence": "summarized here; the later failure replaced the single rolling raw failure file"
+    },
+    {
+      "stage": "review sequencing",
+      "symptom": "An early harness iteration attempted review navigation before the resign/review path had populated the mainline.",
+      "cause": "Verifier action ordering did not match the product lifecycle.",
+      "correction": "Resigned first, entered review, waited for facts, and then exercised navigation.",
+      "rawEvidence": "summarized here; the later failure replaced the single rolling raw failure file"
+    },
+    {
+      "stage": "White game length",
+      "symptom": "A naive quiet-move generator ended the White game at 16 plies.",
+      "cause": "Move choice did not sufficiently avoid terminal tactical lines.",
+      "correction": "Used real engine guidance from the current FEN so the click game reached exactly 20 legal plies.",
+      "rawEvidence": "summarized here; the later failure replaced the single rolling raw failure file"
+    },
+    {
+      "stage": "review candidate creation",
+      "symptom": "An all-engine-best self-play produced no review fact above the candidate threshold and timed out waiting for [data-evidence-id].",
+      "cause": "The generated game had no qualifying mistake; this was a test-data problem, not an analysis failure.",
+      "correction": "Limited safe, deliberately non-best high-exposure choices to plies 6-13 and reran the entire production scenario, producing a genuine 747 CPL blunder fact.",
+      "rawEvidence": "self-play-failure.json and self-play-failure.png"
+    }
+  ],
+  "productErrorsInFinalRun": {
+    "console": 0,
+    "page": 0,
+    "network": 0
+  },
+  "note": "The harness maintained one rolling raw self-play failure file, so only the final failed iteration remains verbatim. Earlier harness failures are accurately summarized here rather than represented as separately preserved raw logs."
+}

@@ -23,17 +23,11 @@ test.describe('Daily Training Plan Flow', () => {
   test('new user sees non-empty training plan', async ({ page }) => {
     await page.goto(`${BASE_URL}/training`, { waitUntil: 'networkidle' });
 
-    // Page should load
-    await expect(page.locator('body')).toBeVisible();
-
-    // Wait for plan to generate
-    await page.waitForTimeout(1000);
-
-    // Check that we have tasks count
-    const tasksText = await page.locator('body').textContent();
-
-    // Should show some tasks (even if 0 initially)
-    expect(tasksText).toBeDefined();
+    await expect(page.getByText('Bài học', { exact: true })).toBeVisible();
+    await expect(page.getByText('Bài tập', { exact: true })).toBeVisible();
+    await expect(page.getByText('Thực chiến', { exact: true })).toBeVisible();
+    await expect(page.getByText('Rèn luyện', { exact: true })).toBeVisible();
+    await expect(page.getByText(/0\/\d+ hoàn thành \(0%\)/)).toBeVisible();
   });
 
   test('training page loads without crash', async ({ page }) => {
@@ -87,16 +81,15 @@ test.describe('Coach Flow', () => {
 
   test('no "AI active" badge when source is not llm', async ({ page }) => {
     await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
+    const skipBtn = page.getByRole('button', { name: /Bỏ qua/i });
+    if (await skipBtn.isVisible({ timeout: 500 }).catch(() => false)) await skipBtn.click();
+    await page.getByRole('button', { name: /^Dễ -/ }).click();
+    await page.getByRole('button', { name: /^Trắng -/ }).click();
+    await page.getByRole('button', { name: 'Bắt đầu ván' }).click();
+    await page.getByRole('button', { name: 'Huấn luyện' }).click();
 
-    // Wait for any coach to initialize
-    await page.waitForTimeout(2000);
-
-    // Without API key, coach should show basic/unavailable badge, not "AI active"
-    const bodyText = await page.locator('body').textContent();
-
-    // Badge should reflect actual state, not default to "AI active"
-    // This test passes if page loads without the misleading badge
-    expect(bodyText).toBeDefined();
+    await expect(page.getByText('Nguồn: Diễn giải cơ bản · Không dùng AI')).toBeVisible();
+    await expect(page.getByText('Nguồn: AI Coach', { exact: true })).toHaveCount(0);
   });
 
   test('coach panel loads without errors', async ({ page }) => {

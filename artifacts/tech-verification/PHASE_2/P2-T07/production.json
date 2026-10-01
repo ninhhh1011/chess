@@ -1,0 +1,86 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4173",
+  "productionAssets": [
+    "http://127.0.0.1:4173/assets/index-Bfs7v8Dt.js",
+    "http://127.0.0.1:4173/assets/rolldown-runtime-FPZURlb5.js",
+    "http://127.0.0.1:4173/assets/index-BEbxCn2f.css",
+    "http://127.0.0.1:4173/assets/vendor-chess-CoWJzkGK.js",
+    "http://127.0.0.1:4173/assets/vendor-icons-CP6Rw3Sy.js",
+    "http://127.0.0.1:4173/assets/vendor-heroui-k8thOMzx.js",
+    "http://127.0.0.1:4173/assets/AppButton-CMR7FM9r.js",
+    "http://127.0.0.1:4173/assets/vendor-animation-DtDKRWZd.js",
+    "http://127.0.0.1:4173/assets/AuthContext-DGj80fFG.js",
+    "http://127.0.0.1:4173/assets/stockfishService-DD9MmX5U.js",
+    "http://127.0.0.1:4173/assets/vendor-react-C6juNK5L.js",
+    "http://127.0.0.1:4173/assets/authService-Bd6bWiI6.js",
+    "http://127.0.0.1:4173/assets/userProfileService-B1MHVIfd.js",
+    "http://127.0.0.1:4173/assets/AppField-lGaxPO9G.js",
+    "http://127.0.0.1:4173/assets/AppProgress-UdxBR0bs.js",
+    "http://127.0.0.1:4173/assets/ui-2zywh3Vj.js",
+    "http://127.0.0.1:4173/assets/dist-Bw_ZecmN.js",
+    "http://127.0.0.1:4173/assets/vendor-supabase-C5-3GuJb.js",
+    "http://127.0.0.1:4173/assets/brand-BPD0bxZJ.js",
+    "http://127.0.0.1:4173/assets/Exercises-rfx0ZThX.js",
+    "http://127.0.0.1:4173/assets/Play-eEKZcRMf.js",
+    "http://127.0.0.1:4173/assets/sound-DNHn2edM.js",
+    "http://127.0.0.1:4173/assets/ChessGameBoard-CMquu5_P.js"
+  ],
+  "corpus": {
+    "puzzleId": "lichess-0000D",
+    "sourceHref": "https://lichess.org/training/0000D",
+    "licenseHref": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "responses": [
+      {
+        "url": "http://127.0.0.1:4173/corpus/current.json",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4173/corpus/runs/c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338/manifest.json",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4173/corpus/runs/c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338/chunks/00000.json",
+        "status": 200
+      }
+    ]
+  },
+  "selfPlay": {
+    "plies": 6,
+    "sanMoves": [
+      "e4",
+      "Nf6",
+      "Nf3",
+      "d6",
+      "d3",
+      "g6"
+    ],
+    "finalFen": "rnbqkb1r/ppp1pp1p/3p1np1/8/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+    "engineSource": "stockfish_wasm",
+    "worker": {
+      "starts": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "ready": [
+        {
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "bestmoves": [
+        "bestmove e2e4 ponder e7e6",
+        "bestmove g8f6 ponder e4e5",
+        "bestmove e2e4 ponder e7e6",
+        "bestmove e7e5 ponder g1f3",
+        "bestmove e4e5 ponder f6d5",
+        "bestmove d7d6 ponder b1c3",
+        "bestmove e4e5 ponder f6d5",
+        "bestmove f6e4 ponder d2d4",
+        "bestmove g7g6 ponder b1c3"
+      ]
+    }
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

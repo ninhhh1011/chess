@@ -1,0 +1,61 @@
+{
+  "task": "P2-T01",
+  "verdict": "PASS",
+  "branch": "main",
+  "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+  "commands": [
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T01/verifier/audit.mjs",
+      "exitCode": 0,
+      "result": "PASS: 11 source/data paths classified, external production count 0, import graph traced, approved source verified, legacy false-positive reproduced"
+    },
+    {
+      "command": "npx eslint artifacts/tech-verification/PHASE_2/P2-T01/verifier/audit.mjs artifacts/tech-verification/PHASE_2/P2-T01/verifier/self-play.mjs",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm test -- --run src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts src/test/corpus.test.ts src/test/exercisesValidator.test.js",
+      "exitCode": 0,
+      "result": "PASS: 4 files, 46 tests"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm test -- --run",
+      "exitCode": 0,
+      "result": "PASS: 33 files, 592 tests"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "PASS: 4103 modules transformed"
+    },
+    {
+      "command": "rg -n generated-corpus-v2|gen-00001|seed-corpus-v1-sha256|puzzle-mate_1_queen dist",
+      "exitCode": 1,
+      "result": "EXPECTED: no synthetic corpus marker in production bundle"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_2/P2-T01/verifier/self-play.mjs http://127.0.0.1:4188",
+      "exitCode": 0,
+      "result": "PASS: hashed production, truthful unavailable notice, 6 legal plies, real stockfish_wasm, 0 console/page/network errors"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS"
+    }
+  ],
+  "harnessFailures": 1,
+  "harnessFailureWasProductFailure": false,
+  "commitOrPush": false
+}

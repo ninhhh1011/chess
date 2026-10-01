@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS",
+  "runDate": "2026-09-06",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6 feat(ui): migrate production to Option C (Charcoal + Pine + Copper) with HeroUI v3.2.4 & Tailwind v4",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T06/verifier/verify-recovery-release.mjs http://127.0.0.1:4206", "exitCode": 0, "result": "pre-fix normal lifecycle PASS; exposed junction bypass separately" },
+    { "command": "node scripts/manage-corpus-release.mjs publish --release-root <preserved-release> --run-dir <preserved-junction>", "exitCode": 0, "result": "pre-fix FAIL: junction escaped runs root, activated pointer, and wrote outside seal" },
+    { "command": "same preserved exploit after realpath/lstat fix", "exitCode": 1, "result": "rejected: Run directory cannot be a symbolic link or junction" },
+    { "command": "npx vitest run scripts/corpus-release.test.mjs scripts/import-lichess-puzzles.test.mjs scripts/validate-puzzle-corpus.test.mjs", "exitCode": 0, "result": "3 files, 23 tests PASS" },
+    { "command": "npm run lint", "exitCode": 0, "result": "PASS, zero warnings" },
+    { "command": "npm run typecheck", "exitCode": 0, "result": "PASS" },
+    { "command": "npm test -- --run (concurrent with build)", "exitCode": 1, "result": "4 subprocess-heavy fixed-timeout failures; preserved as environmental contention" },
+    { "command": "npm test -- --run (overlapped another agent full run)", "exitCode": 1, "result": "694/695; only 15s SIGINT fixture timed out" },
+    { "command": "npx vitest run scripts/import-lichess-puzzles.test.mjs -t <SIGINT checkpoint test>", "exitCode": 0, "result": "1/1 PASS in 5.55s" },
+    { "command": "npm test -- --run (standalone final)", "exitCode": 0, "result": "38 files, 695 tests PASS" },
+    { "command": "npm run build", "exitCode": 0, "result": "PASS; 4103 modules, 45 PWA precache entries" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T06/verifier/verify-recovery-release.mjs http://127.0.0.1:4206", "exitCode": 0, "result": "post-fix complete real-source lifecycle, fresh junction attack, and 3 browser states PASS" },
+    { "command": "git diff --check", "exitCode": 0, "result": "PASS; only existing line-ending warnings" }
+  ]
+}

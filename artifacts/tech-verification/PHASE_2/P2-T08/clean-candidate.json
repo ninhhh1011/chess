@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS",
+  "candidate": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t08-clean-b22cb931a24946fd94e585db305a3e8d",
+  "sourceSelection": "git ls-files --cached --others --exclude-standard, filtered to required build inputs",
+  "sourceFileCount": 228,
+  "ignoredGeneratedPresent": false,
+  "publicCorpusPointerPresent": true,
+  "distCorpusPointerPresent": true,
+  "activeRun": "474266a1953635fef5a03406a2dcd5831cc891085104d19e39c8f2470a40e75f",
+  "puzzleCount": 20000,
+  "chunkCount": 20,
+  "typecheckExit": 0,
+  "buildExit": 0
+}

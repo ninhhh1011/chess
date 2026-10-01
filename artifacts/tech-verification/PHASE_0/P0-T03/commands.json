@@ -1,0 +1,40 @@
+{
+  "taskId": "P0-T03",
+  "commands": [
+    {
+      "command": "npm run test:e2e -- --list (baseline)",
+      "exitCode": 0,
+      "result": "29 tests in 1 file"
+    },
+    {
+      "command": "npx playwright test --list (baseline)",
+      "exitCode": 0,
+      "result": "67 tests in 4 files before the P0-T01 regression was added"
+    },
+    {
+      "command": "npm run test:e2e -- --list and npx playwright test --list (after fix)",
+      "exitCode": 0,
+      "result": "both discover exactly 68 tests in 4 files"
+    },
+    {
+      "command": "npm run test:e2e -- --reporter=line --output=artifacts/tech-verification/PHASE_0/P0-T03/full-e2e",
+      "exitCode": 0,
+      "result": "68 passed, 0 failed, 0 skipped, 4 files, Chromium, 2.5m"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "production build PASS"
+    },
+    {
+      "command": "npm run lint; npm run typecheck; git diff --check",
+      "exitCode": 0,
+      "result": "all static gates PASS"
+    },
+    {
+      "command": "SELF_PLAY_BASE_URL=http://127.0.0.1:4177 SELF_PLAY_OUTPUT_DIR=artifacts/tech-verification/PHASE_0/P0-T03 node P0-T02/self-play.mjs",
+      "exitCode": 0,
+      "result": "6 legal plies, PGN/FEN PASS, stockfish_wasm, zero console/page/network errors"
+    }
+  ]
+}

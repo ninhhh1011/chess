@@ -1,0 +1,77 @@
+{
+  "verdict": "PASS",
+  "corpusText": "Kho bài tập mở rộng chưa khả dụng. Bạn đang luyện với 5 bài tập tích hợp, không phải corpus bên ngoài.",
+  "syntheticCorpusVisible": false,
+  "localIntegratedDrillCount": 5,
+  "route": "/play",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "productionAssets": [
+    "http://127.0.0.1:4192/assets/rolldown-runtime-FPZURlb5.js",
+    "http://127.0.0.1:4192/assets/index-CozSBo6p.js",
+    "http://127.0.0.1:4192/assets/index-BEbxCn2f.css",
+    "http://127.0.0.1:4192/assets/vendor-icons-CP6Rw3Sy.js",
+    "http://127.0.0.1:4192/assets/vendor-heroui-k8thOMzx.js",
+    "http://127.0.0.1:4192/assets/vendor-chess-CoWJzkGK.js",
+    "http://127.0.0.1:4192/assets/vendor-animation-DtDKRWZd.js",
+    "http://127.0.0.1:4192/assets/AppButton-CMR7FM9r.js",
+    "http://127.0.0.1:4192/assets/AuthContext-DGj80fFG.js",
+    "http://127.0.0.1:4192/assets/stockfishService-DD9MmX5U.js",
+    "http://127.0.0.1:4192/assets/vendor-react-C6juNK5L.js",
+    "http://127.0.0.1:4192/assets/userProfileService-B1MHVIfd.js",
+    "http://127.0.0.1:4192/assets/authService-Bd6bWiI6.js",
+    "http://127.0.0.1:4192/assets/AppProgress-UdxBR0bs.js",
+    "http://127.0.0.1:4192/assets/AppField-lGaxPO9G.js",
+    "http://127.0.0.1:4192/assets/ui-2zywh3Vj.js",
+    "http://127.0.0.1:4192/assets/dist-Bw_ZecmN.js",
+    "http://127.0.0.1:4192/assets/vendor-supabase-C5-3GuJb.js",
+    "http://127.0.0.1:4192/assets/brand-BPD0bxZJ.js",
+    "http://127.0.0.1:4192/assets/Exercises-9F_DGGpC.js",
+    "http://127.0.0.1:4192/assets/Play-eEKZcRMf.js",
+    "http://127.0.0.1:4192/assets/sound-DNHn2edM.js",
+    "http://127.0.0.1:4192/assets/ChessGameBoard-CMquu5_P.js"
+  ],
+  "difficulty": "easy",
+  "playerColor": "white",
+  "counts": [
+    2,
+    4,
+    6
+  ],
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "d5",
+    "d3",
+    "Be6"
+  ],
+  "finalFen": "rn1qkbnr/ppp2ppp/4b3/3pp3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove e2e4 ponder e7e5",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove e2e4 ponder e7e5",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove d7d5 ponder f3e5",
+      "bestmove g1f3 ponder b8c6",
+      "bestmove b8c6 ponder f1b5",
+      "bestmove c8e6 ponder f3e5"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

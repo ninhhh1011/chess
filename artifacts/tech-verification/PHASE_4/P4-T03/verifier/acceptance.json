@@ -1,0 +1,45 @@
+{
+  "task": "P4-T03",
+  "checkedAt": "2026-09-06T09:15:47.123Z",
+  "verdict": "PASS",
+  "environment": {
+    "providerConfigured": false,
+    "providerMocked": false,
+    "liveLlmClaimed": false
+  },
+  "counts": {
+    "deterministicCases": 5,
+    "levelsCovered": 4,
+    "httpResponses": 10,
+    "browserRequests": 2,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 0,
+    "unexpectedHttpResponses": 0
+  },
+  "checks": {
+    "clientPureRepeatIsByteStable": true,
+    "serverPureRepeatIsByteStable": true,
+    "sharedHandlerRepeatIsByteStable": true,
+    "clientAndSharedHandlerMatchExactly": true,
+    "realHttpRepeatIsByteStable": true,
+    "hashedProductionBrowserRepeatIsByteStable": true,
+    "multipleCategoriesAndLevelsCovered": true,
+    "allRepliesAreBoundedTo45Words": true,
+    "sourceIsBasic": true,
+    "engineIsNone": true,
+    "knowledgeIsNone": true,
+    "fenIsNotLeaked": true,
+    "questionIsNotLeaked": true,
+    "promptTextIsNotLeaked": true,
+    "providerErrorsAreNotLeaked": true,
+    "uiBasicLabelIsTruthful": true,
+    "uiDoesNotClaimLiveAi": true,
+    "runtimeErrorBucketsAreEmpty": true
+  },
+  "browserHashes": {
+    "requestSha256": "ed91b5ede3046fcecb61179a2a13068280c69346b1f9b91de7e82b91a1e3a571",
+    "responseSha256": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c"
+  },
+  "detail": "determinism.json"
+}

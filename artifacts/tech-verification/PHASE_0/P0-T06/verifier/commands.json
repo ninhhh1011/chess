@@ -1,0 +1,61 @@
+{
+  "verdict": "PASS",
+  "environment": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/coach.test.ts src/test/coachBenchmark.test.ts",
+      "exitCode": 0,
+      "result": "2 files, 277 tests passed"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm test -- --run",
+      "exitCode": 0,
+      "result": "31 files, 569 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "4097 modules transformed"
+    },
+    {
+      "command": "npm run test:e2e -- --list",
+      "exitCode": 0,
+      "result": "68 tests in 4 files"
+    },
+    {
+      "command": "npx playwright test e2e/productFlow.spec.js -g active",
+      "exitCode": 0,
+      "result": "1 Chromium test passed"
+    },
+    {
+      "command": "production import and dist identifier scan",
+      "exitCode": 0,
+      "result": "mockCoachService and aiCoachService have no production importer and neither identifier occurs in dist"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_0/P0-T06/verifier/self-play.mjs",
+      "exitCode": 0,
+      "result": "6 legal plies via real Stockfish; real Express failure path and Vercel adapter returned matching safe coach.v1 basic responses"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS; only LF-to-CRLF conversion notices"
+    }
+  ]
+}

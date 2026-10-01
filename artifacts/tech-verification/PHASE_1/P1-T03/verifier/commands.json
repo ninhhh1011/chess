@@ -1,0 +1,57 @@
+{
+  "task": "P1-T03",
+  "role": "independent-verifier",
+  "date": "2026-09-06",
+  "commands": [
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "npx vitest run src/hooks/useBotMove.test.ts src/components/ChessGameBoard.integration.test.jsx",
+      "exitCode": 0,
+      "result": "2 files, 23 tests passed"
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 0,
+      "result": "31 files, 574 tests passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "4098 modules transformed; production build passed"
+    },
+    {
+      "command": "npx playwright test e2e/stockfish.spec.js --grep \"starting a new game aborts|dispose settles active analysis\"",
+      "exitCode": 0,
+      "result": "2 tests passed"
+    },
+    {
+      "command": "npx playwright test e2e/stockfish.spec.js",
+      "exitCode": 0,
+      "result": "10 tests passed"
+    },
+    {
+      "command": "npm run preview -- --host 127.0.0.1 --port 4179",
+      "exitCode": null,
+      "result": "server started successfully and served the independent browser replay"
+    },
+    {
+      "command": "$env:VERIFIER_BASE_URL='http://127.0.0.1:4179'; node artifacts/tech-verification/PHASE_1/P1-T03/verifier/verify.mjs",
+      "exitCode": 0,
+      "result": "PASS: white lifecycle, black lifecycle, real timeout/recovery isolation"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS"
+    }
+  ]
+}

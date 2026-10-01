@@ -11,6 +11,7 @@
 
 import { Chess } from 'chess.js';
 import { exercises } from '../data/exercises.js';
+import { validateExerciseRecord, validateExerciseRecords } from '../services/exerciseValidator.js';
 
 /**
  * @typedef {Object} ValidationResult
@@ -257,6 +258,24 @@ describe('Exercise Data Validator', () => {
   if (validation.passed) {
     console.log(`\n✅ All ${exercises.length} exercises validated successfully`);
   }
+});
+
+describe('Production exercise contract', () => {
+  it('accepts every shipped exercise through the production validator', () => {
+    expect(validateExerciseRecords(exercises).passed).toBe(true);
+  });
+
+  it('rejects malformed FEN, illegal moves, and unmet objectives', () => {
+    const valid = exercises[0];
+    const invalidRecords = [
+      { ...valid, id: 'bad-fen', fen: 'not-a-fen' },
+      { ...valid, id: 'illegal-move', correctMove: { from: 'g6', to: 'g5' } },
+      { ...valid, id: 'not-mate', tags: ['checkmate'], correctMove: { from: 'g6', to: 'h5' } },
+      { ...exercises[1], id: 'false-promotion', tags: ['promotion'] },
+    ];
+
+    expect(invalidRecords.every((record) => !validateExerciseRecord(record).valid)).toBe(true);
+  });
 });
 
 export default validateAllExercises;

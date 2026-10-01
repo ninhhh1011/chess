@@ -1,0 +1,18 @@
+{
+  "error": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:4219/src/utils/chessMoveValidation.ts\n    at E:\\chess\\artifacts\\tech-verification\\PHASE_1\\P1-T08\\verifier\\benchmark.mjs:63:32",
+  "trace": {
+    "workers": [],
+    "searches": []
+  },
+  "stockfishResponses": [],
+  "errors": {
+    "console": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "page": [],
+    "network": [
+      "404 http://127.0.0.1:4219/src/utils/chessMoveValidation.ts",
+      "GET http://127.0.0.1:4219/src/utils/chessMoveValidation.ts: net::ERR_ABORTED"
+    ]
+  }
+}

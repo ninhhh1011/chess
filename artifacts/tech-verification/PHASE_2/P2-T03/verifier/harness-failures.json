@@ -1,0 +1,23 @@
+[
+  {
+    "stage": "initial adversarial harness import",
+    "command": "npx vitest run artifacts/tech-verification/PHASE_2/P2-T03/verifier/adversarial.test.ts",
+    "exitCode": 1,
+    "testsExecuted": 0,
+    "error": "Failed to resolve an over-deep relative import to src/services/puzzleRecord",
+    "classification": "verifier harness defect; production behavior was not exercised",
+    "correction": "Reduced the relative traversal from six parent segments to five and reran the full adversarial scenario"
+  },
+  {
+    "stage": "independent adversarial contract audit",
+    "command": "npx vitest run artifacts/tech-verification/PHASE_2/P2-T03/verifier/adversarial.test.ts",
+    "exitCode": 1,
+    "testsExecuted": 58,
+    "testsPassed": 57,
+    "testsFailed": 1,
+    "finding": "validatePuzzleRecord accepted an object with zero own required properties when valid-looking values were inherited and the inherited recordSha256 was SHA-256 of the empty canonical own-property object",
+    "expected": "valid=false with required errors",
+    "actual": "valid=true with no errors",
+    "classification": "production contract defect: missing own required fields are not enforced"
+  }
+]

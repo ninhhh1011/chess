@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-09-06T09:10:40.621Z",
+  "verdict": "PASS",
+  "production": true,
+  "pure": [
+    {
+      "input": "move",
+      "hash": "bc6f7a96db37ea311848e6e2750bb284a1796870eea0f9f87f79c184401923c6"
+    },
+    {
+      "input": "opening",
+      "hash": "b1c2b3c456edb6ae830d833d2b4fcf659f90bbad3db2f739fc61bd2fbd3fa0bc"
+    },
+    {
+      "input": "tactic",
+      "hash": "974ac966e4de9749c8321ef7243781966ec68790a86ac43d208e7dd930ac0def"
+    },
+    {
+      "input": "endgame",
+      "hash": "72aa4f85a5e2d6a3c6cbd67578cc4d5d452cb747da95a0d28f14c8ee5cc8d3ee"
+    },
+    {
+      "input": "Nhận xét nhanh",
+      "hash": "f575a7329344edc7b9a8984c512eeee8ffc405619fd87560b51cdb67aeccd363"
+    }
+  ],
+  "handler": {
+    "runs": 3,
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c"
+  },
+  "http": {
+    "runs": 3,
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c"
+  },
+  "browser": {
+    "runs": 2,
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c",
+    "source": "basic",
+    "truthfulLabel": true
+  },
+  "noFenLeakage": true,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "http": []
+  }
+}

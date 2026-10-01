@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-09-06T09:32:12.190Z",
+  "verdict": "PASS",
+  "production": true,
+  "accountCreated": true,
+  "game": {
+    "plies": 12,
+    "legal": true,
+    "finalFen": "rn1qkb1r/pp2ppp1/2p5/P2p3p/4n1b1/2N5/1PPP1PPP/R1B1KBNR w KQkq - 0 7"
+  },
+  "engine": {
+    "searches": 42,
+    "completed": 42
+  },
+  "trust": {
+    "evidenceId": "game:86f56a45-ab14-47e7-97f3-6ce68ebd29b3:ply:7",
+    "source": "stockfish_wasm",
+    "playedSan": "Qg4",
+    "bestSan": "g3",
+    "reviewId": "review:f1d241b0-3bfa-4990-b341-8ebda75bd140",
+    "reviewReferencesFact": true,
+    "missingReviewRejected": true,
+    "forgedDomIgnored": true,
+    "coachGrounded": true
+  },
+  "persistence": {
+    "exactReload": true,
+    "factCount": 3,
+    "reviewCount": 1
+  },
+  "cleanup": {
+    "profile": true,
+    "rowsRemaining": 0,
+    "account": true
+  },
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "http": []
+  }
+}

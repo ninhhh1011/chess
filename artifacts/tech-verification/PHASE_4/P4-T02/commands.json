@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-09-06T09:06:00.000Z",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "diffCheck": "PASS"
+  },
+  "tdd": {
+    "red": "Express GET returned 404 instead of canonical JSON 405",
+    "green": "2 files / 34 tests PASS"
+  },
+  "http": {
+    "valid": 200,
+    "invalidSchema": 400,
+    "missingQuestion": 400,
+    "invalidMethod": 405,
+    "allJson": true
+  },
+  "productionBrowser": {
+    "result": "PASS",
+    "schemaVersion": "coach.v1",
+    "source": "basic",
+    "runtimeErrors": 0
+  },
+  "lint": "PASS",
+  "typecheck": "PASS",
+  "independentVerification": {
+    "result": "PASS",
+    "focused": "34/34",
+    "full": "761/761",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "buildModules": 4107,
+    "pwaEntries": 45,
+    "runtimeErrors": 0
+  }
+}

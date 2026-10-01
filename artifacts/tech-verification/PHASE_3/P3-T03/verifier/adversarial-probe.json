@@ -1,0 +1,29 @@
+{
+  "task": "P3-T03",
+  "finalVerdict": "PASS",
+  "attemptId": "attempt:probe",
+  "revisionAfterFiveEvents": 5,
+  "exactReplayBytesAndRevisionStable": true,
+  "events": [
+    { "eventId": "event:wrong", "type": "wrong", "moveUci": "e6f6", "solved": false, "at": "2026-09-06T06:00:00.000Z" },
+    { "eventId": "event:retry", "type": "retry", "moveUci": null, "solved": false, "at": "2026-09-06T06:01:00.000Z" },
+    { "eventId": "event:correct-1", "type": "correct", "moveUci": "e6e7", "solved": false, "at": "2026-09-06T06:02:00.000Z" },
+    { "eventId": "event:correct-2", "type": "correct", "moveUci": "b3c1", "solved": false, "at": "2026-09-06T06:03:00.000Z" },
+    { "eventId": "event:solved", "type": "correct", "moveUci": "h6c1", "solved": true, "at": "2026-09-06T06:04:00.000Z" }
+  ],
+  "serviceRejectedWithoutMutation": 7,
+  "legacyEventsMaterialized": true,
+  "initialProductFailure": {
+    "verdict": "FAIL",
+    "malformedAccepted": [
+      "solved-event-not-final",
+      "non-monotonic-event-time",
+      "multiple-solved-events",
+      "inverted-empty-legacy-range"
+    ]
+  },
+  "correctedRerun": {
+    "verdict": "PASS",
+    "malformedAccepted": []
+  }
+}

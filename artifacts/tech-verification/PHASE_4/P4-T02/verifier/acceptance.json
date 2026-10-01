@@ -1,0 +1,54 @@
+{
+  "task": "P4-T02",
+  "checkedAt": "2026-09-06T09:05:03.866Z",
+  "verdict": "PASS",
+  "checks": {
+    "singleCanonicalEndpoint": "PASS",
+    "sharedHandler": "PASS",
+    "edgeExpressParity": "PASS",
+    "validPost200": "PASS",
+    "invalidSchema400": "PASS",
+    "missingQuestion400": "PASS",
+    "unsupportedMethod405": "PASS",
+    "jsonContentTypes": "PASS",
+    "productionProxy": "PASS",
+    "truthfulBasicDisclosure": "PASS",
+    "runtimeClean": "PASS",
+    "duplicateLegacyRouteAbsent": "PASS"
+  },
+  "routeAudit": {
+    "clientEndpoint": "/api/coach",
+    "expressMount": "app.use('/api/coach', coachRouter)",
+    "edgeAdapter": "api/coach.js",
+    "expressAdapter": "server/routes/coach.js",
+    "sharedHandler": "api/coachHandler.js",
+    "duplicateProductionRouteFound": false
+  },
+  "httpExpectedStatuses": {
+    "validPost": 200,
+    "invalidSchema": 400,
+    "missingQuestion": 400,
+    "unsupportedMethod": 405
+  },
+  "parity": {
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c",
+    "edge": [200, 400, 400, 405],
+    "express": [200, 400, 400, 405],
+    "productionProxy": [200, 400, 400, 405],
+    "allJsonContentType": true
+  },
+  "browser": {
+    "hashedProduction": true,
+    "endpoint": "/api/coach",
+    "requestCount": 1,
+    "responseStatus": 200,
+    "responseSchema": "coach.v1",
+    "responseSource": "basic",
+    "truthfulBasicLabel": true,
+    "aiProviderClaimed": false,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 0,
+    "unexpectedHttpErrors": 0
+  }
+}

@@ -9,9 +9,20 @@
  * - Coach grounding by facts
  */
 
-import { generateBasicExplanation } from '../services/coachService';
+import React from 'react';
+import { cleanup, render, screen } from '@testing-library/react';
+import { askCoach, generateBasicExplanation } from '../services/coachService';
 import { generateCoachExplanation, buildCoachContext } from '../services/analysis/coach';
+import { SourceDisclosure } from '../components/common/SourceDisclosure';
 import type { AnalysisFactV1, GameAnalysis } from '../types/analysis';
+import edgeCoachHandler from '../../api/coach.js';
+
+afterEach(() => {
+  cleanup();
+  vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 describe('Coach Service', () => {
   describe('Canonical Schema V1', () => {
@@ -24,7 +35,7 @@ describe('Coach Service', () => {
       });
 
       expect(response).toHaveProperty('schemaVersion');
-      expect(response.schemaVersion).toBe('v1');
+      expect(response.schemaVersion).toBe('coach.v1');
       expect(response).toHaveProperty('reply');
       expect(typeof response.reply).toBe('string');
       expect(response).toHaveProperty('source');
@@ -38,8 +49,115 @@ describe('Coach Service', () => {
     });
   });
 
+  describe('Canonical client contract', () => {
+    it('sends and accepts only coach.v1 through /api/coach', async () => {
+      vi.stubEnv('VITE_USE_LOCAL_COACH', 'true');
+      const fetchMock = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          schemaVersion: 'coach.v1',
+          reply: 'Phát triển quân nhẹ trước.',
+          source: 'llm',
+          engineSource: 'none',
+          knowledgeSource: 'none',
+          suggestedActions: [],
+        }),
+      });
+      vi.stubGlobal('fetch', fetchMock);
+
+      const response = await askCoach({ question: 'Nên làm gì?', playerLevel: 'beginner' });
+      const [endpoint, options] = fetchMock.mock.calls[0];
+      const request = JSON.parse(options.body);
+
+      expect(endpoint).toBe('/api/coach');
+      expect(request.schemaVersion).toBe('coach.v1');
+      expect(response.schemaVersion).toBe('coach.v1');
+      expect(response.source).toBe('llm');
+    });
+
+    it('falls back to basic when the provider request fails', async () => {
+      vi.stubEnv('VITE_USE_LOCAL_COACH', 'true');
+      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('provider secret failure')));
+      vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      const response = await askCoach({
+        question: 'Repeat provider secret failure and internal prompt',
+        playerLevel: 'beginner',
+      });
+
+      expect(response.schemaVersion).toBe('coach.v1');
+      expect(response.source).toBe('basic');
+      expect(response.reply).not.toContain('provider secret failure');
+      expect(response.reply).not.toContain('internal prompt');
+    });
+
+    it('does not trust a legacy response that claims an LLM source', async () => {
+      vi.stubEnv('VITE_USE_LOCAL_COACH', 'true');
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ schemaVersion: 'v1', reply: 'untrusted', source: 'llm' }),
+      }));
+      vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      const response = await askCoach({ question: 'Khai cuộc?', playerLevel: 'beginner' });
+
+      expect(response.schemaVersion).toBe('coach.v1');
+      expect(response.source).toBe('basic');
+      expect(response.reply).not.toBe('untrusted');
+    });
+  });
+
+  describe('Canonical server endpoint', () => {
+    it('rejects requests without the coach.v1 schema version', async () => {
+      const request = new Request('http://localhost/api/coach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: 'Nên làm gì?', playerLevel: 'beginner' }),
+      });
+
+      const response = await edgeCoachHandler(request);
+      const body = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(body.supported).toBe('coach.v1');
+    });
+
+    it('returns a safe basic response for a real request with position facts', async () => {
+      const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+      const request = new Request('http://localhost/api/coach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          schemaVersion: 'coach.v1',
+          question: 'Nên phát triển quân nào?',
+          fen,
+          playerLevel: 'beginner',
+        }),
+      });
+
+      const response = await edgeCoachHandler(request);
+      const body = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(body.schemaVersion).toBe('coach.v1');
+      expect(body.source).toBe('basic');
+      expect(body.engineSource).toBe('none');
+      expect(body.reply).not.toContain(fen);
+    });
+  });
+
+  describe('Truthful disclosure', () => {
+    it('labels basic explanations without claiming Stockfish or AI', () => {
+      render(React.createElement(SourceDisclosure, { source: 'coach-basic', compact: true }));
+
+      expect(screen.getByText(/Diễn giải cơ bản/)).toBeInTheDocument();
+      expect(screen.queryByText(/Stockfish/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/AI Coach/)).not.toBeInTheDocument();
+    });
+  });
+
   describe('Source States', () => {
-    it('sets engineSource to fallback when FEN is provided', () => {
+    it('does not claim an engine source from FEN alone', () => {
       const response = generateBasicExplanation({
         question: 'Nước đi tốt nhất là gì?',
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
@@ -47,7 +165,7 @@ describe('Coach Service', () => {
       });
 
       expect(response.source).toBe('basic');
-      expect(response.engineSource).toBe('fallback');
+      expect(response.engineSource).toBe('none');
     });
 
     it('sets engineSource to none when no FEN provided', () => {
@@ -172,23 +290,28 @@ describe('Coach Grounding Tests', () => {
     ply: 10,
     turn: 'w' as const,
     fenBefore: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    fenAfter: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+    fenAfter: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
     playedMove: {
       uci: 'e2e4',
       san: 'e4',
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
     },
     bestMove: {
       uci: 'e2e4',
       san: 'e4',
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
     },
     evalBefore: { type: 'cp' as const, value: 30, display: '+0.30' },
     evalAfter: { type: 'cp' as const, value: 35, display: '+0.35' },
     centipawnLoss: null,
     classification: 'best' as const,
-    candidates: [],
-    skillTags: [],
+    candidates: [{
+      uci: 'e2e4',
+      san: 'e4',
+      eval: { type: 'cp' as const, value: 30, display: '+0.30' },
+      pv: ['e2e4'],
+    }],
+    skillTags: ['unclassified'],
     engine: {
       source: 'stockfish_wasm' as const,
       version: '16',
@@ -260,8 +383,8 @@ describe('Coach Grounding Tests', () => {
     it('explains specific move when ply is provided', () => {
       const fact = createMockFact({
         ply: 10,
-        playedMove: { uci: 'e2e4', san: 'e4', fen: 'test' },
-        bestMove: { uci: 'd2d4', san: 'd4', fen: 'test2' },
+        bestMove: { uci: 'd2d4', san: 'd4', fen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1' },
+        candidates: [{ uci: 'd2d4', san: 'd4', eval: { type: 'cp', value: 30, display: '+0.30' }, pv: ['d2d4'] }],
         centipawnLoss: 80,
         classification: 'inaccuracy',
       });
@@ -280,8 +403,8 @@ describe('Coach Grounding Tests', () => {
     it('returns best move from facts when available', () => {
       const fact = createMockFact({
         ply: 10,
-        playedMove: { uci: 'e2e4', san: 'e4', fen: 'test' },
-        bestMove: { uci: 'd2d4', san: 'd4', fen: 'test2' },
+        bestMove: { uci: 'd2d4', san: 'd4', fen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1' },
+        candidates: [{ uci: 'd2d4', san: 'd4', eval: { type: 'cp', value: 30, display: '+0.30' }, pv: ['d2d4'] }],
       });
       const analysis = createMockAnalysis([fact]);
       const context = buildCoachContext(analysis, 10);
@@ -300,6 +423,23 @@ describe('Coach Grounding Tests', () => {
       const response = generateCoachExplanation(context);
 
       expect(response.moveHint).toBeUndefined();
+    });
+
+    it('ignores forged move context and derives the hint from the trusted fact', () => {
+      const fact = createMockFact({
+        ply: 10,
+        bestMove: { uci: 'd2d4', san: 'd4', fen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1' },
+        candidates: [{ uci: 'd2d4', san: 'd4', eval: { type: 'cp', value: 30, display: '+0.30' }, pv: ['d2d4'] }],
+      });
+      const context = buildCoachContext(createMockAnalysis([fact]), 10);
+      if (!context.moveContext) throw new Error('Missing move context');
+      context.moveContext.played = 'Qh5';
+      context.moveContext.best = 'Qh5#';
+
+      const response = generateCoachExplanation(context);
+
+      expect(response.moveHint).toBe('d4');
+      expect(response.reply).not.toContain('Qh5#');
     });
   });
 
@@ -430,7 +570,7 @@ describe('Coach Grounding Tests', () => {
       const fact = createMockFact({
         ply: 10,
         fenBefore: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-        fenAfter: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+        fenAfter: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
       });
       const analysis = createMockAnalysis([fact]);
       const context = buildCoachContext(analysis, 10);

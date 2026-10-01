@@ -1,0 +1,120 @@
+{
+  "verdict": "PASS",
+  "harness": "Vite browser module graph; native Chromium Worker; no mocks",
+  "baseUrl": "http://127.0.0.1:4230",
+  "gameId": "rklpc7mk",
+  "fixture": "fixed first-40/full-move prefix of the official 47-move game",
+  "pgnParse": "PASS",
+  "legalReplay": "PASS",
+  "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+  "runs": [
+    {
+      "label": "cold",
+      "durationMs": 43011,
+      "analyzerDurationMs": 42946,
+      "fullMoves": 40,
+      "plies": 80,
+      "facts": 80,
+      "orderedFacts": true,
+      "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+      "topMistakes": [
+        "25",
+        "62"
+      ],
+      "pass1Positions": 81,
+      "pass2Positions": 2,
+      "workerSearches": 83,
+      "completedWorkerSearches": 83,
+      "searchesWithInfo": 83,
+      "legalBestmoves": 83,
+      "newWorkers": 1,
+      "sourceViolations": 0,
+      "illegalMoves": 0,
+      "errors": 0,
+      "timeouts": 0,
+      "engineSource": "stockfish_wasm"
+    },
+    {
+      "label": "warm-1",
+      "durationMs": 42810,
+      "analyzerDurationMs": 42766,
+      "fullMoves": 40,
+      "plies": 80,
+      "facts": 80,
+      "orderedFacts": true,
+      "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+      "topMistakes": [
+        "25",
+        "62"
+      ],
+      "pass1Positions": 81,
+      "pass2Positions": 2,
+      "workerSearches": 83,
+      "completedWorkerSearches": 83,
+      "searchesWithInfo": 83,
+      "legalBestmoves": 83,
+      "newWorkers": 0,
+      "sourceViolations": 0,
+      "illegalMoves": 0,
+      "errors": 0,
+      "timeouts": 0,
+      "engineSource": "stockfish_wasm"
+    },
+    {
+      "label": "warm-2",
+      "durationMs": 42721,
+      "analyzerDurationMs": 42670,
+      "fullMoves": 40,
+      "plies": 80,
+      "facts": 80,
+      "orderedFacts": true,
+      "finalFen": "8/p3k1p1/2p3P1/1p2K2P/8/8/P7/2b5 w - - 0 41",
+      "topMistakes": [
+        "25",
+        "62"
+      ],
+      "pass1Positions": 81,
+      "pass2Positions": 2,
+      "workerSearches": 83,
+      "completedWorkerSearches": 83,
+      "searchesWithInfo": 83,
+      "legalBestmoves": 83,
+      "newWorkers": 0,
+      "sourceViolations": 0,
+      "illegalMoves": 0,
+      "errors": 0,
+      "timeouts": 0,
+      "engineSource": "stockfish_wasm"
+    }
+  ],
+  "medianMs": 42810,
+  "maxMs": 43011,
+  "previousMedianMs": 5365,
+  "changePercent": 697.9,
+  "workers": [
+    {
+      "id": 1,
+      "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+    }
+  ],
+  "stockfishResponses": [
+    {
+      "url": "http://127.0.0.1:4230/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4230/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4230/stockfish/stockfish.wasm",
+      "status": 200
+    }
+  ],
+  "noFallbackProof": "83 legal worker bestmoves/run + 80/80 stockfish_wasm facts + worker/JS/WASM HTTP 200",
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

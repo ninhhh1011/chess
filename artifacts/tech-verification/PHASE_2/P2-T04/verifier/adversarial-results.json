@@ -1,0 +1,83 @@
+{
+  "verdict": "PASS",
+  "runDir": "E:\\chess\\artifacts\\tech-verification\\PHASE_2\\P2-T04\\verifier\\work\\adversarial-1788659904194",
+  "cases": [
+    {
+      "name": "malformed and both duplicate classes are quarantined",
+      "verdict": "PASS",
+      "detail": {
+        "counts": {
+          "parsed": 4,
+          "filtered": 0,
+          "accepted": 1,
+          "invalid": 1,
+          "quarantined": 3,
+          "duplicate": 2
+        },
+        "reasons": [
+          "malformed_row",
+          "duplicate_source_id",
+          "duplicate_normalized_puzzle"
+        ]
+      }
+    },
+    {
+      "name": "truncated Zstd and invalid UTF-8 fail closed",
+      "verdict": "PASS",
+      "detail": {
+        "truncatedError": "Truncated or invalid Zstandard stream: Lichess CSV header was not found",
+        "utf8Error": "The encoded data was not valid for encoding utf-8"
+      }
+    },
+    {
+      "name": "checkpoint corruption, path drift, and config drift fail closed",
+      "verdict": "PASS",
+      "detail": {
+        "corruptError": "Invalid checkpoint: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+        "configError": "Checkpoint does not match dataset or importer configuration",
+        "pathError": "Checkpoint output paths do not match resume paths"
+      }
+    },
+    {
+      "name": "inherited required properties and forged content are rejected",
+      "verdict": "PASS",
+      "detail": {
+        "inheritedRequiredErrors": 16,
+        "forgedChecksumRejected": true
+      }
+    },
+    {
+      "name": "download persistence fails without partial destinations",
+      "verdict": "PASS",
+      "detail": {
+        "httpError": "Official source download failed with HTTP 503",
+        "interruptedError": "cut",
+        "partialFiles": 0
+      }
+    },
+    {
+      "name": "CLI fatal paths are non-zero and controlled interruption is 75",
+      "verdict": "PASS",
+      "detail": {
+        "fatalCases": [
+          {
+            "name": "missing required metadata",
+            "exit": 1,
+            "stderr": "--output is required"
+          },
+          {
+            "name": "unknown option",
+            "exit": 1,
+            "stderr": "Unknown option: --unknown"
+          },
+          {
+            "name": "unapproved source",
+            "exit": 1,
+            "stderr": "Unapproved source URL: https://example.test/fake.zst"
+          }
+        ],
+        "controlledInterruptionExit": 75
+      }
+    }
+  ]
+}

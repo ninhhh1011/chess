@@ -1,0 +1,54 @@
+{
+  "verdict": "PASS",
+  "buildUrl": "http://127.0.0.1:4194",
+  "displayedHistory": [
+    "e4",
+    "Nc6",
+    "Ba6",
+    "bxa6",
+    "e5",
+    "Nxe5",
+    "Qf3",
+    "d5",
+    "Qe4",
+    "dxe4",
+    "Nf3",
+    "Nc6",
+    "Nd4",
+    "Nxd4"
+  ],
+  "finalFen": "r1bqkbnr/p1p1pppp/p7/8/3np3/8/PPPP1PPP/RNB1K2R w KQkq - 0 8",
+  "selected": {
+    "id": "review-1788632868038:ply:9",
+    "engineSource": "stockfish_wasm",
+    "skillTags": [
+      "unclassified"
+    ],
+    "playedUci": "f3e4",
+    "bestUci": "f3e2",
+    "text": "Blunder#9: Qe4, Ninh mách Qe2"
+  },
+  "selectedFenBefore": "r1bqkbnr/p1p1pppp/p7/3pn3/8/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 5",
+  "selectedStockfishSearches": [
+    {
+      "fen": "r1bqkbnr/p1p1pppp/p7/3pn3/8/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 5",
+      "command": "go movetime 450",
+      "bestmove": "f3g3",
+      "source": "stockfish_wasm"
+    },
+    {
+      "fen": "r1bqkbnr/p1p1pppp/p7/3pn3/8/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 5",
+      "command": "go movetime 450",
+      "bestmove": "f3e2",
+      "source": "stockfish_wasm"
+    }
+  ],
+  "profileCommonMistakes": [],
+  "navigation": "9 / 14",
+  "reviewSearchCount": 21,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

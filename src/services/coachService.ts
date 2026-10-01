@@ -12,7 +12,7 @@ import type { CoachLevel } from '../types/ChessTypes';
 
 // Coach response schema v1
 export interface CoachResponseV1 {
-  schemaVersion: 'v1';
+  schemaVersion: 'coach.v1';
   reply: string;
   source: 'llm' | 'basic' | 'unavailable';
   engineSource: 'stockfish_wasm' | 'fallback' | 'none';
@@ -26,20 +26,13 @@ export interface CoachResponseV1 {
 
 // Coach payload - canonical v1
 export interface CoachPayloadV1 {
-  schemaVersion: 'v1';
+  schemaVersion: 'coach.v1';
   question: string;
   fen?: string;
   history?: string[];
   pgn?: string;
   playerLevel: CoachLevel;
   responseStyle?: 'short' | 'medium' | 'detailed';
-}
-
-// Legacy input adapter
-export interface CoachPayloadLegacy {
-  question: string;
-  fen?: string;
-  playerLevel?: CoachLevel;
 }
 
 // Provider configuration
@@ -119,15 +112,34 @@ function generateBasicExplanation(
   }
 
   return {
-    schemaVersion: 'v1',
+    schemaVersion: 'coach.v1',
     reply,
     source: 'basic',
-    engineSource: hasEngineData ? 'fallback' : 'none',
+    engineSource: 'none',
     knowledgeSource: 'none',
     suggestedActions: [
       { type: 'exercise', label: 'Luyện bài tập cơ bản' },
     ],
   };
+}
+
+function isCoachResponseV1(data: unknown): data is CoachResponseV1 {
+  if (!data || typeof data !== 'object') return false;
+  const value = data as Record<string, unknown>;
+
+  return value.schemaVersion === 'coach.v1'
+    && typeof value.reply === 'string'
+    && (value.source === 'llm' || value.source === 'basic' || value.source === 'unavailable')
+    && (value.engineSource === 'stockfish_wasm' || value.engineSource === 'fallback' || value.engineSource === 'none')
+    && value.knowledgeSource === 'none'
+    && Array.isArray(value.suggestedActions)
+    && value.suggestedActions.every((action) => {
+      if (!action || typeof action !== 'object') return false;
+      const item = action as Record<string, unknown>;
+      return typeof item.type === 'string'
+        && typeof item.label === 'string'
+        && (item.targetId === undefined || typeof item.targetId === 'string');
+    });
 }
 
 /**
@@ -153,20 +165,8 @@ async function callCoachAPI(config: CoachConfig, payload: CoachPayloadV1): Promi
 
     const data = await response.json();
 
-    // Validate response structure
-    if (data.schemaVersion === 'coach.v1') {
-      return data as CoachResponseV1;
-    }
-
-    // Handle legacy response shape
-    return {
-      schemaVersion: 'v1',
-      reply: data.reply || data.answer || 'Không có phản hồi',
-      source: data.source === 'ai' ? 'llm' : 'basic',
-      engineSource: 'none',
-      knowledgeSource: 'none',
-      suggestedActions: [],
-    };
+    if (!isCoachResponseV1(data)) throw new Error('Invalid coach.v1 response');
+    return data;
   } catch (error) {
     window.clearTimeout(timeoutId);
 
@@ -192,7 +192,7 @@ export async function askCoach(payload: Omit<CoachPayloadV1, 'schemaVersion'>): 
   try {
     const fullPayload: CoachPayloadV1 = {
       ...payload,
-      schemaVersion: 'v1',
+      schemaVersion: 'coach.v1',
     };
     return await callCoachAPI(config, fullPayload);
   } catch {
@@ -200,24 +200,6 @@ export async function askCoach(payload: Omit<CoachPayloadV1, 'schemaVersion'>): 
     console.warn('[coach] Provider unavailable, using basic fallback');
     return generateBasicExplanation(payload);
   }
-}
-
-/**
- * Check coach availability status
- */
-export function getCoachStatus(): { available: boolean; provider: 'llm' | 'basic' | 'unavailable' } {
-  const config = getCoachConfig();
-
-  if (!config.endpoint) {
-    return { available: false, provider: 'unavailable' };
-  }
-
-  // In dev without local server, use basic
-  if (!import.meta.env.PROD && import.meta.env.VITE_USE_LOCAL_COACH !== 'true') {
-    return { available: false, provider: 'unavailable' };
-  }
-
-  return { available: true, provider: 'llm' };
 }
 
 export { generateBasicExplanation };

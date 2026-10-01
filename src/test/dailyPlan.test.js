@@ -10,6 +10,7 @@
  */
 
 import { generateDailyTrainingPlan } from '../services/recommendationService';
+import { getUserProfile } from '../services/userProfileService';
 
 describe('Daily Training Plan Contract', () => {
   const defaultProfile = {
@@ -35,6 +36,7 @@ describe('Daily Training Plan Contract', () => {
       const plan = generateDailyTrainingPlan(defaultProfile);
 
       expect(plan).toBeDefined();
+      expect(plan.schemaVersion).toBe('training.v1');
       expect(plan.generatedAt).toBeDefined();
       expect(plan.tasks).toBeDefined();
       expect(Array.isArray(plan.tasks)).toBe(true);
@@ -129,6 +131,23 @@ describe('Daily Training Plan Contract', () => {
   });
 
   describe('Edge Cases', () => {
+    it('prioritizes the weakest persisted skill and carries its evidence trace', () => {
+      const plan = generateDailyTrainingPlan({
+        ...defaultProfile,
+        persistence: {
+          skillStates: [
+            { skillId: 'king_safety', score: 1, evidenceIds: ['game:one:ply:2'] },
+            { skillId: 'hanging_piece', score: -2, evidenceIds: ['game:one:ply:4', 'event:wrong'] },
+          ],
+        },
+      });
+
+      expect(plan.tasks.find((task) => task.type === 'exercise')).toMatchObject({
+        id: 'skill:hanging_piece', skillTag: 'hanging_piece',
+        evidenceIds: ['game:one:ply:4', 'event:wrong'],
+      });
+    });
+
     it('handles empty profile', () => {
       const plan = generateDailyTrainingPlan({});
       expect(plan.tasks.length).toBeGreaterThan(0);
@@ -174,10 +193,47 @@ describe('Daily Training Plan Contract', () => {
         challenge: 'Chơi 1 ván',
       };
 
-      // The new format should be generated fresh
-      const plan = generateDailyTrainingPlan(defaultProfile);
-      expect(plan.tasks).toBeDefined();
-      expect(Array.isArray(plan.tasks)).toBe(true);
+      localStorage.setItem('vuaCoUserTrainingProfile', JSON.stringify({
+        ...defaultProfile,
+        dailyTrainingPlan: legacyPlan,
+      }));
+
+      const profile = getUserProfile();
+
+      expect(profile.schemaVersion).toBe('profile.v2');
+      expect(profile.dailyTrainingPlan.schemaVersion).toBe('training.v1');
+      expect(profile.dailyTrainingPlan.tasks.map((task) => task.type)).toEqual([
+        'lesson',
+        'exercise',
+        'opening',
+        'challenge',
+      ]);
+
+      const persisted = JSON.parse(localStorage.getItem('vuaCoUserTrainingProfile'));
+      expect(persisted.schemaVersion).toBe('profile.v2');
+      expect(persisted.dailyTrainingPlan.schemaVersion).toBe('training.v1');
+    });
+
+    it('rejects malformed persisted tasks and regenerates a usable plan', () => {
+      localStorage.setItem('vuaCoUserTrainingProfile', JSON.stringify({
+        ...defaultProfile,
+        dailyTrainingPlan: {
+          schemaVersion: 'training.v1',
+          generatedAt: 'not-a-date',
+          tasks: [{ type: 'unknown', id: '', title: '', reason: '' }],
+        },
+      }));
+
+      const profile = getUserProfile();
+
+      expect(profile.dailyTrainingPlan.schemaVersion).toBe('training.v1');
+      expect(profile.dailyTrainingPlan.tasks.length).toBeGreaterThan(0);
+      expect(profile.dailyTrainingPlan.tasks.every((task) =>
+        ['lesson', 'exercise', 'opening', 'challenge'].includes(task.type)
+        && task.id
+        && task.title
+        && task.reason
+      )).toBe(true);
     });
   });
 });

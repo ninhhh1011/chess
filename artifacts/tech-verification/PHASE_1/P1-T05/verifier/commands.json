@@ -1,0 +1,42 @@
+{
+  "task": "P1-T05",
+  "verifier": "independent",
+  "head": "7ecc6a6",
+  "commands": [
+    {
+      "command": "npm run test -- src/test/gameAnalyzer.test.ts src/test/gameLatency.test.ts src/test/pgnParser.test.js src/components/ChessGameBoard.integration.test.jsx",
+      "exitCode": 0,
+      "result": "4 files, 38 tests passed"
+    },
+    {
+      "command": "npm run test",
+      "exitCode": 0,
+      "result": "32 files, 581 tests passed"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "0 warnings/errors"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "tsc --noEmit passed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "Vite production build passed; 4102 modules transformed"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed; only line-ending notices"
+    },
+    {
+      "command": "$env:VERIFIER_BASE_URL='http://127.0.0.1:4193'; node artifacts/tech-verification/PHASE_1/P1-T05/verifier/verify-production.mjs",
+      "exitCode": 0,
+      "result": "14-ply Chromium production review/navigation passed with real Stockfish worker"
+    }
+  ]
+}

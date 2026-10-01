@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { Chess } from 'chess.js';
+import { AppField } from '@/ui/AppField';
+import { AppStatus } from '@/ui/AppStatus';
+import { AppButton } from '@/ui/AppButton';
+import { AppSurface } from '@/ui/AppSurface';
+import { ChevronDown, Search } from 'lucide-react';
 
 /**
  * OpeningExplorer - Visualize common openings with eco codes
@@ -55,20 +60,6 @@ const OPENINGS = [
   },
 ];
 
-function validateMoves(moveString) {
-  try {
-    const game = new Chess();
-    const moves = moveString.split(' ').filter(m => m.match(/^[a-hNBRQKO][a-h0-9x\-+#=!?]+$/));
-    for (const move of moves) {
-      const result = game.move(move);
-      if (!result) return null;
-    }
-    return game.fen();
-  } catch {
-    return null;
-  }
-}
-
 export default function OpeningExplorer({ onSelect }) {
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState(null);
@@ -83,55 +74,60 @@ export default function OpeningExplorer({ onSelect }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-medium text-text-primary">Khai cuộc phổ biến</h4>
+        <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">Khai cuộc phổ biến</h4>
       </div>
 
-      <input
-        type="text"
+      <AppField
         value={search}
-        onChange={e => setSearch(e.target.value)}
+        onChange={setSearch}
         placeholder="Tìm khai cuộc..."
-        className="w-full rounded-md border border-border bg-bg-base px-3 py-2 text-sm text-text-primary placeholder-text-tertiary focus:border-primary-400 focus:outline-none"
+        leftIcon={<Search className="h-4 w-4 text-[var(--app-muted)]" />}
       />
 
-      <div className="max-h-[300px] space-y-2 overflow-y-auto">
+      <div className="max-h-[300px] space-y-2 overflow-y-auto pr-1">
         {filtered.length === 0 ? (
-          <p className="py-4 text-center text-sm text-text-tertiary">Không tìm thấy khai cuộc</p>
+          <p className="py-4 text-center text-xs text-[var(--app-muted)]">Không tìm thấy khai cuộc</p>
         ) : (
           filtered.map(opening => (
-            <div key={opening.eco} className="rounded-lg border border-border bg-bg-surface">
+            <AppSurface key={opening.eco} className="border border-[var(--app-border)] overflow-hidden">
               <button
+                type="button"
                 onClick={() => setExpanded(expanded === opening.eco ? null : opening.eco)}
-                className="flex w-full items-center justify-between p-3 text-left transition hover:bg-bg-elevated"
+                aria-expanded={expanded === opening.eco}
+                className="flex w-full items-center justify-between p-2.5 text-left transition hover:bg-[var(--app-surface-hover)] cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <span className="rounded border border-primary-400/30 bg-primary-400/10 px-2 py-0.5 text-xs font-bold text-primary-300">
+                  <AppStatus variant="teal" size="sm">
                     {opening.eco}
-                  </span>
-                  <span className="text-sm font-medium text-text-primary">{opening.name}</span>
+                  </AppStatus>
+                  <span className="text-xs font-semibold text-[var(--app-foreground)]">{opening.name}</span>
                 </div>
-                <span className={`text-text-tertiary transition-transform ${expanded === opening.eco ? 'rotate-180' : ''}`}>
-                  ▼
-                </span>
+                <ChevronDown
+                  className={`h-4 w-4 text-[var(--app-muted)] transition-transform duration-180 ${
+                    expanded === opening.eco ? 'rotate-180' : ''
+                  }`}
+                />
               </button>
 
               {expanded === opening.eco && (
-                <div className="border-t border-border px-3 py-3">
-                  <p className="mb-2 text-xs text-text-secondary">{opening.description}</p>
-                  <code className="block rounded bg-bg-base p-2 text-xs text-text-tertiary">
+                <div className="border-t border-[var(--app-border)] p-2.5 space-y-2 bg-[var(--app-surface-raised)]">
+                  <p className="text-xs text-[var(--app-muted)]">{opening.description}</p>
+                  <code className="block rounded-[6px] bg-[var(--app-surface)] p-2 text-xs font-mono text-[var(--app-foreground)] border border-[var(--app-border)]">
                     {opening.moves}
                   </code>
                   {onSelect && (
-                    <button
+                    <AppButton
+                      variant="outline"
+                      size="sm"
                       onClick={() => onSelect(opening.moves)}
-                      className="mt-2 w-full rounded border border-border bg-bg-base px-3 py-2 text-xs font-medium text-text-secondary transition hover:bg-bg-elevated hover:text-text-primary"
+                      className="w-full mt-1"
                     >
                       Chơi với khai cuộc này
-                    </button>
+                    </AppButton>
                   )}
                 </div>
               )}
-            </div>
+            </AppSurface>
           ))
         )}
       </div>

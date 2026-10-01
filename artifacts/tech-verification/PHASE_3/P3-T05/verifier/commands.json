@@ -1,0 +1,74 @@
+{
+  "task": "P3-T05",
+  "role": "independent-verifier",
+  "date": "2026-09-06",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "remote": "https://github.com/ninhhh1011/chess",
+    "diffCheck": "PASS (exit 0; line-ending warnings only)"
+  },
+  "history": [
+    {
+      "stage": "focused",
+      "command": "npx vitest run src/test/dailyPlan.test.js src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 3,
+      "passed": 37,
+      "failed": 0,
+      "durationSeconds": 2.23
+    },
+    {
+      "stage": "independent-adversarial",
+      "command": "npx vitest run artifacts/tech-verification/PHASE_3/P3-T05/verifier/adversarial.test.ts --reporter=dot",
+      "result": "PASS",
+      "files": 1,
+      "passed": 4,
+      "failed": 0,
+      "durationSeconds": 1.35
+    },
+    {
+      "stage": "full-standalone-including-verifier",
+      "command": "npm test -- --run --reporter=dot",
+      "result": "PASS",
+      "files": 46,
+      "passed": 731,
+      "failed": 0,
+      "durationSeconds": 36.66
+    },
+    {
+      "stage": "quality",
+      "commands": ["npm run lint", "npm run typecheck", "npm run build", "git diff --check"],
+      "result": "PASS",
+      "workspaceBuild": { "modules": 4105, "pwaEntries": 45, "durationSeconds": 7.91 }
+    },
+    {
+      "stage": "clean-candidate",
+      "commands": ["git ls-files --cached --others --exclude-standard", "npm run typecheck", "npm run build"],
+      "result": "PASS",
+      "files": 1090,
+      "ignoredGeneratedPuzzlesPresent": false,
+      "publicCorpusCurrentPresent": true,
+      "distCorpusCurrentPresent": true,
+      "build": { "modules": 4064, "pwaEntries": 34, "durationSeconds": 7.88 }
+    },
+    {
+      "stage": "production-browser",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T05/self-play.mjs http://127.0.0.1:4291",
+      "candidate": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p3t05-verifier-ea2b13d38d72423bb1b41d752219600a",
+      "result": "PASS",
+      "puzzleId": "lichess-00008",
+      "initialTaskCount": 4,
+      "trainingPlanHistory": 5,
+      "retryKeptPlan": true,
+      "intermediateKeptPlan": true,
+      "firstExerciseSkillTag": "crushing",
+      "firstExerciseEvidenceCount": 2,
+      "exactReloadBytes": true,
+      "errors": { "console": 0, "page": 0, "network": 0 }
+    }
+  ],
+  "verdict": "PASS"
+}

@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS",
+  "profileId": "profile:8602342d-3271-4999-b666-908bf40718a5",
+  "revision": 7,
+  "attemptEvents": 5,
+  "skillEvidence": 2,
+  "reloadExact": true,
+  "newTabExact": true,
+  "malformedBytesPreserved": true,
+  "restoredExact": true,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

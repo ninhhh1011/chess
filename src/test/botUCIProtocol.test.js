@@ -34,10 +34,11 @@ describe('Bot UCI Protocol Configuration', () => {
       expect(level.elo).toBe(800);
     });
 
-    test('Khó (1200 ELO) uses UCI_Elo', () => {
+    test('Khó (1200 ELO) uses Skill Level because Stockfish UCI_Elo starts at 1320', () => {
       const level = getBotLevelByElo(1200);
 
-      expect(level.useSkillLevelOnly).toBe(false);
+      expect(level.useSkillLevelOnly).toBe(true);
+      expect(level.skillLevel).toBe(6);
       expect(level.elo).toBe(1200);
     });
 
@@ -86,7 +87,7 @@ describe('Bot UCI Protocol Configuration', () => {
     });
 
     test('generates correct UCI_LimitStrength command for UCI_Elo mode', () => {
-      const level = getBotLevelByElo(1200);
+      const level = getBotLevelByElo(1600);
 
       if (!level.useSkillLevelOnly) {
         // UCI_LimitStrength should be true
@@ -127,18 +128,20 @@ describe('Bot UCI Protocol Configuration', () => {
     test('UCI_Elo values are within Stockfish supported range', () => {
       BOT_ELO_LEVELS.forEach(level => {
         if (!level.useSkillLevelOnly) {
-          expect(level.elo).toBeGreaterThanOrEqual(1200);
-          expect(level.elo).toBeLessThanOrEqual(2850);
+          expect(level.elo).toBeGreaterThanOrEqual(1320);
+          expect(level.elo).toBeLessThanOrEqual(3190);
         }
       });
     });
 
-    test('low ELO uses only Skill Level (not UCI_Elo)', () => {
+    test('levels below UCI_Elo minimum use only Skill Level', () => {
       const easy = getBotLevelByElo(400);
       const medium = getBotLevelByElo(800);
+      const hard = getBotLevelByElo(1200);
 
       expect(easy.useSkillLevelOnly).toBe(true);
       expect(medium.useSkillLevelOnly).toBe(true);
+      expect(hard.useSkillLevelOnly).toBe(true);
     });
   });
 });

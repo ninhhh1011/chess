@@ -1,0 +1,45 @@
+{
+  "taskId": "P0-T02",
+  "commands": [
+    {
+      "command": "npm run test -- src/test/corpusAvailability.test.ts --reporter=verbose",
+      "exitCode": 1,
+      "result": "RED: loadCorpus returned undefined instead of the unavailable contract"
+    },
+    {
+      "command": "npm run test -- src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts src/test/learningLoop.test.ts --reporter=verbose",
+      "exitCode": 0,
+      "result": "3 files, 29/29 tests passed"
+    },
+    {
+      "command": "tracked-only archive plus current source patches; npm ci; npm run typecheck; npm run build",
+      "exitCode": 0,
+      "result": "generated JSON absent; npm ci=0; typecheck=0; build=0"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "result": "PASS, zero warnings"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "rg generatedPuzzles/generated-corpus-v2 in src (excluding ignored generated data) and clean production dist",
+      "exitCode": 1,
+      "result": "Expected no-match result; hidden path and synthetic source label absent"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_0/P0-T02/self-play.mjs against clean production preview",
+      "exitCode": 0,
+      "result": "truthful corpus notice plus 6 legal plies, PGN/FEN PASS, stockfish_wasm, no console/page/network errors"
+    }
+  ]
+}

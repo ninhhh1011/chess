@@ -1,0 +1,25 @@
+{
+  "verdict": "FAIL",
+  "reproducedAt": "2026-09-06T02:47:00.000Z",
+  "tempRunRoot": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t06-verifier-a4UOWz",
+  "attack": {
+    "outsideRun": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t06-verifier-a4UOWz\\outside-valid",
+    "junction": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t06-verifier-a4UOWz\\release\\runs\\junction-escape",
+    "junctionTarget": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t06-verifier-a4UOWz\\outside-valid",
+    "linkType": "Junction",
+    "command": "node scripts/manage-corpus-release.mjs publish --release-root <release> --run-dir <release>\\runs\\junction-escape",
+    "exitCode": 0
+  },
+  "observedPointer": {
+    "pointerSchemaVersion": "corpus-release-pointer.v1",
+    "activeRun": "junction-escape",
+    "history": ["clean"]
+  },
+  "outsideWrite": {
+    "path": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t06-verifier-a4UOWz\\outside-valid\\seal.json",
+    "bytes": 492,
+    "sha256": "edfb0503221c75f35e890766ad1a82c0927bfcb6b99d32225db980a7dbbd7439"
+  },
+  "rootCause": "directRunName validates only path.resolve/path.relative lexical shape and does not reject a symlink/junction or compare physical real paths. A direct-child junction can therefore escape the release runs directory.",
+  "requiredFix": "Reject reparse-point/symbolic-link run directories and enforce physical realpath containment before hashing, sealing, or updating the pointer."
+}

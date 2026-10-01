@@ -2,151 +2,124 @@ import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { AppButton } from '@/ui/AppButton';
 import { AppTooltip } from '@/ui/AppTooltip';
-import { Lightbulb, RotateCcw, Plus, ArrowLeftRight, Flag } from 'lucide-react';
+import { AppAlertDialog } from '@/ui/AppAlertDialog';
+import { AppSurface } from '@/ui/AppSurface';
+import { Lightbulb, RotateCcw, Plus, ArrowLeftRight, Flag, AlertTriangle } from 'lucide-react';
 
 export default function GameControls({ onHint, requestHint }) {
   const { newGame, undoMove, flipBoard, resignGame, playState, setPlayState, isBotThinking } = useChessGame();
-  const [confirmAction, setConfirmAction] = useState(null);
+  const [isResignOpen, setIsResignOpen] = useState(false);
+  const [isNewGameOpen, setIsNewGameOpen] = useState(false);
 
   if (playState !== 'playing') return null;
 
-  if (confirmAction === 'resign') {
-    return (
-      <div className="flex flex-col gap-2 rounded-[10px] border border-[var(--app-danger)]/40 bg-[var(--app-surface-raised)] p-3">
-        <span className="text-xs font-semibold text-[var(--app-danger)]">
-          Xác nhận đầu hàng ván này?
-        </span>
-        <div className="flex items-center gap-2">
-          <AppButton
-            size="sm"
-            variant="ghost"
-            onClick={() => setConfirmAction(null)}
-            className="flex-1"
-          >
-            Hủy
-          </AppButton>
-          <AppButton
-            size="sm"
-            variant="danger"
-            onClick={() => {
-              resignGame();
-              setConfirmAction(null);
-            }}
-            className="flex-1"
-          >
-            Đầu hàng
-          </AppButton>
-        </div>
-      </div>
-    );
-  }
-
-  if (confirmAction === 'new') {
-    return (
-      <div className="flex flex-col gap-2 rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3">
-        <span className="text-xs font-semibold text-[var(--app-foreground)]">
-          Bắt đầu ván mới?
-        </span>
-        <div className="flex items-center gap-2">
-          <AppButton
-            size="sm"
-            variant="ghost"
-            onClick={() => setConfirmAction(null)}
-          >
-            Hủy
-          </AppButton>
-          <AppButton
-            size="sm"
-            variant="secondary"
-            onClick={() => {
-              newGame();
-              setPlayState('lobby');
-              setConfirmAction(null);
-            }}
-          >
-            Đổi cấp độ
-          </AppButton>
+  return (
+    <>
+      <AppSurface
+        variant="base"
+        radius="sm"
+        className="flex items-center justify-between gap-1.5 p-2 shadow-xs"
+      >
+        {/* Primary / Contextual action: Gợi ý, Hoàn tác, Ván mới */}
+        <div className="flex items-center gap-1.5 flex-1 flex-wrap">
           <AppButton
             size="sm"
             variant="primary"
             onClick={() => {
-              newGame();
-              setConfirmAction(null);
+              if (requestHint) requestHint();
+              if (onHint) onHint();
             }}
+            disabled={isBotThinking}
+            leftIcon={<Lightbulb className="h-3.5 w-3.5" />}
+            aria-label="Gợi ý nước đi"
+          >
+            Gợi ý
+          </AppButton>
+
+          {/* Secondary action: Hoàn tác */}
+          <AppButton
+            size="sm"
+            variant="secondary"
+            onClick={undoMove}
+            disabled={isBotThinking}
+            leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
+            aria-label="Hoàn tác nước cờ"
+          >
+            Hoàn tác
+          </AppButton>
+
+          {/* New Game */}
+          <AppButton
+            size="sm"
+            variant="secondary"
+            onClick={() => setIsNewGameOpen(true)}
+            leftIcon={<Plus className="h-3.5 w-3.5" />}
+            aria-label="Bắt đầu ván mới"
           >
             Ván mới
           </AppButton>
         </div>
-      </div>
-    );
-  }
 
-  return (
-    <div className="flex items-center justify-between gap-1.5 rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2 shadow-xs">
-      {/* Primary / Contextual action: Gợi ý */}
-      <div className="flex items-center gap-1.5 flex-1">
-        <AppButton
-          size="sm"
-          variant="primary"
-          onClick={() => {
-            if (requestHint) requestHint();
-            if (onHint) onHint();
-          }}
-          disabled={isBotThinking}
-          leftIcon={<Lightbulb className="h-3.5 w-3.5" />}
-          aria-label="Gợi ý nước đi"
-        >
-          Gợi ý
-        </AppButton>
+        {/* Utility / Danger actions */}
+        <div className="flex items-center gap-1">
+          <AppTooltip content="Lật bàn cờ" placement="top">
+            <AppButton
+              size="sm"
+              variant="outline"
+              onClick={flipBoard}
+              aria-label="Lật bàn cờ"
+              className="h-8 w-8 p-0 shrink-0"
+            >
+              <ArrowLeftRight className="h-3.5 w-3.5" />
+            </AppButton>
+          </AppTooltip>
 
-        {/* Secondary action: Hoàn tác */}
-        <AppButton
-          size="sm"
-          variant="secondary"
-          onClick={undoMove}
-          disabled={isBotThinking}
-          leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
-          aria-label="Hoàn tác nước cờ"
-        >
-          Hoàn tác
-        </AppButton>
+          <AppTooltip content="Đầu hàng ván đấu" placement="top">
+            <AppButton
+              size="sm"
+              variant="danger"
+              onClick={() => setIsResignOpen(true)}
+              aria-label="Đầu hàng ván đấu"
+              className="h-8 w-8 p-0 shrink-0"
+            >
+              <Flag className="h-3.5 w-3.5" />
+            </AppButton>
+          </AppTooltip>
+        </div>
+      </AppSurface>
 
-        {/* New Game */}
-        <AppButton
-          size="sm"
-          variant="secondary"
-          onClick={() => setConfirmAction('new')}
-          leftIcon={<Plus className="h-3.5 w-3.5" />}
-          aria-label="Ván mới"
-        >
-          Ván mới
-        </AppButton>
-      </div>
+      {/* Resign Confirmation: HeroUI AlertDialog */}
+      <AppAlertDialog
+        isOpen={isResignOpen}
+        onOpenChange={setIsResignOpen}
+        title="Xác nhận đầu hàng"
+        confirmLabel="Đầu hàng"
+        cancelLabel="Tiếp tục chơi"
+        confirmVariant="danger"
+        status="danger"
+        icon={<AlertTriangle className="h-5 w-5 text-[var(--app-danger)]" />}
+        onConfirm={resignGame}
+      >
+        Bạn có chắc chắn muốn đầu hàng ván cờ này không? Kết quả sẽ được ghi nhận là một trận thua.
+      </AppAlertDialog>
 
-      {/* Utility / Danger actions */}
-      <div className="flex items-center gap-1">
-        <AppTooltip content="Lật bàn cờ" placement="top">
-          <button
-            type="button"
-            onClick={flipBoard}
-            aria-label="Lật bàn cờ"
-            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] transition-colors cursor-pointer"
-          >
-            <ArrowLeftRight className="h-3.5 w-3.5" />
-          </button>
-        </AppTooltip>
-
-        <AppTooltip content="Đầu hàng ván đấu" placement="top">
-          <button
-            type="button"
-            onClick={() => setConfirmAction('resign')}
-            aria-label="Đầu hàng"
-            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[var(--app-danger)]/30 bg-[var(--app-danger)]/10 text-[var(--app-danger)] hover:bg-[var(--app-danger)]/20 transition-colors cursor-pointer"
-          >
-            <Flag className="h-3.5 w-3.5" />
-          </button>
-        </AppTooltip>
-      </div>
-    </div>
+      {/* New Game Confirmation: HeroUI AlertDialog */}
+      <AppAlertDialog
+        isOpen={isNewGameOpen}
+        onOpenChange={setIsNewGameOpen}
+        title="Bắt đầu ván mới"
+        confirmLabel="Tạo ván mới"
+        cancelLabel="Tiếp tục ván hiện tại"
+        confirmVariant="primary"
+        status="warning"
+        icon={<Plus className="h-5 w-5 text-[var(--app-accent)]" />}
+        onConfirm={() => {
+          newGame();
+          setPlayState('lobby');
+        }}
+      >
+        Ván cờ hiện tại sẽ kết thúc và bạn sẽ được quay về phòng chờ để chọn mức độ Bot hoặc màu quân mới.
+      </AppAlertDialog>
+    </>
   );
 }

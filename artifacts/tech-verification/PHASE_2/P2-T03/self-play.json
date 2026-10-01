@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "corpusText": "Kho bài tập mở rộng chưa khả dụng. Bạn đang luyện với 5 bài tập tích hợp, không phải corpus bên ngoài.",
+  "route": "/play",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "difficulty": "easy",
+  "playerColor": "white",
+  "plies": 6,
+  "sanMoves": ["e4", "Nf6", "Nf3", "d6", "d3", "e6"],
+  "finalFen": "rnbqkb1r/ppp2ppp/3ppn2/8/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": [],
+  "workerReady": true,
+  "bestmovesObserved": 11
+}

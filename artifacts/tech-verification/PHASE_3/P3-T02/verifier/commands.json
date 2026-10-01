@@ -1,0 +1,73 @@
+{
+  "task": "P3-T02",
+  "role": "independent-verifier",
+  "date": "2026-09-06",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "remote": "https://github.com/ninhhh1011/chess",
+    "diffCheck": "PASS (exit 0; line-ending warnings only)"
+  },
+  "runs": [
+    {
+      "stage": "focused",
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/persistenceContract.test.ts src/components/ChessGameBoard.integration.test.jsx --reporter=dot",
+      "result": "PASS",
+      "files": 3,
+      "passed": 29,
+      "failed": 0,
+      "durationSeconds": 5.12
+    },
+    {
+      "stage": "adversarial-service",
+      "command": "npx vite-node --root E:\\chess C:\\Users\\nguye\\AppData\\Local\\Temp\\p3t02-verifier-probe.mts",
+      "result": "PASS",
+      "rejectedCases": 9,
+      "exactRepeatByteStable": true,
+      "exactRepeatRevisionStable": true
+    },
+    {
+      "stage": "full-standalone",
+      "command": "npx vitest run --reporter=dot",
+      "result": "PASS",
+      "files": 43,
+      "passed": 712,
+      "failed": 0,
+      "durationSeconds": 33.53
+    },
+    {
+      "stage": "quality",
+      "commands": ["npm run lint", "npm run typecheck", "npm run build", "git diff --check"],
+      "result": "PASS",
+      "workspaceBuild": { "modules": 4105, "pwaEntries": 45, "durationSeconds": 8.45 }
+    },
+    {
+      "stage": "clean-candidate",
+      "commands": ["git ls-files --cached --others --exclude-standard", "npm run typecheck", "npm run build"],
+      "result": "PASS",
+      "files": 1034,
+      "ignoredGeneratedPuzzlesPresent": false,
+      "build": { "modules": 4064, "pwaEntries": 34, "durationSeconds": 5.44 }
+    },
+    {
+      "stage": "production-browser-compact",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T02/self-play.mjs http://127.0.0.1:4271",
+      "result": "PASS",
+      "playedPlies": 14,
+      "note": "Compact trace passed; rerun strengthened retained evidence fields."
+    },
+    {
+      "stage": "production-browser-final",
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T02/self-play.mjs http://127.0.0.1:4272",
+      "result": "PASS",
+      "playedPlies": 14,
+      "selectedPly": 7,
+      "engineSource": "stockfish_wasm",
+      "storedBestMoveMatchedObservedSearch": true,
+      "errors": { "console": 0, "page": 0, "network": 0 }
+    }
+  ],
+  "verdict": "PASS"
+}

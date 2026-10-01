@@ -1,0 +1,73 @@
+{
+  "checkedAt": "2026-09-06T09:05:03.866Z",
+  "verdict": "PASS",
+  "endpoint": "/api/coach",
+  "edgeHttp": {
+    "validStatus": 200,
+    "invalidSchemaStatus": 400,
+    "missingQuestionStatus": 400,
+    "unsupportedMethodStatus": 405,
+    "allJsonContentType": true,
+    "responseKeys": [
+      "engineSource",
+      "knowledgeSource",
+      "reply",
+      "schemaVersion",
+      "source",
+      "suggestedActions"
+    ],
+    "responseSource": "basic",
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c"
+  },
+  "expressHttp": {
+    "validStatus": 200,
+    "invalidSchemaStatus": 400,
+    "missingQuestionStatus": 400,
+    "unsupportedMethodStatus": 405,
+    "allJsonContentType": true,
+    "responseKeys": [
+      "engineSource",
+      "knowledgeSource",
+      "reply",
+      "schemaVersion",
+      "source",
+      "suggestedActions"
+    ],
+    "responseSource": "basic",
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c"
+  },
+  "productionProxyHttp": {
+    "validStatus": 200,
+    "invalidSchemaStatus": 400,
+    "missingQuestionStatus": 400,
+    "unsupportedMethodStatus": 405,
+    "allJsonContentType": true,
+    "responseKeys": [
+      "engineSource",
+      "knowledgeSource",
+      "reply",
+      "schemaVersion",
+      "source",
+      "suggestedActions"
+    ],
+    "responseSource": "basic",
+    "responseHash": "9ccf62ea67abe34a882a56f4c25b7feb349b56dc6fb44f668312661c6be83f1c"
+  },
+  "browser": {
+    "hashedProduction": true,
+    "endpoint": "/api/coach",
+    "requestCount": 1,
+    "responseStatus": 200,
+    "responseContentType": "application/json; charset=utf-8",
+    "responseSchema": "coach.v1",
+    "responseSource": "basic",
+    "truthfulBasicLabel": true,
+    "aiProviderClaimed": false
+  },
+  "runtime": {
+    "console": [],
+    "page": [],
+    "network": [],
+    "unexpectedHttp": []
+  }
+}

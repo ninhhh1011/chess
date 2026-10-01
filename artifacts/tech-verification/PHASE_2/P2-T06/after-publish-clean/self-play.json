@@ -1,0 +1,75 @@
+{
+  "verdict": "PASS",
+  "route": "/play",
+  "corpusText": "Kho bài tập mở rộng chưa khả dụng. Bạn đang luyện với 5 bài tập tích hợp, không phải corpus bên ngoài.",
+  "externalCorpusAvailable": false,
+  "browser": "Chromium",
+  "productionAssets": [
+    "http://127.0.0.1:4196/assets/index-CozSBo6p.js",
+    "http://127.0.0.1:4196/assets/rolldown-runtime-FPZURlb5.js",
+    "http://127.0.0.1:4196/assets/index-BEbxCn2f.css",
+    "http://127.0.0.1:4196/assets/vendor-icons-CP6Rw3Sy.js",
+    "http://127.0.0.1:4196/assets/vendor-animation-DtDKRWZd.js",
+    "http://127.0.0.1:4196/assets/AppButton-CMR7FM9r.js",
+    "http://127.0.0.1:4196/assets/AuthContext-DGj80fFG.js",
+    "http://127.0.0.1:4196/assets/stockfishService-DD9MmX5U.js",
+    "http://127.0.0.1:4196/assets/vendor-heroui-k8thOMzx.js",
+    "http://127.0.0.1:4196/assets/vendor-chess-CoWJzkGK.js",
+    "http://127.0.0.1:4196/assets/vendor-react-C6juNK5L.js",
+    "http://127.0.0.1:4196/assets/userProfileService-B1MHVIfd.js",
+    "http://127.0.0.1:4196/assets/authService-Bd6bWiI6.js",
+    "http://127.0.0.1:4196/assets/AppProgress-UdxBR0bs.js",
+    "http://127.0.0.1:4196/assets/AppField-lGaxPO9G.js",
+    "http://127.0.0.1:4196/assets/ui-2zywh3Vj.js",
+    "http://127.0.0.1:4196/assets/dist-Bw_ZecmN.js",
+    "http://127.0.0.1:4196/assets/vendor-supabase-C5-3GuJb.js",
+    "http://127.0.0.1:4196/assets/brand-BPD0bxZJ.js",
+    "http://127.0.0.1:4196/assets/Exercises-9F_DGGpC.js",
+    "http://127.0.0.1:4196/assets/Play-eEKZcRMf.js",
+    "http://127.0.0.1:4196/assets/sound-DNHn2edM.js",
+    "http://127.0.0.1:4196/assets/ChessGameBoard-CMquu5_P.js"
+  ],
+  "difficulty": "easy",
+  "playerColor": "white",
+  "counts": [
+    2,
+    4,
+    6
+  ],
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "e6",
+    "Nf3",
+    "d5",
+    "d3",
+    "Bd7"
+  ],
+  "finalFen": "rn1qkbnr/pppb1ppp/4p3/3p4/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove e2e4 ponder e7e5",
+      "bestmove e7e6 ponder b1c3",
+      "bestmove e2e4 ponder e7e5",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove d7d5 ponder e4e5",
+      "bestmove d2d4 ponder d7d5",
+      "bestmove d7d5 ponder e4d5",
+      "bestmove c8d7 ponder f1e2"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

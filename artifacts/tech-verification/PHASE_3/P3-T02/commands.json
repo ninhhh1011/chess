@@ -1,0 +1,49 @@
+{
+  "task": "P3-T02",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/persistenceContract.test.ts",
+      "exit": 1,
+      "stage": "RED: recordGameReview absent and cross-game evidence accepted",
+      "tests": "2 failed, 14 passed"
+    },
+    {
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/persistenceContract.test.ts",
+      "exit": 0,
+      "files": "2/2",
+      "tests": "16/16"
+    },
+    {
+      "command": "npx vitest run src/components/ChessGameBoard.integration.test.jsx",
+      "exit": 1,
+      "stage": "RED: production review still persisted tags only",
+      "tests": "1 failed, 12 passed"
+    },
+    {
+      "command": "npm run lint && npm run typecheck && npm run build",
+      "exit": 2,
+      "stage": "TypeScript inferred the JS default facts array as never[]"
+    },
+    {
+      "command": "npx vitest run src/test/analysisFactContract.test.ts src/test/persistenceContract.test.ts src/components/ChessGameBoard.integration.test.jsx",
+      "exit": 0,
+      "files": "3/3",
+      "tests": "29/29"
+    },
+    { "command": "npm run lint", "exit": 0 },
+    { "command": "npm run typecheck", "exit": 0 },
+    { "command": "npm run build", "exit": 0, "modules": 4105, "pwaPrecacheEntries": 45 },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T02/self-play.mjs http://127.0.0.1:4174",
+      "exit": 0,
+      "verdict": "PASS",
+      "playedPlies": 14,
+      "selectedPly": 5,
+      "engineSource": "stockfish_wasm",
+      "runtimeErrors": 0
+    },
+    { "command": "npm test -- --run", "exit": 0, "files": "43/43", "tests": "712/712" },
+    { "command": "git diff --check", "exit": 0 }
+  ]
+}

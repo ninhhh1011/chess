@@ -1,0 +1,36 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4270",
+  "profile": {
+    "schemaVersion": "profile.v2",
+    "profileId": "profile:570bd8b3-b352-4f4e-8c95-57bef0852e5f",
+    "revision": 0,
+    "createdAt": "2026-09-06T04:56:52.155Z",
+    "updatedAt": "2026-09-06T04:56:52.155Z",
+    "planId": "plan:63ec6fd5-4af4-405a-8879-b56fcea14c0b",
+    "persistenceSchema": "learningPersistence.v1",
+    "syncId": "sync:profile:570bd8b3-b352-4f4e-8c95-57bef0852e5f",
+    "bytesStableAcrossReadReload": true
+  },
+  "selfPlay": {
+    "plies": 6,
+    "moves": ["e4", "d5", "Nf3", "dxe4", "d3", "Nf6"],
+    "finalFen": "rnbqkb1r/ppp1pppp/5n2/8/4p3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+    "engineSource": "stockfish_wasm",
+    "worker": {
+      "starts": ["/stockfish-worker.js?v=2026-05-30-simplified"],
+      "ready": [{ "type": "ready", "success": true }],
+      "bestmoves": [
+        "bestmove e2e4 ponder e7e5",
+        "bestmove d7d5 ponder e4d5",
+        "bestmove e2e4 ponder e7e5",
+        "bestmove e7e5 ponder g1f3",
+        "bestmove d5e4 ponder f3e5",
+        "bestmove e4d5 ponder c7c6",
+        "bestmove d5e4 ponder f3e5",
+        "bestmove g8f6 ponder f3e5"
+      ]
+    }
+  },
+  "errors": { "console": [], "page": [], "network": [] }
+}

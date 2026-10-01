@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-09-06T09:39:00.000Z",
+  "baseline": {
+    "branch": "main",
+    "head": "7ecc6a6",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "diffCheck": "PASS"
+  },
+  "tdd": {
+    "forgedMoveContextRed": "expected d4, received Qh5#",
+    "transientFactRed": "expected persisted d4, received transient Nf3",
+    "focusedRegression": "PASS"
+  },
+  "root": {
+    "coach": "34/34",
+    "full": "58 files / 765 tests",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "buildModules": 4107,
+    "pwaEntries": 45,
+    "production": "PASS",
+    "productionPlies": 12,
+    "stockfishSearches": "42/42",
+    "missingReviewRejected": true,
+    "exactReload": true,
+    "runtimeErrors": 0,
+    "supabaseCleanup": "PASS"
+  },
+  "independentVerification": {
+    "result": "PASS",
+    "adversarial": "3/3",
+    "focused": "59/59",
+    "full": "58 files / 765 tests",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "buildModules": 4107,
+    "pwaEntries": 45,
+    "productionPlies": 12,
+    "stockfishSearches": "42/42",
+    "runtimeErrors": 0,
+    "supabaseCleanup": "PASS"
+  }
+}

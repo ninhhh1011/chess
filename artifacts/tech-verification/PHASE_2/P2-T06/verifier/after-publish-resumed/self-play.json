@@ -1,0 +1,71 @@
+{
+  "verdict": "PASS",
+  "state": "after-publish-resumed",
+  "releasePointer": {
+    "pointerSchemaVersion": "corpus-release-pointer.v1",
+    "activeRun": "resumed",
+    "history": [
+      "clean"
+    ]
+  },
+  "productionAssets": [
+    "http://127.0.0.1:4206/assets/rolldown-runtime-FPZURlb5.js",
+    "http://127.0.0.1:4206/assets/index-CozSBo6p.js",
+    "http://127.0.0.1:4206/assets/index-BEbxCn2f.css",
+    "http://127.0.0.1:4206/assets/vendor-icons-CP6Rw3Sy.js",
+    "http://127.0.0.1:4206/assets/vendor-chess-CoWJzkGK.js",
+    "http://127.0.0.1:4206/assets/vendor-animation-DtDKRWZd.js",
+    "http://127.0.0.1:4206/assets/vendor-heroui-k8thOMzx.js",
+    "http://127.0.0.1:4206/assets/AuthContext-DGj80fFG.js",
+    "http://127.0.0.1:4206/assets/AppButton-CMR7FM9r.js",
+    "http://127.0.0.1:4206/assets/stockfishService-DD9MmX5U.js",
+    "http://127.0.0.1:4206/assets/userProfileService-B1MHVIfd.js",
+    "http://127.0.0.1:4206/assets/vendor-react-C6juNK5L.js",
+    "http://127.0.0.1:4206/assets/authService-Bd6bWiI6.js",
+    "http://127.0.0.1:4206/assets/AppField-lGaxPO9G.js",
+    "http://127.0.0.1:4206/assets/AppProgress-UdxBR0bs.js",
+    "http://127.0.0.1:4206/assets/ui-2zywh3Vj.js",
+    "http://127.0.0.1:4206/assets/dist-Bw_ZecmN.js",
+    "http://127.0.0.1:4206/assets/vendor-supabase-C5-3GuJb.js",
+    "http://127.0.0.1:4206/assets/Play-eEKZcRMf.js",
+    "http://127.0.0.1:4206/assets/brand-BPD0bxZJ.js",
+    "http://127.0.0.1:4206/assets/sound-DNHn2edM.js",
+    "http://127.0.0.1:4206/assets/ChessGameBoard-CMquu5_P.js"
+  ],
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "Nf6",
+    "Nf3",
+    "d5",
+    "d3",
+    "dxe4"
+  ],
+  "finalFen": "rnbqkb1r/ppp1pppp/5n2/8/4p3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove e2e4 ponder e7e5",
+      "bestmove g8f6 ponder e4e5",
+      "bestmove e2e4 ponder e7e5",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove d7d5 ponder e4e5",
+      "bestmove e4e5 ponder f6d5",
+      "bestmove f6e4 ponder d2d4",
+      "bestmove d5e4 ponder f3e5"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

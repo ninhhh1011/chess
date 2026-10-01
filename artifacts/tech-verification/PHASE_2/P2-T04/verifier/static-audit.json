@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS",
+  "canonicalImporter": "scripts/import-lichess-puzzles.mjs",
+  "approvedSourcePinned": true,
+  "approvedLicensePinned": true,
+  "syntheticGenerationInImporter": false,
+  "fakeProvenanceInImporter": false,
+  "productionMockAdded": false,
+  "newDependencyAdded": false,
+  "packageLockChanged": false,
+  "existingDormantSyntheticGeneratorPreserved": true,
+  "testFixtureClassification": "four-row official Lichess excerpt; test-only and not counted toward the mini-import",
+  "streamGraph": [
+    "fs.createReadStream",
+    "StripLeadingSkippableFrames",
+    "node:zlib.createZstdDecompress",
+    "fatal incremental UTF-8 decoder",
+    "incremental line parser"
+  ],
+  "resumeStrategy": "restart decompression and skip durable committed source-row count; not claimed as O(1)",
+  "advisory": "Native Zstandard was added in Node 22.15.0. Local Node 24.15.0 and rolling CI Node 22.x are compatible; the importer is narrower than package.json's Node 20-compatible application engine range."
+}

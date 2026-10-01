@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { askCoach, getCoachStatus, type CoachResponseV1 } from '../services/coachService';
+import { askCoach, type CoachResponseV1 } from '../services/coachService';
 import { getUserProfile } from '../services/userProfileService';
-import { isEngineReady } from '../services/stockfishService';
 import coachAvatar from '../assets/avatarcoach.webp';
 import { BRAND_NAMES } from '../config/brand';
 import { isInstagramIntent, NINH_INSTAGRAM_URL } from '../utils/socialIntent';
 import type { CoachLevel, Evaluation } from '../types/ChessTypes';
 import { AppButton } from '@/ui/AppButton';
 import { AppField } from '@/ui/AppField';
+import { AppAvatar } from '@/ui/AppAvatar';
+import { AppSpinner } from '@/ui/AppSpinner';
+import { AppSurface } from '@/ui/AppSurface';
 import { SourceDisclosure } from './common/SourceDisclosure';
 import { Send, Zap, Eye, Lightbulb } from 'lucide-react';
 
@@ -106,9 +108,6 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
   const [isLoading, setIsLoading] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
 
-  const engineReady = isEngineReady();
-  const coachStatus = getCoachStatus();
-
   async function getAdvice(type: string): Promise<void> {
     if (isLoading) return;
     setIsLoading(true);
@@ -157,21 +156,17 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
     setCustomMessage('');
   };
 
-  const disclosureSource = coachStatus.provider === 'llm'
+  const disclosureSource = advice?.source === 'llm'
     ? 'coach-llm'
-    : engineReady
-    ? 'coach-basic'
-    : 'unavailable';
+    : advice?.source === 'unavailable'
+      ? 'unavailable'
+      : 'coach-basic';
 
   return (
     <div className="space-y-3.5">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-[var(--app-border)] pb-3">
-        <img
-          src={coachAvatar}
-          alt={COACH_NAME}
-          className="h-9 w-9 rounded-[8px] border border-[var(--app-border)] object-cover shadow-xs"
-        />
+        <AppAvatar src={coachAvatar} name={COACH_NAME} size="md" />
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-bold text-[var(--app-foreground)]">{COACH_NAME}</h3>
           <p className="text-[11px] text-[var(--app-muted)]">Phân tích nước cờ thực tế</p>
@@ -236,13 +231,14 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
       </form>
 
       {/* Advice Display Box */}
-      <div className="min-h-[100px] rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)]/60 p-3">
+      <AppSurface
+        variant="raised"
+        radius="sm"
+        className="min-h-[100px] p-3 bg-[var(--app-surface-raised)]/60"
+      >
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-6 gap-2 text-[var(--app-muted)]">
-            <svg className="h-5 w-5 animate-spin text-[var(--app-accent)]" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-            </svg>
+            <AppSpinner size="md" />
             <span className="text-xs font-medium">Coach đang phân tích...</span>
           </div>
         ) : advice ? (
@@ -257,7 +253,11 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
               </span>
               {advice.source && (
                 <span className="text-[10px] font-mono text-[var(--app-muted)]">
-                  {advice.source === 'llm' ? 'AI Coach' : 'Stockfish'}
+                  {advice.source === 'llm'
+                    ? 'AI Coach'
+                    : advice.source === 'basic'
+                      ? 'Diễn giải cơ bản'
+                      : 'Không khả dụng'}
                 </span>
               )}
             </div>
@@ -268,7 +268,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
             <p className="text-xs">Bấm các nút phía trên hoặc đặt câu hỏi về thế cờ hiện tại.</p>
           </div>
         )}
-      </div>
+      </AppSurface>
 
       {/* Truthful Source Disclosure */}
       <SourceDisclosure source={disclosureSource} compact={true} />

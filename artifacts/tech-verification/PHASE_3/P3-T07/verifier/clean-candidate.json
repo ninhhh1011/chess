@@ -1,0 +1,21 @@
+{
+  "task": "P3-T07",
+  "verdict": "PASS",
+  "sourceEnumeration": "git ls-files --cached --others --exclude-standard",
+  "candidatePath": "C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p3t07-verifier-226cd9f62a404a21bcf8f7bb82c89ec6",
+  "fileCount": 1133,
+  "checks": {
+    "ignoredGeneratedPuzzlesAbsent": true,
+    "publicCorpusCurrentPresent": true,
+    "typecheck": "PASS",
+    "productionBuild": "PASS",
+    "distCorpusCurrentPresent": true,
+    "productionBrowserUsedCandidate": true
+  },
+  "build": {
+    "viteVersion": "8.0.10",
+    "modules": 4064,
+    "pwaEntries": 34,
+    "durationSeconds": 7.46
+  }
+}

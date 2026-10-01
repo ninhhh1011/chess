@@ -1,0 +1,44 @@
+{
+  "task": "P3-T05",
+  "baseline": { "branch": "main", "head": "7ecc6a6", "node": "v24.15.0", "npm": "11.12.1" },
+  "commands": [
+    {
+      "command": "npx vitest run src/test/dailyPlan.test.js src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts",
+      "exit": 1,
+      "stage": "RED: plan ignored skill evidence, skill mutations did not regenerate, task evidence/time not validated",
+      "tests": "3 failed, 34 passed"
+    },
+    {
+      "command": "npx vitest run src/test/dailyPlan.test.js src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts",
+      "exit": 1,
+      "stage": "RED: double safeProfile normalization dropped skill states",
+      "tests": "2 failed, 35 passed"
+    },
+    {
+      "command": "npx vitest run src/test/dailyPlan.test.js src/test/puzzleAttemptPersistence.test.ts src/test/persistenceContract.test.ts",
+      "exit": 0,
+      "files": "3/3",
+      "tests": "37/37"
+    },
+    { "command": "npm run lint", "exit": 0 },
+    { "command": "npm run typecheck", "exit": 0 },
+    { "command": "npm run build", "exit": 0, "modules": 4105 },
+    {
+      "command": "npx vitest run --reporter=json --outputFile=artifacts/tech-verification/PHASE_3/P3-T05/vitest-full.json",
+      "exit": 0,
+      "suites": "191/191",
+      "tests": "727/727"
+    },
+    {
+      "command": "node artifacts/tech-verification/PHASE_3/P3-T05/self-play.mjs http://127.0.0.1:4175",
+      "exit": 0,
+      "verdict": "PASS",
+      "initialTasks": 4,
+      "evidenceDrivenSkill": "crushing",
+      "retryAndIntermediateKeptPlan": true,
+      "exactReloadBytes": true,
+      "runtimeErrors": 0
+    },
+    { "command": "git diff --check", "exit": 0 }
+  ]
+}

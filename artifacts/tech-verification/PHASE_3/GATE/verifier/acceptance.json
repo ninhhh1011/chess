@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-09-06T08:35:54.000Z",
+  "verdict": "PASS",
+  "quality": {
+    "focused": { "files": 15, "passed": 138, "failed": 0 },
+    "full": { "files": 56, "passed": 760, "failed": 0 },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": { "status": "PASS", "modules": 4107, "pwaEntries": 45 },
+    "diffCheck": "PASS"
+  },
+  "production": {
+    "hashedAssets": true,
+    "cleanProfilePlanTasks": 4,
+    "gamePlies": 12,
+    "legalReplay": true,
+    "realStockfishBestmoves": 22,
+    "trustedFactEngine": "stockfish_wasm",
+    "coachGroundedInSelectedFact": true,
+    "puzzleId": "lichess-00008",
+    "sourcePuzzleId": "00008",
+    "puzzleEvents": ["wrong", "retry", "correct", "correct", "correct"],
+    "uniquePuzzleEvents": true,
+    "skillStates": 5,
+    "skillEvidenceIds": 11,
+    "allSkillEvidenceResolvesUniquely": true,
+    "planChanged": true,
+    "planEvidenceBacked": true,
+    "currentPlanUniqueInHistory": true,
+    "reloadByteExact": true,
+    "runtimeErrors": { "page": 0, "console": 0, "network": 0, "unexpectedHttp": 0 }
+  },
+  "cloud": {
+    "realProvider": true,
+    "manualUploadStatuses": [201, 200],
+    "rowCounts": [1, 1],
+    "sameRowIdentity": true,
+    "sameProfile": true,
+    "cleanup": { "events": true, "row": true, "rowsRemaining": 0, "account": true, "accountAbsent": true }
+  }
+}

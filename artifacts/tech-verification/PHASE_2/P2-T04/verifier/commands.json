@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "commands": [
+    { "command": "curl.exe -sS -I https://database.lichess.org/lichess_db_puzzle.csv.zst", "exitCode": 0, "result": "HTTP 200; 304384407 bytes; Last-Modified 2026-08-02T07:23:55Z" },
+    { "command": "Get-FileHash C:\\Users\\nguye\\AppData\\Local\\Temp\\chess-p2t04\\lichess_db_puzzle.csv.zst -Algorithm SHA256", "exitCode": 0, "result": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073" },
+    { "command": "node scripts/import-lichess-puzzles.mjs <official input> <fresh outputs> --limit 1000 --rating-min 1400 --rating-max 1600 --batch-size 64 --dataset-version 2026-08-02 --source-published-at 2026-08-02T07:23:55.000Z", "exitCode": 0, "result": "parsed 9362; accepted 1000" },
+    { "command": "node scripts/import-lichess-puzzles.mjs <official input> <repeat outputs> <same filters>", "exitCode": 0, "result": "same contentIdentitySha256" },
+    { "command": "node scripts/import-lichess-puzzles.mjs <official input> <resume outputs> <same filters> --abort-after 3000", "exitCode": 75, "result": "checkpoint at parsed 3000; accepted 345" },
+    { "command": "node scripts/import-lichess-puzzles.mjs <official input> <resume outputs> <same filters> --resume", "exitCode": 0, "result": "accepted 1000; zero duplicates; resumed" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T04/verifier/audit-real.mjs <official input> <fresh> <repeat> <resume>", "exitCode": 0, "result": "1000/1000 contract, canonical checksum, raw-row, provenance, and solution replay checks passed" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T04/verifier/adversarial.mjs", "exitCode": 0, "result": "6/6 adversarial groups passed" },
+    { "command": "npx vitest run scripts/import-lichess-puzzles.test.mjs src/test/puzzleRecord.test.ts src/test/corpusAvailability.test.ts src/test/corpusIntegration.test.ts", "exitCode": 0, "result": "4 files; 41 tests" },
+    { "command": "npm test", "exitCode": 0, "result": "36 files; 687 tests" },
+    { "command": "npm run lint", "exitCode": 0 },
+    { "command": "npm run typecheck", "exitCode": 0 },
+    { "command": "npm run build", "exitCode": 0, "result": "4103 modules transformed; production hashed assets built" },
+    { "command": "node artifacts/tech-verification/PHASE_2/P2-T04/verifier/self-play.mjs http://127.0.0.1:4198", "exitCode": 0, "result": "6 legal plies, real Stockfish WASM, legal PGN replay, truthful unavailable notice, zero browser errors" },
+    { "command": "git diff --check", "exitCode": 0 }
+  ]
+}

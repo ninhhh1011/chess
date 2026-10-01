@@ -217,25 +217,15 @@ describe('Learning Loop Integration', () => {
   });
 
   describe('Corpus Integration', () => {
-    test('can get random puzzle', () => {
-      const puzzle = getRandomPuzzle();
-      expect(puzzle).toBeDefined();
-      expect(puzzle?.fen).toBeDefined();
+    test('does not substitute a bundled puzzle when the corpus is unavailable', () => {
+      expect(getRandomPuzzle()).toBeNull();
     });
 
-    test('puzzles have required fields', () => {
-      const puzzle = getRandomPuzzle();
-      if (puzzle) {
-        expect(puzzle.fen).toBeDefined();
-        expect(puzzle.correctMoves).toBeDefined();
-        expect(Array.isArray(puzzle.correctMoves)).toBe(true);
-      }
-    });
-
-    test('recommendations use corpus', () => {
+    test('recommendations remain available without an external corpus', () => {
       const profile = getUserProfile();
       const exercises = getRecommendedExercises(profile);
       expect(Array.isArray(exercises)).toBe(true);
+      expect(exercises.length).toBeGreaterThan(0);
     });
   });
 });

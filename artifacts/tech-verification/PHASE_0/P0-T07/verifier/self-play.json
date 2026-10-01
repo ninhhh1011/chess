@@ -1,0 +1,91 @@
+{
+  "verdict": "BROWSER_PASS",
+  "server": "fresh Vite production preview of dist/",
+  "browser": "Chromium",
+  "viewport": "1440x900",
+  "route": "/play -> visible navigation -> /training -> visible navigation -> /exercises",
+  "plies": 6,
+  "sanMoves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nf6",
+    "d3",
+    "Nc6"
+  ],
+  "finalFen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+  "pgnReplay": "PASS",
+  "engineSource": "stockfish_wasm",
+  "profileSchemaVersion": "profile.v1",
+  "planSchemaVersion": "training.v1",
+  "taskTypes": [
+    "lesson",
+    "exercise",
+    "opening",
+    "challenge"
+  ],
+  "taskCount": 4,
+  "canonicalTasksPass": true,
+  "canonicalTasks": [
+    {
+      "id": "board",
+      "type": "lesson",
+      "title": "Bàn cờ và tọa độ",
+      "reason": "Nền tảng để đọc nước đi và hiểu bàn cờ."
+    },
+    {
+      "id": "piece_movement",
+      "type": "exercise",
+      "title": "Bài tập luật đi quân",
+      "reason": "Củng cố cách đi từng quân."
+    },
+    {
+      "id": "italian-game",
+      "type": "opening",
+      "title": "Khai cuộc Ý",
+      "reason": "Phù hợp để xây nền khai cuộc."
+    },
+    {
+      "id": "daily_challenge",
+      "type": "challenge",
+      "title": "Ván cờ thực hành",
+      "reason": "Chơi 1 ván và tập không mất quân miễn phí."
+    }
+  ],
+  "renderedLabels": [
+    "Bài học",
+    "Bài tập",
+    "Thực chiến",
+    "Rèn luyện"
+  ],
+  "exerciseId": "mate_one_queen",
+  "exerciseMove": "g6f7",
+  "persistedExerciseTotal": 1,
+  "persistedCompletedExercises": [
+    "mate_one_queen"
+  ],
+  "worker": {
+    "starts": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "ready": [
+      {
+        "type": "ready",
+        "success": true
+      }
+    ],
+    "bestmoves": [
+      "bestmove e2e3 ponder e7e6",
+      "bestmove e7e5 ponder g1f3",
+      "bestmove d2d4 ponder d7d5",
+      "bestmove g8f6 ponder e4e5",
+      "bestmove g8f6 ponder d2d4",
+      "bestmove g1f3 ponder g8f6",
+      "bestmove g8f6 ponder d2d4",
+      "bestmove b8c6 ponder c2c4"
+    ]
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkErrors": []
+}

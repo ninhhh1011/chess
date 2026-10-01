@@ -1,0 +1,774 @@
+{
+  "verdict": "PASS",
+  "active": {
+    "warmup": {
+      "success": true,
+      "source": "stockfish_wasm",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "bestMove": "g1f3",
+      "evaluation": {
+        "type": "cp",
+        "value": 49,
+        "display": "+0.49"
+      },
+      "depth": 11,
+      "pv": [
+        "d2d4",
+        "d2d4",
+        "d2d4",
+        "g1f3",
+        "e7e6",
+        "d2d4",
+        "d7d5",
+        "d2d4",
+        "d7d5",
+        "g1f3",
+        "e7e6",
+        "d2d4",
+        "d7d5",
+        "g1f3",
+        "g8f6",
+        "c1f4",
+        "e7e6",
+        "e2e4",
+        "d7d5",
+        "e4e5",
+        "e7e6",
+        "d2d4",
+        "c7c5",
+        "g1f3",
+        "e2e4",
+        "e7e5",
+        "g1f3",
+        "e2e4",
+        "d7d5",
+        "e4d5",
+        "d8d5",
+        "b1c3",
+        "d5e5",
+        "f1e2",
+        "e2e4",
+        "d7d5",
+        "e4d5",
+        "d8d5",
+        "g1f3",
+        "d5e6",
+        "f1e2",
+        "e2e4",
+        "e7e5",
+        "b1c3",
+        "d7d6",
+        "d2d4",
+        "e5d4",
+        "d1d4",
+        "b8c6"
+      ],
+      "raw": []
+    },
+    "disposed": {
+      "settled": true,
+      "error": "Stockfish analysis disposed"
+    },
+    "restarted": {
+      "success": true,
+      "source": "stockfish_wasm",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "bestMove": "d2d4",
+      "evaluation": {
+        "type": "cp",
+        "value": 49,
+        "display": "+0.49"
+      },
+      "depth": 11,
+      "pv": [
+        "d2d4",
+        "d2d4",
+        "d2d4",
+        "g1f3",
+        "e7e6",
+        "d2d4",
+        "d7d5",
+        "d2d4",
+        "d7d5",
+        "g1f3",
+        "e7e6",
+        "d2d4",
+        "d7d5",
+        "g1f3",
+        "g8f6",
+        "c1f4",
+        "e7e6",
+        "e2e4",
+        "d7d5",
+        "e4e5",
+        "e7e6",
+        "d2d4",
+        "c7c5",
+        "g1f3",
+        "e2e4",
+        "e7e5",
+        "g1f3",
+        "e2e4",
+        "d7d5",
+        "e4d5",
+        "d8d5",
+        "b1c3",
+        "d5e5",
+        "f1e2",
+        "e2e4",
+        "d7d5",
+        "e4d5",
+        "d8d5",
+        "g1f3",
+        "d5e6",
+        "f1e2",
+        "e2e4",
+        "e7e5",
+        "b1c3",
+        "d7d6",
+        "d2d4",
+        "e5d4",
+        "d1d4",
+        "b8c6"
+      ],
+      "raw": []
+    },
+    "activeWorkerId": 1,
+    "state": "ready",
+    "ready": true,
+    "audit": {
+      "created": [
+        {
+          "id": 1,
+          "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+        },
+        {
+          "id": 2,
+          "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+        }
+      ],
+      "terminated": [
+        1
+      ],
+      "sent": [
+        {
+          "id": 1,
+          "message": "init",
+          "at": 1683.6000001430511
+        },
+        {
+          "id": 1,
+          "message": "setoption name UCI_LimitStrength value true",
+          "at": 1921.8000001907349
+        },
+        {
+          "id": 1,
+          "message": "setoption name UCI_Elo value 1200",
+          "at": 1921.8000001907349
+        },
+        {
+          "id": 1,
+          "message": "ucinewgame",
+          "at": 1921.9000000953674
+        },
+        {
+          "id": 1,
+          "message": "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+          "at": 1921.9000000953674
+        },
+        {
+          "id": 1,
+          "message": "go movetime 100",
+          "at": 1921.9000000953674
+        },
+        {
+          "id": 1,
+          "message": "setoption name UCI_LimitStrength value true",
+          "at": 2033.9000000953674
+        },
+        {
+          "id": 1,
+          "message": "setoption name UCI_Elo value 1200",
+          "at": 2034
+        },
+        {
+          "id": 1,
+          "message": "ucinewgame",
+          "at": 2034
+        },
+        {
+          "id": 1,
+          "message": "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+          "at": 2034
+        },
+        {
+          "id": 1,
+          "message": "go movetime 5000",
+          "at": 2034
+        },
+        {
+          "id": 1,
+          "message": "stop",
+          "at": 2045.7000000476837
+        },
+        {
+          "id": 2,
+          "message": "init",
+          "at": 2046.4000000953674
+        },
+        {
+          "id": 2,
+          "message": "setoption name UCI_LimitStrength value true",
+          "at": 2289.4000000953674
+        },
+        {
+          "id": 2,
+          "message": "setoption name UCI_Elo value 1200",
+          "at": 2289.4000000953674
+        },
+        {
+          "id": 2,
+          "message": "ucinewgame",
+          "at": 2289.4000000953674
+        },
+        {
+          "id": 2,
+          "message": "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+          "at": 2289.4000000953674
+        },
+        {
+          "id": 2,
+          "message": "go movetime 100",
+          "at": 2289.4000000953674
+        }
+      ],
+      "ready": [
+        {
+          "id": 1,
+          "type": "ready",
+          "success": true
+        },
+        {
+          "id": 2,
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "searches": [
+        {
+          "id": 1,
+          "command": "go movetime 100",
+          "startedAt": 1921.9000000953674,
+          "depth": 11,
+          "engineTimeMs": 100,
+          "wallTimeMs": 108,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 5000",
+          "startedAt": 2034,
+          "depth": 4,
+          "engineTimeMs": 2,
+          "wallTimeMs": null,
+          "bestmove": null
+        },
+        {
+          "id": 2,
+          "command": "go movetime 100",
+          "startedAt": 2289.4000000953674,
+          "depth": 11,
+          "engineTimeMs": 100,
+          "wallTimeMs": 110,
+          "bestmove": "d2d4"
+        }
+      ]
+    },
+    "restartedMoveLegal": true,
+    "pass": true
+  },
+  "coldInit": {
+    "firstWorkerId": 1,
+    "secondWorkerId": 2,
+    "firstPrompt": {
+      "settled": true,
+      "value": false,
+      "elapsedMs": 0
+    },
+    "firstFinal": {
+      "value": false,
+      "elapsedMs": 270
+    },
+    "secondInit": {
+      "settled": true,
+      "value": true
+    },
+    "finalState": "ready",
+    "finalReady": true,
+    "audit": {
+      "created": [
+        {
+          "id": 1,
+          "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+        },
+        {
+          "id": 2,
+          "url": "/stockfish-worker.js?v=2026-05-30-simplified"
+        }
+      ],
+      "terminated": [
+        1
+      ],
+      "sent": [
+        {
+          "id": 1,
+          "message": "init",
+          "at": 1068.5999999046326
+        },
+        {
+          "id": 1,
+          "message": "stop",
+          "at": 1068.7000000476837
+        },
+        {
+          "id": 2,
+          "message": "init",
+          "at": 1068.7999999523163
+        }
+      ],
+      "ready": [
+        {
+          "id": 2,
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "searches": []
+    },
+    "pass": true
+  },
+  "selfPlay": {
+    "white": {
+      "color": "w",
+      "plies": 10,
+      "sanMoves": [
+        "a3",
+        "d5",
+        "a4",
+        "e5",
+        "a5",
+        "c5",
+        "a6",
+        "Nxa6",
+        "b3",
+        "Nf6"
+      ],
+      "finalFen": "r1bqkb1r/pp3ppp/n4n2/2ppp3/8/1P6/2PPPPPP/RNBQKBNR w KQkq - 1 6",
+      "pgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. a3 d5 2. a4 e5 3. a5 c5 4. a6 Nxa6 5. b3 Nf6 *",
+      "pgnReplay": true,
+      "workerUrls": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "ready": [
+        {
+          "id": 1,
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "searches": [
+        {
+          "id": 1,
+          "command": "go movetime 400",
+          "startedAt": 1363.6999998092651,
+          "depth": 13,
+          "engineTimeMs": 400,
+          "wallTimeMs": 407,
+          "bestmove": "e2e4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 1772.5,
+          "depth": 15,
+          "engineTimeMs": 504,
+          "wallTimeMs": 522,
+          "bestmove": "d7d5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2298,
+          "depth": 14,
+          "engineTimeMs": 502,
+          "wallTimeMs": 510,
+          "bestmove": "e2e3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2810.2999999523163,
+          "depth": 15,
+          "engineTimeMs": 503,
+          "wallTimeMs": 509,
+          "bestmove": "d7d5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3320.2999999523163,
+          "depth": 14,
+          "engineTimeMs": 504,
+          "wallTimeMs": 513,
+          "bestmove": "e7e5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3835.699999809265,
+          "depth": 15,
+          "engineTimeMs": 503,
+          "wallTimeMs": 515,
+          "bestmove": "d2d3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4351.799999952316,
+          "depth": 14,
+          "engineTimeMs": 504,
+          "wallTimeMs": 515,
+          "bestmove": "c7c5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4868.099999904633,
+          "depth": 15,
+          "engineTimeMs": 504,
+          "wallTimeMs": 514,
+          "bestmove": "c7c5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5386.799999952316,
+          "depth": 15,
+          "engineTimeMs": 500,
+          "wallTimeMs": 512,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5899.799999952316,
+          "depth": 14,
+          "engineTimeMs": 508,
+          "wallTimeMs": 517,
+          "bestmove": "b8c6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6419.699999809265,
+          "depth": 14,
+          "engineTimeMs": 505,
+          "wallTimeMs": 519,
+          "bestmove": "b8a6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6945.699999809265,
+          "depth": 14,
+          "engineTimeMs": 500,
+          "wallTimeMs": 564,
+          "bestmove": "e2e3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 7511.599999904633,
+          "depth": 13,
+          "engineTimeMs": 505,
+          "wallTimeMs": 516,
+          "bestmove": "b8a6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 8032,
+          "depth": 14,
+          "engineTimeMs": 505,
+          "wallTimeMs": 523,
+          "bestmove": "g8f6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 8563.799999952316,
+          "depth": 13,
+          "engineTimeMs": 517,
+          "wallTimeMs": 538,
+          "bestmove": "e2e3"
+        }
+      ],
+      "pass": true
+    },
+    "black": {
+      "color": "b",
+      "plies": 10,
+      "sanMoves": [
+        "e4",
+        "Nc6",
+        "d4",
+        "Rb8",
+        "d5",
+        "Ra8",
+        "dxc6",
+        "Rb8",
+        "Nf3",
+        "Ra8"
+      ],
+      "finalFen": "r1bqkbnr/pppppppp/2P5/8/4P3/5N2/PPP2PPP/RNBQKB1R w KQk - 3 6",
+      "pgn": "[Event \"?\"]\n[Site \"?\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"?\"]\n[Black \"?\"]\n[Result \"*\"]\n\n1. e4 Nc6 2. d4 Rb8 3. d5 Ra8 4. dxc6 Rb8 5. Nf3 Ra8 *",
+      "pgnReplay": true,
+      "workerUrls": [
+        "/stockfish-worker.js?v=2026-05-30-simplified"
+      ],
+      "ready": [
+        {
+          "id": 1,
+          "type": "ready",
+          "success": true
+        }
+      ],
+      "searches": [
+        {
+          "id": 1,
+          "command": "go movetime 400",
+          "startedAt": 1268.3999998569489,
+          "depth": 13,
+          "engineTimeMs": 401,
+          "wallTimeMs": 413,
+          "bestmove": "d2d4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 1683.8999998569489,
+          "depth": 14,
+          "engineTimeMs": 502,
+          "wallTimeMs": 510,
+          "bestmove": "e2e4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2254.2999999523163,
+          "depth": 14,
+          "engineTimeMs": 502,
+          "wallTimeMs": 516,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 2771,
+          "depth": 13,
+          "engineTimeMs": 505,
+          "wallTimeMs": 515,
+          "bestmove": "d2d4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3290.0999999046326,
+          "depth": 14,
+          "engineTimeMs": 502,
+          "wallTimeMs": 516,
+          "bestmove": "d7d5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 3807.5,
+          "depth": 12,
+          "engineTimeMs": 502,
+          "wallTimeMs": 513,
+          "bestmove": "d2d4"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4322.899999856949,
+          "depth": 15,
+          "engineTimeMs": 502,
+          "wallTimeMs": 511,
+          "bestmove": "d4d5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 4842.099999904633,
+          "depth": 14,
+          "engineTimeMs": 505,
+          "wallTimeMs": 523,
+          "bestmove": "g8f6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5367.5,
+          "depth": 15,
+          "engineTimeMs": 502,
+          "wallTimeMs": 511,
+          "bestmove": "e4e5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 5882.299999952316,
+          "depth": 15,
+          "engineTimeMs": 504,
+          "wallTimeMs": 512,
+          "bestmove": "d5c6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6400.599999904633,
+          "depth": 15,
+          "engineTimeMs": 504,
+          "wallTimeMs": 520,
+          "bestmove": "c6a5"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 6921.799999952316,
+          "depth": 16,
+          "engineTimeMs": 504,
+          "wallTimeMs": 513,
+          "bestmove": "d5c6"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 7438.799999952316,
+          "depth": 15,
+          "engineTimeMs": 501,
+          "wallTimeMs": 514,
+          "bestmove": "g1f3"
+        },
+        {
+          "id": 1,
+          "command": "go movetime 500",
+          "startedAt": 7961,
+          "depth": 15,
+          "engineTimeMs": 502,
+          "wallTimeMs": 521,
+          "bestmove": "d7d5"
+        }
+      ],
+      "pass": true
+    }
+  },
+  "assetResponses": [
+    {
+      "label": "active-lifecycle",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "active-lifecycle",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.js"
+    },
+    {
+      "label": "active-lifecycle",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.wasm"
+    },
+    {
+      "label": "active-lifecycle",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "active-lifecycle",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.js"
+    },
+    {
+      "label": "active-lifecycle",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.wasm"
+    },
+    {
+      "label": "cold-init",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "cold-init",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.js"
+    },
+    {
+      "label": "cold-init",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.wasm"
+    },
+    {
+      "label": "self-play-w",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "self-play-w",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.js"
+    },
+    {
+      "label": "self-play-w",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.wasm"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.js"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.wasm"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish-worker.js?v=2026-05-30-simplified"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.js"
+    },
+    {
+      "label": "self-play-b",
+      "status": 200,
+      "url": "http://127.0.0.1:4181/stockfish/stockfish.wasm"
+    }
+  ],
+  "browserErrors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

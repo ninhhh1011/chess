@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS",
+  "importerRecovery": {
+    "partialWrites": "append-only accepted/quarantine .partial files",
+    "durability": "batch write then fsync both partials before atomic checkpoint rename",
+    "checkpointBindings": ["dataset", "source URL/hash", "config hash", "import/parser/validator versions", "import run ID", "retrievedAt", "absolute output paths", "source row", "counts", "durable byte lengths"],
+    "resume": "validates bindings, truncates to durable byte lengths, rebuilds ID/key/content state, re-decompresses and skips committed rows",
+    "freshRerun": "refuses any existing final, checkpoint, or partial target"
+  },
+  "releaseManager": {
+    "confinement": "lexical direct-child validation plus lstat symbolic-link/junction rejection and physical realpath direct-child validation",
+    "verification": "requires completed manifest and accepted/quarantine hashes before seal or pointer mutation",
+    "immutability": "seal binds run name, import run ID, manifest/output/quarantine hashes, and content identity",
+    "pointer": "current.json written through same-directory temporary file then atomic rename",
+    "rollback": "verifies sealed history target before atomic pointer change"
+  },
+  "productionSearch": {
+    "query": "synthetic|fake|mock|S3|GCS|Azure|Firebase|Supabase|blob/object storage",
+    "matches": [],
+    "newDependency": false,
+    "newProviderOrStorage": false
+  }
+}

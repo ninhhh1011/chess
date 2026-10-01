@@ -1,0 +1,4234 @@
+[
+  {
+    "direction": "to-worker",
+    "line": "init"
+  },
+  {
+    "direction": "from-worker",
+    "line": "Stockfish 18 Lite WASM by the Stockfish developers (see AUTHORS file)"
+  },
+  {
+    "direction": "from-worker",
+    "line": "id name Stockfish 18 Lite WASM"
+  },
+  {
+    "direction": "from-worker",
+    "line": "id author the Stockfish developers (see AUTHORS file)"
+  },
+  {
+    "direction": "from-worker",
+    "line": ""
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name Threads type spin default 1 min 1 max 1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name Hash type spin default 16 min 1 max 33554432"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name Clear Hash type button"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name Ponder type check default false"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name MultiPV type spin default 1 min 1 max 256"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name Skill Level type spin default 20 min 0 max 20"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name Move Overhead type spin default 10 min 0 max 5000"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name nodestime type spin default 0 min 0 max 10000"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name UCI_Chess960 type check default false"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name UCI_LimitStrength type check default false"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name UCI_Elo type spin default 1320 min 1320 max 3190"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name UCI_ShowWDL type check default false"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name EvalFile type string default nn-9067e33176e8.nnue"
+  },
+  {
+    "direction": "from-worker",
+    "line": "option name EvalFileSmall type string default <empty>"
+  },
+  {
+    "direction": "from-worker",
+    "line": "uciok"
+  },
+  {
+    "direction": "from-worker",
+    "line": "readyok"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 400"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 7 nodes 20 nps 1818 hashfull 0 time 11 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 34 nodes 48 nps 4000 hashfull 0 time 12 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 47 nodes 119 nps 9916 hashfull 0 time 12 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 9 multipv 1 score cp 22 nodes 1375 nps 91666 hashfull 0 time 15 pv d2d4 d7d5 g2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 20 nodes 2020 nps 118823 hashfull 0 time 17 pv e2e4 d7d5 e4d5 d8d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 9 multipv 1 score cp 21 nodes 2739 nps 136950 hashfull 0 time 20 pv e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 21 nodes 2805 nps 140250 hashfull 0 time 20 pv e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp 21 nodes 2937 nps 139857 hashfull 0 time 21 pv e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 12 multipv 1 score cp 25 nodes 4672 nps 166857 hashfull 1 time 28 pv e2e4 e7e6 d2d4 d7d5 b1c3 d5e4 c3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 11 multipv 1 score cp 32 nodes 6168 nps 186909 hashfull 2 time 33 pv e2e4 e7e6 d2d4 d7d5 b1c3 d5e4 c3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp 35 nodes 8840 nps 215609 hashfull 3 time 41 pv e2e4 e7e6 d2d4 d7d5 b1c3 d5e4 c3e4 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 16 multipv 1 score cp 37 nodes 14923 nps 276351 hashfull 4 time 54 pv e2e4 e7e5 g1f3 g8f6 d2d4 d7d5 e4d5 e5d4 d1d4 f6d5 d4e4 c8e6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 22 multipv 1 score cp 37 nodes 31690 nps 372823 hashfull 11 time 85 pv e2e4 e7e6 g1f3 d7d5 b1c3 d5e4 c3e4 g8f6 e4f6 d8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 20 multipv 1 score cp 40 nodes 47416 nps 427171 hashfull 16 time 111 pv e2e4 e7e5 g1f3 d7d5 e4d5 e5e4 f3e5 d8d5 d2d4 e4d3 e5d3 b8c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 31 multipv 1 score cp 35 nodes 105674 nps 498462 hashfull 35 time 212 pv e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 b1c3 f8c5 d4c6 d7c6 d1d8 e8d8 f2f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 25 multipv 1 score cp 35 nodes 108464 nps 504483 hashfull 35 time 215 pv e2e4 e7e5 g1f3 b8c6 b1c3 g8f6 d2d4 e5d4 f3d4 f8c5 d4c6 b7c6 f1d3 e8g8 c1g5 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 24 multipv 1 score cp 35 nodes 117775 nps 518832 hashfull 37 time 227 pv e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 b1c3 c8e6 f2f3 f8d6 c1e3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 19 multipv 1 score cp 36 nodes 123221 nps 528845 hashfull 38 time 233 pv e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 b1c3 f8c5 f2f3 h8e8 c1f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 19 seldepth 30 multipv 1 score cp 41 lowerbound nodes 233178 nps 582945 hashfull 81 time 400 pv e2e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove e2e4 ponder e7e5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1600"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 1200"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 4 multipv 1 score cp -10 nodes 117 nps 117000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 8 multipv 1 score cp -6 nodes 353 nps 353000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -6 nodes 1505 nps 752500 hashfull 0 time 2 pv d7d5 e4d5 d8d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp -15 nodes 2945 nps 1472500 hashfull 0 time 2 pv d7d5 e4d5 d8d5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -22 nodes 4349 nps 1449666 hashfull 0 time 3 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp -22 nodes 5857 nps 1171400 hashfull 0 time 5 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp -26 nodes 13769 nps 983500 hashfull 4 time 14 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp -42 nodes 22161 nps 963521 hashfull 6 time 23 pv e7e5 b1c3 c7c5 a2a4 b8c6 f1c4 d7d6 c3d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 14 multipv 1 score cp -33 nodes 34489 nps 932135 hashfull 11 time 37 pv e7e6 g1f3 c7c5 d2d4 c5d4 f3d4 b8c6 d4b5 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 17 multipv 1 score cp -37 nodes 49574 nps 935358 hashfull 16 time 53 pv e7e6 g1f3 c7c5 f1e2 b8c6 e1g1 g8f6 b1c3 d7d5 e4d5 f6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 18 multipv 1 score cp -39 nodes 101478 nps 874810 hashfull 35 time 116 pv e7e6 d2d4 d7d5 b1c3 f8b4 e4e5 c7c5 a2a3 b4c3 b2c3 d8a5 g1f3 c5c4 c1d2 g8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp -38 nodes 127611 nps 850740 hashfull 42 time 150 pv c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 d7d6 c1g5 d8a5 g5f6 g7f6 f1e2 f8g7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 19 multipv 1 score cp -38 nodes 215658 nps 862632 hashfull 75 time 250 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 f1d3 f8b4 c1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 28 multipv 1 score cp -35 nodes 358496 nps 839569 hashfull 136 time 427 pv c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 c1e3 g8f6 b1c3 f8g7 d4c6 d7c6 d1d8 e8d8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 29 multipv 1 score cp -35 nodes 482831 nps 814217 hashfull 185 time 593 pv e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3 d8b6 f1e2 c5d4 c3d4 g8e7 b1c3 e7f5 c3a4 b6a5 c1d2 f8b4 a4c3 f5d4 f3d4 c6d4 a2a3 d4e2 a3b4 e2c3 b2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 21 multipv 1 score cp -35 nodes 658591 nps 785908 hashfull 246 time 838 pv e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3 d8b6 f1e2 c5d4 c3d4 g8e7 b1c3 e7f5 c3a4 b6a5 c1d2 f8b4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 26 multipv 1 score cp -35 nodes 774794 nps 783411 hashfull 291 time 989 pv e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3 d8b6 f1e2 c5d4 c3d4 g8e7 b1c3 e7f5 c3a4 b6a5 c1d2 f8b4 a4c3 f5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 34 multipv 1 score cp -35 nodes 901339 nps 779705 hashfull 334 time 1156 pv e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3 d8b6 f1e2 c5d4 c3d4 g8e7 b1c3 e7f5 c3a4 b6a5 c1d2 f8b4 a4c3 f5d4 f3d4 c6d4 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 19 seldepth 34 multipv 1 score cp -35 nodes 933964 nps 778303 hashfull 349 time 1200 pv e7e6 d2d4 d7d5 e4e5 c7c5 c2c3 b8c6 g1f3 d8b6 f1e2 c5d4 c3d4 g8e7 b1c3 e7f5 c3a4 b6a5 c1d2 f8b4 a4c3 f5d4 f3d4 c6d4 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove e7e6 ponder d2d4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 7 nodes 20 nps 20000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 34 nodes 48 nps 48000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 47 nodes 119 nps 119000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 9 multipv 1 score cp 22 nodes 1375 nps 458333 hashfull 0 time 3 pv d2d4 d7d5 g2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 20 nodes 2020 nps 673333 hashfull 0 time 3 pv e2e4 d7d5 e4d5 d8d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 9 multipv 1 score cp 21 nodes 2739 nps 684750 hashfull 0 time 4 pv e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 21 nodes 2805 nps 701250 hashfull 0 time 4 pv e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp 21 nodes 2937 nps 734250 hashfull 0 time 4 pv e2e4 e7e6 d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 12 multipv 1 score cp 25 nodes 4672 nps 778666 hashfull 1 time 6 pv e2e4 e7e6 d2d4 d7d5 b1c3 d5e4 c3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 11 multipv 1 score cp 32 nodes 6168 nps 881142 hashfull 2 time 7 pv e2e4 e7e6 d2d4 d7d5 b1c3 d5e4 c3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp 35 nodes 8840 nps 736666 hashfull 3 time 12 pv e2e4 e7e6 d2d4 d7d5 b1c3 d5e4 c3e4 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 16 multipv 1 score cp 37 nodes 14923 nps 678318 hashfull 4 time 22 pv e2e4 e7e5 g1f3 g8f6 d2d4 d7d5 e4d5 e5d4 d1d4 f6d5 d4e4 c8e6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 22 multipv 1 score cp 37 nodes 31690 nps 688913 hashfull 11 time 46 pv e2e4 e7e6 g1f3 d7d5 b1c3 d5e4 c3e4 g8f6 e4f6 d8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 20 multipv 1 score cp 40 nodes 47416 nps 687188 hashfull 16 time 69 pv e2e4 e7e5 g1f3 d7d5 e4d5 e5e4 f3e5 d8d5 d2d4 e4d3 e5d3 b8c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 31 multipv 1 score cp 35 nodes 105674 nps 664616 hashfull 35 time 159 pv e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 b1c3 f8c5 d4c6 d7c6 d1d8 e8d8 f2f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 25 multipv 1 score cp 35 nodes 108464 nps 665423 hashfull 35 time 163 pv e2e4 e7e5 g1f3 b8c6 b1c3 g8f6 d2d4 e5d4 f3d4 f8c5 d4c6 b7c6 f1d3 e8g8 c1g5 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 24 multipv 1 score cp 35 nodes 117775 nps 669176 hashfull 37 time 176 pv e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 b1c3 c8e6 f2f3 f8d6 c1e3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 19 multipv 1 score cp 36 nodes 123221 nps 677038 hashfull 38 time 182 pv e2e4 e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 b1c3 f8c5 f2f3 h8e8 c1f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 19 seldepth 30 multipv 1 score cp 34 upperbound nodes 358608 nps 714358 hashfull 133 time 502 pv e2e4 e7e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove e2e4 ponder e7e5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 4 multipv 1 score cp -10 nodes 24 nps 24000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp -9 nodes 111 nps 111000 hashfull 0 time 1 pv e7e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -5 nodes 470 nps 235000 hashfull 0 time 2 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp -12 nodes 873 nps 291000 hashfull 0 time 3 pv d7d5 e4d5 d8d5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -29 nodes 2146 nps 536500 hashfull 0 time 4 pv d7d5 e4d5 d8d5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp -34 nodes 3223 nps 402875 hashfull 0 time 8 pv d7d5 e4d5 d8d5 d2d4 g8f6 b1c3 d5c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 8 multipv 1 score cp -34 nodes 3278 nps 409750 hashfull 0 time 8 pv d7d5 e4d5 d8d5 d2d4 g8f6 b1c3 d5c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 13 multipv 1 score cp -34 nodes 4516 nps 410545 hashfull 1 time 11 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d1 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 10 multipv 1 score cp -35 nodes 5309 nps 442416 hashfull 2 time 12 pv e7e6 d2d4 d7d5 e4e5 c7c5 g1f3 c5d4 f3d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 18 multipv 1 score cp -36 nodes 20995 nps 583194 hashfull 7 time 36 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d3 g8f6 b1c3 f8b4 c1g5 d7d5 e1c1 d5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 13 multipv 1 score cp -36 nodes 21735 nps 587432 hashfull 7 time 37 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d3 g8f6 b1c3 f8c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 19 multipv 1 score cp -37 nodes 29760 nps 561509 hashfull 8 time 53 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 b1c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 22 multipv 1 score cp -37 nodes 34618 nps 549492 hashfull 9 time 63 pv e7e5 g1f3 d7d5 d2d4 e5d4 d1d4 g8f6 e4d5 d8d5 b1c3 d5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 15 multipv 1 score cp -37 nodes 37960 nps 550144 hashfull 10 time 69 pv e7e5 g1f3 d7d5 d2d4 e5d4 d1d4 b8c6 d4d5 d8d5 e4d5 c6b4 e1d1 b4d5 f1c4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 24 multipv 1 score cp -39 nodes 71184 nps 588297 hashfull 22 time 121 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 b1c3 c8e6 c1g5 f8b4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 25 multipv 1 score cp -32 nodes 128219 nps 637905 hashfull 44 time 201 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 f1d3 f8d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 31 multipv 1 score cp -33 nodes 248769 nps 654655 hashfull 99 time 380 pv e7e5 g1f3 b8c6 b1c3 g8f6 f1b5 f8c5 f3e5 c6e5 d2d4 c5d6 b5e2 e8g8 e1g1 e5g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 31 multipv 1 score cp -34 nodes 311560 nps 658689 hashfull 119 time 473 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 f2f3 c8e6 c1e3 f6d7 b1d2 a7a5 d2b3 e6b3 a2b3 f8c5 e1f2 c5e3 f2e3 h8e8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 19 seldepth 31 multipv 1 score cp -34 nodes 327790 nps 654271 hashfull 124 time 501 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 f2f3 c8e6 c1e3 f6d7 b1d2 a7a5 d2b3 e6b3 a2b3 f8c5 e1f2 c5e3 f2e3 h8e8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove e7e5 ponder g1f3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1600"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppp1ppp/4p3/8/4P3/N7/PPPP1PPP/R1BQKBNR b KQkq - 1 2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 1200"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 6 multipv 1 score cp 17 nodes 174 nps 174000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 20 nodes 413 nps 413000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 24 nodes 648 nps 648000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 30 nodes 1105 nps 1105000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 34 nodes 1816 nps 908000 hashfull 0 time 2 pv b7b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 68 nodes 4839 nps 967800 hashfull 0 time 5 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp 64 nodes 8966 nps 996222 hashfull 1 time 9 pv d7d5 e4d5 e6d5 d1e2 c8e6 g1f3 f8a3 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp 57 nodes 28382 nps 834764 hashfull 5 time 34 pv d7d5 d2d3 d5e4 d3e4 f8b4 c1d2 b4a3 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 15 multipv 1 score cp 43 nodes 54976 nps 796753 hashfull 15 time 69 pv d7d5 e4e5 f8a3 b2a3 g8e7 a1b1 c7c5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 22 multipv 1 score cp 35 nodes 114352 nps 767463 hashfull 34 time 149 pv b8c6 d2d3 f8a3 b2a3 d7d5 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 14 multipv 1 score cp 35 nodes 188683 nps 734175 hashfull 63 time 257 pv b8c6 g1f3 d7d5 e4d5 e6d5 f1e2 f8a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 21 multipv 1 score cp 36 nodes 286762 nps 694338 hashfull 91 time 413 pv b8c6 g1f3 d7d5 e4d5 e6d5 f1e2 g8f6 e1g1 c8g4 f1e1 f8a3 b2a3 e8g8 c1b2 f8e8 d1c1 d5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 15 multipv 1 score cp 34 nodes 385297 nps 645388 hashfull 121 time 597 pv b8c6 g1f3 d7d5 e4d5 e6d5 f1e2 g8f6 e1g1 f8a3 b2a3 e8g8 c1b2 f8e8 f1e1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 30 multipv 1 score cp 40 nodes 555817 nps 597652 hashfull 174 time 930 pv b8c6 d2d4 f8a3 b2a3 d8h4 d1d3 d7d5 e4d5 e6d5 d3e3 h4e7 e3e7 g8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 30 multipv 1 score cp 38 nodes 706478 nps 588731 hashfull 226 time 1200 pv b8c6 g1f3 d7d5 e4e5 f8a3 b2a3 d5d4 f1d3 g8e7 e1g1 b7b6 c2c4 c8b7 d3e4 d8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove f8a3 ponder b2a3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 29 nodes 30 nps 30000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 6 multipv 1 score cp 59 nodes 72 nps 72000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 6 multipv 1 score cp 80 nodes 126 nps 126000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 11 multipv 1 score cp 28 nodes 1289 nps 429666 hashfull 0 time 3 pv d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 28 nodes 2417 nps 604250 hashfull 0 time 4 pv d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp 28 nodes 2459 nps 614750 hashfull 0 time 4 pv d2d4 d7d5 e4d5 e6d5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp 27 nodes 2631 nps 657750 hashfull 0 time 4 pv d2d4 d7d5 e4d5 e6d5 g1f3 d8e7 f1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 27 nodes 3084 nps 616800 hashfull 0 time 5 pv d2d4 d7d5 e4d5 e6d5 g1f3 c8f5 d1e2 f8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 14 multipv 1 score cp 38 nodes 4652 nps 581500 hashfull 0 time 8 pv d2d4 d7d5 b1c3 d5e4 c3e4 g8f6 e4f6 d8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp 44 nodes 5652 nps 565200 hashfull 1 time 10 pv d2d4 d7d5 b1c3 d5e4 c3e4 g8f6 e4f6 d8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp 71 nodes 7767 nps 597461 hashfull 1 time 13 pv d2d4 d7d5 b1c3 d5e4 c3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 24 multipv 1 score cp 45 nodes 19376 nps 523675 hashfull 5 time 37 pv d2d4 d7d5 b1c3 d5e4 c3e4 f8e7 c2c3 g8f6 e4f6 e7f6 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 21 multipv 1 score cp 44 nodes 43278 nps 527780 hashfull 15 time 82 pv d2d4 d7d5 b1c3 f8b4 e4e5 g8e7 a2a3 b4c3 b2c3 c7c5 a3a4 d8a5 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 25 multipv 1 score cp 34 nodes 125196 nps 521650 hashfull 43 time 240 pv d2d4 d7d5 e4e5 c7c5 c2c3 c8d7 g1f3 b8c6 f1e2 d8c7 e1g1 g8e7 d4c5 c6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 23 multipv 1 score cp 48 nodes 147213 nps 535320 hashfull 47 time 275 pv d2d4 d7d5 e4e5 c7c5 c2c3 c8d7 f1e2 b8c6 g1f3 g8e7 e1g1 e7g6 c1e3 f8e7 e2d3 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 25 multipv 1 score cp 49 nodes 178435 nps 531056 hashfull 58 time 336 pv d2d4 d7d5 e4e5 c7c5 c2c3 c8d7 f1e2 a7a6 g1f3 c5d4 c3d4 d7b5 e2b5 a6b5 e1g1 b8c6 b1c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 31 multipv 1 score cp 48 nodes 231640 nps 505764 hashfull 81 time 458 pv d2d4 d7d5 b1c3 g8f6 e4e5 f6d7 f2f4 c7c5 g1f3 c5d4 f3d4 b8c6 c1e3 f8c5 d1d2 d8a5 e1c1 c5b4 f1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 31 multipv 1 score cp 48 nodes 247889 nps 491843 hashfull 91 time 504 pv d2d4 d7d5 b1c3 g8f6 e4e5 f6d7 f2f4 c7c5 g1f3 c5d4 f3d4 b8c6 c1e3 f8c5 d1d2 d8a5 e1c1 c5b4 f1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d2d4 ponder d7d5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppp1ppp/4p3/8/4P3/N7/PPPP1PPP/R1BQKBNR b KQkq - 1 2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 6 multipv 1 score cp 17 nodes 41 nps 41000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 20 nodes 95 nps 95000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 24 nodes 172 nps 172000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 30 nodes 267 nps 267000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 33 nodes 380 nps 380000 hashfull 0 time 1 pv d7d5 e4d5 f8a3 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp 50 nodes 567 nps 567000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp 52 nodes 2085 nps 521250 hashfull 1 time 4 pv d7d5 e4d5 e6d5 g1f3 f8a3 b2a3 c8g4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 9 multipv 1 score cp 54 nodes 2277 nps 569250 hashfull 1 time 4 pv d7d5 e4e5 f8a3 b2a3 c7c5 d1g4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 17 multipv 1 score cp 48 nodes 7840 nps 490000 hashfull 3 time 16 pv f8a3 b2a3 d7d6 d2d4 g8f6 f1d3 e6e5 g1f3 e5d4 f3d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 16 multipv 1 score cp 41 nodes 19060 nps 501578 hashfull 6 time 38 pv d7d5 e4e5 f8a3 b2a3 g8e7 d2d4 c7c5 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 24 multipv 1 score cp 33 nodes 70181 nps 539853 hashfull 27 time 130 pv d7d5 e4e5 d5d4 f1d3 f8a3 b2a3 d8d5 g1f3 b8c6 e1g1 c6e5 f3e5 d5e5 f1e1 e5c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 15 multipv 1 score cp 33 nodes 70997 nps 541961 hashfull 27 time 131 pv d7d5 e4e5 d5d4 f1d3 f8a3 b2a3 d8d5 g1f3 b8c6 e1g1 c6e5 f3e5 d5e5 f1e1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 21 multipv 1 score cp 37 nodes 95501 nps 545720 hashfull 39 time 175 pv d7d5 e4e5 d5d4 b2b3 g8e7 g1f3 a7a6 c2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 24 multipv 1 score cp 34 nodes 161463 nps 560635 hashfull 64 time 288 pv d7d5 e4e5 d5d4 b2b3 a7a6 a3c4 b8c6 d1f3 g8e7 f1d3 e7g6 f3g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 29 multipv 1 score cp 29 nodes 232776 nps 551601 hashfull 92 time 422 pv d7d5 e4e5 d5d4 b2b3 b8c6 g1f3 g7g5 h2h3 g8e7 f3g5 c6e5 d1h5 e7g6 a3c4 d8d5 c4e5 d5e5 e1d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 24 multipv 1 score cp 43 nodes 277119 nps 552029 hashfull 107 time 502 pv d7d5 e4e5 d5d4 b2b3 b8c6 g1f3 g7g5 h2h3 g8e7 f3g5 c6e5 a3c4 e7g6 d1h5 e5c6 e1d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 24 multipv 1 score cp 43 nodes 277505 nps 551699 hashfull 108 time 503 pv d7d5 e4e5 d5d4 b2b3 b8c6 g1f3 g7g5 h2h3 g8e7 f3g5 c6e5 a3c4 e7g6 d1h5 e5c6 e1d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d7d5 ponder e4e5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1600"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 1200"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 370 nodes 147 nps 147000 hashfull 0 time 1 pv a3f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 490 nodes 286 nps 286000 hashfull 0 time 1 pv a3d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 484 nodes 432 nps 432000 hashfull 0 time 1 pv a3f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp 446 nodes 752 nps 752000 hashfull 0 time 1 pv a3f8 a2a3 f8c5 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 472 nodes 990 nps 495000 hashfull 0 time 2 pv a3e7 c1b2 e7f6 b2f6 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 393 nodes 1462 nps 731000 hashfull 0 time 2 pv d8e7 e4e5 a7a6 c1a3 e7a3 b3b4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 372 nodes 1774 nps 591333 hashfull 0 time 3 pv d8e7 e4e5 a7a6 c1a3 e7a3 b3b4 a3a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 491 nodes 3631 nps 605166 hashfull 1 time 6 pv a3c1 a1c1 d8e7 c1b1 g8f6 e4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 10 multipv 1 score cp 416 nodes 5300 nps 662500 hashfull 2 time 8 pv a3c1 a1c1 d8e7 d1g4 g8f6 g4g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp 526 nodes 7789 nps 649083 hashfull 3 time 12 pv a3c1 a1c1 b8c6 d1g4 g7g6 g4g3 d7d5 g3c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 12 multipv 1 score cp 508 nodes 11883 nps 625421 hashfull 4 time 19 pv a3c1 a1c1 b8c6 d1g4 e8f8 g4g3 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp 500 nodes 16703 nps 642423 hashfull 5 time 26 pv a3c1 a1c1 d7d6 d2d4 d6d5 e4d5 e6d5 d1e2 e8f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 18 multipv 1 score cp 482 nodes 34349 nps 624527 hashfull 13 time 55 pv a3c1 d1c1 b8c6 e1d1 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 18 multipv 1 score cp 467 nodes 56791 nps 585474 hashfull 25 time 97 pv a3c1 d1c1 b8c6 f1b5 g8f6 e4e5 f6d5 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 20 multipv 1 score cp 473 nodes 195243 nps 582814 hashfull 89 time 335 pv a3c1 d1c1 d7d5 c1b2 g8f6 e4e5 f6d7 d2d4 c7c5 d4c5 b8c6 g1f3 d7c5 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 22 multipv 1 score cp 453 nodes 588011 nps 489601 hashfull 250 time 1201 pv a3c1 d1c1 d7d5 e4e5 c8d7 d2d4 g8e7 g1f3 c7c5 d4c5 d8a5 c1d2 a5c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove a3c5 ponder c1b2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/8/4P3/b7/PPPP1PPP/R1BQKBNR w KQkq - 0 3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -45 nodes 29 nps 29000 hashfull 0 time 1 pv b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp -31 nodes 63 nps 63000 hashfull 0 time 1 pv b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp -33 nodes 261 nps 261000 hashfull 0 time 1 pv b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp -98 nodes 727 nps 727000 hashfull 0 time 1 pv b2a3 d7d6 f1b5 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 11 multipv 1 score cp -87 nodes 950 nps 950000 hashfull 0 time 1 pv b2a3 d7d6 a3a4 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 9 multipv 1 score cp -89 nodes 1186 nps 593000 hashfull 0 time 2 pv b2a3 d7d6 f1b5 c8d7 b5e2 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp -86 nodes 1261 nps 630500 hashfull 0 time 2 pv b2a3 d7d6 f1b5 c8d7 b5e2 g8f6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp -91 nodes 1587 nps 793500 hashfull 0 time 2 pv b2a3 d7d6 f1b5 c8d7 b5d7 d8d7 c1b2 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 15 multipv 1 score cp -76 nodes 3130 nps 626000 hashfull 1 time 5 pv b2a3 d7d5 e4d5 d8d5 c1b2 g8f6 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 12 multipv 1 score cp -51 nodes 5635 nps 469583 hashfull 1 time 12 pv b2a3 d7d5 e4d5 d8d5 c1b2 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 14 multipv 1 score cp -35 nodes 11609 nps 464360 hashfull 3 time 25 pv b2a3 d7d5 e4d5 e6d5 c1b2 d8e7 f1e2 g8f6 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 18 multipv 1 score cp -40 nodes 13878 nps 478551 hashfull 3 time 29 pv b2a3 d7d6 d1g4 d8f6 a1b1 g8e7 g1f3 e6e5 g4g3 e8g8 d2d3 b7b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 18 multipv 1 score cp -31 nodes 38597 nps 482462 hashfull 15 time 80 pv b2a3 d7d6 g1e2 b7b6 e2g3 c8b7 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 15 multipv 1 score cp -10 nodes 49522 nps 490316 hashfull 19 time 101 pv b2a3 d7d5 c1b2 g8f6 e4e5 f6d7 d2d4 e8g8 f1d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 20 multipv 1 score cp 3 nodes 81216 nps 507600 hashfull 32 time 160 pv b2a3 d7d5 c1b2 e6e5 d2d4 d5e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 27 multipv 1 score cp -11 upperbound nodes 217639 nps 400808 hashfull 90 time 543 pv b2a3 g8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove b2a3 ponder g8e7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 370 nodes 54 nps 54000 hashfull 0 time 1 pv a3f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 484 nodes 92 nps 46000 hashfull 0 time 2 pv a3f8 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 421 nodes 132 nps 66000 hashfull 0 time 2 pv a3f8 a2a3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp 500 nodes 170 nps 85000 hashfull 0 time 2 pv a3f8 g2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 424 nodes 408 nps 136000 hashfull 0 time 3 pv a3d6 g2g3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp 430 nodes 536 nps 178666 hashfull 0 time 3 pv a3f8 c1b2 h7h5 f1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp 445 nodes 659 nps 164750 hashfull 0 time 4 pv a3e7 a2a3 e6e5 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 9 multipv 1 score cp 376 nodes 826 nps 206500 hashfull 0 time 4 pv a3e7 c1b2 e7f6 e4e5 f6e7 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 12 multipv 1 score cp 394 nodes 1178 nps 235600 hashfull 0 time 5 pv a3e7 c1b2 g8f6 e4e5 f6d5 d1g4 h8g8 c2c4 d5b4 c4c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 17 multipv 1 score cp 417 nodes 2150 nps 238888 hashfull 0 time 9 pv a3e7 c1b2 e8f8 e4e5 h7h5 g1f3 g7g6 c2c4 h5h4 c4c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp 424 nodes 2971 nps 198066 hashfull 1 time 15 pv a3f8 h2h4 a7a5 c1b2 b8c6 e4e5 a5a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 14 multipv 1 score cp 411 nodes 3718 nps 232375 hashfull 1 time 16 pv a3f8 c1b2 b8c6 g1f3 d7d5 e4d5 e6d5 d1e2 c8e6 h2h4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 17 multipv 1 score cp 403 nodes 5486 nps 274300 hashfull 2 time 20 pv a3f8 c1b2 b8c6 g1f3 d7d5 f1d3 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 22 multipv 1 score cp 487 nodes 18537 nps 343277 hashfull 9 time 54 pv a3c1 d1c1 e6e5 d2d4 e5d4 e4e5 b8c6 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 15 multipv 1 score cp 460 nodes 21473 nps 357883 hashfull 11 time 60 pv a3c1 d1c1 d7d6 d2d4 b8d7 g1f3 a7a5 f1b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 21 multipv 1 score cp 483 nodes 36200 nps 397802 hashfull 18 time 91 pv a3c1 d1c1 d7d5 e4d5 e6d5 d2d4 g8f6 c1e3 d8e7 e3e7 e8e7 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 26 multipv 1 score cp 445 nodes 152330 nps 444110 hashfull 67 time 343 pv a3c1 a1c1 d7d5 e4e5 c7c5 c2c3 g8e7 g1f3 b8c6 d2d4 c5d4 c3d4 h7h6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 26 multipv 1 score cp 445 nodes 234343 nps 464045 hashfull 100 time 505 pv a3c1 a1c1 d7d5 e4e5 c7c5 c2c3 g8e7 g1f3 b8c6 d2d4 c5d4 c3d4 h7h6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove a3c1 ponder a1c1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1600"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 1200"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 489 nodes 140 nps 140000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 8 multipv 1 score cp 553 nodes 465 nps 465000 hashfull 0 time 1 pv a7a5 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 6 multipv 1 score cp 560 nodes 691 nps 691000 hashfull 0 time 1 pv a7a5 a2a3 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 596 nodes 985 nps 492500 hashfull 0 time 2 pv g8e7 c2c3 a7a5 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 575 nodes 1381 nps 690500 hashfull 0 time 2 pv a7a5 a2a3 c5a7 d2d3 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp 539 nodes 1793 nps 597666 hashfull 1 time 3 pv c5d4 a1b1 d4f6 c1b2 f6b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 528 nodes 2309 nps 769666 hashfull 1 time 3 pv e6e5 c1b2 d7d6 f1b5 c7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp 511 nodes 3080 nps 770000 hashfull 1 time 4 pv c5e7 c1b2 e7f6 b2f6 g8f6 d2d4 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp 514 nodes 4764 nps 680571 hashfull 1 time 7 pv b8c6 c1b2 e6e5 c2c3 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 12 multipv 1 score cp 543 nodes 6873 nps 624818 hashfull 2 time 11 pv d8h4 e1e2 h4f2 e2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp 476 nodes 14198 nps 617304 hashfull 4 time 23 pv b8c6 c1b2 e6e5 f3f4 d7d6 f4e5 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 16 multipv 1 score cp 458 nodes 28075 nps 584895 hashfull 13 time 48 pv d7d5 c1b2 e8f8 e4e5 g8e7 d2d4 c5b6 d1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 17 multipv 1 score cp 434 nodes 61842 nps 594634 hashfull 25 time 104 pv e6e5 c1b2 d7d6 g1e2 b8c6 d2d4 c5d4 e2d4 c6d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 28 multipv 1 score cp 426 nodes 160663 nps 537334 hashfull 68 time 299 pv d7d6 d2d4 c5b4 c1d2 a7a5 g1h3 b8c6 d4d5 e6d5 e4d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 27 multipv 1 score cp 404 nodes 321544 nps 463319 hashfull 129 time 694 pv b8c6 c1b2 c5d4 c2c3 d4g1 h1g1 d7d5 d2d4 d5e4 f3e4 d8h4 g2g3 h4e4 e1d2 e4f5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 30 multipv 1 score cp 419 nodes 588446 nps 490371 hashfull 235 time 1200 pv e6e5 c1b2 d7d6 g1e2 b8c6 d2d4 e5d4 e2d4 c6d4 b2d4 c5d4 d1d4 d8h4 e1d2 h4h6 d2e1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d7d6 ponder g1e2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P6/P1PP1PPP/R1BQKBNR w KQkq - 1 4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp -367 nodes 31 nps 31000 hashfull 0 time 1 pv c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp -319 nodes 64 nps 64000 hashfull 0 time 1 pv c1b2 e6e5 b2e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp -319 nodes 98 nps 98000 hashfull 0 time 1 pv c1b2 e6e5 b2e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp -233 nodes 170 nps 170000 hashfull 0 time 1 pv c1b2 h7h5 b2g7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -377 nodes 976 nps 325333 hashfull 0 time 3 pv d1g4 c5f8 g4g3 b8c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 9 multipv 1 score cp -372 nodes 1025 nps 341666 hashfull 0 time 3 pv d1g4 c5f8 g4g3 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp -355 nodes 1118 nps 279500 hashfull 0 time 4 pv d1g4 c5f8 c1b2 g8f6 g4h3 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 13 multipv 1 score cp -382 nodes 1550 nps 310000 hashfull 0 time 5 pv d1g4 c5f8 c1b2 g8f6 g4h3 d7d6 f1b5 c7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 18 multipv 1 score cp -370 nodes 3382 nps 307454 hashfull 1 time 11 pv c1b2 c5f8 f2f4 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 16 multipv 1 score cp -330 nodes 3875 nps 322916 hashfull 1 time 12 pv c1b2 c5f8 f2f4 b8c6 g1f3 h7h5 f3g5 g8f6 e4e5 f6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 17 multipv 1 score cp -349 nodes 6795 nps 377500 hashfull 3 time 18 pv c1b2 c5f8 g1f3 b8c6 f1c4 h7h5 h2h3 g8f6 e4e5 f6d5 c4d5 e6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp -333 nodes 10413 nps 400500 hashfull 3 time 26 pv c1b2 c5f8 g1f3 g8f6 e4e5 f6d5 a2a3 d7d6 c2c4 d5f4 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 19 multipv 1 score cp -340 nodes 27467 nps 443016 hashfull 11 time 62 pv c1b2 c5f8 g1f3 g8f6 e4e5 f6d5 a2a3 d7d6 d2d4 d5b6 c2c3 d6d5 f1b5 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 26 multipv 1 score cp -329 nodes 80072 nps 500450 hashfull 35 time 160 pv c1b2 c5f8 g1f3 a7a6 h2h4 b8c6 a2a3 d7d5 e4e5 g8h6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 29 multipv 1 score cp -329 nodes 172061 nps 426950 hashfull 77 time 403 pv c1b2 e6e5 b2e5 g8f6 e5b2 d7d5 d2d4 c5b6 e4e5 f6e4 f1d3 e8g8 f2f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 23 multipv 1 score cp -327 nodes 211644 nps 428429 hashfull 96 time 494 pv c1b2 c5f8 g1f3 b8c6 d1e2 d7d5 e4d5 d8d5 c2c4 d5f5 e1c1 g8f6 d2d4 f8e7 h2h4 e8g8 f3e5 c6e5 d4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 23 multipv 1 score cp -327 nodes 214116 nps 423992 hashfull 97 time 505 pv c1b2 c5f8 g1f3 b8c6 d1e2 d7d5 e4d5 d8d5 c2c4 d5f5 e1c1 g8f6 d2d4 f8e7 h2h4 e8g8 f3e5 c6e5 d4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c1b2 ponder c5f8"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 489 nodes 41 nps 41000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 8 multipv 1 score cp 553 nodes 105 nps 105000 hashfull 0 time 1 pv a7a5 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 513 nodes 151 nps 151000 hashfull 0 time 1 pv a7a5 a2a3 a5a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 570 nodes 241 nps 241000 hashfull 0 time 1 pv a7a5 a2a3 d7d5 e4d5 e6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 565 nodes 297 nps 148500 hashfull 0 time 2 pv a7a5 a2a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp 582 nodes 475 nps 237500 hashfull 0 time 2 pv e6e5 h2h4 a7a5 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 525 nodes 700 nps 350000 hashfull 0 time 2 pv d7d5 e4d5 e6d5 d1e2 g8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp 496 nodes 1136 nps 378666 hashfull 0 time 3 pv b8c6 c1b2 e6e5 b3b4 c5b4 f3f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 12 multipv 1 score cp 480 nodes 1491 nps 372750 hashfull 0 time 4 pv e6e5 c1b2 b8c6 b3b4 c5b4 f3f4 d7d6 d1h5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 14 multipv 1 score cp 492 nodes 2258 nps 451600 hashfull 0 time 5 pv d8h4 g2g3 h4f6 d2d4 c5d4 a1b1 d4b6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 20 multipv 1 score cp 432 nodes 6497 nps 464071 hashfull 1 time 14 pv d7d5 c1b2 g8f6 e4d5 e6d5 d1e2 d8e7 e2e7 c5e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 14 multipv 1 score cp 434 nodes 9243 nps 486473 hashfull 2 time 19 pv d7d5 c1b2 g8f6 e4e5 f6d7 f3f4 c5e7 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 15 multipv 1 score cp 450 nodes 12489 nps 462555 hashfull 4 time 27 pv d8h4 g2g3 h4f6 a1b1 c5b6 d2d4 b6d4 c1b2 e6e5 f3f4 d4b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 21 multipv 1 score cp 432 nodes 23287 nps 347567 hashfull 8 time 67 pv b8c6 c1b2 c5d4 c2c3 d4b6 d2d4 d7d5 e4e5 h7h5 f1d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 21 multipv 1 score cp 428 nodes 47911 nps 377251 hashfull 20 time 127 pv d7d6 f3f4 g8f6 c1b2 e6e5 f4e5 d6e5 b2e5 e8g8 d1f3 c8g4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 26 multipv 1 score cp 416 nodes 111579 nps 380815 hashfull 47 time 293 pv d7d6 d2d4 c5b4 c1d2 d8h4 g2g3 b4d2 d1d2 h4e7 f1d3 a7a5 g1e2 a5a4 d3b5 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 32 multipv 1 score cp 395 nodes 197632 nps 394475 hashfull 85 time 501 pv d7d6 c1b2 e6e5 g1e2 b8c6 d2d4 c5d4 e2d4 c6d4 b2d4 e5d4 d1d4 d8f6 d4f6 g7f6 f3f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d7d6 ponder c1b2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1600"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/ppp2ppp/3pp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 1200"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 564 nodes 159 nps 159000 hashfull 0 time 1 pv d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 8 multipv 1 score cp 584 nodes 454 nps 227000 hashfull 0 time 2 pv g8e7 f1b5 c7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 8 multipv 1 score cp 569 nodes 664 nps 332000 hashfull 0 time 2 pv a7a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp 562 nodes 1037 nps 345666 hashfull 0 time 3 pv d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 11 multipv 1 score cp 555 nodes 1418 nps 472666 hashfull 0 time 3 pv g8e7 d2d4 c5b4 e1f2 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp 555 nodes 2028 nps 405600 hashfull 0 time 5 pv d6e5 d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 8 multipv 1 score cp 553 nodes 2679 nps 446500 hashfull 0 time 6 pv g8e7 d2d4 c5b4 e1f2 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 567 nodes 3489 nps 498428 hashfull 0 time 7 pv c5d4 f3f4 d4a1 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp 569 nodes 4718 nps 524222 hashfull 1 time 9 pv c5d4 c2c3 d4e5 d2d4 e5f6 f1b5 c7c6 b5d3 f6h4 e1f1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 20 multipv 1 score cp 575 nodes 8471 nps 423550 hashfull 3 time 20 pv d6e5 d2d4 c5d4 g1e2 d4a1 d1d8 e8d8 c1g5 f7f6 g5h4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp 584 nodes 12595 nps 466481 hashfull 3 time 27 pv d8h4 g2g3 h4d4 f1b5 c7c6 b5d3 d4a1 e5d6 c5d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 15 multipv 1 score cp 592 nodes 19873 nps 462162 hashfull 7 time 43 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 19 multipv 1 score cp 604 nodes 56701 nps 501778 hashfull 20 time 113 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 d2d4 c5d4 e2b5 c7c6 b5d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 25 multipv 1 score cp 576 nodes 96911 nps 523843 hashfull 40 time 185 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 c2c3 g8e7 d2d4 c5b6 f3f4 a1c3 c1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 30 multipv 1 score cp 576 nodes 202429 nps 502305 hashfull 92 time 403 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 c2c3 g8e7 h3f4 h7h6 f4h5 h8h7 b3b4 c5b6 e2b5 b8d7 b5d7 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 30 multipv 1 score cp 576 nodes 602333 nps 501944 hashfull 275 time 1200 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 c2c3 g8e7 h3f4 h7h6 f4h5 h8h7 b3b4 c5b6 e2b5 b8d7 b5d7 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove b8c6 ponder f3f4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/ppp2ppp/3pp3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -419 nodes 33 nps 33000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 6 multipv 1 score cp -457 nodes 184 nps 184000 hashfull 0 time 1 pv f3f4 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp -437 nodes 232 nps 232000 hashfull 0 time 1 pv f3f4 c5g1 h1g1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp -387 nodes 283 nps 283000 hashfull 0 time 1 pv f3f4 c5g1 h1g1 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 9 multipv 1 score cp -362 nodes 328 nps 328000 hashfull 0 time 1 pv f3f4 c5g1 h1g1 d6d5 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 11 multipv 1 score cp -427 nodes 486 nps 486000 hashfull 0 time 1 pv f3f4 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 12 multipv 1 score cp -397 nodes 1292 nps 646000 hashfull 0 time 2 pv a2a4 c5b6 a4a5 b6d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 9 multipv 1 score cp -394 nodes 1441 nps 480333 hashfull 0 time 3 pv f3f4 d8h4 g2g3 h4f6 d2d4 f6d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp -453 nodes 1923 nps 641000 hashfull 0 time 3 pv f3f4 c5d4 a1b1 d4f6 c2c3 f6e7 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 11 multipv 1 score cp -416 nodes 2808 nps 561600 hashfull 0 time 5 pv c1b2 e6e5 d2d4 c5b6 g1e2 e5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp -432 nodes 3914 nps 391400 hashfull 0 time 10 pv c1b2 g8f6 g1e2 c5b6 d2d4 a7a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 15 multipv 1 score cp -426 nodes 5638 nps 433692 hashfull 0 time 13 pv g1e2 c5b6 c1b2 g8f6 a2a4 e6e5 d2d4 e5d4 e2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 16 multipv 1 score cp -431 nodes 8627 nps 479277 hashfull 1 time 18 pv g1e2 d6d5 d2d4 c5d6 c2c3 a7a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 16 multipv 1 score cp -401 nodes 12071 nps 431107 hashfull 3 time 28 pv g1e2 d6d5 c1b2 g8f6 e4e5 f6d7 d2d4 c5b4 c2c3 b4f8 c3c4 f8b4 e1f2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 23 multipv 1 score cp -395 nodes 31886 nps 468911 hashfull 12 time 68 pv g1e2 c5b6 c1b2 e6e5 d2d4 b8c6 d4e5 d6e5 d1d8 e8d8 f3f4 c8e6 e1c1 d8e8 f4e5 a8d8 d1d8 c6d8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 24 multipv 1 score cp -394 nodes 56686 nps 484495 hashfull 24 time 117 pv g1e2 c5b6 d2d4 a7a5 c1b2 a5a4 d1d2 b8d7 e1c1 b6a5 d2e3 a4b3 a2b3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 24 multipv 1 score cp -386 nodes 124149 nps 456430 hashfull 55 time 272 pv g1e2 c5b6 d2d4 a7a5 d1d2 g8e7 c1b2 a5a4 e1c1 a4b3 a2b3 b6a5 d2e3 e7g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 24 multipv 1 score cp -386 nodes 226438 nps 451071 hashfull 100 time 502 pv g1e2 c5b6 d2d4 a7a5 d1d2 g8e7 c1b2 a5a4 e1c1 a4b3 a2b3 b6a5 d2e3 e7g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove g1e2 ponder c5b6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/ppp2ppp/3pp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 564 nodes 37 nps 37000 hashfull 0 time 1 pv d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp 583 nodes 76 nps 76000 hashfull 0 time 1 pv d6e5 f1b5 c7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 583 nodes 120 nps 120000 hashfull 0 time 1 pv d6e5 f1b5 c7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 623 nodes 169 nps 169000 hashfull 0 time 1 pv d6e5 f1b5 c7c6 b5e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 596 nodes 220 nps 220000 hashfull 0 time 1 pv d6e5 f1b5 c7c6 b5e2 a7a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp 609 nodes 318 nps 318000 hashfull 0 time 1 pv d6e5 f1b5 c7c6 b5a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 8 multipv 1 score cp 581 nodes 433 nps 216500 hashfull 0 time 2 pv d6e5 f1b5 c7c6 b5a4 c5d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 9 multipv 1 score cp 541 nodes 822 nps 411000 hashfull 0 time 2 pv d6e5 d2d4 c5d4 f3f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 15 multipv 1 score cp 558 nodes 1309 nps 436333 hashfull 0 time 3 pv d6e5 d2d4 c5b4 c1d2 b4d2 d1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 14 multipv 1 score cp 570 nodes 2374 nps 474800 hashfull 1 time 5 pv d6e5 d2d4 c5d4 c1a3 d4a1 f1b5 c8d7 b5d7 b8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 14 multipv 1 score cp 578 nodes 3361 nps 560166 hashfull 2 time 6 pv d6e5 f1b5 c8d7 b5d7 b8d7 d2d4 e5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 15 multipv 1 score cp 580 nodes 4629 nps 578625 hashfull 3 time 8 pv d6e5 d2d4 e5d4 f1b5 e8f8 b5a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 15 multipv 1 score cp 546 nodes 8029 nps 535266 hashfull 5 time 15 pv d6e5 c1b2 g8f6 f3f4 e5e4 g2g4 c5d4 b2a3 d4a1 d1a1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 20 multipv 1 score cp 617 nodes 14774 nps 590960 hashfull 7 time 25 pv d8h4 g2g3 h4d4 f1b5 c7c6 g1h3 d4a1 b5d3 a1d4 d1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 22 multipv 1 score cp 614 nodes 25558 nps 567955 hashfull 10 time 45 pv d8h4 g2g3 h4d4 d1e2 d4a1 e1d1 c8d7 e5d6 c7d6 f3f4 g8f6 f4f5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 30 multipv 1 score cp 613 nodes 176009 nps 577078 hashfull 92 time 305 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 h3g5 a1d4 g5e4 c5b6 e2b5 b8d7 d1e2 e6e5 b5d7 c8d7 c2c3 d4d5 d2d4 a7a5 d4e5 d5e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 30 multipv 1 score cp 613 nodes 269601 nps 534922 hashfull 132 time 504 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 h3g5 a1d4 g5e4 c5b6 e2b5 b8d7 d1e2 e6e5 b5d7 c8d7 c2c3 d4d5 d2d4 a7a5 d4e5 d5e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d8h4 ponder g2g3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1600"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/ppp2ppp/2nPp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 1200"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 4 multipv 1 score cp 567 nodes 169 nps 169000 hashfull 0 time 1 pv c7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 631 nodes 342 nps 342000 hashfull 0 time 1 pv c5d6 c2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 618 nodes 513 nps 513000 hashfull 0 time 1 pv c7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp 608 nodes 759 nps 759000 hashfull 0 time 1 pv c5d6 g1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 567 nodes 989 nps 989000 hashfull 0 time 1 pv c7d6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 587 nodes 1417 nps 708500 hashfull 0 time 2 pv c5d6 g1e2 g8f6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp 568 nodes 2071 nps 517750 hashfull 0 time 4 pv c5d6 g1e2 g8f6 c1b2 e6e5 e2c1 f6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 581 nodes 2674 nps 534800 hashfull 0 time 5 pv c5d6 c1b2 e6e5 g1e2 g8f6 e2c3 e8g8 c3e4 f6e4 f3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp 549 nodes 4627 nps 462700 hashfull 0 time 10 pv g8f6 d6c7 d8d4 g1h3 d4a1 f1b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 12 multipv 1 score cp 570 nodes 7258 nps 453625 hashfull 0 time 16 pv c5d6 c1b2 e6e5 f1b5 g8e7 b5c6 e7c6 g1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp 550 nodes 14058 nps 502071 hashfull 3 time 28 pv d8h4 g2g3 h4d4 g1h3 d4a1 f1b5 c5d6 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 14 multipv 1 score cp 558 nodes 20082 nps 456409 hashfull 7 time 44 pv d8h4 g2g3 h4d4 g1h3 d4a1 f3f4 c5d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 16 multipv 1 score cp 594 nodes 31025 nps 456250 hashfull 8 time 68 pv d8h4 g2g3 h4d4 g1h3 d4a1 f1b5 a1e5 d1e2 e5e2 b5e2 c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 24 multipv 1 score cp 564 nodes 79083 nps 451902 hashfull 30 time 175 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 f3f4 c5d4 c1a3 c8d7 h3f2 d4f2 e2f2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 32 multipv 1 score cp 568 nodes 227564 nps 509091 hashfull 89 time 447 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 f3f4 h7h6 h3f2 c5e7 c1b2 g8f6 f2e4 f6e4 e2e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 34 multipv 1 score cp 594 nodes 591404 nps 492836 hashfull 234 time 1200 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 c1b2 g8f6 h3g5 c5e7 g5e4 c8d7 e2f2 f6e4 f3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c7d6 ponder c1b2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/ppp2ppp/2npp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 1 6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 6 multipv 1 score cp -493 nodes 58 nps 58000 hashfull 0 time 1 pv d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp -493 nodes 101 nps 101000 hashfull 0 time 1 pv d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp -526 nodes 151 nps 151000 hashfull 0 time 1 pv c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp -526 nodes 266 nps 133000 hashfull 0 time 2 pv f3f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -505 nodes 310 nps 155000 hashfull 0 time 2 pv f3f4 d6e5 f4e5 c5g1 h1g1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp -513 nodes 423 nps 211500 hashfull 0 time 2 pv f3f4 d6e5 f4e5 c6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp -507 nodes 502 nps 251000 hashfull 0 time 2 pv f3f4 d6e5 f4e5 c6e5 g1f3 e5f3 d1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp -462 nodes 1120 nps 280000 hashfull 0 time 4 pv f3f4 d6e5 g1f3 e5e4 c1b2 e4f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp -499 nodes 1512 nps 302400 hashfull 0 time 5 pv f3f4 d6e5 g1f3 e5f4 c1b2 c5f8 g2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 12 multipv 1 score cp -501 nodes 2716 nps 339500 hashfull 0 time 8 pv f3f4 d6e5 d1g4 c5f8 c1b2 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 13 multipv 1 score cp -454 nodes 3410 nps 310000 hashfull 1 time 11 pv f3f4 d6e5 g1f3 c5d4 c2c3 d4b6 f4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 16 multipv 1 score cp -474 nodes 6461 nps 293681 hashfull 3 time 22 pv f3f4 d6e5 c1b2 c5d4 d1g4 e5e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 20 multipv 1 score cp -483 nodes 14493 nps 381394 hashfull 7 time 38 pv f3f4 c5d4 c2c3 d4g1 d2d4 d6e5 c1a3 e5e4 h1g1 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 18 multipv 1 score cp -498 nodes 28790 nps 411285 hashfull 12 time 70 pv f3f4 d6e5 c1b2 c5d4 d1g4 d4b2 g4g7 d8f6 g7f6 g8f6 a1b1 b2a1 b1a1 e5e4 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 20 multipv 1 score cp -461 nodes 34913 nps 401298 hashfull 15 time 87 pv f3f4 d6e5 c1b2 c5d4 c2c3 d4b6 d1g4 d8f6 f1d3 h7h5 g4e2 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 19 multipv 1 score cp -477 nodes 59755 nps 417867 hashfull 25 time 143 pv f3f4 d6e5 c1b2 c5d4 c2c3 d4b6 d1g4 d8f6 f1d3 c8d7 g1f3 e5e4 d3e4 h7h5 g4h3 e8c8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 26 multipv 1 score cp -477 nodes 77126 nps 410244 hashfull 32 time 188 pv f3f4 d6e5 c1b2 c5d4 c2c3 d4b6 g1f3 e5e4 f3e5 c6e5 f4e5 c8d7 d1g4 g7g6 g4f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 26 multipv 1 score cp -477 nodes 206993 nps 413159 hashfull 86 time 501 pv f3f4 d6e5 c1b2 c5d4 c2c3 d4b6 g1f3 e5e4 f3e5 c6e5 f4e5 c8d7 d1g4 g7g6 g4f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove f3f4 ponder d6e5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/ppp2ppp/2nPp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 4 multipv 1 score cp 567 nodes 44 nps 44000 hashfull 0 time 1 pv c7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp 618 nodes 87 nps 43500 hashfull 0 time 2 pv c7d6 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 613 nodes 136 nps 68000 hashfull 0 time 2 pv c7d6 a2a3 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 650 nodes 184 nps 92000 hashfull 0 time 2 pv c7d6 h2h3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 651 nodes 240 nps 120000 hashfull 0 time 2 pv c7d6 h2h3 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp 605 nodes 382 nps 191000 hashfull 0 time 2 pv c5d6 c1b2 g8f6 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp 589 nodes 497 nps 165666 hashfull 0 time 3 pv c7d6 c1b2 e6e5 b3b4 c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp 635 nodes 789 nps 263000 hashfull 0 time 3 pv c5d6 c1b2 g8f6 b2f6 d8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 10 multipv 1 score cp 554 nodes 1103 nps 275750 hashfull 0 time 4 pv c5d6 f3f4 g8f6 g1f3 e8g8 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 11 multipv 1 score cp 556 nodes 1571 nps 314200 hashfull 0 time 5 pv c7d6 f3f4 g8f6 c1b2 e8g8 g2g4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 18 multipv 1 score cp 538 nodes 2280 nps 380000 hashfull 1 time 6 pv c7d6 f3f4 e6e5 c1b2 g8f6 f4e5 d6e5 g2g4 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp 551 nodes 5109 nps 464454 hashfull 1 time 11 pv d8h4 g2g3 h4d4 g1h3 c7d6 f3f4 d4a1 h3g5 a1b1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 17 multipv 1 score cp 582 nodes 6857 nps 457133 hashfull 3 time 15 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1d4 f3f4 d4e4 d1e2 e4h1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 16 multipv 1 score cp 588 nodes 9283 nps 488578 hashfull 5 time 19 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 c5d6 c2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 18 multipv 1 score cp 585 nodes 12777 nps 511080 hashfull 6 time 25 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1d4 d1e2 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 24 multipv 1 score cp 587 nodes 58225 nps 544158 hashfull 27 time 107 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 e1d1 c5d4 c1a3 c7d8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 32 multipv 1 score cp 594 nodes 142888 nps 545374 hashfull 68 time 262 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 f3f4 c5e7 c1b2 e7f6 b2e5 f6e5 f4e5 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 32 multipv 1 score cp 594 nodes 264154 nps 523077 hashfull 116 time 505 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 f3f4 c5e7 c1b2 e7f6 b2e5 f6e5 f4e5 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d8h4 ponder g2g3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1600"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/2npp3/2b5/1P6/5P2/P1PP2PP/R1BQKBNR b KQkq - 0 7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 1200"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 590 nodes 176 nps 176000 hashfull 0 time 1 pv c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp 647 nodes 391 nps 391000 hashfull 0 time 1 pv c5b6 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 642 nodes 614 nps 614000 hashfull 0 time 1 pv c5b6 a2a3 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 630 nodes 952 nps 952000 hashfull 0 time 1 pv c5b6 a2a3 d6d5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 575 nodes 1316 nps 658000 hashfull 0 time 2 pv c5b4 c1b2 g8f6 b2c1 b4c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 583 nodes 1693 nps 846500 hashfull 0 time 2 pv c5b6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 562 nodes 2181 nps 727000 hashfull 0 time 3 pv c5b6 c1b2 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 609 nodes 3361 nps 672200 hashfull 0 time 5 pv c5d4 b4b5 d4a1 b5c6 b7c6 d2d4 a1c3 c1d2 c3d2 e1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp 571 nodes 4403 nps 629000 hashfull 0 time 7 pv c5b4 g1e2 e6e5 c1b2 b4a5 e2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 11 multipv 1 score cp 586 nodes 8577 nps 612642 hashfull 0 time 14 pv c5d4 b4b5 d4a1 b5c6 a1f6 c6b7 c8b7 g1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 12 multipv 1 score cp 581 nodes 12399 nps 590428 hashfull 0 time 21 pv c5b6 c1b2 g8f6 f1b5 e6e5 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 18 multipv 1 score cp 590 nodes 23941 nps 520456 hashfull 3 time 46 pv c5d4 a1b1 d4f6 b4b5 c6e7 c1b2 f6b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 15 multipv 1 score cp 557 nodes 40571 nps 533828 hashfull 9 time 76 pv c5d4 a1b1 e6e5 b4b5 c6e7 f3f4 e7g6 f4e5 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 19 multipv 1 score cp 551 nodes 109152 nps 565554 hashfull 37 time 193 pv c5d4 f1b5 g8e7 g1e2 d4f6 b5c6 b7c6 c2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 32 multipv 1 score cp 537 nodes 353951 nps 541209 hashfull 134 time 654 pv d8h4 g2g3 h4b4 g1e2 g8f6 g3g4 b4b6 d2d4 c6d4 e2c3 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 25 multipv 1 score cp 547 nodes 642819 nps 535682 hashfull 259 time 1200 pv d8h4 g2g3 h4b4 g1e2 d6d5 f3f4 b4b6 e2c3 c5f2 e1e2 f2d4 c3b5 d4a1 b5d6 e8f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c5b6 ponder c1b2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/2npp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -567 nodes 37 nps 37000 hashfull 0 time 1 pv c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 7 multipv 1 score cp -547 nodes 69 nps 69000 hashfull 0 time 1 pv c1b2 d8h4 e1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -572 nodes 117 nps 117000 hashfull 0 time 1 pv c1b2 e6e5 d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp -572 nodes 186 nps 93000 hashfull 0 time 2 pv c1b2 e6e5 d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -584 nodes 244 nps 122000 hashfull 0 time 2 pv d2d4 c5d4 c1d2 d4a1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp -541 nodes 416 nps 208000 hashfull 0 time 2 pv g1e2 e6e5 d2d4 e5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 12 multipv 1 score cp -516 nodes 584 nps 194666 hashfull 0 time 3 pv g1e2 e8f8 c1b2 e6e5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp -543 nodes 877 nps 219250 hashfull 0 time 4 pv g1e2 e6e5 d2d4 e5d4 c1b2 g8f6 e2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 15 multipv 1 score cp -550 nodes 1658 nps 276333 hashfull 0 time 6 pv b3b4 c5b6 c1b2 e6e5 b4b5 c6a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 16 multipv 1 score cp -547 nodes 2144 nps 268000 hashfull 0 time 8 pv c1b2 e6e5 g1e2 c5b6 d2d4 e5d4 d1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 14 multipv 1 score cp -545 nodes 3404 nps 309454 hashfull 1 time 11 pv c1b2 e6e5 d2d4 c5d4 b2d4 c6d4 g1e2 d4e6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 14 multipv 1 score cp -531 nodes 6375 nps 375000 hashfull 3 time 17 pv f1b5 g8e7 c1b2 e6e5 d2d4 e5d4 b5c6 e7c6 g1e2 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 18 multipv 1 score cp -519 nodes 9737 nps 360629 hashfull 5 time 27 pv c1b2 g8f6 d2d4 c5b6 d1d2 b6a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 15 multipv 1 score cp -521 nodes 16993 nps 386204 hashfull 7 time 44 pv c1b2 g8f6 f1b5 d6d5 b5c6 b7c6 f3f4 e8g8 d1f3 c5e7 f3g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 20 multipv 1 score cp -501 nodes 39261 nps 446147 hashfull 17 time 88 pv c1b2 e6e5 g1e2 g8f6 d2d4 e5d4 d1d2 c5b4 c2c3 d4c3 b2c3 a7a5 c3b4 a5b4 e1c1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 28 multipv 1 score cp -508 nodes 86422 nps 496678 hashfull 36 time 174 pv c1b2 c5d4 b2d4 c6d4 c2c3 d4c6 d2d4 a7a5 d4d5 e6d5 d1d5 g8f6 d5d2 a5a4 b3a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 29 multipv 1 score cp -470 nodes 203973 nps 571352 hashfull 86 time 357 pv c1b2 c5d4 b2d4 c6d4 c2c3 d4c6 d2d4 a7a5 f1d3 a5a4 g1e2 g8f6 e1g1 e8g8 d1d2 a4a3 e2f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 29 multipv 1 score cp -470 nodes 297868 nps 594546 hashfull 121 time 501 pv c1b2 c5d4 b2d4 c6d4 c2c3 d4c6 d2d4 a7a5 f1d3 a5a4 g1e2 g8f6 e1g1 e8g8 d1d2 a4a3 e2f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c1b2 ponder c5d4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/2npp3/2b5/1P6/5P2/P1PP2PP/R1BQKBNR b KQkq - 0 7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 500"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 590 nodes 45 nps 45000 hashfull 0 time 1 pv c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp 647 nodes 89 nps 89000 hashfull 0 time 1 pv c5b6 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 641 nodes 138 nps 138000 hashfull 0 time 1 pv c5b6 a2a3 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 670 nodes 189 nps 189000 hashfull 0 time 1 pv c5b6 h2h3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 8 multipv 1 score cp 560 nodes 333 nps 333000 hashfull 0 time 1 pv c5d4 b4b5 d4a1 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 573 nodes 437 nps 437000 hashfull 0 time 1 pv c5d4 a1b1 d8h4 e1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp 581 nodes 555 nps 555000 hashfull 0 time 1 pv c5d4 b4b5 d4a1 b5c6 b7c6 e1f2 a1d4 f2e1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp 581 nodes 696 nps 696000 hashfull 0 time 1 pv c5d4 b4b5 d4a1 b5c6 b7c6 e1f2 a1d4 f2e1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp 557 nodes 1157 nps 578500 hashfull 0 time 2 pv c5d4 b4b5 d4a1 b5c6 b7c6 d2d4 a1c3 e1f2 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp 571 nodes 2142 nps 714000 hashfull 0 time 3 pv c5b4 c1b2 e6e5 g1e2 b4a5 e2c3 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 19 multipv 1 score cp 555 nodes 5343 nps 763285 hashfull 1 time 7 pv c5d4 b4b5 d4a1 b5c6 a1f6 f1b5 b7c6 b5c6 c8d7 c6d7 d8d7 e1f2 a8b8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 21 multipv 1 score cp 562 nodes 8227 nps 685583 hashfull 3 time 12 pv c5d4 b4b5 d4a1 b5c6 a1f6 f1b5 b7c6 b5c6 c8d7 c6d7 d8d7 d2d4 a8c8 e1f2 d7c6 f2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 21 multipv 1 score cp 560 nodes 12566 nps 739176 hashfull 5 time 17 pv c5d4 b4b5 d4a1 b5c6 a1f6 f1b5 e8f8 g1e2 a7a6 c1a3 h7h5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 23 multipv 1 score cp 576 nodes 32053 nps 801325 hashfull 14 time 40 pv c5d4 a1b1 d4f6 c1b2 d6d5 b2f6 g8f6 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 18 multipv 1 score cp 550 nodes 40232 nps 773692 hashfull 18 time 52 pv c5d4 f1b5 g8e7 b5c6 e7c6 b4b5 c6e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 24 multipv 1 score cp 538 nodes 93234 nps 764213 hashfull 41 time 122 pv c5d4 c2c3 d4f6 f1b5 g8e7 d2d4 d6d5 g1e2 e8g8 b5c6 e7c6 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 26 multipv 1 score cp 521 nodes 235012 nps 770531 hashfull 102 time 305 pv c6b4 f1b5 b4c6 c1b2 e8f8 b5c6 b7c6 f3f4 h7h5 a2a4 a7a5 g1f3 c5a7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 30 multipv 1 score cp 523 nodes 369361 nps 738722 hashfull 157 time 500 pv c6b4 d2d4 c5b6 c2c3 b4d5 f1b5 c8d7 b5d7 d8d7 c3c4 d5f6 a1b1 g8e7 g1e2 b6a5 e1f2 b7b6 e2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c6b4 ponder d2d4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/1bnpp3/8/1P6/5P2/P1PP2PP/R1BQKBNR w KQkq - 1 8"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 400"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -570 nodes 31 nps 31000 hashfull 0 time 1 pv b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 5 multipv 1 score cp -549 nodes 132 nps 132000 hashfull 0 time 1 pv a2a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 9 multipv 1 score cp -542 nodes 241 nps 241000 hashfull 0 time 1 pv a2a4 c6b4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 9 multipv 1 score cp -536 nodes 298 nps 298000 hashfull 0 time 1 pv a2a4 a7a5 b4a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 9 multipv 1 score cp -500 nodes 376 nps 376000 hashfull 0 time 1 pv a2a4 c6b4 c1a3 a7a5 d1b1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp -522 nodes 467 nps 233500 hashfull 0 time 2 pv a2a4 c6b4 c1a3 a7a5 d1b1 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp -515 nodes 579 nps 289500 hashfull 0 time 2 pv a2a4 h7h5 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 16 multipv 1 score cp -545 nodes 1024 nps 341333 hashfull 0 time 3 pv a2a4 b6d4 b4b5 d4a1 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp -511 nodes 1465 nps 366250 hashfull 0 time 4 pv a2a4 b6d4 a1a3 d4f6 b4b5 c6e7 b5b6 d8b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp -525 nodes 2259 nps 451800 hashfull 0 time 5 pv a2a4 b6c7 b4b5 c6e7 b5b6 c7b6 c1b2 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp -526 nodes 3255 nps 542500 hashfull 0 time 6 pv a2a4 e6e5 a4a5 b6c7 b4b5 c6e7 f3f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 20 multipv 1 score cp -506 nodes 4942 nps 617750 hashfull 1 time 8 pv a2a4 b6d4 a1a3 c8d7 b4b5 c6e7 a4a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 16 multipv 1 score cp -517 nodes 8402 nps 700166 hashfull 2 time 12 pv a2a4 b6d4 a1a3 d4f6 b4b5 c6e7 a4a5 d6d5 a5a6 b7a6 b5a6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 19 multipv 1 score cp -506 nodes 14382 nps 719100 hashfull 5 time 20 pv a2a4 d8h4 g2g3 h4f6 b4b5 f6a1 b5c6 b7c6 a4a5 b6c7 f3f4 a1a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 18 multipv 1 score cp -521 nodes 26704 nps 785411 hashfull 7 time 34 pv c1b2 g8f6 f3f4 e8g8 g2g4 e6e5 g4g5 f6d5 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 25 multipv 1 score cp -520 nodes 123605 nps 824033 hashfull 52 time 150 pv f3f4 d8h4 g2g3 h4f6 d2d4 f6d4 d1d4 b6d4 a1b1 d4b6 b4b5 c6e7 e1d2 h7h5 f1g2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 23 multipv 1 score cp -528 nodes 222939 nps 838116 hashfull 88 time 266 pv f3f4 g8f6 b4b5 c6e7 a2a4 b6d4 c2c3 d4c5 a4a5 a7a6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 26 multipv 1 score cp -512 nodes 325489 nps 813722 hashfull 128 time 400 pv f3f4 c6b4 a2a4 b6d4 c2c3 d4f6 g2g4 f6h4 e1e2 b4c6 g4g5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove f3f4 ponder c6b4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value false"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name Skill Level value 20"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/1bnpp3/8/1P6/5P2/P1PP2PP/R1BQKBNR w KQkq - 1 8"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 400"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -570 nodes 31 nps 31000 hashfull 0 time 1 pv b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 5 multipv 1 score cp -549 nodes 132 nps 132000 hashfull 0 time 1 pv a2a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 9 multipv 1 score cp -542 nodes 241 nps 241000 hashfull 0 time 1 pv a2a4 c6b4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 9 multipv 1 score cp -536 nodes 298 nps 298000 hashfull 0 time 1 pv a2a4 a7a5 b4a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 9 multipv 1 score cp -500 nodes 376 nps 376000 hashfull 0 time 1 pv a2a4 c6b4 c1a3 a7a5 d1b1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp -522 nodes 467 nps 467000 hashfull 0 time 1 pv a2a4 c6b4 c1a3 a7a5 d1b1 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp -515 nodes 579 nps 579000 hashfull 0 time 1 pv a2a4 h7h5 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 16 multipv 1 score cp -545 nodes 1024 nps 512000 hashfull 0 time 2 pv a2a4 b6d4 b4b5 d4a1 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp -511 nodes 1465 nps 732500 hashfull 0 time 2 pv a2a4 b6d4 a1a3 d4f6 b4b5 c6e7 b5b6 d8b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp -525 nodes 2259 nps 753000 hashfull 0 time 3 pv a2a4 b6c7 b4b5 c6e7 b5b6 c7b6 c1b2 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp -526 nodes 3255 nps 813750 hashfull 0 time 4 pv a2a4 e6e5 a4a5 b6c7 b4b5 c6e7 f3f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 20 multipv 1 score cp -506 nodes 4942 nps 823666 hashfull 1 time 6 pv a2a4 b6d4 a1a3 c8d7 b4b5 c6e7 a4a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 16 multipv 1 score cp -517 nodes 8402 nps 763818 hashfull 2 time 11 pv a2a4 b6d4 a1a3 d4f6 b4b5 c6e7 a4a5 d6d5 a5a6 b7a6 b5a6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 19 multipv 1 score cp -506 nodes 14382 nps 756947 hashfull 5 time 19 pv a2a4 d8h4 g2g3 h4f6 b4b5 f6a1 b5c6 b7c6 a4a5 b6c7 f3f4 a1a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 18 multipv 1 score cp -521 nodes 26704 nps 702736 hashfull 7 time 38 pv c1b2 g8f6 f3f4 e8g8 g2g4 e6e5 g4g5 f6d5 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 25 multipv 1 score cp -520 nodes 123605 nps 727088 hashfull 52 time 170 pv f3f4 d8h4 g2g3 h4f6 d2d4 f6d4 d1d4 b6d4 a1b1 d4b6 b4b5 c6e7 e1d2 h7h5 f1g2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 23 multipv 1 score cp -528 nodes 222939 nps 733351 hashfull 88 time 304 pv f3f4 g8f6 b4b5 c6e7 a2a4 b6d4 c2c3 d4c5 a4a5 a7a6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 18 seldepth 23 multipv 1 score cp -528 nodes 291867 nps 729667 hashfull 116 time 400 pv f3f4 g8f6 b4b5 c6e7 a2a4 b6d4 c2c3 d4c5 a4a5 a7a6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove f3f4 ponder g8f6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 7 nodes 106 nps 106000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 34 nodes 206 nps 206000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 51 nodes 448 nps 448000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 8 multipv 1 score cp 28 nodes 2200 nps 1100000 hashfull 0 time 2 pv g1f3 e7e6 d2d4 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 9 multipv 1 score cp 21 nodes 5545 nps 924166 hashfull 0 time 6 pv d2d4 d7d5 g1f3 e7e6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp 23 nodes 7738 nps 967250 hashfull 1 time 8 pv d2d4 d7d5 g1f3 g8f6 c1f4 e7e6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 10 multipv 1 score cp 22 nodes 12588 nps 968307 hashfull 2 time 13 pv e2e4 d7d5 e4e5 e7e6 d2d4 c7c5 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp 26 nodes 16757 nps 985705 hashfull 4 time 17 pv e2e4 e7e5 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 14 multipv 1 score cp 44 nodes 29639 nps 956096 hashfull 9 time 31 pv e2e4 d7d5 e4d5 d8d5 b1c3 d5e5 f1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 14 multipv 1 score cp 47 nodes 46826 nps 955632 hashfull 16 time 49 pv e2e4 d7d5 e4d5 d8d5 g1f3 d5e6 f1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp 49 nodes 73463 nps 929911 hashfull 23 time 79 pv e2e4 e7e5 b1c3 d7d6 d2d4 e5d4 d1d4 b8c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 19 multipv 1 score cp 50 nodes 126514 nps 860639 hashfull 40 time 147 pv e2e4 e7e5 g1f3 g8f6 b1c3 d7d6 d2d4 e5d4 f3d4 f8e7 f1c4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 26 multipv 1 score cp 38 nodes 246181 nps 851837 hashfull 98 time 289 pv e2e4 e7e5 g1f3 g8f6 d2d4 f6e4 f1d3 d7d5 f3e5 f8d6 e1g1 e8g8 b1c3 e4c3 b2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 17 multipv 1 score cp 38 nodes 353294 nps 799307 hashfull 139 time 442 pv e2e4 e7e5 g1f3 g8f6 d2d4 f6e4 f1d3 d7d5 f3e5 f8d6 e1g1 e8g8 b1c3 e4c3 b2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 17 multipv 1 score cp 38 nodes 359917 nps 799815 hashfull 141 time 450 pv e2e4 e7e5 g1f3 g8f6 d2d4 f6e4 f1d3 d7d5 f3e5 f8d6 e1g1 e8g8 b1c3 e4c3 b2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove g1f3 ponder d7d5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 4 multipv 1 score cp -10 nodes 117 nps 117000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 8 multipv 1 score cp -6 nodes 353 nps 353000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -6 nodes 1505 nps 1505000 hashfull 0 time 1 pv d7d5 e4d5 d8d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp -15 nodes 2945 nps 1472500 hashfull 0 time 2 pv d7d5 e4d5 d8d5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -22 nodes 4349 nps 1449666 hashfull 0 time 3 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp -22 nodes 5857 nps 1464250 hashfull 0 time 4 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp -26 nodes 13769 nps 1059153 hashfull 4 time 13 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp -42 nodes 22161 nps 1007318 hashfull 6 time 22 pv e7e5 b1c3 c7c5 a2a4 b8c6 f1c4 d7d6 c3d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 14 multipv 1 score cp -33 nodes 34489 nps 958027 hashfull 11 time 36 pv e7e6 g1f3 c7c5 d2d4 c5d4 f3d4 b8c6 d4b5 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 17 multipv 1 score cp -37 nodes 49574 nps 935358 hashfull 16 time 53 pv e7e6 g1f3 c7c5 f1e2 b8c6 e1g1 g8f6 b1c3 d7d5 e4d5 f6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 18 multipv 1 score cp -39 nodes 101478 nps 914216 hashfull 35 time 111 pv e7e6 d2d4 d7d5 b1c3 f8b4 e4e5 c7c5 a2a3 b4c3 b2c3 d8a5 g1f3 c5c4 c1d2 g8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp -38 nodes 127611 nps 918064 hashfull 42 time 139 pv c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6 b1c3 d7d6 c1g5 d8a5 g5f6 g7f6 f1e2 f8g7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 19 multipv 1 score cp -38 nodes 215658 nps 898575 hashfull 75 time 240 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 g8f6 d4c6 d7c6 d1d8 e8d8 f1d3 f8b4 c1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 28 multipv 1 score cp -35 nodes 358496 nps 863845 hashfull 136 time 415 pv c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 c1e3 g8f6 b1c3 f8g7 d4c6 d7c6 d1d8 e8d8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 16 multipv 1 score cp -35 nodes 389398 nps 857704 hashfull 150 time 454 pv c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g7g6 c1e3 g8f6 b1c3 f8g7 d4c6 d7c6 d1d8 e8d8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove e7e6 ponder b1c3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 29 nodes 170 nps 170000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 6 multipv 1 score cp 59 nodes 318 nps 318000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 6 multipv 1 score cp 80 nodes 2439 nps 813000 hashfull 0 time 3 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp 43 nodes 4271 nps 1067750 hashfull 0 time 4 pv d2d4 g8f6 c1g5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 8 multipv 1 score cp 61 nodes 7039 nps 1173166 hashfull 1 time 6 pv d2d4 f8b4 b1c3 b4c3 b2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp 58 nodes 9173 nps 1146625 hashfull 1 time 8 pv d2d4 d7d6 h2h4 g8f6 c1g5 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 13 multipv 1 score cp 43 nodes 19485 nps 1146176 hashfull 4 time 17 pv b1c3 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp 41 nodes 31216 nps 1076413 hashfull 8 time 29 pv b1c3 c7c5 g1f3 b8c6 d2d4 c5d4 f3d4 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp 42 nodes 37191 nps 1033083 hashfull 12 time 36 pv d2d4 d7d5 b1c3 d5e4 c3e4 g8f6 e4f6 d8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp 48 nodes 51362 nps 1007098 hashfull 15 time 51 pv d2d4 d7d5 b1c3 d5e4 c3e4 g8f6 e4f6 d8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp 54 nodes 104110 nps 963981 hashfull 33 time 108 pv d2d4 d7d5 b1c3 d5e4 c3e4 g8f6 e4f6 d8f6 g1f3 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 19 multipv 1 score cp 53 nodes 169064 nps 949797 hashfull 58 time 178 pv d2d4 d7d5 b1c3 f8b4 e4e5 c7c5 a2a3 b4c3 b2c3 g8e7 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 21 multipv 1 score cp 57 nodes 374956 nps 863953 hashfull 130 time 434 pv d2d4 d7d5 b1c3 d5e4 c3e4 c8d7 g1f3 d7c6 f1d3 g8f6 e4f6 d8f6 c1g5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 24 multipv 1 score cp 43 upperbound nodes 391077 nps 869060 hashfull 133 time 450 pv d2d4 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d2d4 ponder d7d5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqkbnr/pppp1ppp/4p3/8/4P3/N7/PPPP1PPP/R1BQKBNR b KQkq - 1 2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 6 multipv 1 score cp 17 nodes 174 nps 174000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 20 nodes 413 nps 413000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 24 nodes 648 nps 648000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 30 nodes 1105 nps 1105000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 34 nodes 1816 nps 1816000 hashfull 0 time 1 pv b7b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 68 nodes 4839 nps 1209750 hashfull 0 time 4 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp 64 nodes 8966 nps 1120750 hashfull 1 time 8 pv d7d5 e4d5 e6d5 d1e2 c8e6 g1f3 f8a3 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 12 multipv 1 score cp 57 nodes 28382 nps 1013642 hashfull 5 time 28 pv d7d5 d2d3 d5e4 d3e4 f8b4 c1d2 b4a3 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 15 multipv 1 score cp 43 nodes 54976 nps 947862 hashfull 15 time 58 pv d7d5 e4e5 f8a3 b2a3 g8e7 a1b1 c7c5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 22 multipv 1 score cp 35 nodes 114352 nps 945057 hashfull 34 time 121 pv b8c6 d2d3 f8a3 b2a3 d7d5 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 14 multipv 1 score cp 35 nodes 188683 nps 938721 hashfull 63 time 201 pv b8c6 g1f3 d7d5 e4d5 e6d5 f1e2 f8a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 21 multipv 1 score cp 36 nodes 286762 nps 943296 hashfull 91 time 304 pv b8c6 g1f3 d7d5 e4d5 e6d5 f1e2 g8f6 e1g1 c8g4 f1e1 f8a3 b2a3 e8g8 c1b2 f8e8 d1c1 d5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 15 multipv 1 score cp 34 nodes 385297 nps 913026 hashfull 121 time 422 pv b8c6 g1f3 d7d5 e4d5 e6d5 f1e2 g8f6 e1g1 f8a3 b2a3 e8g8 c1b2 f8e8 f1e1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 25 multipv 1 score cp 37 lowerbound nodes 411059 nps 903426 hashfull 131 time 455 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d7d5 ponder e4e5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/8/4P3/b7/PPPP1PPP/R1BQKBNR w KQkq - 0 3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -45 nodes 159 nps 159000 hashfull 0 time 1 pv b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp -37 nodes 377 nps 377000 hashfull 0 time 1 pv b2a3 b7b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -49 nodes 1062 nps 1062000 hashfull 0 time 1 pv b2a3 d7d6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp -71 nodes 1978 nps 989000 hashfull 0 time 2 pv b2a3 d7d6 c1b2 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -52 nodes 2673 nps 1336500 hashfull 0 time 2 pv b2a3 d7d6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 9 multipv 1 score cp -75 nodes 3732 nps 1244000 hashfull 0 time 3 pv b2a3 d7d6 a3a4 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp -73 nodes 4902 nps 1225500 hashfull 0 time 4 pv b2a3 d7d6 c1b2 g8f6 g1f3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp -56 nodes 6142 nps 1228400 hashfull 0 time 5 pv b2a3 d7d6 g1f3 g8f6 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 14 multipv 1 score cp -51 nodes 8363 nps 1194714 hashfull 1 time 7 pv b2a3 d7d6 g1f3 g8f6 c1b2 e6e5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp -19 nodes 12613 nps 1146636 hashfull 3 time 11 pv b2a3 d7d6 d2d4 g8f6 f1d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 23 multipv 1 score cp -27 nodes 29343 nps 978100 hashfull 9 time 30 pv b2a3 d7d6 d2d4 b7b6 f1b5 b8d7 d1g4 d8f6 g1e2 f6g6 g4g6 h7g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 19 multipv 1 score cp -23 nodes 45796 nps 954083 hashfull 14 time 48 pv b2a3 d7d5 c1b2 e6e5 d1h5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 18 multipv 1 score cp -22 nodes 72069 nps 960920 hashfull 23 time 75 pv b2a3 g8e7 g1f3 d7d5 f1d3 c7c5 e4d5 e6d5 e1g1 e8g8 f1e1 e7g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 23 multipv 1 score cp -26 nodes 122639 nps 915216 hashfull 41 time 134 pv b2a3 g8e7 d2d4 d7d5 f1d3 c7c5 d4c5 b8d7 e4d5 e7d5 c5c6 b7c6 c2c4 d5f6 g1f3 d7c5 d3c2 d8d1 e1d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 29 multipv 1 score cp -29 nodes 244293 nps 911541 hashfull 85 time 268 pv b2a3 g8e7 d2d4 d7d5 f1d3 b7b6 c2c4 d5c4 d3c4 c8b7 c4d3 e8g8 g1e2 c7c5 d4c5 b8d7 c5b6 a7b6 e1g1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 28 multipv 1 score cp -22 nodes 381586 nps 840497 hashfull 130 time 454 pv b2a3 g8e7 d2d4 d7d5 e4d5 d8d5 g1f3 b7b6 c2c4 d5a5 c1d2 a5a3 f1e2 c8b7 e1g1 e8g8 d1c2 b8d7 f1e1 c7c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d2d4 ponder a3e7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 370 nodes 147 nps 147000 hashfull 0 time 1 pv a3f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 490 nodes 286 nps 286000 hashfull 0 time 1 pv a3d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 484 nodes 432 nps 432000 hashfull 0 time 1 pv a3f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp 446 nodes 752 nps 752000 hashfull 0 time 1 pv a3f8 a2a3 f8c5 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 472 nodes 990 nps 990000 hashfull 0 time 1 pv a3e7 c1b2 e7f6 b2f6 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 393 nodes 1462 nps 1462000 hashfull 0 time 1 pv d8e7 e4e5 a7a6 c1a3 e7a3 b3b4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 372 nodes 1774 nps 887000 hashfull 0 time 2 pv d8e7 e4e5 a7a6 c1a3 e7a3 b3b4 a3a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 491 nodes 3631 nps 726200 hashfull 1 time 5 pv a3c1 a1c1 d8e7 c1b1 g8f6 e4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 10 multipv 1 score cp 416 nodes 5300 nps 883333 hashfull 2 time 6 pv a3c1 a1c1 d8e7 d1g4 g8f6 g4g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp 526 nodes 7789 nps 865444 hashfull 3 time 9 pv a3c1 a1c1 b8c6 d1g4 g7g6 g4g3 d7d5 g3c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 12 multipv 1 score cp 508 nodes 11883 nps 914076 hashfull 4 time 13 pv a3c1 a1c1 b8c6 d1g4 e8f8 g4g3 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp 500 nodes 16703 nps 879105 hashfull 5 time 19 pv a3c1 a1c1 d7d6 d2d4 d6d5 e4d5 e6d5 d1e2 e8f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 18 multipv 1 score cp 482 nodes 34349 nps 880743 hashfull 13 time 39 pv a3c1 d1c1 b8c6 e1d1 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 18 multipv 1 score cp 467 nodes 56791 nps 860469 hashfull 25 time 66 pv a3c1 d1c1 b8c6 f1b5 g8f6 e4e5 f6d5 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 20 multipv 1 score cp 473 nodes 195243 nps 765658 hashfull 89 time 255 pv a3c1 d1c1 d7d5 c1b2 g8f6 e4e5 f6d7 d2d4 c7c5 d4c5 b8c6 g1f3 d7c5 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 22 multipv 1 score cp 453 nodes 344502 nps 757147 hashfull 155 time 455 pv a3c1 d1c1 d7d5 e4e5 c8d7 d2d4 g8e7 g1f3 c7c5 d4c5 d8a5 c1d2 a5c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove a3f8 ponder c1b2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P6/P1PP1PPP/R1BQKBNR w KQkq - 1 4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp -367 nodes 115 nps 115000 hashfull 0 time 1 pv c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 5 multipv 1 score cp -283 nodes 589 nps 589000 hashfull 0 time 1 pv d1g4 g7g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp -240 nodes 849 nps 849000 hashfull 0 time 1 pv d1g4 g7g6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp -292 nodes 1184 nps 592000 hashfull 0 time 2 pv d1g4 g7g6 c1b2 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp -279 nodes 1589 nps 794500 hashfull 0 time 2 pv d1g4 g7g6 c1b2 g8f6 g4f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp -292 nodes 2517 nps 839000 hashfull 0 time 3 pv c1b2 g8f6 e4e5 f6e4 d1g4 c5f2 e1d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp -292 nodes 4252 nps 1063000 hashfull 1 time 4 pv c1b2 g8f6 e4e5 f6e4 d1g4 c5f2 e1d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 13 multipv 1 score cp -303 nodes 7356 nps 817333 hashfull 1 time 9 pv c1b2 e6e5 b2e5 g8f6 e5b2 b8c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 16 multipv 1 score cp -335 nodes 10000 nps 909090 hashfull 2 time 11 pv c1b2 g8f6 e4e5 f6d5 d1g4 g7g6 g1f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp -333 nodes 12561 nps 897214 hashfull 3 time 14 pv c1b2 e6e5 b2e5 g8f6 e5b2 d7d5 e4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 14 multipv 1 score cp -306 nodes 22946 nps 882538 hashfull 10 time 26 pv c1b2 e6e5 b2e5 g8f6 e5b2 d7d5 e4d5 d8e7 d1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp -353 nodes 38705 nps 879659 hashfull 18 time 44 pv c1b2 c5f8 d1f3 d7d6 f1b5 c7c6 b5d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 16 multipv 1 score cp -342 nodes 55782 nps 871593 hashfull 23 time 64 pv c1b2 e6e5 b2e5 g8f6 e5b2 d7d5 e4e5 f6e4 d2d4 c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 19 multipv 1 score cp -342 nodes 110312 nps 875492 hashfull 43 time 126 pv c1b2 c5f8 d1e2 g8f6 g1f3 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 22 multipv 1 score cp -331 nodes 173428 nps 884836 hashfull 64 time 196 pv c1b2 e6e5 f2f4 d7d6 g1f3 g8f6 f4e5 d6e5 f3e5 e8g8 d2d4 c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 20 multipv 1 score cp -338 nodes 288865 nps 867462 hashfull 106 time 333 pv c1b2 c5f8 g1f3 d7d5 e4d5 e6d5 f1b5 c7c6 d1e2 d8e7 e1g1 e7e2 b5e2 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 27 multipv 1 score cp -322 nodes 380094 nps 837211 hashfull 153 time 454 pv c1b2 c5f8 g1f3 d7d5 e4d5 e6d5 f1b5 c7c6 b5d3 g8f6 d1e2 f8e7 b2f6 g7f6 e1g1 c8e6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d1h5 ponder b7b6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 489 nodes 140 nps 140000 hashfull 0 time 1 pv d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 8 multipv 1 score cp 553 nodes 465 nps 465000 hashfull 0 time 1 pv a7a5 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 6 multipv 1 score cp 560 nodes 691 nps 691000 hashfull 0 time 1 pv a7a5 a2a3 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 596 nodes 985 nps 985000 hashfull 0 time 1 pv g8e7 c2c3 a7a5 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 575 nodes 1381 nps 690500 hashfull 0 time 2 pv a7a5 a2a3 c5a7 d2d3 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp 539 nodes 1793 nps 896500 hashfull 1 time 2 pv c5d4 a1b1 d4f6 c1b2 f6b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 528 nodes 2309 nps 1154500 hashfull 1 time 2 pv e6e5 c1b2 d7d6 f1b5 c7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp 511 nodes 3080 nps 1026666 hashfull 1 time 3 pv c5e7 c1b2 e7f6 b2f6 g8f6 d2d4 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp 514 nodes 4764 nps 952800 hashfull 1 time 5 pv b8c6 c1b2 e6e5 c2c3 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 12 multipv 1 score cp 543 nodes 6873 nps 981857 hashfull 2 time 7 pv d8h4 e1e2 h4f2 e2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp 476 nodes 14198 nps 887375 hashfull 4 time 16 pv b8c6 c1b2 e6e5 f3f4 d7d6 f4e5 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 16 multipv 1 score cp 458 nodes 28075 nps 877343 hashfull 13 time 32 pv d7d5 c1b2 e8f8 e4e5 g8e7 d2d4 c5b6 d1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 17 multipv 1 score cp 434 nodes 61842 nps 813710 hashfull 25 time 76 pv e6e5 c1b2 d7d6 g1e2 b8c6 d2d4 c5d4 e2d4 c6d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 28 multipv 1 score cp 426 nodes 160663 nps 832450 hashfull 68 time 193 pv d7d6 d2d4 c5b4 c1d2 a7a5 g1h3 b8c6 d4d5 e6d5 e4d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 27 multipv 1 score cp 404 nodes 321544 nps 828721 hashfull 129 time 388 pv b8c6 c1b2 c5d4 c2c3 d4g1 h1g1 d7d5 d2d4 d5e4 f3e4 d8h4 g2g3 h4e4 e1d2 e4f5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 30 multipv 1 score cp 419 nodes 370732 nps 823848 hashfull 145 time 450 pv e6e5 c1b2 d7d6 g1e2 b8c6 d2d4 e5d4 e2d4 c6d4 b2d4 c5d4 d1d4 d8h4 e1d2 h4h6 d2e1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove d7d6 ponder g1e2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/ppp2ppp/3pp3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -419 nodes 110 nps 110000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp -411 nodes 474 nps 474000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -423 nodes 596 nps 596000 hashfull 0 time 1 pv g1e2 e6e5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp -455 nodes 867 nps 867000 hashfull 0 time 1 pv d2d4 c5b4 e1f2 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 8 multipv 1 score cp -442 nodes 1169 nps 1169000 hashfull 0 time 1 pv g1e2 e6e5 d2d4 e5d4 e2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp -428 nodes 1533 nps 766500 hashfull 0 time 2 pv c2c3 c5b6 d2d4 d6d5 e4d5 e6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp -447 nodes 2016 nps 1008000 hashfull 0 time 2 pv g1e2 e6e5 d2d4 e5d4 e2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp -404 nodes 3081 nps 1027000 hashfull 0 time 3 pv g1e2 d8h4 e2g3 e6e5 d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 10 multipv 1 score cp -432 nodes 4770 nps 795000 hashfull 0 time 6 pv f3f4 e6e5 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp -433 nodes 6636 nps 829500 hashfull 1 time 8 pv f3f4 g8f6 c1b2 e6e5 g1f3 e5f4 f3g5 c5b6 f1b5 c7c6 b5d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp -431 nodes 9576 nps 870545 hashfull 1 time 11 pv f3f4 e6e5 c1b2 g8f6 g1f3 b8c6 f1b5 a7a6 f4e5 a6b5 e5f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 15 multipv 1 score cp -422 nodes 20173 nps 840541 hashfull 3 time 24 pv d2d4 c5b4 c1d2 b4d2 d1d2 g8f6 f1b5 c7c6 b5d3 a7a5 e1c1 a5a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 26 multipv 1 score cp -402 nodes 45205 nps 852924 hashfull 14 time 53 pv g1e2 b8c6 d2d4 c5b6 c1b2 e6e5 d4e5 d6e5 d1d8 e8d8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 23 multipv 1 score cp -390 nodes 82095 nps 760138 hashfull 25 time 108 pv g1e2 b8c6 d2d4 c5b6 d1d2 d8h4 e1d1 h4h6 d2h6 g8h6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 23 multipv 1 score cp -392 nodes 151600 nps 773469 hashfull 51 time 196 pv g1e2 b8c6 d2d4 c5b6 c1b2 e6e5 a2a4 d8h4 g2g3 h4h6 a4a5 b6d4 e2d4 e5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 29 multipv 1 score cp -378 nodes 318275 nps 766927 hashfull 127 time 415 pv g1e2 b8c6 d2d4 c5b6 a2a4 g8f6 c1b2 a7a6 e2g3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 29 multipv 1 score cp -378 nodes 346998 nps 762632 hashfull 139 time 455 pv g1e2 b8c6 d2d4 c5b6 a2a4 g8f6 c1b2 a7a6 e2g3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove f3f4 ponder g8f6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/ppp2ppp/3pp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 2 multipv 1 score cp 564 nodes 159 nps 159000 hashfull 0 time 1 pv d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 8 multipv 1 score cp 584 nodes 454 nps 454000 hashfull 0 time 1 pv g8e7 f1b5 c7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 8 multipv 1 score cp 569 nodes 664 nps 664000 hashfull 0 time 1 pv a7a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp 562 nodes 1037 nps 518500 hashfull 0 time 2 pv d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 11 multipv 1 score cp 555 nodes 1418 nps 709000 hashfull 0 time 2 pv g8e7 d2d4 c5b4 e1f2 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 10 multipv 1 score cp 555 nodes 2028 nps 1014000 hashfull 0 time 2 pv d6e5 d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 8 multipv 1 score cp 553 nodes 2679 nps 893000 hashfull 0 time 3 pv g8e7 d2d4 c5b4 e1f2 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 567 nodes 3489 nps 872250 hashfull 0 time 4 pv c5d4 f3f4 d4a1 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp 569 nodes 4718 nps 943600 hashfull 1 time 5 pv c5d4 c2c3 d4e5 d2d4 e5f6 f1b5 c7c6 b5d3 f6h4 e1f1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 20 multipv 1 score cp 575 nodes 8471 nps 847100 hashfull 3 time 10 pv d6e5 d2d4 c5d4 g1e2 d4a1 d1d8 e8d8 c1g5 f7f6 g5h4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp 584 nodes 12595 nps 839666 hashfull 3 time 15 pv d8h4 g2g3 h4d4 f1b5 c7c6 b5d3 d4a1 e5d6 c5d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 15 multipv 1 score cp 592 nodes 19873 nps 903318 hashfull 7 time 22 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 19 multipv 1 score cp 604 nodes 56701 nps 872323 hashfull 20 time 65 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 d2d4 c5d4 e2b5 c7c6 b5d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 25 multipv 1 score cp 576 nodes 96911 nps 857619 hashfull 40 time 113 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 c2c3 g8e7 d2d4 c5b6 f3f4 a1c3 c1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 30 multipv 1 score cp 576 nodes 202429 nps 812967 hashfull 92 time 249 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 c2c3 g8e7 h3f4 h7h6 f4h5 h8h7 b3b4 c5b6 e2b5 b8d7 b5d7 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 30 multipv 1 score cp 576 nodes 347683 nps 772628 hashfull 166 time 450 pv d8h4 g2g3 h4d4 g1h3 d4e5 f1e2 e5a1 c2c3 g8e7 h3f4 h7h6 f4h5 h8h7 b3b4 c5b6 e2b5 b8d7 b5d7 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove g8e7 ponder c1b2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/ppp2ppp/2npp3/2b1P3/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 1 6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 6 multipv 1 score cp -493 nodes 166 nps 166000 hashfull 0 time 1 pv d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp -493 nodes 538 nps 269000 hashfull 0 time 2 pv d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp -517 nodes 684 nps 342000 hashfull 0 time 2 pv f3f4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp -511 nodes 959 nps 479500 hashfull 0 time 2 pv c2c3 d6e5 d2d4 e5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -517 nodes 1197 nps 598500 hashfull 0 time 2 pv f3f4 d6e5 f4e5 c6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 13 multipv 1 score cp -533 nodes 1959 nps 653000 hashfull 0 time 3 pv f1b5 d6e5 b5c6 b7c6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp -521 nodes 2676 nps 669000 hashfull 0 time 4 pv f3f4 c5d4 a1b1 d6e5 g1f3 e5e4 f3d4 c6d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp -513 nodes 3848 nps 769600 hashfull 0 time 5 pv f1b5 d6e5 f3f4 c5d4 b5c6 b7c6 c1a3 d4a1 d1a1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 12 multipv 1 score cp -483 nodes 6633 nps 829125 hashfull 1 time 8 pv f3f4 d6e5 c1b2 c5d4 d1g4 d4b2 g4g7 b2a1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp -443 nodes 11486 nps 765733 hashfull 3 time 15 pv f3f4 a7a5 c1b2 a5a4 b3a4 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 17 multipv 1 score cp -471 nodes 18485 nps 770208 hashfull 6 time 24 pv f1b5 c5d4 f3f4 d4a1 b5c6 b7c6 d1g4 g7g6 c2c3 f7f5 g4f3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 19 multipv 1 score cp -469 nodes 29440 nps 795675 hashfull 10 time 37 pv f3f4 d6e5 f1b5 e5e4 c1b2 g8f6 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 17 multipv 1 score cp -465 nodes 46873 nps 822333 hashfull 17 time 57 pv f3f4 d6e5 g1f3 e5f4 c1b2 g8f6 f1b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 20 multipv 1 score cp -496 nodes 117831 nps 841650 hashfull 47 time 140 pv f3f4 d6e5 g1f3 e5e4 f3g5 c5d4 c2c3 d4f6 g5e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 25 multipv 1 score cp -491 nodes 229948 nps 845397 hashfull 94 time 272 pv g1h3 d6e5 c1b2 g8e7 f3f4 c5d6 d1e2 e5f4 e2g4 e6e5 g4g7 h8g8 g7h7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 27 multipv 1 score cp -479 nodes 364565 nps 801241 hashfull 155 time 455 pv f3f4 d6e5 c1b2 c5d4 c2c3 d4g1 h1g1 g8e7 d1h5 e7g6 g2g3 e8g8 e1c1 c6e7 c3c4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove f3f4 ponder d6e5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/ppp2ppp/2nPp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR b KQkq - 0 6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 4 multipv 1 score cp 567 nodes 169 nps 169000 hashfull 0 time 1 pv c7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 631 nodes 342 nps 342000 hashfull 0 time 1 pv c5d6 c2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 618 nodes 513 nps 513000 hashfull 0 time 1 pv c7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp 608 nodes 759 nps 759000 hashfull 0 time 1 pv c5d6 g1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 567 nodes 989 nps 989000 hashfull 0 time 1 pv c7d6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 587 nodes 1417 nps 1417000 hashfull 0 time 1 pv c5d6 g1e2 g8f6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp 568 nodes 2071 nps 1035500 hashfull 0 time 2 pv c5d6 g1e2 g8f6 c1b2 e6e5 e2c1 f6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 581 nodes 2674 nps 891333 hashfull 0 time 3 pv c5d6 c1b2 e6e5 g1e2 g8f6 e2c3 e8g8 c3e4 f6e4 f3e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp 549 nodes 4627 nps 925400 hashfull 0 time 5 pv g8f6 d6c7 d8d4 g1h3 d4a1 f1b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 12 multipv 1 score cp 570 nodes 7258 nps 806444 hashfull 0 time 9 pv c5d6 c1b2 e6e5 f1b5 g8e7 b5c6 e7c6 g1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 16 multipv 1 score cp 550 nodes 14058 nps 937200 hashfull 3 time 15 pv d8h4 g2g3 h4d4 g1h3 d4a1 f1b5 c5d6 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 14 multipv 1 score cp 558 nodes 20082 nps 912818 hashfull 7 time 22 pv d8h4 g2g3 h4d4 g1h3 d4a1 f3f4 c5d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 16 multipv 1 score cp 594 nodes 31025 nps 886428 hashfull 8 time 35 pv d8h4 g2g3 h4d4 g1h3 d4a1 f1b5 a1e5 d1e2 e5e2 b5e2 c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 24 multipv 1 score cp 564 nodes 79083 nps 909000 hashfull 30 time 87 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 f3f4 c5d4 c1a3 c8d7 h3f2 d4f2 e2f2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 32 multipv 1 score cp 568 nodes 227564 nps 871892 hashfull 89 time 261 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 f3f4 h7h6 h3f2 c5e7 c1b2 g8f6 f2e4 f6e4 e2e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 32 multipv 1 score cp 568 nodes 361078 nps 802395 hashfull 142 time 450 pv d8h4 g2g3 h4d4 g1h3 d4a1 d6c7 a1e5 d1e2 e5c7 f3f4 h7h6 h3f2 c5e7 c1b2 g8f6 f2e4 f6e4 e2e4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c5d6 ponder c1b2"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/2npp3/2b5/8/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -567 nodes 111 nps 111000 hashfull 0 time 1 pv c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 5 multipv 1 score cp -537 nodes 671 nps 671000 hashfull 0 time 1 pv a2a4 e6e5 c1b2 c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp -537 nodes 794 nps 794000 hashfull 0 time 1 pv a2a4 e6e5 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp -537 nodes 1257 nps 1257000 hashfull 0 time 1 pv a2a4 e6e5 c1b2 c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 12 multipv 1 score cp -533 nodes 1613 nps 806500 hashfull 0 time 2 pv c1b2 e6e5 g1e2 a7a6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 12 multipv 1 score cp -528 nodes 2012 nps 1006000 hashfull 0 time 2 pv c1b2 e6e5 g1e2 g8e7 d2d4 e5d4 e2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 12 multipv 1 score cp -526 nodes 2927 nps 975666 hashfull 0 time 3 pv f1b5 c5b6 c1b2 e6e5 d2d4 e5d4 d1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp -422 nodes 4110 nps 1027500 hashfull 0 time 4 pv f3f4 d6d5 c1b2 e6e5 f4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp -508 nodes 6161 nps 1026833 hashfull 2 time 6 pv f1b5 c5b6 b5c6 b7c6 c1b2 e6e5 d1e2 g8e7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp -517 nodes 11272 nps 1024727 hashfull 3 time 11 pv f1b5 e6e5 b5c6 b7c6 c1b2 g8e7 d1e2 e8g8 a2a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 20 multipv 1 score cp -527 nodes 19972 nps 951047 hashfull 5 time 21 pv c1b2 e6e5 g1e2 g8e7 d2d4 e5d4 d1d2 e8g8 e2d4 c6d4 b2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 22 multipv 1 score cp -509 nodes 39819 nps 904977 hashfull 14 time 44 pv c2c3 d6d5 d2d4 c5e7 f1d3 a7a6 g1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 19 multipv 1 score cp -506 nodes 62444 nps 892057 hashfull 22 time 70 pv f1b5 g8e7 c1b2 e8g8 f3f4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 21 multipv 1 score cp -496 nodes 144847 nps 872572 hashfull 57 time 166 pv c2c3 c5b6 d2d4 e6e5 a2a4 g8f6 f1d3 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 23 multipv 1 score cp -492 nodes 258571 nps 856195 hashfull 105 time 302 pv c2c3 c5b6 b3b4 b6c7 d2d4 g8e7 f1d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 22 multipv 1 score cp -488 nodes 371358 nps 816171 hashfull 147 time 455 pv c2c3 e6e5 d2d4 e5d4 f1b5 g8e7 b3b4 c5b6 a2a4 d6d5 a4a5 b6c7 g1e2 d4c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c1b2 ponder c5d4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/2npp3/2b5/1P6/5P2/P1PP2PP/R1BQKBNR b KQkq - 0 7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 590 nodes 176 nps 176000 hashfull 0 time 1 pv c5b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 4 multipv 1 score cp 647 nodes 391 nps 391000 hashfull 0 time 1 pv c5b6 a2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp 642 nodes 614 nps 614000 hashfull 0 time 1 pv c5b6 a2a3 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 6 multipv 1 score cp 630 nodes 952 nps 476000 hashfull 0 time 2 pv c5b6 a2a3 d6d5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp 575 nodes 1316 nps 438666 hashfull 0 time 3 pv c5b4 c1b2 g8f6 b2c1 b4c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 583 nodes 1693 nps 564333 hashfull 0 time 3 pv c5b6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 562 nodes 2181 nps 545250 hashfull 0 time 4 pv c5b6 c1b2 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 609 nodes 3361 nps 672200 hashfull 0 time 5 pv c5d4 b4b5 d4a1 b5c6 b7c6 d2d4 a1c3 c1d2 c3d2 e1d2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 11 multipv 1 score cp 571 nodes 4403 nps 733833 hashfull 0 time 6 pv c5b4 g1e2 e6e5 c1b2 b4a5 e2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 11 multipv 1 score cp 586 nodes 8577 nps 779727 hashfull 0 time 11 pv c5d4 b4b5 d4a1 b5c6 a1f6 c6b7 c8b7 g1e2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 12 multipv 1 score cp 581 nodes 12399 nps 826600 hashfull 0 time 15 pv c5b6 c1b2 g8f6 f1b5 e6e5 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 18 multipv 1 score cp 590 nodes 23941 nps 855035 hashfull 3 time 28 pv c5d4 a1b1 d4f6 b4b5 c6e7 c1b2 f6b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 15 multipv 1 score cp 557 nodes 40571 nps 881978 hashfull 9 time 46 pv c5d4 a1b1 e6e5 b4b5 c6e7 f3f4 e7g6 f4e5 d6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 19 multipv 1 score cp 551 nodes 109152 nps 866285 hashfull 37 time 126 pv c5d4 f1b5 g8e7 g1e2 d4f6 b5c6 b7c6 c2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 32 multipv 1 score cp 537 nodes 353951 nps 832825 hashfull 134 time 425 pv d8h4 g2g3 h4b4 g1e2 g8f6 g3g4 b4b6 d2d4 c6d4 e2c3 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 32 multipv 1 score cp 537 nodes 371983 nps 815752 hashfull 145 time 456 pv d8h4 g2g3 h4b4 g1e2 g8f6 g3g4 b4b6 d2d4 c6d4 e2c3 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove c5g1 ponder h1g1"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 1500"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen r1bqk1nr/pp3ppp/1bnpp3/8/1P6/5P2/P1PP2PP/R1BQKBNR w KQkq - 1 8"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -570 nodes 118 nps 118000 hashfull 0 time 1 pv b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 5 multipv 1 score cp -467 nodes 433 nps 433000 hashfull 0 time 1 pv c1b2 d8h4 g2g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 5 multipv 1 score cp -522 nodes 566 nps 566000 hashfull 0 time 1 pv a2a4 g8f6 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp -550 nodes 797 nps 797000 hashfull 0 time 1 pv c1b2 e6e5 b4b5 c6a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -543 nodes 1082 nps 1082000 hashfull 0 time 1 pv a2a4 g8f6 b4b5 c6a5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 7 multipv 1 score cp -531 nodes 1520 nps 760000 hashfull 0 time 2 pv a2a4 g8f6 b4b5 c6a5 d2d4 e8g8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp -484 nodes 2268 nps 756000 hashfull 0 time 3 pv c1b2 e6e5 a2a4 g8f6 a4a5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp -517 nodes 4517 nps 752833 hashfull 1 time 6 pv a2a4 g8e7 a4a5 b6d4 a1a2 d4f6 b4b5 c6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 13 multipv 1 score cp -523 nodes 7451 nps 827888 hashfull 1 time 9 pv a2a4 g8e7 f3f4 b6g1 h1g1 e8g8 b4b5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp -504 nodes 11976 nps 798400 hashfull 2 time 15 pv a2a4 e6e5 a4a5 b6d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 13 multipv 1 score cp -502 nodes 18552 nps 806608 hashfull 4 time 23 pv a2a4 g8f6 a4a5 b6g1 b4b5 c6d4 h1g1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 19 multipv 1 score cp -511 nodes 42250 nps 845000 hashfull 12 time 50 pv b4b5 c6a5 f3f4 g8f6 d2d4 e8g8 g2g4 c8d7"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 21 multipv 1 score cp -508 nodes 66689 nps 854987 hashfull 24 time 78 pv f3f4 g8f6 b4b5 c6d4 a2a4 e6e5 a4a5 b6a5 f4e5 d6e5 c2c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 25 multipv 1 score cp -516 nodes 193006 nps 828351 hashfull 77 time 233 pv f3f4 g8f6 a2a4 e8g8 g1f3 e6e5 a4a5 b6c7 b4b5 c6d4 f3d4 e5d4 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 28 multipv 1 score cp -509 nodes 353496 nps 778625 hashfull 142 time 454 pv b4b5 c6b4 d2d4 b6d4 c1d2 d4a1 c2c3 b4d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove a2a4 ponder d8h4"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 2850"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/8/4P3/b7/PPPP1PPP/R1BQKBNR w KQkq - 0 3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -45 nodes 159 nps 159000 hashfull 0 time 1 pv b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp -37 nodes 377 nps 377000 hashfull 0 time 1 pv b2a3 b7b6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -49 nodes 1062 nps 1062000 hashfull 0 time 1 pv b2a3 d7d6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp -71 nodes 1978 nps 989000 hashfull 0 time 2 pv b2a3 d7d6 c1b2 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 7 multipv 1 score cp -52 nodes 2673 nps 1336500 hashfull 0 time 2 pv b2a3 d7d6 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 9 multipv 1 score cp -75 nodes 3732 nps 1244000 hashfull 0 time 3 pv b2a3 d7d6 a3a4 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 11 multipv 1 score cp -73 nodes 4902 nps 1225500 hashfull 0 time 4 pv b2a3 d7d6 c1b2 g8f6 g1f3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp -56 nodes 6142 nps 1228400 hashfull 0 time 5 pv b2a3 d7d6 g1f3 g8f6 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 14 multipv 1 score cp -51 nodes 8363 nps 1194714 hashfull 1 time 7 pv b2a3 d7d6 g1f3 g8f6 c1b2 e6e5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp -19 nodes 12613 nps 970230 hashfull 3 time 13 pv b2a3 d7d6 d2d4 g8f6 f1d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 23 multipv 1 score cp -27 nodes 29343 nps 946548 hashfull 9 time 31 pv b2a3 d7d6 d2d4 b7b6 f1b5 b8d7 d1g4 d8f6 g1e2 f6g6 g4g6 h7g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 19 multipv 1 score cp -23 nodes 45796 nps 954083 hashfull 14 time 48 pv b2a3 d7d5 c1b2 e6e5 d1h5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 18 multipv 1 score cp -22 nodes 72069 nps 935961 hashfull 23 time 77 pv b2a3 g8e7 g1f3 d7d5 f1d3 c7c5 e4d5 e6d5 e1g1 e8g8 f1e1 e7g6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 23 multipv 1 score cp -26 nodes 122639 nps 875992 hashfull 41 time 140 pv b2a3 g8e7 d2d4 d7d5 f1d3 c7c5 d4c5 b8d7 e4d5 e7d5 c5c6 b7c6 c2c4 d5f6 g1f3 d7c5 d3c2 d8d1 e1d1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 29 multipv 1 score cp -29 nodes 244293 nps 857168 hashfull 85 time 285 pv b2a3 g8e7 d2d4 d7d5 f1d3 b7b6 c2c4 d5c4 d3c4 c8b7 c4d3 e8g8 g1e2 c7c5 d4c5 b8d7 c5b6 a7b6 e1g1"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 28 multipv 1 score cp -22 nodes 369822 nps 814585 hashfull 124 time 454 pv b2a3 g8e7 d2d4 d7d5 e4d5 d8d5 g1f3 b7b6 c2c4 d5a5 c1d2 a5a3 f1e2 c8b7 e1g1 e8g8 d1c2 b8d7 f1e1 c7c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove b2a3 ponder g8e7"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 2850"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/ppp2ppp/3pp3/2b5/4P3/1P3P2/P1PP2PP/R1BQKBNR w KQkq - 0 5"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp -419 nodes 110 nps 110000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp -411 nodes 474 nps 474000 hashfull 0 time 1 pv d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 7 multipv 1 score cp -423 nodes 596 nps 596000 hashfull 0 time 1 pv g1e2 e6e5 d2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 7 multipv 1 score cp -455 nodes 867 nps 867000 hashfull 0 time 1 pv d2d4 c5b4 e1f2 d6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 8 multipv 1 score cp -442 nodes 1169 nps 584500 hashfull 0 time 2 pv g1e2 e6e5 d2d4 e5d4 e2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp -428 nodes 1533 nps 766500 hashfull 0 time 2 pv c2c3 c5b6 d2d4 d6d5 e4d5 e6d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp -447 nodes 2016 nps 1008000 hashfull 0 time 2 pv g1e2 e6e5 d2d4 e5d4 e2d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 10 multipv 1 score cp -404 nodes 3081 nps 770250 hashfull 0 time 4 pv g1e2 d8h4 e2g3 e6e5 d2d4 c5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 10 multipv 1 score cp -432 nodes 4770 nps 954000 hashfull 0 time 5 pv f3f4 e6e5 c1b2"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 13 multipv 1 score cp -433 nodes 6636 nps 948000 hashfull 1 time 7 pv f3f4 g8f6 c1b2 e6e5 g1f3 e5f4 f3g5 c5b6 f1b5 c7c6 b5d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 15 multipv 1 score cp -431 nodes 9576 nps 957600 hashfull 1 time 10 pv f3f4 e6e5 c1b2 g8f6 g1f3 b8c6 f1b5 a7a6 f4e5 a6b5 e5f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 15 multipv 1 score cp -422 nodes 20173 nps 877086 hashfull 3 time 23 pv d2d4 c5b4 c1d2 b4d2 d1d2 g8f6 f1b5 c7c6 b5d3 a7a5 e1c1 a5a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 26 multipv 1 score cp -402 nodes 45205 nps 837129 hashfull 14 time 54 pv g1e2 b8c6 d2d4 c5b6 c1b2 e6e5 d4e5 d6e5 d1d8 e8d8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 23 multipv 1 score cp -390 nodes 82095 nps 855156 hashfull 25 time 96 pv g1e2 b8c6 d2d4 c5b6 d1d2 d8h4 e1d1 h4h6 d2h6 g8h6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 23 multipv 1 score cp -392 nodes 151600 nps 823913 hashfull 51 time 184 pv g1e2 b8c6 d2d4 c5b6 c1b2 e6e5 a2a4 d8h4 g2g3 h4h6 a4a5 b6d4 e2d4 e5d4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 29 multipv 1 score cp -378 nodes 318275 nps 820296 hashfull 127 time 388 pv g1e2 b8c6 d2d4 c5b6 a2a4 g8f6 c1b2 a7a6 e2g3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 17 seldepth 29 multipv 1 score cp -378 nodes 364274 nps 802365 hashfull 146 time 454 pv g1e2 b8c6 d2d4 c5b6 a2a4 g8f6 c1b2 a7a6 e2g3 e6e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove f3f4 ponder g8f6"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_LimitStrength value true"
+  },
+  {
+    "direction": "to-worker",
+    "line": "setoption name UCI_Elo value 2850"
+  },
+  {
+    "direction": "to-worker",
+    "line": "ucinewgame"
+  },
+  {
+    "direction": "to-worker",
+    "line": "position fen rnbqk1nr/pppp1ppp/4p3/8/4P3/bP6/P1PP1PPP/R1BQKBNR b KQkq - 0 3"
+  },
+  {
+    "direction": "to-worker",
+    "line": "go movetime 450"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string NNUE evaluation using nn-9067e33176e8.nnue (11MiB, (22528, 256, 15, 32, 1))"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info string Network replica 1: Local memory. Shared memory not supported by the OS. Local allocation fallback."
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 1 seldepth 3 multipv 1 score cp 370 nodes 147 nps 147000 hashfull 0 time 1 pv a3f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 2 seldepth 3 multipv 1 score cp 490 nodes 286 nps 286000 hashfull 0 time 1 pv a3d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 3 seldepth 4 multipv 1 score cp 484 nodes 432 nps 432000 hashfull 0 time 1 pv a3f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 4 seldepth 5 multipv 1 score cp 446 nodes 752 nps 752000 hashfull 0 time 1 pv a3f8 a2a3 f8c5 d2d3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 5 seldepth 6 multipv 1 score cp 472 nodes 990 nps 990000 hashfull 0 time 1 pv a3e7 c1b2 e7f6 b2f6 g8f6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 6 seldepth 8 multipv 1 score cp 393 nodes 1462 nps 731000 hashfull 0 time 2 pv d8e7 e4e5 a7a6 c1a3 e7a3 b3b4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 7 seldepth 9 multipv 1 score cp 372 nodes 1774 nps 887000 hashfull 0 time 2 pv d8e7 e4e5 a7a6 c1a3 e7a3 b3b4 a3a4"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 8 seldepth 11 multipv 1 score cp 491 nodes 3631 nps 726200 hashfull 1 time 5 pv a3c1 a1c1 d8e7 c1b1 g8f6 e4e5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 9 seldepth 10 multipv 1 score cp 416 nodes 5300 nps 757142 hashfull 2 time 7 pv a3c1 a1c1 d8e7 d1g4 g8f6 g4g3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 10 seldepth 15 multipv 1 score cp 526 nodes 7789 nps 865444 hashfull 3 time 9 pv a3c1 a1c1 b8c6 d1g4 g7g6 g4g3 d7d5 g3c3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 11 seldepth 12 multipv 1 score cp 508 nodes 11883 nps 848785 hashfull 4 time 14 pv a3c1 a1c1 b8c6 d1g4 e8f8 g4g3 d7d5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 12 seldepth 17 multipv 1 score cp 500 nodes 16703 nps 835150 hashfull 5 time 20 pv a3c1 a1c1 d7d6 d2d4 d6d5 e4d5 e6d5 d1e2 e8f8"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 13 seldepth 18 multipv 1 score cp 482 nodes 34349 nps 858725 hashfull 13 time 40 pv a3c1 d1c1 b8c6 e1d1 d7d6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 14 seldepth 18 multipv 1 score cp 467 nodes 56791 nps 860469 hashfull 25 time 66 pv a3c1 d1c1 b8c6 f1b5 g8f6 e4e5 f6d5 b5c6 b7c6"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 15 seldepth 20 multipv 1 score cp 473 nodes 195243 nps 800176 hashfull 89 time 244 pv a3c1 d1c1 d7d5 c1b2 g8f6 e4e5 f6d7 d2d4 c7c5 d4c5 b8c6 g1f3 d7c5 b2a3"
+  },
+  {
+    "direction": "from-worker",
+    "line": "info depth 16 seldepth 22 multipv 1 score cp 453 nodes 313667 nps 689378 hashfull 143 time 455 pv a3c1 d1c1 d7d5 e4e5 c8d7 d2d4 g8e7 g1f3 c7c5 d4c5 d8a5 c1d2 a5c5"
+  },
+  {
+    "direction": "from-worker",
+    "line": "bestmove a3c1 ponder d1c1"
+  }
+]

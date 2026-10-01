@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-09-06T08:33:34.088Z",
+  "verdict": "FAIL",
+  "production": {
+    "hashedAssets": true,
+    "scripts": 2
+  },
+  "initialPlan": {
+    "id": "plan:dc5a56b6-c983-4e12-a385-4e4c1d6c2d12",
+    "tasks": 4
+  },
+  "game": {
+    "plies": 12,
+    "legalReplay": true,
+    "finalFen": "rn1qkb1r/pp2pppp/3p1n2/2p5/PP6/6Pb/2PPPP1P/RNBQK2R w KQkq - 0 7",
+    "stockfishBestmoves": 20
+  },
+  "review": {
+    "evidenceId": "game:2766a822-5d57-4e06-9d02-fe46d68fe5df:ply:9",
+    "ply": 9,
+    "playedSan": "g3",
+    "bestSan": "gxh3",
+    "classification": "blunder",
+    "engineSource": "stockfish_wasm"
+  },
+  "coach": {
+    "evidenceId": "game:2766a822-5d57-4e06-9d02-fe46d68fe5df:ply:9",
+    "groundedBestMove": "gxh3",
+    "explanationVisible": true
+  },
+  "puzzle": {},
+  "skills": {},
+  "finalPlan": {},
+  "persistence": {},
+  "cloud": {
+    "statuses": [],
+    "rowCounts": [],
+    "rowHashes": [],
+    "profileHashes": [],
+    "cleanup": {
+      "eventsDelete": true,
+      "rowDelete": true,
+      "rowsRemaining": 0,
+      "accountDelete": true,
+      "accountAbsent": true
+    },
+    "accountCreated": true,
+    "userHash": "2874b92599098598bbf8b5393d8e47706e2e3663bdcc09b00145eff4400ed6a5"
+  },
+  "runtime": {
+    "pageErrors": [],
+    "consoleErrors": [],
+    "failedRequests": [],
+    "unexpectedHttp": []
+  },
+  "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(attempt.events.every((event) => event.attemptId === attempt.attemptId))\n\n    at file:///E:/chess/artifacts/tech-verification/PHASE_3/GATE/verifier/phase3-gate.mjs:236:3",
+  "failureContext": {
+    "url": "http://127.0.0.1:4175/exercises",
+    "profileAvailable": true
+  }
+}

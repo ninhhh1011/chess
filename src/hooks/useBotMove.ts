@@ -41,6 +41,7 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelMove = useCallback(() => {
+    currentGameGenIdRef.current += 1;
     // Clear any pending timeout
     if (timeoutRef.current) {
       window.clearTimeout(timeoutRef.current);
@@ -64,21 +65,27 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
       currentGameGenIdRef.current = genId;
       setRequestId(genId);
 
-      abortControllerRef.current = new AbortController();
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
       setIsThinking(true);
       onMoveStart?.();
 
       // Create timeout to prevent infinite loading
+      let timedOut = false;
+      let timeoutId: ReturnType<typeof setTimeout>;
       const timeoutPromise = new Promise<BotMoveResult>((_, reject) => {
-        timeoutRef.current = window.setTimeout(() => {
+        timeoutId = window.setTimeout(() => {
+          timedOut = true;
+          controller.abort();
           reject(new Error('TIMEOUT'));
         }, timeoutMs);
+        timeoutRef.current = timeoutId;
       });
 
       try {
         // Race between bot move and timeout
         const result = await Promise.race([
-          getBotMove(fen, botElo),
+          getBotMove(fen, botElo, controller.signal),
           timeoutPromise,
         ]);
 
@@ -97,7 +104,7 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
           return lastMove || { move: null, source: 'stale', elo: botElo, depth: 0, movetime: 0, skillLevel: 0, warning: 'Stale response ignored' };
         }
 
-        const isTimeout = error instanceof Error && error.message === 'TIMEOUT';
+        const isTimeout = timedOut || (error instanceof Error && error.message === 'TIMEOUT');
         const errorResult: BotMoveResult = {
           move: null,
           source: isTimeout ? 'timeout' : 'error',
@@ -113,9 +120,12 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
         return errorResult;
       } finally {
         // Always clear timeout
-        if (timeoutRef.current) {
-          window.clearTimeout(timeoutRef.current);
+        window.clearTimeout(timeoutId!);
+        if (timeoutRef.current === timeoutId!) {
           timeoutRef.current = null;
+        }
+        if (abortControllerRef.current === controller) {
+          abortControllerRef.current = null;
         }
         // Only clear thinking state if this is still the current request
         if (currentGameGenIdRef.current === genId) {

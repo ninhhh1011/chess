@@ -1,0 +1,21 @@
+{
+  "manifestSchemaVersion": "corpus-delivery-manifest.v1",
+  "corpusSchemaVersion": "puzzle-record.v1",
+  "completed": true,
+  "contentIdentitySha256": "c836c4470ffc4289945d2e48f987ad1849926f7cb526002bb81e4f9511b00338",
+  "inputSha256": "e23ec11296bfb650805c08a23056df9ea8d267887ffe43181d412a0baaacf8d7",
+  "source": "lichess",
+  "officialSourceUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+  "licenseId": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "datasetVersion": "2026-08-02",
+  "sourceSha256": "a0ea9129c6b6434dfb34a9ac4ec660c9cfff22b2de465e01854f018fc847f073",
+  "puzzleCount": 1000,
+  "chunks": [
+    {
+      "file": "chunks/00000.json",
+      "count": 1000,
+      "sha256": "6b590292150f094d08adda19303437a7a1bd6afbda4bd82c946576775b0c979b"
+    }
+  ]
+}

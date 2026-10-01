@@ -1,0 +1,14 @@
+{
+  "command": "node scripts/verify-corpus.cjs",
+  "exitCode": 0,
+  "reportedSummary": "All validations passed",
+  "contradictions": {
+    "manifestVersionRead": null,
+    "manifestLicenseRead": null,
+    "checksum": "missing warning",
+    "sampledProvenance": "0/10 warning",
+    "normalizedDuplicates": "39977 warning",
+    "solutionValidation": "only string-length check on first 100 rows"
+  },
+  "conclusion": "The legacy validator is not evidence that this artifact is real, licensed, unique, or chess-valid. Its zero exit despite these warnings reproduces the documented Phase 2 defect."
+}

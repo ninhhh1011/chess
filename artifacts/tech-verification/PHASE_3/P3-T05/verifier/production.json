@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS",
+  "initialPlanId": "plan:d169270e-7c5a-40a0-9ab7-72fc6f2b072c",
+  "wrongPlanId": "plan:829ba590-897d-41f7-ac8c-11c2f0c0e543",
+  "solvedPlanId": "plan:5e1aee50-c707-4673-99a3-24fa7c0ddab6",
+  "initialTaskCount": 4,
+  "solvedTask": {
+    "type": "exercise",
+    "id": "skill:crushing",
+    "title": "Bài tập: crushing",
+    "reason": "Ưu tiên kỹ năng có điểm thấp nhất từ 2 bằng chứng đã lưu.",
+    "skillTag": "crushing",
+    "evidenceIds": [
+      "event:4d0a7a6d-1460-4492-a816-a0bc7027edf8",
+      "event:75b4cc60-8fcb-4987-850a-b9907a6698c0"
+    ]
+  },
+  "trainingPlanHistory": 5,
+  "retryKeptPlan": true,
+  "intermediateKeptPlan": true,
+  "exactReloadBytes": true,
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}

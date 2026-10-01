@@ -13,7 +13,9 @@ import { describe, test, expect } from 'vitest';
 import {
   normalizeEvalToWhite,
   calculateCPL,
+  calculateMoverCPL,
   classifyMove,
+  determineSkillTags,
   parseEngineEval,
 } from '../services/analysis/orientation';
 
@@ -63,16 +65,85 @@ describe('Evaluation Orientation', () => {
       expect(calculateCPL(played, best)).toBe(50); // 70 - 20 = 50cp
     });
 
-    test('negative loss (opponent error)', () => {
+    test('engine noise cannot produce negative CPL', () => {
       const played = { type: 'cp' as const, value: 80 };
       const best = { type: 'cp' as const, value: 30 };
-      expect(calculateCPL(played, best)).toBe(-50); // Good move!
+      expect(calculateCPL(played, best)).toBe(0);
     });
 
-    test('both mate scores - mate distance', () => {
-      const played = { type: 'mate' as const, value: 2 };
-      const best = { type: 'mate' as const, value: 4 };
-      expect(calculateCPL(played, best)).toBe(200); // |2-4| * 100
+    test('orders winning mate by the shorter distance', () => {
+      expect(calculateCPL(
+        { type: 'mate', value: 4 },
+        { type: 'mate', value: 2 }
+      )).toBe(200);
+      expect(calculateCPL(
+        { type: 'mate', value: 2 },
+        { type: 'mate', value: 4 }
+      )).toBe(0);
+    });
+
+    test('orders losing mate by the longer survival', () => {
+      expect(calculateCPL(
+        { type: 'mate', value: -2 },
+        { type: 'mate', value: -4 }
+      )).toBe(200);
+      expect(calculateCPL(
+        { type: 'mate', value: -4 },
+        { type: 'mate', value: -2 }
+      )).toBe(0);
+    });
+
+    test('orders mate above centipawn advantage and below centipawn when losing', () => {
+      expect(calculateCPL(
+        { type: 'cp', value: 900 },
+        { type: 'mate', value: 3 }
+      )).toBeGreaterThan(900);
+      expect(calculateCPL(
+        { type: 'mate', value: -3 },
+        { type: 'cp', value: -900 }
+      )).toBeGreaterThan(900);
+    });
+
+    test('is symmetric and non-negative for white and black movers', () => {
+      expect(calculateMoverCPL(
+        { type: 'cp', value: 100 },
+        { type: 'cp', value: -100 },
+        'w'
+      )).toBe(200);
+      expect(calculateMoverCPL(
+        { type: 'cp', value: -100 },
+        { type: 'cp', value: 100 },
+        'b'
+      )).toBe(200);
+      expect(calculateMoverCPL(
+        { type: 'cp', value: 0 },
+        { type: 'cp', value: 20 },
+        'w'
+      )).toBe(0);
+      expect(calculateMoverCPL(
+        { type: 'cp', value: 0 },
+        { type: 'cp', value: -20 },
+        'b'
+      )).toBe(0);
+    });
+  });
+
+  describe('skill tags', () => {
+    test('uses positive CPL for tactical and endgame losses', () => {
+      const move = { san: 'Qe4', piece: 'Q', isCapture: false, isCheck: false, isMate: false };
+
+      expect(determineSkillTags(move, 200, {
+        isBackRank: false,
+        isHanging: false,
+        isOpening: false,
+        isEndgame: false,
+      })).toContain('tactical_oversight');
+      expect(determineSkillTags(move, 120, {
+        isBackRank: false,
+        isHanging: false,
+        isOpening: false,
+        isEndgame: true,
+      })).toContain('endgame_conversion');
     });
   });
 

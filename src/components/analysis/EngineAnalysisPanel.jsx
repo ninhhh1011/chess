@@ -3,7 +3,10 @@ import { analyzeFen, isEngineReady, stopEngine } from '../../services/stockfishS
 import { formatEvaluation, getSanFromUci } from '../../utils/chessMoveUtils';
 import GameReviewPanel from './GameReviewPanel';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
-import { AppButton } from '../../ui';
+import { AppButton } from '../../ui/AppButton';
+import { AppStatus } from '../../ui/AppStatus';
+import { AppSwitch } from '../../ui/AppSwitch';
+import { AppSurface } from '../../ui/AppSurface';
 
 function getEvalPercent(evaluation) {
   if (!evaluation) return 50;
@@ -14,9 +17,9 @@ function getEvalPercent(evaluation) {
 }
 
 /**
- * EngineAnalysisPanel - Option C styling
+ * EngineAnalysisPanel - Option C styling with HeroUI foundation
  */
-export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
+export default function EngineAnalysisPanel({ fen, onBestMove, onReview, onReviewFact, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
   const [status, setStatus] = useState(() => (isEngineReady() ? 'Sẵn sàng' : 'Chưa tải'));
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState('');
@@ -58,14 +61,18 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
     setStatus('Đã dừng');
   }
 
+  const statusVariant = status === 'Sẵn sàng' ? 'engine' : status === 'Lỗi' ? 'danger' : 'basic';
+
   return (
     <div className="space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-[var(--app-foreground)]">{BRAND_NAMES.analysis}</h3>
-        <span className="rounded px-2 py-0.5 text-xs font-medium bg-[var(--app-accent-soft)] text-[var(--app-accent)] border border-[var(--app-accent)]/20">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--app-foreground)]">
+          {BRAND_NAMES.analysis}
+        </h3>
+        <AppStatus variant={statusVariant} size="sm">
           {status}
-        </span>
+        </AppStatus>
       </div>
 
       {/* Single source disclosure line per Section 14 */}
@@ -86,7 +93,7 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
 
         {/* Eval info */}
         <div className="space-y-2">
-          <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-xs">
+          <AppSurface variant="base" radius="sm" className="p-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="text-[var(--app-muted)]">Đánh giá</span>
               <b className="font-mono text-[var(--app-accent)]">{formatEvaluation(analysis?.evaluation)}</b>
@@ -97,52 +104,61 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
                 style={{ width: `${whiteEvalPercent}%` }}
               />
             </div>
-          </div>
+          </AppSurface>
 
-          <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-xs text-[var(--app-foreground)]">
+          <AppSurface variant="base" radius="sm" className="p-2 text-xs text-[var(--app-foreground)]">
             <span className="text-[var(--app-muted)]">Nước tốt nhất: </span>
             <b className="font-mono text-[var(--app-copper)]">{bestSan || '—'}</b>
-          </div>
+          </AppSurface>
         </div>
       </div>
 
-      {/* Auto analyze */}
-      <label className="flex items-center gap-2 rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] p-2 text-xs font-medium text-[var(--app-foreground)] cursor-pointer">
-        <input
-          type="checkbox"
-          checked={autoAnalyze}
-          onChange={(e) => onAutoAnalyzeChange(e.target.checked)}
-          className="accent-[var(--app-accent)] rounded"
+      {/* Auto analyze Switch */}
+      <AppSurface variant="base" radius="sm" className="p-2.5">
+        <AppSwitch
+          isSelected={Boolean(autoAnalyze)}
+          onChange={(val) => onAutoAnalyzeChange(val)}
+          label="Tự động phân tích"
+          description="Tính toán nước đi tối ưu sau mỗi nước cờ"
         />
-        Tự động phân tích
-      </label>
+      </AppSurface>
 
       {/* Comments */}
       {autoComment && (
-        <p className="rounded-md border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-2 text-xs text-[var(--app-accent-hover)]">
+        <p className="rounded-[8px] border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-2 text-xs text-[var(--app-accent-hover)]">
           {autoComment}
         </p>
       )}
       {error && (
-        <p className="rounded-md border border-[var(--app-copper)]/30 bg-[var(--app-copper-soft)] p-2 text-xs text-[var(--app-copper)]">
+        <p className="rounded-[8px] border border-[var(--app-copper)]/30 bg-[var(--app-copper-soft)] p-2 text-xs text-[var(--app-copper)]">
           {error}
         </p>
       )}
 
       {/* PV */}
-      <div className="rounded-md border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-2 text-xs text-[var(--app-muted)]">
+      <AppSurface variant="raised" radius="sm" className="p-2 text-xs text-[var(--app-muted)]">
         <span className="font-semibold text-[var(--app-foreground)]">PV: </span>
         <span className="font-mono text-[11px]">
           {analysis?.pv?.map((uci) => getSanFromUci(analysis.fen, uci)).join(' ') || '—'}
         </span>
-      </div>
+      </AppSurface>
 
       {/* Actions */}
       <div className="grid grid-cols-2 gap-2">
-        <AppButton size="sm" variant="primary" onClick={() => runAnalysis(false)} disabled={isAnalyzing}>
-          {isAnalyzing ? 'Đang mổ...' : BRAND_NAMES.analysis}
+        <AppButton
+          size="sm"
+          variant="primary"
+          onClick={() => runAnalysis(false)}
+          isLoading={isAnalyzing}
+        >
+          {BRAND_NAMES.analysis}
         </AppButton>
-        <AppButton size="sm" variant="secondary" onClick={() => runAnalysis(true)} disabled={isAnalyzing}>
+        <AppButton
+          size="sm"
+          variant="secondary"
+          onClick={() => runAnalysis(true)}
+          disabled={isAnalyzing}
+        >
           {UI_COPY.hint}
         </AppButton>
       </div>
@@ -152,7 +168,7 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, review,
 
       {/* Game review */}
       <div className="pt-2">
-        <GameReviewPanel review={review} isReviewing={isReviewing} onReview={onReview} />
+        <GameReviewPanel review={review} isReviewing={isReviewing} onReview={onReview} onSelectFact={onReviewFact} />
       </div>
     </div>
   );

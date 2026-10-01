@@ -1,0 +1,35 @@
+{
+  "checkpointSchemaVersion": "lichess-import-checkpoint.v1",
+  "datasetVersion": "2026-08-02",
+  "sourceUrl": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+  "rawSha256": "7f6dc879f8c3d92f9af0755337ee3caea4a97bf721beef4cabe055cbff70a3db",
+  "importerVersion": "lichess-importer.v1",
+  "parserVersion": "lichess-csv.v1",
+  "validatorVersion": "puzzle-record.v1",
+  "configSha256": "9aea5a414fa5134c21bd94ba96cb8bb0bd8a3cb7933f4009bc271671223cf972",
+  "importRunId": "lichess-87d38ab3a23fac9dab9e92a1",
+  "retrievedAt": "2026-09-06T01:57:48.926Z",
+  "paths": {
+    "output": "E:\\chess\\artifacts\\tech-verification\\PHASE_2\\P2-T04\\verifier\\work\\adversarial-1788659868238\\06-cli\\controlled\\accepted.jsonl",
+    "quarantineOutput": "E:\\chess\\artifacts\\tech-verification\\PHASE_2\\P2-T04\\verifier\\work\\adversarial-1788659868238\\06-cli\\controlled\\quarantine.jsonl",
+    "manifestOutput": "E:\\chess\\artifacts\\tech-verification\\PHASE_2\\P2-T04\\verifier\\work\\adversarial-1788659868238\\06-cli\\controlled\\manifest.json"
+  },
+  "sourceRowsCommitted": 1,
+  "counts": {
+    "parsed": 1,
+    "filtered": 0,
+    "accepted": 1,
+    "invalid": 0,
+    "quarantined": 0,
+    "duplicate": 0
+  },
+  "parsedCount": 1,
+  "filteredCount": 0,
+  "acceptedCount": 1,
+  "quarantineCount": 0,
+  "duplicateCount": 0,
+  "acceptedBytes": 1321,
+  "quarantineBytes": 0,
+  "updatedAt": "2026-09-06T01:57:48.957Z",
+  "status": "interrupted"
+}

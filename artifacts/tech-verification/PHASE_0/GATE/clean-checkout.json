@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-05",
+  "method": "git archive HEAD plus only current tracked changes and two intentional untracked source files; no node_modules, dist, env, ignored generated corpus, docs, or prior artifacts copied",
+  "temporaryCheckout": "C:/Users/nguye/AppData/Local/Temp/chess-phase0-clean-cd36730f393841ba9621af2cc32195d5/repo",
+  "generatedCorpusCopied": false,
+  "commands": [
+    { "command": "npm ci", "exitCode": 0, "result": "689 packages installed; inherited audit: 12 advisories" },
+    { "command": "npm run lint", "exitCode": 0, "result": "PASS" },
+    { "command": "npm run typecheck", "exitCode": 0, "result": "PASS" },
+    { "command": "npm test", "exitCode": 0, "result": "31 files, 572 tests passed" },
+    { "command": "npm run build", "exitCode": 0, "result": "PASS, 4057 modules transformed, PWA 34 precache entries" }
+  ],
+  "verdict": "PASS"
+}

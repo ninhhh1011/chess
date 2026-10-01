@@ -1,0 +1,172 @@
+{
+  "verdict": "PASS",
+  "baseUrl": "http://127.0.0.1:4231",
+  "productionScripts": [
+    "http://127.0.0.1:4231/assets/index-CozSBo6p.js",
+    "http://127.0.0.1:4231/registerSW.js"
+  ],
+  "white": {
+    "side": "w",
+    "input": "click",
+    "plies": 20,
+    "moves": [
+      "e4",
+      "d5",
+      "exd5",
+      "e6",
+      "Bb5+",
+      "Bd7",
+      "Qf3",
+      "exd5",
+      "Qe4+",
+      "dxe4",
+      "Ba6",
+      "Bc6",
+      "Bxb7",
+      "Bxb7",
+      "Na3",
+      "Kd7",
+      "Nc4",
+      "Qe8",
+      "b3",
+      "Nh6"
+    ],
+    "finalFen": "rn2qb1r/pbpk1ppp/7n/8/2N1p3/1P6/P1PP1PPP/R1B1K1NR w KQ - 1 11",
+    "undoEvidence": null,
+    "hint": "PASS"
+  },
+  "black": {
+    "side": "b",
+    "input": "drag",
+    "plies": 21,
+    "moves": [
+      "d4",
+      "d5",
+      "g3",
+      "c5",
+      "dxc5",
+      "e5",
+      "Nf3",
+      "Qg5",
+      "Nxg5",
+      "Be6",
+      "Nxe6",
+      "Nd7",
+      "Bh3",
+      "Rd8",
+      "Ng5",
+      "Rc8",
+      "a3",
+      "Ngf6",
+      "c3",
+      "h6",
+      "c6"
+    ],
+    "finalFen": "2r1kb1r/pp1n1pp1/2P2n1p/3pp1N1/8/P1P3PB/1P2PP1P/RNBQK2R b KQk - 0 11",
+    "undoEvidence": {
+      "before": 3,
+      "after": 1
+    }
+  },
+  "lifecycle": {
+    "pendingFen": "rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1",
+    "pendingWorkerId": 1,
+    "pendingWorkerTerminated": true,
+    "staleMoveDiscarded": true
+  },
+  "resignation": {
+    "confirmed": true,
+    "game": {
+      "side": "w",
+      "input": "click",
+      "plies": 16,
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "d6",
+        "d4",
+        "Nd7",
+        "Nxe5",
+        "Nxe5",
+        "Qd3",
+        "Nxd3+",
+        "Kd2",
+        "Nxf2",
+        "Na3",
+        "Nxh1",
+        "Ba6",
+        "Nf6"
+      ],
+      "finalFen": "r1bqkb1r/ppp2ppp/B2p1n2/8/3PP3/N7/PPPK2PP/R1B4n w kq - 2 9",
+      "undoEvidence": null
+    }
+  },
+  "review": {
+    "fact": {
+      "id": "review-1788638616911:ply:9",
+      "source": "stockfish_wasm",
+      "turn": "w",
+      "cpl": 616,
+      "classification": "blunder",
+      "playedUci": "d1d3",
+      "bestUci": "d4e5"
+    },
+    "searches": 23,
+    "selectedPosition": "9 / 16",
+    "navigation": "9 / 16 -> 0 / 16 -> 1 / 16"
+  },
+  "newGameReset": true,
+  "worker": {
+    "urls": [
+      "/stockfish-worker.js?v=2026-05-30-simplified"
+    ],
+    "workers": 2,
+    "searches": 174,
+    "completedSearches": 172,
+    "legalBestmoves": 172
+  },
+  "stockfishResponses": [
+    {
+      "url": "http://127.0.0.1:4231/stockfish.js",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish-worker.js",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish/stockfish.wasm",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish-worker.js?v=2026-05-30-simplified",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish/stockfish.js",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4231/stockfish/stockfish.wasm",
+      "status": 200
+    }
+  ],
+  "errors": {
+    "console": [],
+    "page": [],
+    "network": []
+  }
+}
