@@ -1,5 +1,6 @@
 node_modules
 dist
+/coverage/
 .env
 .env.local
 .env.*.local
@@ -7,9 +8,11 @@ server/.env
 .DS_Store
 .codex-dev*.log
 .worktrees/
+/graphify-out/
 /public/stockfish.js
 /public/stockfish.wasm
 test-results/
 playwright-report/
 playwright/.cache/
 src/data/generated/
+.playwright-mcp/

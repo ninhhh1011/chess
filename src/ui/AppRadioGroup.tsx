@@ -1,46 +1,69 @@
 import React from 'react';
-import {
-  RadioGroup as HeroUIRadioGroup,
-  Radio as HeroUIRadio,
-  Label as HeroUILabel,
-} from '@heroui/react';
+import { RadioGroup as HeroUIRadioGroup, Radio as HeroUIRadio, Label as HeroUILabel } from '@heroui/react';
+
+export interface RadioOption {
+  value: string;
+  label: string;
+  description?: string;
+  disabled?: boolean;
+}
 
 export interface AppRadioGroupProps {
-  value: string;
-  onChange: (val: string) => void;
   label?: string;
-  children: React.ReactNode;
-  className?: string;
+  value: string;
+  onChange: (value: string) => void;
+  options?: RadioOption[];
+  children?: React.ReactNode;
   orientation?: 'horizontal' | 'vertical';
-  disabled?: boolean;
+  className?: string;
   ariaLabel?: string;
+  disabled?: boolean;
 }
 
 export function AppRadioGroup({
+  label,
   value,
   onChange,
-  label,
+  options,
   children,
-  className = '',
   orientation = 'vertical',
-  disabled = false,
+  className = '',
   ariaLabel,
+  disabled = false,
 }: AppRadioGroupProps) {
   return (
     <HeroUIRadioGroup
       value={value}
       onChange={onChange}
-      isDisabled={disabled}
-      aria-label={ariaLabel || label || 'Nhóm lựa chọn'}
       orientation={orientation}
-      className={`w-full ${className || (orientation === 'horizontal' ? 'flex flex-row flex-wrap gap-2.5' : 'flex flex-col gap-2')}`}
+      isDisabled={disabled}
+      aria-label={ariaLabel || label || 'Tùy chọn'}
+      className={`flex flex-col gap-2 ${className}`}
     >
       {label && (
         <HeroUILabel className="text-xs font-semibold text-[var(--app-muted)] select-none">
           {label}
         </HeroUILabel>
       )}
-      {children}
+
+      {children ? (
+        <div className={orientation === 'horizontal' ? 'flex flex-wrap gap-2.5' : 'flex flex-col gap-2'}>
+          {children}
+        </div>
+      ) : (
+        <div className={orientation === 'horizontal' ? 'flex flex-wrap gap-3' : 'flex flex-col gap-2'}>
+          {options?.map((opt) => (
+            <AppRadio
+              key={opt.value}
+              value={opt.value}
+              description={opt.description}
+              disabled={opt.disabled}
+            >
+              {opt.label}
+            </AppRadio>
+          ))}
+        </div>
+      )}
     </HeroUIRadioGroup>
   );
 }
@@ -71,17 +94,17 @@ export function AppRadio({
           <HeroUIRadio.Control
             className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${
               isSelected
-                ? 'border-[var(--app-accent)] bg-[var(--app-accent)]'
-                : 'border-[var(--app-border)] bg-[var(--app-surface)]'
+                ? 'border-[var(--app-secondary)] bg-[var(--app-secondary)]'
+                : 'border-[var(--app-border)] bg-white'
             }`}
           >
-            {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-[#0C100E]" />}
+            {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
           </HeroUIRadio.Control>
 
           <div className="flex flex-col">
             <span
               className={`font-medium ${
-                isSelected ? 'text-[var(--app-foreground)]' : 'text-[var(--app-muted)]'
+                isSelected ? 'text-[#030302] font-semibold' : 'text-[var(--app-muted)]'
               }`}
             >
               {children}
@@ -117,12 +140,12 @@ export function AppRadioCard({
     >
       {({ isSelected }) => (
         <HeroUIRadio.Content
-          className={`flex h-full w-full flex-col rounded-[10px] border p-3 transition-all duration-150 ${
+          className={`flex h-full w-full flex-col rounded-[16px] border p-3.5 transition-all duration-150 ${
             isSelected
-              ? 'border-[var(--app-accent)] bg-[var(--app-surface-hover)] shadow-xs'
-              : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] hover:border-[var(--app-border-strong)]'
+              ? 'border-[#030302] bg-white shadow-xs ring-1 ring-[#030302]'
+              : 'border-[var(--app-border)] bg-[var(--app-muted-surface)]/60 hover:bg-[var(--app-muted-surface)]'
           }`}
-          style={{ borderRadius: '10px' }}
+          style={{ borderRadius: '16px' }}
         >
           {children}
         </HeroUIRadio.Content>
