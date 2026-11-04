@@ -1,0 +1,120 @@
+/* -------------------------------------------------------------------------------------------------
+ * CRAFT SOFT EDITORIAL THEME (craft.do-design.md)
+ * Light, airy productivity system with expressive serif headlines, soft cloudlike surfaces,
+ * and restrained black accents. Synchronized with HeroUI v3.
+ * -----------------------------------------------------------------------------------------------*/
+
+:root {
+  color-scheme: light;
+
+  /* Surface & Base */
+  --app-bg: #FCF9F7;                  /* Neutral warm off-white canvas */
+  --app-surface: #FFFFFF;             /* Pure white for cards, panels, modals */
+  --app-surface-raised: #FFFFFF;      /* Raised floating containers */
+  --app-surface-hover: #F8F6F4;       /* Subtle warm hover state */
+  --app-muted-surface: #F3F1EE;       /* Secondary quiet warm gray */
+  --app-border: rgba(3, 3, 2, 0.08);  /* Faint translucent border */
+  --app-border-strong: rgba(3, 3, 2, 0.16);
+
+  /* Typography Colors */
+  --app-foreground: #030302;          /* Primary near-black ink */
+  --app-muted: #5C6460;               /* Muted body and secondary text */
+  --app-subtle: #8A948F;              /* Subtle labels, captions, metadata */
+  --app-disabled: #B4BCB7;            /* Disabled text / icons */
+
+  /* Brand Roles & Accents */
+  --app-primary: #030302;             /* Primary CTA fill (Ink Black) */
+  --app-primary-foreground: #FFFFFF;  /* Text on primary CTA */
+  --app-secondary: #427E8A;           /* Muted Teal accent for links & highlights */
+  --app-secondary-hover: #376C77;     /* Hover state for teal */
+  --app-tertiary: #D7EAF0;            /* Pale cloud blue for soft panels & chips */
+  --app-accent: #A9D8F2;              /* Sky blue highlight */
+  --app-copper: #427E8A;              /* Secondary accent compatibility mapping */
+
+  /* Semantic Feedback */
+  --app-success: #3D7D72;             /* Tactile muted teal success */
+  --app-warning: #C89B4F;             /* Amber for inaccuracies / caution */
+  --app-danger: #D94A4A;              /* Coral red for blunder / check / errors */
+  --app-info: #427E8A;                /* Slate teal for information */
+
+  /* Chessboard Specific Tokens */
+  --board-light: #FBF9F5;             /* Crisp ivory / warm cream */
+  --board-dark: #587982;              /* Calm muted slate teal */
+  --board-selected: rgba(66, 126, 138, 0.28);
+  --board-last-move: rgba(215, 234, 240, 0.65);
+  --board-check: rgba(217, 74, 74, 0.40);
+  --board-legal-dot: rgba(3, 3, 2, 0.25);
+  --board-capture-ring: rgba(66, 126, 138, 0.50);
+
+  /* Radius Rules */
+  --radius-button: 9999px;
+  --radius-input: 14px;
+  --radius-panel: 24px;
+  --radius-card: 24px;
+  --radius-modal: 24px;
+  --radius-badge: 9999px;
+  --app-radius-btn: 9999px;
+  --app-radius-modal: 24px;
+  --app-radius-card: 24px;
+  --app-radius-badge: 9999px;
+
+  /* Shadows (Diffuse Soft Lift) */
+  --shadow-floating: 0 10px 30px -4px rgba(3, 3, 2, 0.05), 0 4px 12px -2px rgba(3, 3, 2, 0.03);
+  --shadow-card: 0 4px 20px rgba(3, 3, 2, 0.04);
+  --shadow-modal: 0 20px 50px -10px rgba(3, 3, 2, 0.12);
+
+  /* Quiet Motion Timing */
+  --app-duration-fast: 120ms;
+  --app-duration-base: 180ms;
+  --app-duration-slow: 240ms;
+
+  /* HeroUI v3 CSS Variable Mappings */
+  --background: var(--app-bg);
+  --foreground: var(--app-foreground);
+  --surface: var(--app-surface);
+  --surface-foreground: var(--app-foreground);
+  --surface-secondary: var(--app-muted-surface);
+  --surface-hover: var(--app-surface-hover);
+  --overlay: var(--app-surface);
+  --overlay-foreground: var(--app-foreground);
+  --border: var(--app-border);
+  --separator: var(--app-border);
+  --default: var(--app-muted-surface);
+  --default-foreground: var(--app-foreground);
+  --default-hover: var(--app-surface-hover);
+  --accent: var(--app-secondary);
+  --accent-foreground: #FFFFFF;
+  --accent-hover: var(--app-secondary-hover);
+  --accent-soft: var(--app-tertiary);
+  --accent-soft-foreground: #1c454e;
+  --focus: var(--app-secondary);
+  --muted: var(--app-muted);
+  --success: var(--app-success);
+  --warning: var(--app-warning);
+  --danger: var(--app-danger);
+  --danger-foreground: #FFFFFF;
+  --danger-hover: #c93b3b;
+  --segment: var(--app-muted-surface);
+  --segment-foreground: var(--app-foreground);
+  --radius: 20px;
+  --field-radius: 14px;
+  --surface-shadow: 0 4px 20px rgba(3, 3, 2, 0.04);
+  --overlay-shadow: 0 20px 50px -10px rgba(3, 3, 2, 0.12);
+
+  /* Backward Compatibility Token Aliases */
+  --color-bg: var(--app-bg);
+  --color-surface: var(--app-surface);
+  --color-surface-raised: var(--app-surface-raised);
+  --color-border: var(--app-border);
+  --color-border-strong: var(--app-border-strong);
+  --color-primary: var(--app-primary);
+  --color-primary-hover: #1c1c1a;
+  --color-text-main: var(--app-foreground);
+  --color-text-muted: var(--app-muted);
+  --color-board-light: var(--board-light);
+  --color-board-dark: var(--board-dark);
+  --color-board-legal-hint: var(--board-legal-dot);
+  --color-board-last-move: var(--board-last-move);
+  --color-board-check: var(--board-check);
+  --color-board-selected: var(--board-selected);
+}

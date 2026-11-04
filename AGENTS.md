@@ -18,26 +18,29 @@
 - **Single Source of UI**: All application screens must consume components from `src/ui/` or direct HeroUI v3 primitives. Do not invent raw interactive elements or parallel design systems.
 - **Truth in UI**: Provide authentic, clear information (e.g. precise engine sources) instead of redundant visual badges.
 
-## 3. Visual Identity (Option C: Charcoal + Pine + Copper)
+## 3. Visual Identity (Craft Soft Editorial: craft.do-design.md)
 - **Palette**:
-  - Background: `#0C100E` (`--app-bg`)
-  - Surface: `#141A17` (`--app-surface`)
-  - Surface Raised: `#1A221E` (`--app-surface-raised`)
-  - Surface Hover: `#222C27` (`--app-surface-hover`)
-  - Border: `#2D3932` (`--app-border`)
-  - Border Strong: `#425047` (`--app-border-strong`)
-  - Foreground: `#F1F4F2` (`--app-foreground`)
-  - Muted: `#9BA89F` (`--app-muted`)
-  - Subtle: `#708078` (`--app-subtle`)
-  - Primary Pine: `#3FAD79` (`--app-accent`)
-  - Primary Hover: `#52BD8A` (`--app-accent-hover`)
-  - Copper: `#C88954` (`--app-copper`)
-  - Semantic Roles: Success Teal `#49A6A0`, Warning Amber `#C89B4F`, Danger Coral `#D46666`, Info `#6B98C8`
+  - Background: `#FCF9F7` (`--app-bg`)
+  - Surface: `#FFFFFF` (`--app-surface`)
+  - Surface Raised: `#FFFFFF` (`--app-surface-raised`)
+  - Surface Hover: `#F8F6F4` (`--app-surface-hover`)
+  - Muted Surface: `#F3F1EE` (`--app-muted-surface`)
+  - Border: `rgba(3, 3, 2, 0.08)` (`--app-border`)
+  - Border Strong: `rgba(3, 3, 2, 0.16)` (`--app-border-strong`)
+  - Foreground: `#030302` (`--app-foreground`)
+  - Muted: `#5C6460` (`--app-muted`)
+  - Subtle: `#8A948F` (`--app-subtle`)
+  - Primary Ink: `#030302` (`--app-primary`)
+  - Secondary Teal: `#427E8A` (`--app-secondary`)
+  - Secondary Hover: `#376C77` (`--app-secondary-hover`)
+  - Tertiary Cloud Blue: `#D7EAF0` (`--app-tertiary`)
+  - Accent Sky Blue: `#A9D8F2` (`--app-accent`)
+  - Semantic Roles: Success `#3D7D72`, Warning Amber `#C89B4F`, Danger Coral `#D94A4A`, Info `#427E8A`
 - **Radius Standards**:
-  - Buttons & Inputs: `8px`
-  - Panels & Cards: `10px`
-  - Modals & Overlays: `12px`
-  - Badges & Chips: `6px`
+  - Buttons & Badges: `rounded-full` (9999px)
+  - Cards & Modals: `24px`
+  - Sub-surfaces & Panels: `20px`
+  - Inputs & Form Fields: `14px`
 - **Quiet Motion**: Fast 120ms, Base 180ms, Slow 240ms. No jarring spring physics. Always respect `prefers-reduced-motion`.
 - **Card Hierarchy**: Use `Surface` for panels, toolbars, sidebars, and page regions. Reserve `Card` strictly for independent semantic entities (e.g., individual lessons, openings, exercises). Avoid nested cards.
 
@@ -65,3 +68,10 @@ npm test
 npm run build
 ```
 Verify responsive behavior on 360px and 390px mobile viewports without horizontal overflow.
+
+## 7. Agent Context & Documentation
+- Start with `README.md` for setup and `docs/README.md` to find the one relevant document.
+- Treat `src/` and current runtime behavior as implementation truth. `docs/CURRENT_RUNTIME.md` is a source map, not a substitute for checking the touched code.
+- Do not read `docs/CODEX_TECH_EXECUTION_PLAN.md`, `docs/task-reports/`, or `docs/verifications/` unless the task explicitly needs roadmap details or matching historical evidence. These are not current implementation instructions.
+- For architecture questions, query the generated code graph first: `graphify query "<focused question>" --budget 1200`. The graph indexes `src/`; regenerate after structural source changes with `graphify extract src --code-only --no-cluster --out .`.
+- Keep generated Graphify output out of commits. Use targeted file searches and read only the callers and code relevant to the change.

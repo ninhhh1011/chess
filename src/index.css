@@ -1,19 +1,26 @@
 @import "tailwindcss";
 @import "@heroui/styles";
-@import "./styles/theme-charcoal-pine.css";
+@import "./styles/theme-craft-editorial.css";
 @import "./styles/motion.css";
 
 @theme {
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+
   --color-app-bg: var(--app-bg);
   --color-app-surface: var(--app-surface);
   --color-app-surface-raised: var(--app-surface-raised);
   --color-app-surface-hover: var(--app-surface-hover);
+  --color-app-muted-surface: var(--app-muted-surface);
   --color-app-border: var(--app-border);
   --color-app-border-strong: var(--app-border-strong);
   --color-app-foreground: var(--app-foreground);
   --color-app-muted: var(--app-muted);
   --color-app-subtle: var(--app-subtle);
   --color-app-disabled: var(--app-disabled);
+  --color-app-primary: var(--app-primary);
+  --color-app-secondary: var(--app-secondary);
+  --color-app-tertiary: var(--app-tertiary);
   --color-app-accent: var(--app-accent);
   --color-app-copper: var(--app-copper);
   --color-app-success: var(--app-success);
@@ -21,19 +28,19 @@
   --color-app-danger: var(--app-danger);
   --color-app-info: var(--app-info);
 
-  /* Legacy aliases mapped directly to Option C tokens */
+  /* Legacy aliases mapped directly to Craft Soft Editorial tokens */
   --color-bg-base: var(--app-bg);
   --color-bg-surface: var(--app-surface);
   --color-bg-elevated: var(--app-surface-raised);
   --color-border: var(--app-border);
   --color-border-subtle: var(--app-border);
   --color-border-strong: var(--app-border-strong);
-  --color-primary-500: var(--app-accent);
-  --color-primary-400: var(--app-accent-hover);
-  --color-primary-300: var(--app-accent-hover);
-  --color-primary-600: var(--app-accent-pressed);
-  --color-primary-700: var(--app-accent-soft);
-  --color-accent-500: var(--app-copper);
+  --color-primary-500: var(--app-primary);
+  --color-primary-400: #222220;
+  --color-primary-300: #333330;
+  --color-primary-600: #000000;
+  --color-primary-700: #000000;
+  --color-accent-500: var(--app-secondary);
   --color-text-primary: var(--app-foreground);
   --color-text-secondary: var(--app-muted);
   --color-text-tertiary: var(--app-subtle);
@@ -55,7 +62,7 @@ body {
   width: 100%;
   min-height: 100%;
   overflow-x: hidden;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
   letter-spacing: 0;
   background-color: var(--app-bg);
   color: var(--app-foreground);
@@ -66,13 +73,13 @@ button, select {
   font: inherit;
 }
 
-/* Custom focus ring complying with Option C tokens */
+/* Custom focus ring complying with Craft Soft Editorial */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 :focus-visible {
-  outline: 2px solid var(--app-accent);
+  outline: 2px solid var(--app-secondary);
   outline-offset: 2px;
 }
 
@@ -81,7 +88,7 @@ img, svg, canvas, iframe {
 }
 
 ::selection {
-  background: var(--app-accent-soft);
+  background: var(--app-tertiary);
   color: var(--app-foreground);
 }
 
@@ -96,12 +103,12 @@ img, svg, canvas, iframe {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--app-border);
-  border-radius: 4px;
+  background: rgba(3, 3, 2, 0.15);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--app-muted);
+  background: rgba(3, 3, 2, 0.25);
 }
 
 /* Chess Board container layout */
@@ -132,41 +139,42 @@ img, svg, canvas, iframe {
 
 /* HeroUI Component Theme Rules */
 .button {
-  border-radius: 8px !important;
+  border-radius: 9999px !important;
 }
 
 .button--primary {
-  --button-bg: var(--app-accent);
-  --button-bg-hover: var(--app-accent-hover);
-  --button-bg-pressed: var(--app-accent-pressed);
-  --button-fg: #0C100E;
+  --button-bg: var(--app-primary);
+  --button-bg-hover: #1c1c1a;
+  --button-bg-pressed: #000000;
+  --button-fg: #FFFFFF;
 }
 
 .button--secondary {
-  --button-bg: var(--app-surface-raised);
+  --button-bg: var(--app-surface);
   --button-bg-hover: var(--app-surface-hover);
-  --button-bg-pressed: var(--app-surface-hover);
+  --button-bg-pressed: var(--app-muted-surface);
   --button-fg: var(--app-foreground);
   border: 1px solid var(--app-border);
 }
 
 .button--outline {
   --button-bg: transparent;
-  --button-bg-hover: var(--app-surface);
+  --button-bg-hover: var(--app-muted-surface);
   --button-fg: var(--app-foreground);
-  border: 1px solid var(--app-border);
+  border: 1px solid var(--app-border-strong);
 }
 
 .button--danger {
   --button-bg: var(--app-danger);
-  --button-bg-hover: #e07070;
+  --button-bg-hover: #c93b3b;
   --button-fg: #FFFFFF;
 }
 
 .card {
-  border-radius: 10px !important;
-  background-color: var(--app-surface-raised);
+  border-radius: 24px !important;
+  background-color: var(--app-surface);
   border: 1px solid var(--app-border);
+  box-shadow: var(--shadow-card);
 }
 
 .surface {
@@ -174,7 +182,5 @@ img, svg, canvas, iframe {
 }
 
 .chip {
-  border-radius: 6px !important;
+  border-radius: 9999px !important;
 }
-
-
