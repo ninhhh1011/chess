@@ -4,7 +4,7 @@ import { Surface as HeroUISurface } from '@heroui/react';
 export interface AppSurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   variant?: 'base' | 'raised' | 'hover' | 'transparent';
-  radius?: 'sm' | 'md' | 'lg' | 'none';
+  radius?: 'sm' | 'md' | 'lg' | 'full' | 'none';
   className?: string;
   hasBorder?: boolean;
 }
@@ -20,16 +20,17 @@ export function AppSurface({
 }: AppSurfaceProps) {
   const variantStyles = {
     base: 'bg-[var(--app-surface)]',
-    raised: 'bg-[var(--app-surface-raised)]',
+    raised: 'bg-[var(--app-surface-raised)] shadow-[var(--shadow-card)]',
     hover: 'bg-[var(--app-surface-hover)]',
     transparent: 'bg-transparent',
   }[variant];
 
   const radiusStyles = {
     none: 'rounded-none',
-    sm: 'rounded-[8px]',
-    md: 'rounded-[10px]',
-    lg: 'rounded-[12px]',
+    sm: 'rounded-[14px]',
+    md: 'rounded-[20px]',
+    lg: 'rounded-[24px]',
+    full: 'rounded-full',
   }[radius];
 
   const borderClass = hasBorder ? 'border border-[var(--app-border)]' : '';
@@ -40,12 +41,20 @@ export function AppSurface({
     transparent: 'transparent' as const,
   }[variant];
 
+  const borderRadiusMap = {
+    none: '0px',
+    sm: '14px',
+    md: '20px',
+    lg: '24px',
+    full: '9999px',
+  };
+
   return (
     <HeroUISurface
       variant={heroUIVariant}
       className={`${variantStyles} ${radiusStyles} ${borderClass} ${className}`}
       style={{
-        borderRadius: radius === 'md' ? '10px' : radius === 'sm' ? '8px' : radius === 'lg' ? '12px' : 0,
+        borderRadius: borderRadiusMap[radius] || '20px',
         ...style,
       }}
       {...rest}

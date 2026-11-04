@@ -31,28 +31,28 @@ export function AppAlertDialog({
     <HeroUIAlertDialog isOpen={isOpen} onOpenChange={onOpenChange}>
       <HeroUIAlertDialog.Backdrop
         isDismissable
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs transition-opacity duration-200"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-200"
       >
         <HeroUIAlertDialog.Container className="w-full flex items-center justify-center">
           <HeroUIAlertDialog.Dialog
-            className="w-full max-w-md overflow-hidden rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-2xl outline-none"
-            style={{ borderRadius: '12px' }}
+            className="w-full max-w-md overflow-hidden rounded-[24px] border border-[var(--app-border)] bg-white p-6 sm:p-7 shadow-[var(--shadow-modal)] outline-none"
+            style={{ borderRadius: '24px' }}
           >
             <HeroUIAlertDialog.Header className="flex items-center gap-3 pb-3 border-b border-[var(--app-border)]">
               {icon && (
                 <HeroUIAlertDialog.Icon
                   status={status}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px]"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--app-muted-surface)]"
                 >
                   {icon}
                 </HeroUIAlertDialog.Icon>
               )}
-              <HeroUIAlertDialog.Heading className="text-base font-bold text-[var(--app-foreground)]">
+              <HeroUIAlertDialog.Heading className="text-lg font-bold font-serif text-[#030302]">
                 {title}
               </HeroUIAlertDialog.Heading>
             </HeroUIAlertDialog.Header>
 
-            <HeroUIAlertDialog.Body className="py-4 text-xs text-[var(--app-muted)] leading-relaxed">
+            <HeroUIAlertDialog.Body className="py-4 text-xs sm:text-sm text-[var(--app-muted)] leading-relaxed">
               {children}
             </HeroUIAlertDialog.Body>
 

@@ -54,16 +54,16 @@ export function AppSelect({
         )}
 
         <HeroUISelect.Trigger
-          className="w-full h-9 flex items-center justify-between rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface)] px-3 text-xs font-medium text-[var(--app-foreground)] transition-colors focus:border-[var(--app-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-accent)]/20 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-          style={{ borderRadius: '8px' }}
+          className="w-full h-10 sm:h-11 flex items-center justify-between rounded-[14px] border border-[var(--app-border)] bg-white px-3.5 text-xs sm:text-sm font-medium text-[#030302] transition-colors focus:border-[var(--app-secondary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-secondary)]/20 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 shadow-xs"
+          style={{ borderRadius: '14px' }}
         >
           <HeroUISelect.Value className="truncate" />
           <HeroUISelect.Indicator className="text-[var(--app-subtle)] shrink-0 ml-2" />
         </HeroUISelect.Trigger>
 
         <HeroUISelect.Popover
-          className="min-w-[var(--trigger-width)] max-h-60 overflow-y-auto rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-1 shadow-xl z-50"
-          style={{ borderRadius: '8px' }}
+          className="min-w-[var(--trigger-width)] max-h-60 overflow-y-auto rounded-[16px] border border-[var(--app-border)] bg-white p-1.5 shadow-[var(--shadow-floating)] z-50"
+          style={{ borderRadius: '16px' }}
         >
           <HeroUIListBox className="outline-none p-0 flex flex-col gap-0.5">
             {options.map((opt) => (
@@ -71,15 +71,14 @@ export function AppSelect({
                 key={opt.value}
                 id={opt.value}
                 textValue={opt.label}
-                className="flex items-center justify-between px-3 py-2 rounded-[6px] text-xs font-medium text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] focus:bg-[var(--app-surface-hover)] cursor-pointer outline-none transition-colors"
+                className="flex items-center justify-between px-3.5 py-2 rounded-[10px] text-xs font-medium text-[#030302] hover:bg-[var(--app-muted-surface)] focus:bg-[var(--app-muted-surface)] cursor-pointer outline-none transition-colors"
               >
-                <span>
-                  {opt.label}{' '}
-                  {opt.hint && (
-                    <span className="text-[11px] text-[var(--app-muted)]">({opt.hint})</span>
-                  )}
-                </span>
-                <HeroUIListBox.ItemIndicator className="ml-2 text-[var(--app-accent)]" />
+                <span>{opt.label}</span>
+                {opt.hint && (
+                  <span className="text-[10px] text-[var(--app-subtle)] font-mono ml-2">
+                    {opt.hint}
+                  </span>
+                )}
               </HeroUIListBox.Item>
             ))}
           </HeroUIListBox>

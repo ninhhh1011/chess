@@ -33,20 +33,14 @@ export function AppRadioGroup({
       isDisabled={disabled}
       aria-label={ariaLabel || label || 'Nhóm lựa chọn'}
       orientation={orientation}
-      className={`w-full flex flex-col gap-2 ${className}`}
+      className={`w-full ${className || (orientation === 'horizontal' ? 'flex flex-row flex-wrap gap-2.5' : 'flex flex-col gap-2')}`}
     >
       {label && (
         <HeroUILabel className="text-xs font-semibold text-[var(--app-muted)] select-none">
           {label}
         </HeroUILabel>
       )}
-      <div
-        className={`flex ${
-          orientation === 'horizontal' ? 'flex-row flex-wrap gap-2.5' : 'flex-col gap-2'
-        }`}
-      >
-        {children}
-      </div>
+      {children}
     </HeroUIRadioGroup>
   );
 }

@@ -47,8 +47,8 @@ export function AppMenu({
 
       <HeroUIDropdown.Popover
         placement={normalizedPlacement}
-        className={`z-50 min-w-[180px] rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-1.5 shadow-xl outline-none ${className}`}
-        style={{ borderRadius: '10px' }}
+        className={`z-50 min-w-[200px] rounded-[18px] border border-[var(--app-border)] bg-white p-1.5 shadow-[var(--shadow-floating)] outline-none ${className}`}
+        style={{ borderRadius: '18px' }}
       >
         <HeroUIDropdown.Menu
           aria-label={ariaLabel}
@@ -65,10 +65,10 @@ export function AppMenu({
               id={item.id}
               textValue={item.label}
               href={item.href}
-              className={`flex items-center gap-2.5 rounded-[6px] px-3 py-2 text-xs font-medium cursor-pointer outline-none transition-colors select-none ${
+              className={`flex items-center gap-2.5 rounded-[10px] px-3.5 py-2.5 text-xs font-medium cursor-pointer outline-none transition-colors select-none ${
                 item.variant === 'danger'
-                  ? 'text-[var(--app-danger)] hover:bg-[var(--app-danger)]/12 focus:bg-[var(--app-danger)]/12'
-                  : 'text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] focus:bg-[var(--app-surface-hover)]'
+                  ? 'text-[var(--app-danger)] hover:bg-[var(--app-danger)]/10 focus:bg-[var(--app-danger)]/10'
+                  : 'text-[#030302] hover:bg-[var(--app-muted-surface)] focus:bg-[var(--app-muted-surface)]'
               }`}
             >
               {item.icon && <span className="shrink-0">{item.icon}</span>}

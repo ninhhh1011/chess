@@ -24,21 +24,21 @@ export function AppDialog({
 }: AppDialogProps) {
   return (
     <HeroUIModal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <HeroUIModal.Backdrop className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs transition-opacity duration-200">
+      <HeroUIModal.Backdrop className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-200">
         <HeroUIModal.Container className="w-full flex items-center justify-center">
           <HeroUIModal.Dialog
-            className={`w-full ${maxWidth} relative overflow-hidden rounded-[12px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-xl outline-none transition-all duration-200`}
-            style={{ borderRadius: '12px' }}
+            className={`w-full ${maxWidth} relative overflow-hidden rounded-[24px] border border-[var(--app-border)] bg-white p-6 sm:p-8 shadow-[var(--shadow-modal)] outline-none transition-all duration-200`}
+            style={{ borderRadius: '24px' }}
           >
             {!hideCloseButton && (
               <HeroUIModal.CloseTrigger
-                className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-[6px] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-raised)] transition-colors cursor-pointer outline-none"
+                className="absolute top-5 right-5 flex h-8 w-8 items-center justify-center rounded-full text-[var(--app-muted)] hover:text-[#030302] hover:bg-[var(--app-muted-surface)] transition-colors cursor-pointer outline-none"
                 aria-label="Đóng hộp thoại"
               />
             )}
 
             <HeroUIModal.Header className="flex flex-col gap-1 pb-4 border-b border-[var(--app-border)] pr-8">
-              <HeroUIModal.Heading className="text-lg font-bold text-[var(--app-foreground)]">
+              <HeroUIModal.Heading className="text-xl font-bold font-serif text-[#030302]">
                 {title}
               </HeroUIModal.Heading>
               {description && (
@@ -48,7 +48,7 @@ export function AppDialog({
               )}
             </HeroUIModal.Header>
 
-            <HeroUIModal.Body className="py-4 text-sm text-[var(--app-foreground)] max-h-[75vh] overflow-y-auto">
+            <HeroUIModal.Body className="py-5 text-sm text-[var(--app-foreground)] max-h-[75vh] overflow-y-auto">
               {children}
             </HeroUIModal.Body>
 

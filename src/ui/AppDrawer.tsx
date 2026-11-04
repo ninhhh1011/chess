@@ -33,14 +33,14 @@ export function AppDrawer({
     <HeroUIDrawer isOpen={isOpen} onOpenChange={onOpenChange}>
       <HeroUIDrawer.Backdrop
         isDismissable
-        className="fixed inset-0 z-50 flex bg-black/60 backdrop-blur-xs transition-opacity duration-200"
+        className="fixed inset-0 z-50 flex bg-black/40 backdrop-blur-sm transition-opacity duration-200"
       >
         <HeroUIDrawer.Content
           placement={placement}
           className={`${placementWidths} ${className}`}
         >
           <HeroUIDrawer.Dialog
-            className="flex h-full w-full flex-col bg-[var(--app-surface)] border-[var(--app-border)] p-5 shadow-2xl outline-none"
+            className="flex h-full w-full flex-col bg-white border-[var(--app-border)] p-6 shadow-2xl outline-none"
             style={{
               borderLeftWidth: placement === 'right' ? '1px' : 0,
               borderRightWidth: placement === 'left' ? '1px' : 0,
@@ -49,18 +49,18 @@ export function AppDrawer({
             }}
           >
             <HeroUIDrawer.Header className="flex items-center justify-between pb-4 border-b border-[var(--app-border)]">
-              <HeroUIDrawer.Heading className="text-base font-bold text-[var(--app-foreground)]">
+              <HeroUIDrawer.Heading className="text-lg font-bold font-serif text-[#030302]">
                 {title}
               </HeroUIDrawer.Heading>
               {!hideCloseButton && (
                 <HeroUIDrawer.CloseTrigger
-                  className="flex h-8 w-8 items-center justify-center rounded-[6px] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-raised)] transition-colors cursor-pointer outline-none"
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--app-muted)] hover:text-[#030302] hover:bg-[var(--app-muted-surface)] transition-colors cursor-pointer outline-none"
                   aria-label="Đóng menu"
                 />
               )}
             </HeroUIDrawer.Header>
 
-            <HeroUIDrawer.Body className="flex-1 overflow-y-auto py-4">
+            <HeroUIDrawer.Body className="flex-1 overflow-y-auto py-5">
               {children}
             </HeroUIDrawer.Body>
 

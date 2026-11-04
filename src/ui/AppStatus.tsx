@@ -31,7 +31,8 @@ export function AppStatus({
       color={colorMap[variant] || 'default'}
       variant="secondary"
       size={size}
-      className={`inline-flex items-center gap-1.5 font-medium ${className}`}
+      className={`inline-flex items-center gap-1.5 font-medium rounded-full ${className}`}
+      style={{ borderRadius: '9999px' }}
     >
       {icon && <span className="shrink-0 flex items-center">{icon}</span>}
       <HeroUIChip.Label>{children}</HeroUIChip.Label>
@@ -55,7 +56,7 @@ export function TruthfulSourceLine({ source, details }: TruthfulSourceLineProps)
   return (
     <div className="flex items-center justify-between text-[11px] text-[var(--app-subtle)] border-t border-[var(--app-border)] pt-2 mt-2 select-none">
       <div className="flex items-center gap-1.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-accent)]" />
+        <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-secondary)]" />
         <span>{sourceLabels}</span>
       </div>
       {details && <span className="text-[10px] text-[var(--app-muted)]">{details}</span>}

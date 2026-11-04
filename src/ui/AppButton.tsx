@@ -33,25 +33,27 @@ export const AppButton = React.forwardRef<HTMLButtonElement, AppButtonProps>(
     const isActuallyDisabled = Boolean(isDisabled || disabled || isLoading);
 
     const sizeClasses = {
-      sm: 'h-8 px-3 text-xs gap-1.5 rounded-[8px]',
-      md: 'h-9 px-4 text-sm gap-2 rounded-[8px]',
-      lg: 'h-11 px-5 text-base gap-2.5 rounded-[8px]',
-    }[size as 'sm' | 'md' | 'lg'] || 'h-9 px-4 text-sm gap-2 rounded-[8px]';
+      sm: 'h-8 sm:h-9 px-4 text-xs gap-1.5 rounded-full',
+      md: 'h-10 sm:h-11 px-5 text-sm gap-2 rounded-full',
+      lg: 'h-12 sm:h-13 px-7 text-base gap-2.5 rounded-full font-medium',
+    }[size as 'sm' | 'md' | 'lg'] || 'h-10 sm:h-11 px-5 text-sm gap-2 rounded-full';
 
     const variantStyles: Record<string, string> = {
       primary:
-        'bg-[var(--app-accent)] text-[#0C100E] font-semibold hover:bg-[var(--app-accent-hover)] active:bg-[var(--app-accent-pressed)] border border-transparent shadow-xs',
+        'bg-[#030302] text-white font-medium hover:bg-[#222220] active:scale-[0.99] border border-transparent shadow-xs',
       secondary:
-        'bg-[var(--app-surface-raised)] text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] border border-[var(--app-border)]',
+        'bg-white text-[#030302] font-medium hover:bg-[var(--app-surface-hover)] active:bg-[var(--app-muted-surface)] border border-[var(--app-border)] shadow-xs',
       tertiary:
-        'bg-[var(--app-surface)] text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] border border-transparent',
+        'bg-[var(--app-muted-surface)] text-[#030302] font-medium hover:bg-[#eae6e1] active:bg-[#e0dbd4] border border-transparent',
       outline:
-        'bg-transparent text-[var(--app-foreground)] hover:bg-[var(--app-surface)] border border-[var(--app-border)]',
+        'bg-transparent text-[#030302] font-medium hover:bg-[var(--app-muted-surface)] border border-[var(--app-border-strong)]',
       danger:
-        'bg-[var(--app-danger)] text-white hover:opacity-90 active:opacity-100 border border-transparent shadow-xs',
+        'bg-[var(--app-danger)] text-white font-medium hover:opacity-90 active:opacity-100 border border-transparent shadow-xs',
       ghost:
-        'bg-transparent text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-hover)] border border-transparent',
+        'bg-transparent text-[var(--app-muted)] font-medium hover:text-[#030302] hover:bg-[var(--app-muted-surface)] border border-transparent',
     };
+
+    const chosenVariantStyle = variantStyles[variant] || variantStyles.primary;
 
     return (
       <HeroUIButton
@@ -59,8 +61,8 @@ export const AppButton = React.forwardRef<HTMLButtonElement, AppButtonProps>(
         variant={variant as any}
         size={size}
         isDisabled={isActuallyDisabled}
-        className={`rounded-[8px] font-medium transition-all ${className}`}
-        style={{ borderRadius: '8px', ...style }}
+        className={`rounded-full transition-all duration-150 inline-flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${chosenVariantStyle} ${className}`}
+        style={{ borderRadius: '9999px', ...style }}
         onPress={onPress}
         onClick={onClick}
         {...rest}

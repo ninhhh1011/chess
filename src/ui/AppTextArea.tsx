@@ -49,12 +49,12 @@ export const AppTextArea = React.forwardRef<HTMLTextAreaElement, AppTextAreaProp
         )}
 
         <HeroUIInputGroup
-          className={`relative flex w-full rounded-[8px] border bg-[var(--app-surface)] p-2 transition-colors duration-150 ${
+          className={`relative flex w-full rounded-[14px] border bg-white p-3 transition-colors duration-150 shadow-xs ${
             error
               ? 'border-[var(--app-danger)] ring-1 ring-[var(--app-danger)]/30'
-              : 'border-[var(--app-border)] focus-within:border-[var(--app-accent)] focus-within:ring-2 focus-within:ring-[var(--app-accent)]/20'
+              : 'border-[var(--app-border)] focus-within:border-[var(--app-secondary)] focus-within:ring-2 focus-within:ring-[var(--app-secondary)]/20'
           }`}
-          style={{ borderRadius: '8px' }}
+          style={{ borderRadius: '14px' }}
         >
           <HeroUIInputGroup.TextArea
             ref={ref}

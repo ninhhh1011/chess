@@ -35,7 +35,7 @@ export const AppField = React.forwardRef<HTMLInputElement, AppFieldProps>(
   ) => {
     const inputId = id || (label ? `field-${label.toLowerCase().replace(/[^a-z0-9]/g, '-')}` : undefined);
 
-    const inputBaseClasses = `w-full h-9 bg-[var(--app-surface)] text-sm text-[var(--app-foreground)] placeholder-[var(--app-subtle)] focus:outline-none transition-colors duration-150`;
+    const inputBaseClasses = `w-full h-10 sm:h-11 bg-transparent text-sm text-[var(--app-foreground)] placeholder-[var(--app-subtle)] focus:outline-none transition-colors duration-150`;
 
     return (
       <HeroUITextField
@@ -54,15 +54,15 @@ export const AppField = React.forwardRef<HTMLInputElement, AppFieldProps>(
         )}
 
         <HeroUIInputGroup
-          className={`relative flex items-center w-full rounded-[8px] border bg-[var(--app-surface)] px-2.5 transition-colors duration-150 ${
+          className={`relative flex items-center w-full rounded-[14px] border bg-white px-3.5 transition-colors duration-150 shadow-xs ${
             error
               ? 'border-[var(--app-danger)] ring-1 ring-[var(--app-danger)]/30'
-              : 'border-[var(--app-border)] focus-within:border-[var(--app-accent)] focus-within:ring-2 focus-within:ring-[var(--app-accent)]/20'
+              : 'border-[var(--app-border)] focus-within:border-[var(--app-secondary)] focus-within:ring-2 focus-within:ring-[var(--app-secondary)]/20'
           }`}
-          style={{ borderRadius: '8px' }}
+          style={{ borderRadius: '14px' }}
         >
           {leftIcon && (
-            <HeroUIInputGroup.Prefix className="mr-2 text-[var(--app-subtle)] shrink-0 flex items-center">
+            <HeroUIInputGroup.Prefix className="mr-2.5 text-[var(--app-subtle)] shrink-0 flex items-center">
               {leftIcon}
             </HeroUIInputGroup.Prefix>
           )}

@@ -18,13 +18,13 @@ export function AppCard({
 }: AppCardProps) {
   const effectiveInteractive = isInteractive || isPressable;
   const interactiveStyles = effectiveInteractive
-    ? 'cursor-pointer hover:border-[var(--app-accent)]/40 hover:bg-[var(--app-surface-hover)] active:translate-y-px transition-all duration-150'
+    ? 'cursor-pointer hover:shadow-[var(--shadow-floating)] hover:border-[var(--app-border-strong)] active:translate-y-px transition-all duration-150'
     : '';
 
   return (
     <HeroUICard
-      className={`rounded-[10px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-5 transition-colors ${interactiveStyles} ${className}`}
-      style={{ borderRadius: '10px', ...style }}
+      className={`rounded-[24px] border border-[var(--app-border)] bg-white p-6 shadow-[var(--shadow-card)] transition-all ${interactiveStyles} ${className}`}
+      style={{ borderRadius: '24px', ...style }}
       {...rest}
     >
       {children}
