@@ -25,7 +25,8 @@ export default function Training() {
   const [syncing, setSyncing] = useState(false);
 
   const navigate = useNavigate();
-  const { user, isAuthenticated, signOut } = useAuth();
+  const { user, signOut } = useAuth();
+  const isAuthenticated = Boolean(user);
 
   useEffect(() => {
     setProfile(getUserProfile());
@@ -126,32 +127,32 @@ export default function Training() {
   return (
     <div className="space-y-8 py-2 sm:py-6 max-w-6xl mx-auto">
       {/* Header Banner - Surface Component */}
-      <AppSurface className="rounded-[12px] border border-[var(--app-border)] p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
-        <div className="space-y-1.5">
+      <AppSurface className="rounded-[28px] border border-[var(--app-border)] bg-white p-7 sm:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-[var(--shadow-card)]">
+        <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[var(--app-accent)]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--app-accent)]">
+            <span className="h-2 w-2 rounded-full bg-[var(--app-secondary)]" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--app-secondary)]">
               Tiến độ & Lộ trình
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--app-foreground)]">
+          <h1 className="font-serif text-3xl sm:text-4xl font-normal text-[#030302]">
             Kế hoạch rèn luyện
           </h1>
-          <p className="text-xs sm:text-sm text-[var(--app-muted)]">
+          <p className="text-xs sm:text-sm text-[var(--app-muted)] max-w-xl leading-relaxed">
             Lộ trình cá nhân hóa dựa trên kết quả ván đấu và bài tập thực tế của bạn
           </p>
         </div>
 
-        <div className="flex items-center gap-4 border-t sm:border-t-0 sm:border-l border-[var(--app-border)] pt-3 sm:pt-0 sm:pl-6 shrink-0">
+        <div className="flex items-center gap-6 border-t sm:border-t-0 sm:border-l border-[var(--app-border)] pt-4 sm:pt-0 sm:pl-8 shrink-0">
           <div>
             <span className="text-[11px] font-semibold text-[var(--app-muted)] block">Cấp độ hiện tại</span>
-            <span className="text-xl font-extrabold capitalize text-[var(--app-accent)]">
+            <span className="font-serif text-2xl font-bold capitalize text-[var(--app-secondary)]">
               {profile.currentLevel}
             </span>
           </div>
           <div>
             <span className="text-[11px] font-semibold text-[var(--app-muted)] block">Ván cờ đã chơi</span>
-            <span className="text-xl font-extrabold font-mono text-[var(--app-foreground)]">
+            <span className="font-serif text-2xl font-bold text-[#030302]">
               {profile.gamesPlayed}
             </span>
           </div>
@@ -346,6 +347,9 @@ export default function Training() {
                 <AppSurface className="rounded-[8px] p-3 border border-[var(--app-border)] space-y-2">
                   <p className="text-xs text-[var(--app-foreground)]">
                     Phát hiện dữ liệu cần đồng bộ lên tài khoản:
+                  </p>
+                  <p className="text-[11px] text-[var(--app-muted)]">
+                    Nếu hai nơi có thay đổi riêng, chọn dữ liệu muốn giữ bằng nút tải lên hoặc tải về.
                   </p>
                   <div className="flex gap-2">
                     <AppButton

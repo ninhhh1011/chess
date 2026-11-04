@@ -100,25 +100,23 @@ export default function ExerciseBoard({ exercise, onResult, onAttempt }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(280px,540px)_1fr] items-start">
       {/* Board Column */}
-      <AppSurface
-        variant="base"
-        radius="md"
-        className="mx-auto w-full max-w-[540px] p-3.5 shadow-sm"
-      >
-        <Chessboard
-          options={{
-            position: game.fen(),
-            onPieceDrop: onDrop,
-            showNotation: true,
-            darkSquareStyle: { backgroundColor: '#66745C' },
-            lightSquareStyle: { backgroundColor: '#DAD2BD' },
-          }}
-        />
-      </AppSurface>
+      <div className="mx-auto w-full max-w-[540px] p-3.5 rounded-[28px] bg-white border border-[var(--app-border)] shadow-[var(--shadow-card)]">
+        <div className="overflow-hidden rounded-[18px] border border-[var(--app-border)]">
+          <Chessboard
+            options={{
+              position: game.fen(),
+              onPieceDrop: onDrop,
+              showNotation: true,
+              darkSquareStyle: { backgroundColor: '#587982' },
+              lightSquareStyle: { backgroundColor: '#FBF9F5' },
+            }}
+          />
+        </div>
+      </div>
 
       {/* Details & Controls Column - HeroUI AppCard Compound */}
-      <AppCard className="p-6 space-y-4">
-        <AppCard.Header className="space-y-1.5 p-0">
+      <AppCard className="p-7 space-y-5 rounded-[28px] bg-white border border-[var(--app-border)] shadow-[var(--shadow-card)]">
+        <AppCard.Header className="space-y-2 p-0">
           <div className="flex flex-wrap items-center gap-1.5">
             <AppStatus variant="teal" size="sm">
               Bài tập chiến thuật
@@ -129,7 +127,7 @@ export default function ExerciseBoard({ exercise, onResult, onAttempt }) {
               </AppStatus>
             ))}
           </div>
-          <AppCard.Title className="text-xl sm:text-2xl font-bold text-[var(--app-foreground)]">
+          <AppCard.Title className="font-serif text-2xl sm:text-3xl font-bold text-[#030302]">
             {exercise.title}
           </AppCard.Title>
           <AppCard.Description className="text-xs sm:text-sm leading-relaxed text-[var(--app-muted)]">
@@ -140,20 +138,20 @@ export default function ExerciseBoard({ exercise, onResult, onAttempt }) {
         <AppCard.Content className="p-0 space-y-4">
           {/* Feedback Alert Box */}
           <div
-            className={`rounded-[8px] p-3 text-xs font-semibold border transition-colors ${
+            className={`rounded-[16px] p-4 text-xs font-semibold border transition-colors ${
               isSuccess
                 ? 'border-[var(--app-success)]/40 bg-[var(--app-success)]/10 text-[var(--app-success)]'
                 : isWrong
                 ? 'border-[var(--app-danger)]/40 bg-[var(--app-danger)]/10 text-[var(--app-danger)]'
-                : 'border-[var(--app-border)] bg-[var(--app-surface-raised)] text-[var(--app-muted)]'
+                : 'border-[var(--app-border)] bg-[var(--app-muted-surface)]/60 text-[#030302]'
             }`}
           >
             {message}
           </div>
 
           {showHint && (
-            <div className="rounded-[8px] bg-[var(--app-surface-raised)] p-3 border border-[var(--app-border)] text-xs text-[var(--app-muted)] leading-relaxed">
-              <span className="font-semibold text-[var(--app-foreground)]">{UI_COPY.hint}: </span>
+            <div className="rounded-[16px] bg-[var(--app-muted-surface)]/60 p-4 border border-[var(--app-border)] text-xs text-[var(--app-muted)] leading-relaxed">
+              <span className="font-semibold text-[#030302]">{UI_COPY.hint}: </span>
               {exercise.hint}
             </div>
           )}

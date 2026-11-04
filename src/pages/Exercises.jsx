@@ -116,10 +116,11 @@ export default function Exercises() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 py-2 sm:py-6">
+    <div className="mx-auto max-w-6xl space-y-6 py-2 sm:py-4">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--app-foreground)]">
+        <div className="space-y-1.5">
+          <span className="text-xs uppercase tracking-widest font-semibold text-[var(--app-secondary)]">Thực hành</span>
+          <h1 className="font-serif text-3xl sm:text-4xl font-normal text-[#030302]">
             Bài tập chiến thuật
           </h1>
           <p className="text-xs sm:text-sm text-[var(--app-muted)]">
@@ -129,7 +130,7 @@ export default function Exercises() {
         </div>
         <AppButton
           variant="primary"
-          size="sm"
+          size="md"
           onClick={() => setIndex((index + 1) % availableExercises.length)}
           rightIcon={<ChevronRight className="h-4 w-4" />}
         >
@@ -138,17 +139,17 @@ export default function Exercises() {
       </div>
 
       {!corpusStatus.available && (
-        <AppSurface variant="raised" radius="sm" className="px-4 py-3 text-xs text-[var(--app-muted)]" role="status">
+        <div className="rounded-[16px] px-5 py-3.5 text-xs text-[var(--app-muted)] bg-white border border-[var(--app-border)] shadow-2xs" role="status">
           Kho bài tập mở rộng chưa khả dụng. Bạn đang luyện với {availableExercises.length} bài tập tích hợp, không phải corpus bên ngoài.
-        </AppSurface>
+        </div>
       )}
 
       {corpusStatus.available && (
-        <AppSurface variant="raised" radius="sm" className="px-4 py-3 text-xs text-[var(--app-muted)]" role="status">
-          Nguồn: <a className="underline" href={exercise.sourceUrl} target="_blank" rel="noreferrer">Lichess</a>
-          {' · '}Giấy phép: <a className="underline" href={corpusStatus.licenseUrl} target="_blank" rel="noreferrer">{corpusStatus.licenseId}</a>
+        <div className="rounded-[16px] px-5 py-3.5 text-xs text-[var(--app-muted)] bg-white border border-[var(--app-border)] shadow-2xs" role="status">
+          Nguồn: <a className="underline text-[var(--app-secondary)]" href={exercise.sourceUrl} target="_blank" rel="noreferrer">Lichess</a>
+          {' · '}Giấy phép: <a className="underline text-[var(--app-secondary)]" href={corpusStatus.licenseUrl} target="_blank" rel="noreferrer">{corpusStatus.licenseId}</a>
           {corpusStatus.datasetVersion ? ` · Dữ liệu ${corpusStatus.datasetVersion}` : ''}
-        </AppSurface>
+        </div>
       )}
 
       <ExerciseBoard

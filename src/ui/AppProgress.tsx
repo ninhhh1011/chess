@@ -23,19 +23,19 @@ export function AppProgress({
   const clampedValue = Math.min(100, Math.max(0, value));
 
   const heightStyles = {
-    sm: 'h-1.5',
-    md: 'h-2.5',
+    sm: 'h-2',
+    md: 'h-3',
     lg: 'h-4',
-  }[size] || 'h-2.5';
+  }[size] || 'h-3';
 
   const fillColors = {
-    pine: 'bg-[var(--app-accent)]',
+    pine: 'bg-[var(--app-secondary)]',
     teal: 'bg-[var(--app-success)]',
-    copper: 'bg-[var(--app-copper)]',
+    copper: 'bg-[#030302]',
     warning: 'bg-[var(--app-warning)]',
     danger: 'bg-[var(--app-danger)]',
     info: 'bg-[var(--app-info)]',
-  }[variant] || 'bg-[var(--app-accent)]';
+  }[variant] || 'bg-[var(--app-secondary)]';
 
   return (
     <HeroUIProgressBar
@@ -49,7 +49,7 @@ export function AppProgress({
         <div className="flex items-center justify-between text-xs font-semibold text-[var(--app-muted)] select-none">
           {label && <HeroUILabel>{label}</HeroUILabel>}
           {showValue && (
-            <HeroUIProgressBar.Output className="font-mono text-[var(--app-foreground)]">
+            <HeroUIProgressBar.Output className="font-mono text-[#030302] font-medium">
               {valueLabel || `${Math.round(clampedValue)}%`}
             </HeroUIProgressBar.Output>
           )}
@@ -57,12 +57,12 @@ export function AppProgress({
       )}
 
       <HeroUIProgressBar.Track
-        className={`w-full overflow-hidden rounded-[6px] bg-[var(--app-surface-hover)] border border-[var(--app-border)] ${heightStyles}`}
-        style={{ borderRadius: '6px' }}
+        className={`w-full overflow-hidden rounded-full bg-[var(--app-muted-surface)] border border-[var(--app-border)] ${heightStyles}`}
+        style={{ borderRadius: '9999px' }}
       >
         <HeroUIProgressBar.Fill
-          className={`h-full rounded-[4px] transition-all duration-300 ease-out ${fillColors}`}
-          style={{ width: `${clampedValue}%` }}
+          className={`h-full rounded-full transition-all duration-300 ease-out ${fillColors}`}
+          style={{ width: `${clampedValue}%`, borderRadius: '9999px' }}
         />
       </HeroUIProgressBar.Track>
     </HeroUIProgressBar>
