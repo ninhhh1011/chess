@@ -1,4 +1,5 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
+import { getUserProfile } from '../../services/userProfileService';
 import coachAvatar from '../../assets/avatarcoach.webp';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
 import { AppAvatar } from '@/ui/AppAvatar';
@@ -22,9 +23,12 @@ export default function PlayerBar({ position = 'top', boardOrientation, isThinki
   let avatarSrc;
   let isActive;
 
+  const profile = getUserProfile();
+  const playerElo = profile?.playerElo || 1000;
+
   if (isPlayer) {
     displayName = 'Bạn';
-    displayBadge = playerColor === 'w' ? 'Trắng' : 'Đen';
+    displayBadge = `ELO ${playerElo} · ${playerColor === 'w' ? 'Trắng' : 'Đen'}`;
     avatarSrc = null;
     isActive = currentTurn === playerColor;
   } else {

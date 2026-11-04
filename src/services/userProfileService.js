@@ -6,9 +6,9 @@ import {
   normalizeDailyTrainingPlan,
   shouldLevelUp,
 } from './recommendationService';
-import { syncOnAction } from './syncService';
 import { assertAnalysisFactV1, getAnalysisFactEvidenceId } from './analysis/analysisFact';
 import { assertPersistenceState, createPersistenceState } from './persistenceContract';
+import { calculateEloDelta, INITIAL_PLAYER_ELO } from '../domain/elo/eloRating';
 
 const STORAGE_KEY = 'vuaCoUserTrainingProfile';
 const PROFILE_SCHEMA_VERSION = 'profile.v2';
@@ -61,6 +61,9 @@ function createDefaultProfile() {
     profileId,
     revision: 0,
     currentLevel: 'noob',
+    playerElo: INITIAL_PLAYER_ELO,
+    eloHistory: [],
+    playedGames: [],
     gamesPlayed: 0,
     lessonsCompleted: [],
     exercisesCompleted: [],
@@ -117,6 +120,11 @@ function normalizeProfile(profile) {
     profileId,
     revision: Number.isInteger(profile?.revision) && profile.revision >= 0 ? profile.revision : 0,
     currentLevel: level,
+    playerElo: typeof profile?.playerElo === 'number' && !Number.isNaN(profile.playerElo)
+      ? Math.max(100, Math.min(3500, Math.round(profile.playerElo)))
+      : INITIAL_PLAYER_ELO,
+    eloHistory: Array.isArray(profile?.eloHistory) ? profile.eloHistory : [],
+    playedGames: Array.isArray(profile?.playedGames) ? profile.playedGames : [],
     gamesPlayed: Number(profile?.gamesPlayed) || 0,
     lessonsCompleted: Array.isArray(profile?.lessonsCompleted) ? uniqueList(profile.lessonsCompleted) : [],
     exercisesCompleted: Array.isArray(profile?.exercisesCompleted) ? uniqueList(profile.exercisesCompleted) : [],
@@ -183,7 +191,7 @@ export function calculateLevel(profile) {
 }
 
 export function saveUserProfile(profile, options = {}) {
-  const { userId = null, syncCloud = false, preserveTimestamps = false } = options;
+  const { preserveTimestamps = false } = options;
   const current = normalizeProfile(profile);
   const updatedAt = preserveTimestamps ? current.updatedAt : nowIso();
   const revision = preserveTimestamps ? current.revision : current.revision + 1;
@@ -201,12 +209,6 @@ export function saveUserProfile(profile, options = {}) {
     writeStoredProfile(normalized);
   } catch (error) {
     console.warn('[profile] Cannot save user profile to localStorage:', error);
-  }
-
-  if (syncCloud && userId) {
-    syncOnAction(userId, 'save_profile').catch((err) => {
-      console.warn('[profile] Cannot sync to cloud:', err);
-    });
   }
 
   return normalized;
@@ -430,18 +432,74 @@ export function updateExerciseResult({ exerciseId, isCorrect, tags = /** @type {
   });
 }
 
-export function updateAfterGame({ result = 'unknown', movesCount = 0, mistakes = /** @type {string[]} */ ([]) }) {
+export function updateAfterGame({
+  result = 'unknown',
+  movesCount = 0,
+  mistakes = /** @type {string[]} */ ([]),
+  botElo = 1200,
+}) {
   const profile = getUserProfile();
-  const /** @type {string[]} */ mockMistakes = movesCount < 12 ? ['poor_development', 'weak_opening'] : /** @type {string[]} */ ([]) ;
+  const /** @type {string[]} */ mockMistakes = movesCount < 12 ? ['poor_development', 'weak_opening'] : /** @type {string[]} */ ([]);
+
+  const normalizedResult = result === 'loss' ? 'lose' : result;
+  let newPlayerElo = profile.playerElo || INITIAL_PLAYER_ELO;
+  let eloDelta = 0;
+  const eloHistory = Array.isArray(profile.eloHistory) ? [...profile.eloHistory] : [];
+
+  if (['win', 'lose', 'draw'].includes(normalizedResult)) {
+    const eloCalc = calculateEloDelta(newPlayerElo, Number(botElo) || 1200, normalizedResult, profile.gamesPlayed);
+    newPlayerElo = eloCalc.newRating;
+    eloDelta = eloCalc.delta;
+    eloHistory.push({
+      at: nowIso(),
+      elo: newPlayerElo,
+      delta: eloDelta,
+      botElo: Number(botElo) || 1200,
+      result: normalizedResult,
+    });
+  }
 
   return saveUserProfile({
     ...profile,
+    playerElo: newPlayerElo,
+    eloHistory: eloHistory.slice(-50),
+    lastEloDelta: eloDelta,
     gamesPlayed: profile.gamesPlayed + 1,
     commonMistakes: uniqueList([...profile.commonMistakes, ...mockMistakes, ...(Array.isArray(mistakes) ? mistakes : [])]),
     lastGameResult: result,
     lastGameMovesCount: movesCount,
     dailyTrainingPlan: null,
     lastTrainingDate: nowIso(),
+  });
+}
+
+export function recordPlayedGame({
+  pgn = '',
+  result = 'unknown',
+  botElo = 1200,
+  playerColor = 'w',
+  eloDelta = 0,
+  movesCount = 0,
+  timeControl = 'rapid_10',
+}) {
+  const profile = getUserProfile();
+  const playedGames = Array.isArray(profile.playedGames) ? [...profile.playedGames] : [];
+  const gameRecord = {
+    id: `game:${globalThis.crypto.randomUUID()}`,
+    pgn,
+    playedAt: nowIso(),
+    result,
+    botElo: Number(botElo) || 1200,
+    playerColor,
+    eloDelta,
+    movesCount,
+    timeControl,
+  };
+  playedGames.unshift(gameRecord);
+
+  return saveUserProfile({
+    ...profile,
+    playedGames: playedGames.slice(0, 50),
   });
 }
 

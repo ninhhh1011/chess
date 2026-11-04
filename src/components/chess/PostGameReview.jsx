@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChessGame } from '../../contexts/ChessGameContext';
+import { getUserProfile } from '../../services/userProfileService';
 import { RESULT_COPY } from '../../config/brand';
 import { AppDialog } from '@/ui/AppDialog';
 import { AppButton } from '@/ui/AppButton';
@@ -116,14 +117,23 @@ export default function PostGameReview() {
         if (!isOpen) handleReviewBoard();
       }}
       title={
-        <div className="flex items-center gap-2">
-          <span className="text-xl font-bold">{resultCopy.title}</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xl font-bold font-serif">{resultCopy.title}</span>
           <AppStatus
             variant={resultKind === 'win' ? 'teal' : resultKind === 'lose' ? 'danger' : 'basic'}
             size="sm"
           >
             {resultKind === 'win' ? 'Thắng' : resultKind === 'lose' ? 'Thua' : 'Hòa'}
           </AppStatus>
+          <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
+            (getUserProfile()?.lastEloDelta ?? 0) > 0
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : (getUserProfile()?.lastEloDelta ?? 0) < 0
+              ? 'bg-rose-50 text-rose-800 border-rose-200'
+              : 'bg-stone-50 text-stone-700 border-stone-200'
+          }`}>
+            ELO {getUserProfile()?.playerElo || 1000} ({(getUserProfile()?.lastEloDelta ?? 0) > 0 ? `+${getUserProfile()?.lastEloDelta}` : (getUserProfile()?.lastEloDelta ?? 0)})
+          </span>
         </div>
       }
       description={resultCopy.description}

@@ -7,16 +7,18 @@ import { analyzeGame } from '../services/analysis/gameAnalyzer';
 import { getAnalysisFactEvidenceId } from '../services/analysis/analysisFact';
 import { getSanFromUci } from '../utils/chessMoveUtils';
 import { classifyMoveAnnotation } from '../utils/moveQuality';
-import { recordGameReview, updateAfterGame } from '../services/userProfileService';
+import { recordGameReview, updateAfterGame, recordPlayedGame, getUserProfile } from '../services/userProfileService';
 import { playCheckSound, playVictorySound, playDefeatSound, playDrawSound, playMoveSound, playCaptureSound } from '../utils/sound';
 import { recordGameResult } from '../hooks/useGameStats';
-import { BRAND_NAMES, UI_COPY } from '../config/brand';
+import { UI_COPY } from '../config/brand';
+
+const noop = () => {};
 
 import GameLayout from './chess/GameLayout';
 
 
 
-export default function ChessGameBoard() {
+export default function ChessGameBoard({ boardOrientation = 'white', flipBoard = noop }) {
   const {
     game,
     activeGame,
@@ -26,26 +28,16 @@ export default function ChessGameBoard() {
     isCheck,
     isGameOver,
     analysisMode,
-    isBotThinking,
-    setIsBotThinking,
-    botRequestId,
-    botRequestIdRef,
+    gameGeneration,
     botElo,
     playerColor,
-    gameMode,
-    engineHint,
-    setEngineHint,
-    lastMoveFenPair,
-    setLastMoveFenPair,
+    pendingLiveMoveAnalysis,
+    resolveMoveAnnotation,
+    failMoveAnnotation,
     moveAnnotations,
-    setMoveAnnotations,
-    resultNotice,
-    setResultNotice,
-    recordedGamePgn,
-    setRecordedGamePgn,
-    setShouldShowGameOverModal,
-    setPlayState,
-    GAME_MODES,
+    gameResult,
+    claimGameResultRecording,
+    enterReview,
     makeMove,
     currentTurn,
     playState,
@@ -57,6 +49,9 @@ export default function ChessGameBoard() {
   const [review, setReview] = useState(null);
   const [isReviewing, setIsReviewing] = useState(false);
   const [liveAnalysis, setLiveAnalysis] = useState(null);
+  const [engineHint, setEngineHint] = useState(null);
+  const hintRequestRef = useRef({ id: 0, fen: null, playState: null });
+  const manualHintControllerRef = useRef(null);
   const [liveEvalStatus, setLiveEvalStatus] = useState('Đang tải');
   const [showStartNotice, setShowStartNotice] = useState(true);
 
@@ -66,24 +61,19 @@ export default function ChessGameBoard() {
   const gameStartFenRef = useRef(null);
   const botPositionKeyRef = useRef(null);
 
+  useEffect(() => {
+    hintRequestRef.current.id += 1;
+    manualHintControllerRef.current?.abort();
+    manualHintControllerRef.current = null;
+    setEngineHint(null);
+  }, [currentFen, playState]);
+
   // Game timer
   const { elapsed: gameTime } = useGameTimer(playState === 'playing');
 
   // Bot move handler
-  const handleBotMoveStart = useCallback(() => {
-    setIsBotThinking(true);
-  }, [setIsBotThinking]);
-
   const handleBotMoveComplete = useCallback(
-    async (result, responseGameGenId) => {
-      setIsBotThinking(false);
-
-      // Check if this response is from the current game
-      if (responseGameGenId !== botRequestIdRef.current) {
-        // This is a stale response from an old game - ignore it
-        return;
-      }
-
+    async (result) => {
       if (!result?.move) {
         // Bot failed - skip silently
         return;
@@ -109,53 +99,38 @@ export default function ChessGameBoard() {
         }
       }
     },
-    [activeGame, botRequestIdRef, makeMove, setIsBotThinking]
+    [activeGame, makeMove]
   );
 
   // Bot move hook
-  const { getMove, cancelMove } = useBotMove({
+  const { getMove, cancelMove, isThinking } = useBotMove({
     botElo,
-    onMoveStart: handleBotMoveStart,
     onMoveComplete: handleBotMoveComplete,
   });
 
-  const previousBotRequestIdRef = useRef(botRequestId);
   useEffect(() => {
-    if (previousBotRequestIdRef.current === botRequestId) return;
-    previousBotRequestIdRef.current = botRequestId;
-    botPositionKeyRef.current = null;
-    cancelMove();
-  }, [botRequestId, cancelMove]);
-
-  // Trigger bot move when it's bot's turn
-  useEffect(() => {
-    // Skip in analysis mode, when game is over, or if not bot mode
-    if (analysisMode || isGameOver || gameMode !== GAME_MODES.BOT) {
+    if (playState !== 'playing' || analysisMode || isGameOver || currentTurn === playerColor) {
+      botPositionKeyRef.current = null;
+      cancelMove();
       return;
     }
 
-    // It's bot's turn if the current turn doesn't match player's color
-    const isBotTurn = currentTurn !== playerColor;
+    const positionKey = `${gameGeneration}:${currentFen}`;
 
-    const positionKey = `${botRequestId}:${currentFen}`;
+    if (botPositionKeyRef.current === positionKey) return;
 
-    if (isBotTurn && !isBotThinking && botPositionKeyRef.current !== positionKey) {
-      botPositionKeyRef.current = positionKey;
-      gameStartFenRef.current = currentFen;
-      getMove(currentFen, botRequestId);
-    }
-  }, [currentTurn, playerColor, isGameOver, analysisMode, gameMode, GAME_MODES.BOT, isBotThinking, currentFen, botRequestId, getMove]);
-
-  // Cancel bot move on game state changes
-  useEffect(() => {
-    if (isBotThinking && (isGameOver || analysisMode)) {
-      cancelMove();
-    }
-  }, [isGameOver, analysisMode, isBotThinking, cancelMove]);
+    cancelMove();
+    botPositionKeyRef.current = positionKey;
+    gameStartFenRef.current = currentFen;
+    getMove(currentFen);
+  }, [playState, currentTurn, playerColor, isGameOver, analysisMode, isThinking, currentFen, gameGeneration, getMove, cancelMove]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      hintRequestRef.current.id += 1;
+      manualHintControllerRef.current?.abort();
+      manualHintControllerRef.current = null;
       cancelMove();
     };
   }, [cancelMove]);
@@ -176,7 +151,7 @@ export default function ChessGameBoard() {
 
   // Live analysis
   useEffect(() => {
-    if (!analysisMode && isBotThinking) {
+    if (!analysisMode && isThinking) {
       setLiveEvalStatus(UI_COPY.botThinking);
       return undefined;
     }
@@ -185,103 +160,102 @@ export default function ChessGameBoard() {
     liveAnalysisRequestRef.current = requestId;
     setLiveEvalStatus('Đang phân tích');
 
+    const controller = new AbortController();
+    let cancelled = false;
+
     const timerId = window.setTimeout(() => {
-      analyzeFen({ fen: currentFen, depth: 8, movetime: 400, purpose: 'hint' })
+      analyzeFen({ fen: currentFen, depth: 8, movetime: 400, purpose: 'hint', signal: controller.signal })
         .then((result) => {
-          if (liveAnalysisRequestRef.current !== requestId) return;
+          if (cancelled || liveAnalysisRequestRef.current !== requestId) return;
           setLiveAnalysis(result);
           setLiveEvalStatus(result.source?.startsWith('fallback') ? 'Fallback' : 'Live');
         })
-        .catch(() => {
-          if (liveAnalysisRequestRef.current !== requestId) return;
+        .catch((error) => {
+          if (cancelled || liveAnalysisRequestRef.current !== requestId || error?.name === 'AbortError') return;
           setLiveEvalStatus('Lỗi engine');
         });
     }, 400);
 
-    return () => window.clearTimeout(timerId);
-  }, [currentFen, analysisMode, isBotThinking]);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timerId);
+      controller.abort();
+    };
+  }, [currentFen, analysisMode, isThinking]);
 
   // Game over handling — only trigger modal for live game, not analysis/replay
   useEffect(() => {
+    if (!gameResult) return;
     if (analysisMode) return;
-    if (!isGameOver) {
-      return;
-    }
 
     const currentPgn = game.pgn();
-    if (recordedGamePgn !== currentPgn) {
-      const isCheckmate = game.isCheckmate();
-      const isPlayerWin = isCheckmate && ((game.turn() === 'w' && playerColor === 'black') || (game.turn() === 'black' && playerColor === 'white'));
-      const result = isCheckmate ? (isPlayerWin ? 'win' : 'lose') : 'draw';
-      const mistakes = moveHistory.length < 12 ? ['opening_development'] : [];
-      updateAfterGame({ result, movesCount: moveHistory.length, mistakes });
-      setRecordedGamePgn(currentPgn);
+    const gameKey = `${gameGeneration}:${currentPgn}`;
+    if (!claimGameResultRecording(gameKey)) return;
 
-      // Record game stats
-      recordGameResult(result, moveHistory.length, gameTime);
+    const mistakes = moveHistory.length < 12 ? ['opening_development'] : [];
+    const updatedProfile = updateAfterGame({ result: gameResult, movesCount: moveHistory.length, mistakes, botElo });
 
-      // Play appropriate sound
-      if (isCheckmate) {
-        if (isPlayerWin) {
-          playVictorySound();
-        } else {
-          playDefeatSound();
-        }
-      } else {
-        playDrawSound();
-      }
-    }
+    // Save full played game archive
+    recordPlayedGame({
+      pgn: currentPgn,
+      result: gameResult,
+      botElo,
+      playerColor,
+      eloDelta: updatedProfile.lastEloDelta || 0,
+      movesCount: moveHistory.length,
+      timeControl: 'rapid_10',
+    });
 
-    if (game.isCheckmate()) {
-      const winner = game.turn() === 'w' ? 'Đen' : 'Trắng';
-      setResultNotice(`${winner} thắng trước ${BRAND_NAMES.bot}.`);
-      setPlayState('review');
-      return;
-    }
+    // Record game stats
+    recordGameResult(gameResult, moveHistory.length, gameTime);
 
-    setResultNotice('Ván cờ hòa!');
-    setPlayState('review');
-  }, [isGameOver, game, recordedGamePgn, moveHistory.length, analysisMode, setResultNotice, setRecordedGamePgn, setPlayState, playerColor, gameTime]);
+    if (gameResult === 'win') playVictorySound();
+    else if (gameResult === 'lose') playDefeatSound();
+    else playDrawSound();
+
+    enterReview();
+  }, [gameResult, game, gameGeneration, moveHistory.length, analysisMode, claimGameResultRecording, enterReview, gameTime]);
 
   // Move annotation
   useEffect(() => {
-    if (!lastMoveFenPair) return;
+    if (!pendingLiveMoveAnalysis) return;
+    const move = pendingLiveMoveAnalysis;
+    const controller = new AbortController();
     let cancelled = false;
 
     async function analyzeLastMove() {
       try {
-        const before = await analyzeFen({ fen: lastMoveFenPair.beforeFen, depth: 8, movetime: 500, purpose: 'annotation' });
-        if (cancelled) return;
-        const after = await analyzeFen({ fen: lastMoveFenPair.afterFen, depth: 7, movetime: 400, purpose: 'annotation' });
-        if (cancelled) return;
+        const before = await analyzeFen({ fen: move.beforeFen, depth: 8, movetime: 500, purpose: 'annotation', signal: controller.signal });
+        if (cancelled || controller.signal.aborted) return;
+        const after = await analyzeFen({ fen: move.afterFen, depth: 7, movetime: 400, purpose: 'annotation', signal: controller.signal });
+        if (cancelled || controller.signal.aborted) return;
 
         const annotation = classifyMoveAnnotation({
           before,
           after,
-          playedUci: lastMoveFenPair.playedUci,
-          playedSan: lastMoveFenPair.san,
-          color: lastMoveFenPair.color,
+          playedUci: move.playedUci,
+          playedSan: move.san,
+          color: move.color,
         });
 
-        setMoveAnnotations((current) => ({
-          ...current,
-          [lastMoveFenPair.moveIndex]: annotation,
-        }));
+        if (!annotation) {
+          failMoveAnnotation(move.requestId);
+          return;
+        }
+
+        resolveMoveAnnotation(move.requestId, annotation);
 
         if (!autoAnalyze) return;
 
-        const bestSan = before.bestMove ? getSanFromUci(lastMoveFenPair.beforeFen, before.bestMove) : 'không rõ';
+        const bestSan = before.bestMove ? getSanFromUci(move.beforeFen, before.bestMove) : 'không rõ';
         if (annotation.symbol === '!!' || annotation.symbol === '!') {
-          setAutoComment(`${annotation.symbol} Ninh duyệt ${lastMoveFenPair.san}. Nước này giữ thế ổn.`);
+          setAutoComment(`${annotation.symbol} Ninh duyệt ${move.san}. Nước này giữ thế ổn.`);
         } else {
           setAutoComment(`${annotation.symbol} ${annotation.label} Ninh mách ${bestSan} ngon hơn.`);
         }
-      } catch {
-        if (!cancelled) {
-          setMoveAnnotations((current) => ({
-            ...current,
-            [lastMoveFenPair.moveIndex]: { symbol: '...', label: 'Chưa phân tích được', tone: 'pending' },
-          }));
+      } catch (error) {
+        if (!cancelled && error?.name !== 'AbortError') {
+          failMoveAnnotation(move.requestId);
           if (autoAnalyze) setAutoComment('Ninh chưa mổ được thế này. Thử lại sau vài giây.');
         }
       }
@@ -290,8 +264,9 @@ export default function ChessGameBoard() {
     analyzeLastMove();
     return () => {
       cancelled = true;
+      controller.abort();
     };
-  }, [lastMoveFenPair, autoAnalyze, setMoveAnnotations]);
+  }, [pendingLiveMoveAnalysis, autoAnalyze, resolveMoveAnnotation, failMoveAnnotation]);
 
   // Game review
   async function reviewGameWithEngine() {
@@ -372,28 +347,60 @@ export default function ChessGameBoard() {
   }
 
   // Request hint - analyzes position and sets engine hint
+  function onAnalysisRequestStart() {
+    manualHintControllerRef.current?.abort();
+    manualHintControllerRef.current = null;
+    const requestId = hintRequestRef.current.id + 1;
+    hintRequestRef.current = { id: requestId, fen: currentFen, playState };
+    return requestId;
+  }
+
+  function onBestMove(result, requestId) {
+    const request = hintRequestRef.current;
+    if (
+      request.id !== requestId ||
+      request.fen !== currentFen ||
+      request.playState !== playState ||
+      (result?.fen && result.fen !== request.fen)
+    ) return;
+    if (!result?.bestMove) return;
+
+    setEngineHint({
+      bestMove: result.bestMove,
+      evaluation: result.evaluation?.display || null,
+      fen: request.fen,
+      playState: request.playState,
+    });
+  }
+
   async function requestHint() {
+    const requestId = onAnalysisRequestStart();
+    const controller = new AbortController();
+    manualHintControllerRef.current = controller;
     try {
-      const result = await analyzeFen({ fen: currentFen, depth: 10, movetime: 600, purpose: 'hint' });
-      if (result?.bestMove) {
-        setEngineHint({
-          bestMove: result.bestMove,
-          evaluation: result.evaluation?.display || null,
-        });
-      }
-    } catch {
+      const result = await analyzeFen({ fen: currentFen, depth: 10, movetime: 600, purpose: 'hint', signal: controller.signal });
+      if (controller.signal.aborted) return;
+      onBestMove(result, requestId);
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
       // Silent fail - hint is optional
+    } finally {
+      if (manualHintControllerRef.current === controller) manualHintControllerRef.current = null;
     }
   }
 
-  const engineMove = parseEngineMove(engineHint);
+  const visibleEngineHint = engineHint?.fen === currentFen && engineHint?.playState === playState ? engineHint : null;
+  const engineMove = parseEngineMove(visibleEngineHint);
 
   return (
     <GameLayout
       liveAnalysis={liveAnalysis}
+      boardOrientation={boardOrientation}
+      flipBoard={flipBoard}
       liveEvalStatus={liveEvalStatus}
-      engineHint={engineHint}
-      setEngineHint={setEngineHint}
+      engineHint={visibleEngineHint}
+      onAnalysisRequestStart={onAnalysisRequestStart}
+      onBestMove={onBestMove}
       autoAnalyze={autoAnalyze}
       setAutoAnalyze={setAutoAnalyze}
       autoComment={autoComment}
@@ -402,6 +409,7 @@ export default function ChessGameBoard() {
       reviewGameWithEngine={reviewGameWithEngine}
       engineMove={engineMove}
       showStartNotice={showStartNotice}
+      isThinking={isThinking}
       onRequestHint={requestHint}
       onReviewFact={(item) => {
         setReview((current) => current ? {
