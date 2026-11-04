@@ -11,8 +11,8 @@ export const BOT_ELO_LEVELS = [
     elo: 400,
     label: "Dễ",
     description: "Người mới",
-    depth: 4,
-    movetime: 500,
+    depth: 3,
+    movetime: 400,
     skillLevel: 0,
     useSkillLevelOnly: true,
     randomChance: 0
@@ -21,7 +21,7 @@ export const BOT_ELO_LEVELS = [
     elo: 800,
     label: "Vừa",
     description: "Cơ bản",
-    depth: 6,
+    depth: 5,
     movetime: 600,
     skillLevel: 3,
     useSkillLevelOnly: true,
@@ -31,7 +31,7 @@ export const BOT_ELO_LEVELS = [
     elo: 1200,
     label: "Khó",
     description: "Sơ cấp",
-    depth: 8,
+    depth: 7,
     movetime: 800,
     skillLevel: 6,
     useSkillLevelOnly: true,
@@ -44,6 +44,46 @@ export const BOT_ELO_LEVELS = [
     depth: 10,
     movetime: 1200,
     skillLevel: 10,
+    useSkillLevelOnly: false,
+    randomChance: 0
+  },
+  {
+    elo: 1800,
+    label: "Khá",
+    description: "Câu lạc bộ",
+    depth: 12,
+    movetime: 1500,
+    skillLevel: 13,
+    useSkillLevelOnly: false,
+    randomChance: 0
+  },
+  {
+    elo: 2000,
+    label: "Nâng cao",
+    description: "Chuyên sâu",
+    depth: 14,
+    movetime: 1800,
+    skillLevel: 16,
+    useSkillLevelOnly: false,
+    randomChance: 0
+  },
+  {
+    elo: 2200,
+    label: "Kiện tướng",
+    description: "Master",
+    depth: 16,
+    movetime: 2200,
+    skillLevel: 19,
+    useSkillLevelOnly: false,
+    randomChance: 0
+  },
+  {
+    elo: 2600,
+    label: "Đại kiện tướng",
+    description: "Grandmaster",
+    depth: 20,
+    movetime: 2500,
+    skillLevel: 20,
     useSkillLevelOnly: false,
     randomChance: 0
   }

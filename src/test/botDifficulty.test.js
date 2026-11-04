@@ -8,7 +8,7 @@ describe('Bot Difficulty Configuration', () => {
   describe('Difficulty Labels', () => {
     it('uses correct UI labels', () => {
       const labels = BOT_ELO_LEVELS.map(l => l.label);
-      expect(labels).toEqual(['Dễ', 'Vừa', 'Khó', 'Thử thách']);
+      expect(labels).toEqual(['Dễ', 'Vừa', 'Khó', 'Thử thách', 'Khá', 'Nâng cao', 'Kiện tướng', 'Đại kiện tướng']);
     });
 
     it('has monotonically increasing ELO', () => {
@@ -58,6 +58,10 @@ describe('Bot Difficulty Configuration', () => {
       expect(getBotLevelByElo(800).label).toBe('Vừa');
       expect(getBotLevelByElo(1200).label).toBe('Khó');
       expect(getBotLevelByElo(1600).label).toBe('Thử thách');
+      expect(getBotLevelByElo(1800).label).toBe('Khá');
+      expect(getBotLevelByElo(2000).label).toBe('Nâng cao');
+      expect(getBotLevelByElo(2200).label).toBe('Kiện tướng');
+      expect(getBotLevelByElo(2600).label).toBe('Đại kiện tướng');
     });
   });
 

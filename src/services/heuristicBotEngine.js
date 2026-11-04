@@ -78,9 +78,19 @@ export function getSafeFallbackMove(fen, botElo = 1200) {
   if (!moves.length) return null;
 
   if (botElo <= 800) {
-    const randomMove = moves[Math.floor(Math.random() * moves.length)];
-    const randomUci = moveToUci(randomMove);
-    return isLegalUciMove(fen, randomUci) ? randomUci : null;
+    // Score moves with intentional variance for beginner levels
+    const scored = moves.map((move) => ({
+      move,
+      score: scoreMove(game, move) + (Math.random() * 240 - 120),
+    })).sort((a, b) => b.score - a.score);
+
+    const poolSize = botElo <= 400
+      ? Math.max(3, Math.floor(moves.length * 0.7))
+      : Math.max(2, Math.floor(moves.length * 0.4));
+    const candidates = scored.slice(0, Math.min(poolSize, scored.length));
+    const chosen = candidates[Math.floor(Math.random() * candidates.length)] || candidates[0];
+    const chosenUci = moveToUci(chosen.move);
+    return isLegalUciMove(fen, chosenUci) ? chosenUci : null;
   }
 
   const scored = moves
@@ -90,7 +100,7 @@ export function getSafeFallbackMove(fen, botElo = 1200) {
     }))
     .sort((a, b) => b.score - a.score);
 
-  const topN = botElo >= 1600 ? 2 : 3;
+  const topN = botElo >= 2200 ? 1 : botElo >= 1600 ? 2 : 3;
   const candidates = scored.slice(0, Math.min(topN, scored.length));
   const chosen = candidates[Math.floor(Math.random() * candidates.length)];
   const chosenUci = moveToUci(chosen.move);

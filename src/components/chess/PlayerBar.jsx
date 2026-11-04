@@ -4,12 +4,13 @@ import coachAvatar from '../../assets/avatarcoach.webp';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
 import { AppAvatar } from '@/ui/AppAvatar';
 import { AppStatus } from '@/ui/AppStatus';
+import { formatClockTime } from '../../domain/clock/chessClock';
 
 /**
  * PlayerBar - compact player/opponent identity strip.
  */
 export default function PlayerBar({ position = 'top', boardOrientation, isThinking }) {
-  const { activeGame, playerColor, botElo } = useChessGame();
+  const { activeGame, playerColor, botElo, clock } = useChessGame();
 
   const currentTurn = activeGame.turn();
   const isTop = position === 'top';
@@ -38,6 +39,10 @@ export default function PlayerBar({ position = 'top', boardOrientation, isThinki
     isActive = currentTurn !== playerColor;
   }
 
+  const thisColor = isPlayer ? playerColor : (playerColor === 'w' ? 'b' : 'w');
+  const remainingMs = thisColor === 'w' ? clock?.whiteRemainingMs : clock?.blackRemainingMs;
+  const isLowTime = remainingMs !== null && remainingMs < 30_000 && remainingMs > 0;
+
   return (
     <div
       className={`flex items-center justify-between rounded-full px-4 py-2 transition-all ${
@@ -64,17 +69,33 @@ export default function PlayerBar({ position = 'top', boardOrientation, isThinki
         </AppStatus>
       </div>
 
-      {isActive && (
-        <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
+        {remainingMs !== null && (
           <span
-            className={`h-2 w-2 rounded-full bg-[var(--app-secondary)] ${!isPlayer && isThinking ? 'animate-pulse' : ''}`}
-            title={!isPlayer && isThinking ? UI_COPY.botThinking : undefined}
-          />
-          {!isPlayer && isThinking && (
-            <span className="hidden text-[11px] font-medium text-[var(--app-muted)] sm:inline">{UI_COPY.botThinking}</span>
-          )}
-        </div>
-      )}
+            className={`font-mono text-xs font-semibold px-2.5 py-0.5 rounded-full border transition-colors ${
+              isActive
+                ? isLowTime
+                  ? 'bg-rose-50 text-rose-700 border-rose-300 animate-pulse'
+                  : 'bg-[#030302] text-white border-transparent'
+                : 'bg-[var(--app-muted-surface)] text-[var(--app-muted)] border-[var(--app-border)]'
+            }`}
+          >
+            {formatClockTime(remainingMs)}
+          </span>
+        )}
+
+        {isActive && (
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`h-2 w-2 rounded-full bg-[var(--app-secondary)] ${!isPlayer && isThinking ? 'animate-pulse' : ''}`}
+              title={!isPlayer && isThinking ? UI_COPY.botThinking : undefined}
+            />
+            {!isPlayer && isThinking && (
+              <span className="hidden text-[11px] font-medium text-[var(--app-muted)] sm:inline">{UI_COPY.botThinking}</span>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

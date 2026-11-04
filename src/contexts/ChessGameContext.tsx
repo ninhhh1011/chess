@@ -1,5 +1,18 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from 'react';
 import { Chess, type Move, type Square, type Color } from 'chess.js';
+import { gameSessionReducer, createInitialGameSession, type GameSession } from '../domain/game/gameSession';
+import { getPlayerResult, type GameOutcome } from '../domain/game/gameOutcome';
+import type { GameEvent, GamePhase } from '../domain/game/gameLifecycle';
+import { createReviewSession, getGameRootFen, reviewSessionReducer, type LiveMoveAnalysis, type MoveAnnotation } from '../domain/game/reviewSession';
+import {
+  createInitialClock,
+  startClock,
+  tickClock,
+  switchTurn,
+  pauseClock,
+  type DualClockState,
+  type TimeControlId,
+} from '../domain/clock/chessClock';
 
 interface ChessGameState {
   game: Chess;
@@ -12,80 +25,44 @@ interface ChessGameState {
   isCheckmate: boolean;
   isDraw: boolean;
   isGameOver: boolean;
-  boardKey: number;
-  gameMode: string;
+  gameGeneration: number;
   playerColor: Color;
   botElo: number;
-  gameGoal: string;
-  setGameGoal: (goal: string) => void;
-  timeControl: string;
-  setTimeControl: (tc: string) => void;
-  GAME_MODES: Record<string, string>;
+  timeControl: TimeControlId;
+  clock: DualClockState;
   PLAYER_COLORS: Record<string, Color>;
-  isBotThinking: boolean;
-  setIsBotThinking: (thinking: boolean) => void;
-  botMoveSource: { from: string; to: string } | null;
-  setBotMoveSource: (source: { from: string; to: string } | null) => void;
-  botRequestId: number;
-  setBotRequestId: (id: number) => void;
-  botRequestIdRef: React.MutableRefObject<number>;
-  selectedSquare: Square | null;
-  moveHints: Record<string, React.CSSProperties>;
-  lastMoveSquares: { from: string; to: string } | null;
-  setLastMoveSquares: (squares: { from: string; to: string } | null) => void;
-  boardOrientation: 'white' | 'black';
-  setBoardOrientation: (orientation: 'white' | 'black') => void;
-  engineHint: { bestMove: string; evaluation: string } | null;
-  setEngineHint: (hint: { bestMove: string; evaluation: string } | null) => void;
-  resultNotice: string | null;
-  setResultNotice: (notice: string | null) => void;
-  recordedGamePgn: string | null;
-  setRecordedGamePgn: (pgn: string | null) => void;
-  shouldShowGameOverModal: boolean;
-  setShouldShowGameOverModal: (show: boolean) => void;
-  playState: string;
-  setPlayState: (state: string) => void;
+  outcome: GameOutcome | null;
+  gameResult: ReturnType<typeof getPlayerResult>;
+  claimGameResultRecording: (key: string) => boolean;
+  playState: GamePhase;
+  enterReview: () => void;
+  returnToLobby: () => void;
   moveAnnotations: Record<number, { symbol: string; label: string; tone: string }>;
-  setMoveAnnotations: (annotations: Record<number, { symbol: string; label: string; tone: string }>) => void;
-  lastMoveFenPair: {
-    beforeFen: string;
-    afterFen: string;
-    playedUci: string;
-    moveIndex: number;
-    color: Color;
-    san: string;
-  } | null;
-  setLastMoveFenPair: (pair: {
-    beforeFen: string;
-    afterFen: string;
-    playedUci: string;
-    moveIndex: number;
-    color: Color;
-    san: string;
-  } | null) => void;
-  pendingPromotion: { from: Square; to: Square } | null;
-  setPendingPromotion: (promotion: { from: Square; to: Square } | null) => void;
+  pendingLiveMoveAnalysis: LiveMoveAnalysis | null;
+  resolveMoveAnnotation: (requestId: number, annotation: MoveAnnotation) => void;
+  failMoveAnnotation: (requestId: number) => void;
+  pendingPromotion: GameSession['pendingPromotion'];
   analysisMode: boolean;
   analysisGame: Chess;
   analysisMainline: string[];
   analysisPly: number;
   makeMove: (from: string, to: string, promotion?: string, options?: { byBot?: boolean; sourceFen?: string | null }) => { move: Move; nextGame: Chess } | false;
-  selectSquare: (square: Square) => void;
-  clearSelection: () => void;
+  attemptMove: (from: Square, to: Square) => { status: 'promotion_required'; from: Square; to: Square; color: Color } | { status: 'moved'; move: Move; nextGame: Chess } | { status: 'rejected' };
+  choosePromotion: (piece: 'q' | 'r' | 'b' | 'n') => { move: Move; nextGame: Chess } | false;
+  cancelPromotion: () => void;
   getLegalMoves: (square: Square) => Move[];
   getKingSquare: (color: Color) => Square | null;
   newGame: () => Chess;
-  startGame: (options: { elo?: number; color?: Color; mode?: string; gameGoal?: string; timeControl?: string }) => void;
+  startGame: (options?: { elo?: number; color?: Color; timeControl?: TimeControlId }) => void;
   undoMove: () => Chess | null;
-  changeGameMode: (mode: string) => void;
   changePlayerColor: (color: Color) => void;
   changeBotElo: (elo: number) => void;
   enterAnalysisMode: () => void;
   exitAnalysisMode: () => void;
   goToAnalysisPly: (ply: number) => void;
   cloneGame: (sourceGame?: Chess) => Chess;
-  flipBoard: () => void;
   resignGame: () => void;
+  offerDraw: (currentCentipawns?: number | null) => { accepted: boolean; reason: string };
   restartGameWithCurrentSettings: () => void;
 }
 
@@ -98,11 +75,6 @@ export function useChessGame() {
   }
   return context;
 }
-
-const GAME_MODES = {
-  LOCAL: 'local',
-  BOT: 'bot',
-};
 
 const PLAYER_COLORS: Record<string, Color> = {
   WHITE: 'w' as Color,
@@ -124,60 +96,66 @@ interface ChessGameProviderProps {
 
 export function ChessGameProvider({ children }: ChessGameProviderProps) {
   // Core game state
-  const [game, setGame] = useState(() => new Chess());
-  const [boardKey, setBoardKey] = useState(0);
+  const [session, dispatchSession] = useReducer(gameSessionReducer, undefined, createInitialGameSession);
+  const { game, phase: playState, playerColor, generation: gameGeneration, pendingPromotion, outcome } = session;
 
-  // Play state: 'lobby', 'playing', 'review'
-  const [playState, setPlayState] = useState('lobby');
-
-  // Game mode and settings
-  const [gameMode, setGameMode] = useState(GAME_MODES.BOT);
-  const [playerColor, setPlayerColor] = useState(PLAYER_COLORS.WHITE);
+  // Bot and game settings
   const [botElo, setBotElo] = useState(1200);
-  const [gameGoal, setGameGoal] = useState('fun');
-  const [timeControl, setTimeControl] = useState('unlimited');
+  const [timeControl, setTimeControl] = useState<TimeControlId>('rapid_10');
+  const [clock, setClock] = useState<DualClockState>(() => createInitialClock('rapid_10'));
 
-  // Bot state
-  const [isBotThinking, setIsBotThinking] = useState(false);
-  const [botMoveSource, setBotMoveSource] = useState<{ from: string; to: string } | null>(null);
-  const [botRequestId, setBotRequestId] = useState(0);
-  const botRequestIdRef = useRef(0);
+  // Clock countdown ticker
+  useEffect(() => {
+    if (playState !== 'playing' || outcome !== null) {
+      setClock((prev) => (prev.isRunning ? pauseClock(prev) : prev));
+      return;
+    }
 
-  // UI state
-  const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
-  const [moveHints, setMoveHints] = useState<Record<string, React.CSSProperties>>({});
-  const [lastMoveSquares, setLastMoveSquares] = useState<{ from: string; to: string } | null>(null);
-  const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white');
+    const intervalId = window.setInterval(() => {
+      setClock((prev) => {
+        if (!prev.isRunning || prev.isTimeout) return prev;
+        const next = tickClock(prev);
+        if (next.isTimeout && next.timeoutWinner) {
+          dispatchSession({ type: 'TIMEOUT', winner: next.timeoutWinner });
+        }
+        return next;
+      });
+    }, 250);
 
-  // Engine state
-  const [engineHint, setEngineHint] = useState<{ bestMove: string; evaluation: string } | null>(null);
+    return () => window.clearInterval(intervalId);
+  }, [playState, outcome]);
 
   // Game status
-  const [resultNotice, setResultNotice] = useState<string | null>(null);
-  const [recordedGamePgn, setRecordedGamePgn] = useState<string | null>(null);
-  const [shouldShowGameOverModal, setShouldShowGameOverModal] = useState(false);
+  const gameResultRecordingKeyRef = useRef<string | null>(null);
+
+  const claimGameResultRecording = useCallback((key: string) => {
+    if (gameResultRecordingKeyRef.current === key) return false;
+    gameResultRecordingKeyRef.current = key;
+    return true;
+  }, []);
 
   // Move annotations
-  const [moveAnnotations, setMoveAnnotations] = useState<Record<number, { symbol: string; label: string; tone: string }>>({});
-  const [lastMoveFenPair, setLastMoveFenPair] = useState<{
-    beforeFen: string;
-    afterFen: string;
-    playedUci: string;
-    moveIndex: number;
-    color: Color;
-    san: string;
-  } | null>(null);
-
-  // Promotion state
-  const [pendingPromotion, setPendingPromotion] = useState<{ from: Square; to: Square } | null>(null);
+  const moveAnnotationRequestIdRef = useRef(0);
 
   // Analysis mode
-  const [analysisMode, setAnalysisMode] = useState(false);
-  const [analysisGame, setAnalysisGame] = useState(() => new Chess());
-  const [analysisMainline, setAnalysisMainline] = useState<string[]>([]);
-  const [analysisPly, setAnalysisPly] = useState(0);
+  const [reviewSession, dispatchReviewSession] = useReducer(reviewSessionReducer, undefined, createReviewSession);
+  const { game: analysisGame, mainline: analysisMainline, ply: analysisPly } = reviewSession;
+  const { annotations: moveAnnotations, pendingLiveMoveAnalysis } = reviewSession;
+
+  const resolveMoveAnnotation = useCallback((requestId: number, annotation: MoveAnnotation) => {
+    dispatchReviewSession({ type: 'LIVE_MOVE_ANALYZED', requestId, annotation });
+  }, []);
+
+  const failMoveAnnotation = useCallback((requestId: number) => {
+    dispatchReviewSession({ type: 'LIVE_MOVE_FAILED', requestId });
+  }, []);
+
+  function dispatchGameEvent(event: GameEvent) {
+    dispatchSession({ type: 'EVENT', event });
+  }
 
   // Derived state
+  const analysisMode = playState === 'analysis';
   const activeGame = analysisMode ? analysisGame : game;
   const currentFen = activeGame.fen();
   const currentPgn = activeGame.pgn();
@@ -186,7 +164,8 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
   const isCheck = activeGame.isCheck();
   const isCheckmate = activeGame.isCheckmate();
   const isDraw = activeGame.isDraw();
-  const isGameOver = activeGame.isGameOver();
+  const isGameOver = analysisMode ? activeGame.isGameOver() : outcome !== null;
+  const gameResult = getPlayerResult(outcome, playerColor);
 
   // Helper functions
   function cloneGame(sourceGame = game) {
@@ -217,8 +196,7 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
   }
 
   // Actions
-  // options.byBot = true  → được phép đi dù isBotThinking, dù không phải lượt playerColor
-  function makeMove(from: string, to: string, promotion = 'q', options: { byBot?: boolean; sourceFen?: string | null } = {}): { move: Move; nextGame: Chess } | false {
+  function makeMove(from: string, to: string, promotion?: string, options: { byBot?: boolean; sourceFen?: string | null } = {}): { move: Move; nextGame: Chess } | false {
     const { byBot = false, sourceFen = null } = options;
     const gameToUse = activeGame;
 
@@ -233,13 +211,10 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
     }
 
     if (!analysisMode) {
-      if (!byBot && isBotThinking) {
-        return failMove('bot thinking', { from, to });
-      }
-      if (!byBot && gameMode === GAME_MODES.BOT && currentTurn !== playerColor) {
+      if (!byBot && currentTurn !== playerColor) {
         return failMove('not player turn', { currentTurn, playerColor });
       }
-      if (byBot && gameMode === GAME_MODES.BOT && currentTurn === playerColor) {
+      if (byBot && currentTurn === playerColor) {
         return failMove('not bot turn', { currentTurn, playerColor });
       }
       if (byBot && sourceFen && gameToUse.fen() !== sourceFen) {
@@ -257,8 +232,11 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
     const piece = gameToUse.get(from as Square);
     const isPromotion = piece?.type === 'p' && ((piece.color === 'w' && to[1] === '8') || (piece.color === 'b' && to[1] === '1'));
 
-    // Default promotion to queen if not specified
-    const safePromotion = isPromotion ? (promotion || 'q') : promotion;
+    if (isPromotion && !promotion) {
+      return failMove('promotion choice required', { from, to });
+    }
+
+    const safePromotion = promotion;
 
     const beforeFen = gameToUse.fen();
     const nextGame = cloneGame(gameToUse);
@@ -280,204 +258,137 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
       return failMove('chess.js rejected move', { from, to, promotion: safePromotion, fen: gameToUse.fen() });
     }
 
-    // Clear UI state
-    setSelectedSquare(null);
-    setMoveHints({});
-    setEngineHint(null);
-    setLastMoveSquares({ from: move.from as string, to: move.to as string });
+    dispatchSession({ type: 'PROMOTION_CANCELLED' });
 
     // Update game state
     if (analysisMode) {
-      setAnalysisGame(nextGame);
-      setAnalysisPly(nextGame.history().length);
+      dispatchReviewSession({ type: 'POSITION_REPLACED', game: nextGame });
     } else {
       const moveIndex = nextGame.history().length - 1;
       const playedUci = `${move.from}${move.to}${move.promotion || ''}`;
 
-      setGame(nextGame);
-      setMoveAnnotations((current) => ({
-        ...current,
-        [moveIndex]: { symbol: '...', label: 'Đang phân tích', tone: 'pending' },
-      }));
-      setLastMoveFenPair({
+      dispatchSession({ type: 'MOVE_COMMITTED', game: nextGame });
+      setClock((prev) => switchTurn(prev, nextGame.turn()));
+      moveAnnotationRequestIdRef.current += 1;
+      dispatchReviewSession({ type: 'LIVE_MOVE_PENDING', requestId: moveAnnotationRequestIdRef.current, move: {
         beforeFen,
         afterFen: nextGame.fen(),
         playedUci,
         moveIndex,
         color: move.color,
         san: move.san,
-      } as {
-        beforeFen: string;
-        afterFen: string;
-        playedUci: string;
-        moveIndex: number;
-        color: Color;
-        san: string;
-      });
+      } });
 
-      // Check if game just ended from this live move
-      if (nextGame.isGameOver()) {
-        setShouldShowGameOverModal(true);
-      }
     }
 
     return { move, nextGame };
   }
 
-  function selectSquare(square: Square) {
-    if (!square) {
-      setSelectedSquare(null);
-      setMoveHints({});
-      return;
+  function attemptMove(from: Square, to: Square) {
+    if (isGameOver || (!analysisMode && currentTurn !== playerColor)) {
+      return { status: 'rejected' as const };
     }
 
-    const piece = activeGame.get(square);
+    const legalMove = getLegalMoves(from).find((move) => move.to === to);
+    if (!legalMove) return { status: 'rejected' as const };
 
-    if (!piece || piece.color !== currentTurn) {
-      setSelectedSquare(null);
-      setMoveHints({});
-      return;
+    if (legalMove.promotion) {
+      const promotion = { from, to, color: activeGame.turn() };
+      dispatchSession({ type: 'PROMOTION_REQUESTED', promotion });
+      return { status: 'promotion_required' as const, ...promotion };
     }
 
-    if (!analysisMode && isBotThinking) {
-      return;
-    }
-
-    if (!analysisMode && gameMode === GAME_MODES.BOT && piece.color !== playerColor) {
-      return;
-    }
-
-    const moves = getLegalMoves(square);
-
-    const hints = moves.reduce<Record<string, React.CSSProperties>>((acc, move) => {
-      // Check if target square has opponent piece (capture)
-      const targetPiece = activeGame.get(move.to);
-      const isCapture = targetPiece && targetPiece.color !== piece.color;
-
-      const style = isCapture
-        ? { boxShadow: 'inset 0 0 0 4px rgba(234,179,8,0.42)' }
-        : {
-            backgroundImage: 'radial-gradient(circle, rgba(234,179,8,0.45) 0 18%, transparent 20%)',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: '100% 100%',
-          };
-      acc[move.to as string] = style;
-      return acc;
-    }, {});
-
-    setSelectedSquare(square);
-    setMoveHints(hints);
+    const result = makeMove(from, to);
+    return result ? { status: 'moved' as const, ...result } : { status: 'rejected' as const };
   }
 
-  function clearSelection() {
-    setSelectedSquare(null);
-    setMoveHints({});
+  function choosePromotion(piece: 'q' | 'r' | 'b' | 'n') {
+    if (!pendingPromotion || !['q', 'r', 'b', 'n'].includes(piece)) return false;
+    return makeMove(pendingPromotion.from, pendingPromotion.to, piece);
+  }
+
+  function cancelPromotion() {
+    dispatchSession({ type: 'PROMOTION_CANCELLED' });
   }
 
   function newGame() {
     const freshGame = new Chess();
-    setGame(freshGame);
-    setAnalysisMode(false);
-    setAnalysisGame(new Chess());
-    setAnalysisMainline([]);
-    setAnalysisPly(0);
-    setIsBotThinking(false);
-    botRequestIdRef.current += 1;
-    setBotRequestId(botRequestIdRef.current);
-    setBotMoveSource(null);
-    setMoveHints({});
-    setEngineHint(null);
-    setLastMoveSquares(null);
-    setSelectedSquare(null);
-    setResultNotice(null);
-    setRecordedGamePgn(null);
-    setMoveAnnotations({});
-    setLastMoveFenPair(null);
-    setShouldShowGameOverModal(false);
-    setBoardKey((k) => k + 1);
+    gameResultRecordingKeyRef.current = null;
+    dispatchSession({ type: 'RESET_POSITION', game: freshGame });
+    dispatchReviewSession({ type: 'RESET' });
 
     return freshGame;
   }
 
-  function startGame({ elo = 1200, color = PLAYER_COLORS.WHITE, mode = GAME_MODES.BOT, gameGoal = 'fun', timeControl = 'unlimited' }: { elo?: number; color?: Color; mode?: string; gameGoal?: string; timeControl?: string }) {
+  function startGame(options: { elo?: number; color?: Color; timeControl?: TimeControlId } = {}) {
+    const { elo = 1200, color = PLAYER_COLORS.WHITE, timeControl: tc = 'rapid_10' } = options;
     setBotElo(elo ?? 1200);
-    setPlayerColor(color ?? PLAYER_COLORS.WHITE);
-    setBoardOrientation(color === PLAYER_COLORS.BLACK ? 'black' : 'white');
-    setGameMode(mode ?? GAME_MODES.BOT);
-    setGameGoal(gameGoal ?? 'fun');
-    setTimeControl(timeControl ?? 'unlimited');
-    newGame();
-    setPlayState('playing');
+    setTimeControl(tc);
+    const freshGame = newGame();
+    dispatchSession({ type: 'START_GAME', game: freshGame, playerColor: color ?? PLAYER_COLORS.WHITE });
+    const freshClock = createInitialClock(tc);
+    setClock(startClock(freshClock, 'w'));
   }
 
   function restartGameWithCurrentSettings() {
-    newGame();
-    setBoardOrientation(playerColor === PLAYER_COLORS.BLACK ? 'black' : 'white');
-    setPlayState('playing');
+    const freshGame = newGame();
+    dispatchSession({ type: 'START_GAME', game: freshGame, playerColor });
+    const freshClock = createInitialClock(timeControl);
+    setClock(startClock(freshClock, 'w'));
+  }
+
+  function offerDraw(currentCentipawns: number | null = null) {
+    if (playState !== 'playing' || outcome !== null) {
+      return { accepted: false, reason: 'Ván cờ chưa bắt đầu.' };
+    }
+    const moves = activeGame.history();
+    if (moves.length < 20) {
+      return { accepted: false, reason: 'Ván cờ mới bắt đầu (dưới 20 nước), Quân sư Ninh muốn tiếp tục thi đấu!' };
+    }
+    const cp = currentCentipawns ?? 0;
+    if (Math.abs(cp) <= 75) {
+      dispatchSession({ type: 'OFFER_DRAW_ACCEPTED' });
+      return { accepted: true, reason: 'Thế cờ cân bằng, Quân sư Ninh đồng ý hòa cờ!' };
+    }
+    return {
+      accepted: false,
+      reason: cp > 75
+        ? 'Quân sư Ninh đang chiếm ưu thế nên từ chối lời đề nghị hòa!'
+        : 'Thế cờ còn nhiều cơ hội, Quân sư Ninh muốn đấu tiếp!',
+    };
   }
 
   function undoMove() {
     if (analysisMode) {
+      dispatchSession({ type: 'PROMOTION_CANCELLED' });
       const nextGame = cloneGame(analysisGame);
       nextGame.undo();
-      setAnalysisGame(nextGame);
-      setAnalysisPly(nextGame.history().length);
-      setEngineHint(null);
+      dispatchReviewSession({ type: 'POSITION_REPLACED', game: nextGame });
 
-      const lastMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
-      setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
-      clearSelection();
       return nextGame;
     }
 
     const nextGame = cloneGame();
-
-    if (gameMode === GAME_MODES.BOT) {
-      botRequestIdRef.current += 1;
-
-      const lastMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
-      if (lastMove?.color !== playerColor) {
-        nextGame.undo();
-      }
-
-      const previousMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
-      if (previousMove?.color === playerColor) {
-        nextGame.undo();
-      }
-    } else {
+    const lastMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
+    if (lastMove?.color !== playerColor) {
       nextGame.undo();
     }
 
-    setGame(nextGame);
-    setIsBotThinking(false);
-    setBotRequestId(botRequestIdRef.current);
-    setEngineHint(null);
-    setResultNotice(null);
-    setRecordedGamePgn(null);
-    setShouldShowGameOverModal(false);
-    setPlayState('playing');
+    const previousMove = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
+    if (previousMove?.color === playerColor) {
+      nextGame.undo();
+    }
 
-    const lastMoveAfterSet = nextGame.history({ verbose: true }).at(-1) as Move | undefined;
-    setLastMoveSquares(lastMoveAfterSet ? { from: lastMoveAfterSet.from as string, to: lastMoveAfterSet.to as string } : null);
+    if (!nextGame.isGameOver()) gameResultRecordingKeyRef.current = null;
 
-    setMoveAnnotations((current) =>
-      Object.fromEntries(
-        Object.entries(current).filter(([index]) => Number(index) < nextGame.history().length)
-      )
-    );
-    clearSelection();
+    dispatchSession({ type: 'UNDO', game: nextGame });
 
+    dispatchReviewSession({ type: 'TRIM_ANNOTATIONS', retainedPly: nextGame.history().length });
     return nextGame;
   }
 
-  function changeGameMode(mode: string) {
-    setGameMode(mode);
-    newGame();
-  }
-
   function changePlayerColor(color: Color) {
-    setPlayerColor(color);
+    dispatchSession({ type: 'SET_PLAYER_COLOR', playerColor: color });
     newGame();
   }
 
@@ -488,68 +399,36 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
   function enterAnalysisMode() {
     const mainline = game.history();
     const analysisCopy = cloneGame(game);
-    setAnalysisMode(true);
-    setAnalysisMainline(mainline);
-    setAnalysisGame(analysisCopy);
-    setAnalysisPly(mainline.length);
-    setShouldShowGameOverModal(false);
-    setIsBotThinking(false);
-    setEngineHint(null);
-    setMoveHints({});
-    setSelectedSquare(null);
+    dispatchReviewSession({ type: 'ENTER', game: analysisCopy, mainline, rootFen: getGameRootFen(game) });
 
-    const lastMove = analysisCopy.history({ verbose: true }).at(-1) as Move | undefined;
-    setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
+    dispatchGameEvent('ENTER_ANALYSIS');
   }
 
   function exitAnalysisMode() {
-    setAnalysisMode(false);
-    setAnalysisGame(new Chess());
-    setAnalysisMainline([]);
-    setAnalysisPly(0);
-    setShouldShowGameOverModal(false);
-    setEngineHint(null);
-    setMoveHints({});
-    setSelectedSquare(null);
+    dispatchReviewSession({ type: 'EXIT' });
 
-    const lastMove = game.history({ verbose: true }).at(-1) as Move | undefined;
-    setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
+    dispatchGameEvent('EXIT_ANALYSIS');
   }
 
   function goToAnalysisPly(ply: number) {
-    const boundedPly = Math.max(0, Math.min(ply, analysisMainline.length));
-    const replay = new Chess();
-
-    analysisMainline.slice(0, boundedPly).forEach((san) => {
-      try {
-        replay.move(san);
-      } catch {
-        // Ignore invalid moves
-      }
-    });
-
-    setAnalysisGame(replay);
-    setAnalysisPly(boundedPly);
-    setEngineHint(null);
-    setMoveHints({});
-    setSelectedSquare(null);
-
-    const lastMove = replay.history({ verbose: true }).at(-1) as Move | undefined;
-    setLastMoveSquares(lastMove ? { from: lastMove.from as string, to: lastMove.to as string } : null);
-  }
-
-  function flipBoard() {
-    setBoardOrientation(prev => prev === 'white' ? 'black' : 'white');
+    dispatchSession({ type: 'PROMOTION_CANCELLED' });
+    dispatchReviewSession({ type: 'NAVIGATE', ply });
   }
 
   function resignGame() {
-    const winner = playerColor === PLAYER_COLORS.WHITE ? 'Đen' : 'Trắng';
-    setResultNotice(`${winner} thắng do bạn đầu hàng.`);
-    setIsBotThinking(false);
-    botRequestIdRef.current += 1;
-    setBotRequestId(botRequestIdRef.current);
-    setShouldShowGameOverModal(false);
-    setPlayState('review');
+    if (playState !== 'playing') return;
+    dispatchGameEvent('RESIGN');
+    dispatchGameEvent('ENTER_REVIEW');
+  }
+
+  function enterReview() {
+    dispatchGameEvent('GAME_END');
+    dispatchGameEvent('ENTER_REVIEW');
+  }
+
+  function returnToLobby() {
+    newGame();
+    dispatchGameEvent('RESET');
   }
 
   const value = {
@@ -564,59 +443,31 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
     isCheckmate,
     isDraw,
     isGameOver,
-    boardKey,
+    gameGeneration,
 
     // Game mode
-    gameMode,
     playerColor,
     botElo,
-    gameGoal,
-    setGameGoal,
     timeControl,
-    setTimeControl,
-    GAME_MODES,
+    clock,
     PLAYER_COLORS,
 
-    // Bot state
-    isBotThinking,
-    setIsBotThinking,
-    botMoveSource,
-    setBotMoveSource,
-    botRequestId,
-    setBotRequestId,
-    botRequestIdRef,
-
-    // UI state
-    selectedSquare,
-    moveHints,
-    lastMoveSquares,
-    setLastMoveSquares,
-    boardOrientation,
-    setBoardOrientation,
-
-    // Engine
-    engineHint,
-    setEngineHint,
-
     // Status
-    resultNotice,
-    setResultNotice,
-    recordedGamePgn,
-    setRecordedGamePgn,
-    shouldShowGameOverModal,
-    setShouldShowGameOverModal,
+    outcome,
+    gameResult,
+    claimGameResultRecording,
     playState,
-    setPlayState,
+    enterReview,
+    returnToLobby,
 
     // Annotations
     moveAnnotations,
-    setMoveAnnotations,
-    lastMoveFenPair,
-    setLastMoveFenPair,
+    pendingLiveMoveAnalysis,
+    resolveMoveAnnotation,
+    failMoveAnnotation,
 
     // Promotion
     pendingPromotion,
-    setPendingPromotion,
 
     // Analysis mode
     analysisMode,
@@ -626,22 +477,22 @@ export function ChessGameProvider({ children }: ChessGameProviderProps) {
 
     // Actions
     makeMove,
-    selectSquare,
-    clearSelection,
+    attemptMove,
+    choosePromotion,
+    cancelPromotion,
     getLegalMoves,
     getKingSquare,
     newGame,
     startGame,
     undoMove,
-    changeGameMode,
     changePlayerColor,
     changeBotElo,
     enterAnalysisMode,
     exitAnalysisMode,
     goToAnalysisPly,
     cloneGame,
-    flipBoard,
     resignGame,
+    offerDraw,
     restartGameWithCurrentSettings,
   };
 
