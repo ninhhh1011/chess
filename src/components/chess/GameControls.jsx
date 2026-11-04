@@ -4,14 +4,23 @@ import { AppButton } from '@/ui/AppButton';
 import { AppTooltip } from '@/ui/AppTooltip';
 import { AppAlertDialog } from '@/ui/AppAlertDialog';
 import { AppSurface } from '@/ui/AppSurface';
-import { Lightbulb, RotateCcw, Plus, ArrowLeftRight, Flag, AlertTriangle } from 'lucide-react';
+import { Lightbulb, RotateCcw, Plus, ArrowLeftRight, Flag, AlertTriangle, Handshake } from 'lucide-react';
 
 export default function GameControls({ onHint, requestHint, flipBoard, isThinking }) {
-  const { returnToLobby, undoMove, resignGame, playState } = useChessGame();
+  const { returnToLobby, undoMove, resignGame, offerDraw, playState } = useChessGame();
   const [isResignOpen, setIsResignOpen] = useState(false);
   const [isNewGameOpen, setIsNewGameOpen] = useState(false);
+  const [drawFeedback, setDrawFeedback] = useState(null);
 
   if (playState !== 'playing') return null;
+
+  function handleOfferDraw() {
+    const result = offerDraw();
+    if (!result.accepted) {
+      setDrawFeedback(result.reason);
+      setTimeout(() => setDrawFeedback(null), 3500);
+    }
+  }
 
   return (
     <>
@@ -65,6 +74,19 @@ export default function GameControls({ onHint, requestHint, flipBoard, isThinkin
 
         {/* Utility / Danger actions */}
         <div className="flex items-center gap-1.5 pr-1">
+          <AppTooltip content="Đề nghị hòa" placement="top">
+            <AppButton
+              size="sm"
+              variant="outline"
+              onClick={handleOfferDraw}
+              aria-label="Đề nghị hòa cờ"
+              disabled={isThinking}
+              className="h-9 w-9 p-0 rounded-full shrink-0"
+            >
+              <Handshake className="h-3.5 w-3.5" />
+            </AppButton>
+          </AppTooltip>
+
           <AppTooltip content="Lật bàn cờ" placement="top">
             <AppButton
               size="sm"
@@ -90,6 +112,13 @@ export default function GameControls({ onHint, requestHint, flipBoard, isThinkin
           </AppTooltip>
         </div>
       </AppSurface>
+
+      {/* Draw Feedback Banner */}
+      {drawFeedback && (
+        <div className="text-center py-2 px-4 bg-amber-50 text-amber-900 border border-amber-200 text-xs font-medium rounded-full shadow-xs animate-in fade-in duration-200">
+          {drawFeedback}
+        </div>
+      )}
 
       {/* Resign Confirmation: HeroUI AlertDialog */}
       <AppAlertDialog

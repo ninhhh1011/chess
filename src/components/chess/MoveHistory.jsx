@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
+import { getUserProfile } from '../../services/userProfileService';
+import { formatSevenTagRosterPgn } from '../../utils/pgnFormat';
 import { BRAND_NAMES } from '../../config/brand';
 import { AppButton } from '@/ui/AppButton';
 import { AppSurface } from '@/ui/AppSurface';
@@ -23,19 +25,30 @@ function mapToneToStatusVariant(tone) {
  * MoveHistory - Danh sách nước đi với HeroUI components
  */
 export default function MoveHistory() {
-  const { moveHistory, moveAnnotations, currentPgn, analysisMode, goToAnalysisPly, analysisPly } = useChessGame();
+  const { moveHistory, moveAnnotations, currentPgn, playerColor, botElo, gameResult, analysisMode, goToAnalysisPly, analysisPly } = useChessGame();
   const [copied, setCopied] = useState(false);
 
   function copyPgn() {
-    if (!currentPgn) return;
-    navigator.clipboard.writeText(currentPgn).then(
+    if (!moveHistory.length && !currentPgn) return;
+    const profile = getUserProfile();
+    const fullPgn = formatSevenTagRosterPgn({
+      moves: moveHistory,
+      white: playerColor === 'w' ? 'Bạn' : BRAND_NAMES.bot,
+      black: playerColor === 'w' ? BRAND_NAMES.bot : 'Bạn',
+      whiteElo: playerColor === 'w' ? (profile?.playerElo || 1000) : botElo,
+      blackElo: playerColor === 'w' ? botElo : (profile?.playerElo || 1000),
+      result: gameResult,
+      playerColor,
+    });
+
+    navigator.clipboard.writeText(fullPgn).then(
       () => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       },
       () => {
         const textarea = document.createElement('textarea');
-        textarea.value = currentPgn;
+        textarea.value = fullPgn;
         textarea.style.position = 'fixed';
         textarea.style.opacity = '0';
         document.body.appendChild(textarea);

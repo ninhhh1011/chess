@@ -5,6 +5,7 @@ import { getUserProfile, updateDailyTrainingPlan } from '../services/userProfile
 import { signOutUser } from '../services/authService';
 import { syncLocalProfileToCloud, loadCloudProfileToLocal } from '../services/syncService';
 import SyncStatusBadge from '../components/SyncStatusBadge';
+import MatchHistoryModal from '../components/chess/MatchHistoryModal';
 import { AppButton, AppCard, AppProgress, AppStatus, AppSurface } from '@/ui';
 import {
   CheckCircle2,
@@ -18,11 +19,13 @@ import {
   Award,
   LogOut,
   Target,
+  History,
 } from 'lucide-react';
 
 export default function Training() {
   const [profile, setProfile] = useState(null);
   const [syncing, setSyncing] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
@@ -143,19 +146,34 @@ export default function Training() {
           </p>
         </div>
 
-        <div className="flex items-center gap-6 border-t sm:border-t-0 sm:border-l border-[var(--app-border)] pt-4 sm:pt-0 sm:pl-8 shrink-0">
+        <div className="flex items-center gap-6 border-t sm:border-t-0 sm:border-l border-[var(--app-border)] pt-4 sm:pt-0 sm:pl-8 shrink-0 flex-wrap">
           <div>
-            <span className="text-[11px] font-semibold text-[var(--app-muted)] block">Cấp độ hiện tại</span>
+            <span className="text-[11px] font-semibold text-[var(--app-muted)] block">Điểm ELO</span>
+            <span className="font-serif text-2xl font-bold text-[#030302]">
+              {profile.playerElo || 1000}
+            </span>
+          </div>
+          <div>
+            <span className="text-[11px] font-semibold text-[var(--app-muted)] block">Cấp độ</span>
             <span className="font-serif text-2xl font-bold capitalize text-[var(--app-secondary)]">
               {profile.currentLevel}
             </span>
           </div>
           <div>
-            <span className="text-[11px] font-semibold text-[var(--app-muted)] block">Ván cờ đã chơi</span>
+            <span className="text-[11px] font-semibold text-[var(--app-muted)] block">Ván đã chơi</span>
             <span className="font-serif text-2xl font-bold text-[#030302]">
               {profile.gamesPlayed}
             </span>
           </div>
+          <AppButton
+            size="sm"
+            variant="outline"
+            onClick={() => setIsHistoryOpen(true)}
+            leftIcon={<History className="h-3.5 w-3.5" />}
+            className="h-8 text-xs"
+          >
+            Lịch sử
+          </AppButton>
         </div>
       </AppSurface>
 
@@ -377,6 +395,12 @@ export default function Training() {
           </AppCard>
         </div>
       </div>
+
+      <MatchHistoryModal
+        isOpen={isHistoryOpen}
+        onOpenChange={setIsHistoryOpen}
+        onSelectGameForAnalysis={() => navigate('/play')}
+      />
     </div>
   );
 }

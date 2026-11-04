@@ -4,7 +4,8 @@ import { AppButton } from '@/ui/AppButton';
 import { AppRadioGroup, AppRadioCard } from '@/ui/AppRadioGroup';
 import { AppSurface } from '@/ui/AppSurface';
 import { TIME_CONTROLS } from '../../domain/clock/chessClock';
-import { Shield, Sparkles, Swords, Flame, Trophy, Zap, Crown, Medal, Check, Clock } from 'lucide-react';
+import MatchHistoryModal from './MatchHistoryModal';
+import { Shield, Sparkles, Swords, Flame, Trophy, Zap, Crown, Medal, Check, Clock, History } from 'lucide-react';
 
 const DIFFICULTIES = [
   {
@@ -88,6 +89,7 @@ export default function PreGameLobby() {
   const [selectedElo, setSelectedElo] = useState(400);
   const [selectedColor, setSelectedColor] = useState('w');
   const [selectedTimeControl, setSelectedTimeControl] = useState('rapid_10');
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   function handleStart() {
     startGame({
@@ -108,9 +110,22 @@ export default function PreGameLobby() {
       >
         {/* Header */}
         <div className="text-center space-y-1.5">
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#030302]">
-            Chơi với máy
-          </h1>
+          <div className="flex items-center justify-between">
+            <div className="w-16" />
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#030302]">
+              Chơi với máy
+            </h1>
+            <AppButton
+              size="sm"
+              variant="outline"
+              onClick={() => setIsHistoryOpen(true)}
+              leftIcon={<History className="h-3.5 w-3.5" />}
+              className="h-8 text-xs px-2.5"
+              aria-label="Lịch sử ván đấu"
+            >
+              Lịch sử
+            </AppButton>
+          </div>
           <p className="text-xs sm:text-sm text-[var(--app-muted)]">
             Chọn trình độ đối thủ, thể thức thời gian và màu quân yêu thích
           </p>
@@ -272,6 +287,11 @@ export default function PreGameLobby() {
           </AppButton>
         </div>
       </AppSurface>
+
+      <MatchHistoryModal
+        isOpen={isHistoryOpen}
+        onOpenChange={setIsHistoryOpen}
+      />
     </div>
   );
 }
