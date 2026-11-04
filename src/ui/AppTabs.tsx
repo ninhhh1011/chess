@@ -13,7 +13,7 @@ export interface AppTabsProps {
   selectedId: string;
   onSelectionChange: (id: string) => void;
   className?: string;
-  variant?: 'underline' | 'segment';
+  variant?: 'underline' | 'segment' | 'pill';
   ariaLabel?: string;
 }
 
@@ -25,7 +25,7 @@ export function AppTabs({
   variant = 'underline',
   ariaLabel = 'Các mục chuyển đổi',
 }: AppTabsProps) {
-  if (variant === 'segment') {
+  if (variant === 'segment' || variant === 'pill') {
     return (
       <HeroUITabs
         selectedKey={selectedId}

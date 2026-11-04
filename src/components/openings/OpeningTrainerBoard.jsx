@@ -128,41 +128,34 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
   function showCorrect(){ setMessage(`Nước đúng là ${expectedMove?.san || 'hết line'}: ${expectedMove?.explanation || ''}`); }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(280px,560px)_1fr]">
-      <AppSurface
-        variant="base"
-        radius="md"
-        className="mx-auto aspect-square w-[min(100%,560px)] p-3 shadow-sm"
-      >
-        <Chessboard
-          options={{
-            position: game.fen(),
-            boardOrientation,
-            onPieceDrop: onDrop,
-            onPieceDrag: ({ square }) => showLegalMoveHints(square, true),
-            onPieceClick: ({ square }) => showLegalMoveHints(square),
-            onSquareClick: handleSquareClick,
-            squareStyles: moveHints,
-            showNotation: true,
-            boardStyle: { borderRadius: '8px', overflow: 'hidden' },
-            darkSquareStyle: { backgroundColor: '#66745C' },
-            lightSquareStyle: { backgroundColor: '#DAD2BD' },
-          }}
-        />
-      </AppSurface>
-      <AppSurface
-        variant="base"
-        radius="md"
-        className="space-y-4 p-5 shadow-sm"
-      >
-        <h2 className="text-xl font-bold text-[var(--app-foreground)]">Practice Mode</h2>
-        <div className="rounded-md border border-[var(--app-accent)]/30 bg-[var(--app-accent-soft)] p-3 text-xs font-medium text-[var(--app-accent-hover)]">
+    <div className="grid gap-8 lg:grid-cols-[minmax(280px,560px)_1fr] items-start">
+      <div className="mx-auto aspect-square w-[min(100%,560px)] p-3.5 rounded-[28px] bg-white border border-[var(--app-border)] shadow-[var(--shadow-card)]">
+        <div className="overflow-hidden rounded-[18px] border border-[var(--app-border)]">
+          <Chessboard
+            options={{
+              position: game.fen(),
+              boardOrientation,
+              onPieceDrop: onDrop,
+              onPieceDrag: ({ square }) => showLegalMoveHints(square, true),
+              onPieceClick: ({ square }) => showLegalMoveHints(square),
+              onSquareClick: handleSquareClick,
+              squareStyles: moveHints,
+              showNotation: true,
+              darkSquareStyle: { backgroundColor: '#587982' },
+              lightSquareStyle: { backgroundColor: '#FBF9F5' },
+            }}
+          />
+        </div>
+      </div>
+      <div className="space-y-5 p-7 sm:p-8 rounded-[28px] bg-white border border-[var(--app-border)] shadow-[var(--shadow-card)]">
+        <h2 className="font-serif text-2xl font-bold text-[#030302]">Luyện tập nước đi</h2>
+        <div className="rounded-[16px] border border-[var(--app-border)] bg-[var(--app-muted-surface)]/60 p-4 text-xs font-medium text-[#030302]">
           {message}
         </div>
-        <p className="text-xs text-[var(--app-muted)]">
-          Nước cần luyện: <b className="text-[var(--app-foreground)]">{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b>
+        <p className="text-xs sm:text-sm text-[var(--app-muted)]">
+          Nước cần luyện: <b className="text-[#030302] font-semibold">{waitingForUser ? expectedMove?.san : 'Coach đang đi...'}</b>
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2.5">
           <AppButton size="sm" variant="secondary" onClick={() => setMessage(expectedMove?.explanation || 'Đã hết line.')}>
             Ninh mách nước
           </AppButton>
@@ -176,33 +169,33 @@ export default function OpeningTrainerBoard({ opening, onProgress }) {
         <p className="text-xs text-[var(--app-subtle)]">Lỗi sai phiên này: {mistakes.length}</p>
 
         {showQualityRating && (
-          <AppSurface variant="raised" radius="sm" className="p-4 space-y-2">
-            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--app-foreground)]">
+          <div className="p-5 rounded-[20px] bg-[var(--app-muted-surface)]/60 border border-[var(--app-border)] space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#030302]">
               Đánh giá mức độ ghi nhớ (SM-2)
             </h3>
             <div className="flex flex-col gap-1.5">
-              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(5)}>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs rounded-full hover:bg-white" onClick={() => handleRateQuality(5)}>
                 5 - Hoàn hảo, nhớ ngay lập tức
               </AppButton>
-              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(4)}>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs rounded-full hover:bg-white" onClick={() => handleRateQuality(4)}>
                 4 - Đúng, nhưng có chút ngập ngừng
               </AppButton>
-              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(3)}>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs rounded-full hover:bg-white" onClick={() => handleRateQuality(3)}>
                 3 - Đúng, nhưng phải suy nghĩ lâu
               </AppButton>
-              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(2)}>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs rounded-full hover:bg-white" onClick={() => handleRateQuality(2)}>
                 2 - Sai, nhưng khi thấy nước đúng thì nhớ ra ngay
               </AppButton>
-              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(1)}>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs rounded-full hover:bg-white" onClick={() => handleRateQuality(1)}>
                 1 - Sai, và chỉ mang máng nhớ
               </AppButton>
-              <AppButton size="sm" variant="ghost" className="justify-start text-xs" onClick={() => handleRateQuality(0)}>
+              <AppButton size="sm" variant="ghost" className="justify-start text-xs rounded-full hover:bg-white" onClick={() => handleRateQuality(0)}>
                 0 - Hoàn toàn không nhớ gì
               </AppButton>
             </div>
-          </AppSurface>
+          </div>
         )}
-      </AppSurface>
+      </div>
     </div>
   );
 }
