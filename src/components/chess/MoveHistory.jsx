@@ -9,7 +9,6 @@ import { Copy, Check } from 'lucide-react';
 function mapToneToStatusVariant(tone) {
   const map = {
     pending: 'basic',
-    brilliant: 'teal',
     great: 'teal',
     best: 'teal',
     good: 'basic',
@@ -70,11 +69,7 @@ export default function MoveHistory() {
       </div>
 
       {/* Danh sách nước đi */}
-      <AppSurface
-        variant="raised"
-        radius="sm"
-        className="max-h-[380px] overflow-y-auto p-2"
-      >
+      <div className="max-h-[380px] overflow-y-auto p-2.5 bg-[var(--app-muted-surface)]/50 rounded-[18px] border border-[var(--app-border)]">
         {moveHistory.length ? (
           <div className="grid grid-cols-2 gap-1.5">
             {moveHistory.map((move, index) => {
@@ -90,21 +85,21 @@ export default function MoveHistory() {
                   onClick={() => {
                     if (analysisMode) goToAnalysisPly(index + 1);
                   }}
-                  className={`w-full justify-between h-auto py-1 px-2 text-xs font-normal rounded-[6px] ${
+                  className={`w-full justify-between h-auto py-1 px-3 text-xs font-normal rounded-full ${
                     isCurrent
-                      ? 'border-[var(--app-accent)] font-semibold text-[var(--app-foreground)] bg-[var(--app-surface-hover)]'
-                      : 'text-[var(--app-muted)] hover:text-[var(--app-foreground)] bg-[var(--app-surface)] hover:bg-[var(--app-surface-hover)] border-transparent'
+                      ? 'border-[#030302] font-semibold text-[#030302] bg-white shadow-2xs'
+                      : 'text-[var(--app-muted)] hover:text-[#030302] bg-transparent hover:bg-white/80 border-transparent'
                   } ${analysisMode ? 'cursor-pointer' : 'cursor-default'}`}
                 >
                   <span className="min-w-0 truncate text-left">
                     <span className="text-[var(--app-subtle)] font-mono mr-1">{index + 1}.</span>
-                    <span className="text-[var(--app-foreground)] font-medium">{move}</span>
+                    <span className="text-[#030302] font-medium">{move}</span>
                   </span>
                   {annotation && (
                     <AppStatus
                       variant={statusVariant}
                       size="sm"
-                      className="px-1 py-0 h-4 text-[10px] shrink-0 font-bold"
+                      className="px-1.5 py-0 h-4 text-[10px] shrink-0 font-bold"
                     >
                       {annotation.symbol}
                     </AppStatus>
@@ -118,7 +113,7 @@ export default function MoveHistory() {
             Chưa có nước cờ nào được thực hiện.
           </p>
         )}
-      </AppSurface>
+      </div>
     </div>
   );
 }

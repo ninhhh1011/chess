@@ -3,16 +3,16 @@ import { useChessGame } from '../../contexts/ChessGameContext';
 import { Chessboard } from 'react-chessboard';
 import { standardPieces } from './standardPieces';
 import { useMoveHighlights } from '../../hooks/useMoveHighlights';
-import { playCaptureSound, playMoveSound, playCastlingSound, playPromotionSound } from '../../utils/sound';
+import { playCaptureSound, playMoveSound, playCastlingSound } from '../../utils/sound';
 
 const fixedBoardStyle = {
   width: '100%',
   height: '100%',
   aspectRatio: '1 / 1',
-  border: '1px solid rgba(148, 163, 184, 0.28)',
-  borderRadius: '8px',
+  border: '1px solid rgba(3, 3, 2, 0.08)',
+  borderRadius: '16px',
   overflow: 'hidden',
-  boxShadow: '0 18px 50px rgba(2, 6, 23, 0.38), 0 1px 0 rgba(255,255,255,0.04)',
+  boxShadow: '0 20px 40px -15px rgba(3, 3, 2, 0.07), 0 0 0 1px rgba(3, 3, 2, 0.04)',
   touchAction: 'none',
 };
 
@@ -56,25 +56,16 @@ function describeEngineMove(hint, activeGame) {
   }
 }
 
-export default function ChessBoardPanel({ engineHint }) {
+export default function ChessBoardPanel({ boardOrientation, engineHint, selectedSquare, moveHints, selectSquare, clearSelection, isThinking }) {
   const {
     activeGame,
     currentFen,
-    boardKey,
+    gameGeneration,
     playerColor,
-    boardOrientation,
-    gameMode,
-    isBotThinking,
     isGameOver,
-    selectedSquare,
-    moveHints,
-    lastMoveSquares,
-    makeMove,
-    selectSquare,
-    clearSelection,
+    attemptMove,
     getKingSquare,
     getLegalMoves,
-    GAME_MODES,
   } = useChessGame();
 
   // FIX BUG 3: Remove hover hints state - only show hints on selection
@@ -86,6 +77,10 @@ export default function ChessBoardPanel({ engineHint }) {
   );
 
   const engineMove = useMemo(() => describeEngineMove(engineHint, activeGame), [engineHint, activeGame]);
+  const lastMoveSquares = useMemo(() => {
+    const lastMove = activeGame.history({ verbose: true }).at(-1);
+    return lastMove ? { from: lastMove.from, to: lastMove.to } : null;
+  }, [activeGame]);
 
   // FIX BUG 3: Only use selected hints, never hover hints
   const { boardSquareStyles, engineArrows } = useMoveHighlights({
@@ -101,10 +96,10 @@ export default function ChessBoardPanel({ engineHint }) {
     const styles = { ...boardSquareStyles };
 
     // Add subtle hover effect on hoverable pieces (no legal move dots)
-    if (hoveredSquare && !selectedSquare && !isBotThinking && !isGameOver) {
+    if (hoveredSquare && !selectedSquare && !isThinking && !isGameOver) {
       const piece = activeGame.get(hoveredSquare);
       if (piece && piece.color === activeGame.turn()) {
-        if (gameMode === GAME_MODES.BOT && piece.color !== playerColor) {
+        if (piece.color !== playerColor) {
           // Don't highlight opponent pieces in bot mode
         } else {
           styles[hoveredSquare] = {
@@ -117,18 +112,14 @@ export default function ChessBoardPanel({ engineHint }) {
     }
 
     return styles;
-  }, [boardSquareStyles, hoveredSquare, selectedSquare, isBotThinking, isGameOver, activeGame, gameMode, playerColor, GAME_MODES]);
+  }, [boardSquareStyles, hoveredSquare, selectedSquare, isThinking, isGameOver, activeGame, playerColor]);
 
   function canDragPiece({ isSparePiece, piece, square }) {
-    if (isSparePiece || isBotThinking || isGameOver || !piece?.pieceType) return false;
+    if (isSparePiece || isThinking || isGameOver || !piece?.pieceType) return false;
 
     const pieceColor = piece.pieceType[0];
 
-    if (gameMode === GAME_MODES.BOT) {
-      return activeGame.turn() === playerColor && pieceColor === playerColor;
-    }
-
-    return pieceColor === activeGame.turn();
+    return activeGame.turn() === playerColor && pieceColor === playerColor;
   }
 
   // NEW: Handle drag begin - show legal move hints
@@ -157,21 +148,12 @@ export default function ChessBoardPanel({ engineHint }) {
       return false;
     }
 
-    const boardPiece = activeGame.get(sourceSquare);
-    const isPromotion = boardPiece?.type === 'p' &&
-      ((boardPiece.color === 'w' && targetSquare?.[1] === '8') ||
-       (boardPiece.color === 'b' && targetSquare?.[1] === '1'));
+    const result = attemptMove(sourceSquare, targetSquare);
 
-    const result = isPromotion
-      ? makeMove(sourceSquare, targetSquare, 'q')
-      : makeMove(sourceSquare, targetSquare);
-
-    if (result && result.move) {
+    if (result.status === 'moved') {
       // Play appropriate sound
       if (result.move.captured) {
         playCaptureSound();
-      } else if (isPromotion) {
-        playPromotionSound();
       } else if (isCastling(sourceSquare, targetSquare)) {
         playCastlingSound();
       } else {
@@ -182,7 +164,7 @@ export default function ChessBoardPanel({ engineHint }) {
     // Clear selection after drop attempt
     clearSelection();
 
-    return !!result;
+    return result.status !== 'rejected';
   }
 
   function isCastling(from, to) {
@@ -198,25 +180,19 @@ export default function ChessBoardPanel({ engineHint }) {
 
     // If square has legal move hint, execute move
     if (selectedSquare && moveHints[square]) {
-      const boardPiece = activeGame.get(selectedSquare);
-      const isPromotion = boardPiece?.type === 'p' &&
-        ((boardPiece.color === 'w' && square[1] === '8') ||
-         (boardPiece.color === 'b' && square[1] === '1'));
+      const result = attemptMove(selectedSquare, square);
 
-      const result = isPromotion
-        ? makeMove(selectedSquare, square, 'q')
-        : makeMove(selectedSquare, square);
-
-      if (result && result.move) {
+      if (result.status === 'moved') {
         if (result.move.captured) {
           playCaptureSound();
-        } else if (isPromotion) {
-          playPromotionSound();
         } else if (isCastling(selectedSquare, square)) {
           playCastlingSound();
         } else {
           playMoveSound();
         }
+        clearSelection();
+      } else if (result.status === 'promotion_required') {
+        clearSelection();
       }
       return;
     }
@@ -251,13 +227,13 @@ export default function ChessBoardPanel({ engineHint }) {
 
   // FIX BUG 3: Hover only adds subtle effect, NO legal move dots
   function handleMouseOverSquare({ square }) {
-    if (!square || selectedSquare || isBotThinking || isGameOver) return;
+    if (!square || selectedSquare || isThinking || isGameOver) return;
 
     const piece = activeGame.get(square);
     if (!piece || piece.color !== activeGame.turn()) return;
 
     // In bot mode, only allow hover on player's pieces
-    if (gameMode === GAME_MODES.BOT && piece.color !== playerColor) return;
+    if (piece.color !== playerColor) return;
 
     setHoveredSquare(square);
   }
@@ -267,23 +243,22 @@ export default function ChessBoardPanel({ engineHint }) {
   }
 
   // Determine if player can interact
-  const canInteract = !isBotThinking && !isGameOver &&
-    (gameMode !== GAME_MODES.BOT || activeGame.turn() === playerColor);
+  const canInteract = !isThinking && !isGameOver && activeGame.turn() === playerColor;
 
   return (
     <div className="chess-board-container relative">
       {/* Turn indicator overlay */}
-      {isBotThinking && (
-        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-bg-base/40 backdrop-blur-[1px]">
-          <div className="flex flex-col items-center gap-2 rounded-lg border border-border bg-bg-elevated/90 px-4 py-3 shadow-lg">
-            <div className="text-2xl animate-pulse">♟</div>
-            <span className="text-xs font-medium text-text-secondary">Đang tính nước...</span>
+      {isThinking && (
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/40 backdrop-blur-xs">
+          <div className="flex flex-col items-center gap-2 rounded-full border border-[var(--app-border)] bg-white/95 px-5 py-3 shadow-[var(--shadow-floating)]">
+            <div className="text-xl animate-bounce text-[#030302]">♟</div>
+            <span className="text-xs font-medium text-[#030302]">Đang tính nước...</span>
           </div>
         </div>
       )}
 
       <Chessboard
-        key={boardKey}
+        key={gameGeneration}
         options={{
           pieces: standardPieces,
           position: currentFen,

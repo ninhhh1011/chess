@@ -10,8 +10,7 @@ export default function ReviewNavigator() {
     analysisMainline,
     goToAnalysisPly,
     exitAnalysisMode,
-    newGame,
-    setPlayState,
+    returnToLobby,
     playState,
     restartGameWithCurrentSettings,
   } = useChessGame();
@@ -27,13 +26,11 @@ export default function ReviewNavigator() {
 
   const handleExitReview = () => {
     exitAnalysisMode();
-    setPlayState('review'); // Go back to the summary modal
   };
 
   const handleNewGame = () => {
     exitAnalysisMode();
-    newGame();
-    setPlayState('lobby');
+    returnToLobby();
   };
 
   return (

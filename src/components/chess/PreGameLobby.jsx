@@ -45,7 +45,7 @@ const DIFFICULTIES = [
 ];
 
 export default function PreGameLobby() {
-  const { GAME_MODES, startGame } = useChessGame();
+  const { startGame } = useChessGame();
 
   // Default: Dễ (400) + Trắng ('w')
   const [selectedElo, setSelectedElo] = useState(400);
@@ -55,9 +55,6 @@ export default function PreGameLobby() {
     startGame({
       elo: selectedElo,
       color: selectedColor,
-      mode: GAME_MODES.BOT,
-      gameGoal: 'fun',
-      timeControl: 'unlimited',
     });
   }
 
@@ -68,11 +65,11 @@ export default function PreGameLobby() {
       <AppSurface
         variant="base"
         radius="lg"
-        className="w-full max-w-lg p-6 sm:p-8 space-y-6 shadow-sm"
+        className="w-full max-w-lg p-6 sm:p-10 space-y-6 bg-white rounded-[28px] border border-[var(--app-border)] shadow-[var(--shadow-modal)]"
       >
         {/* Header */}
         <div className="text-center space-y-1.5">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--app-foreground)]">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#030302]">
             Chơi với máy
           </h1>
           <p className="text-xs sm:text-sm text-[var(--app-muted)]">
@@ -82,7 +79,7 @@ export default function PreGameLobby() {
 
         {/* Difficulty Selection: HeroUI RadioGroup with Card-style Options */}
         <div className="space-y-2.5">
-          <label className="block text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--app-subtle)]">
             Mức độ
           </label>
 
@@ -91,51 +88,45 @@ export default function PreGameLobby() {
             onChange={(val) => setSelectedElo(Number(val))}
             ariaLabel="Chọn mức độ chơi"
             orientation="horizontal"
-            className="w-full"
+            className="w-full grid grid-cols-4 gap-2"
           >
-            <div className="grid grid-cols-4 gap-2 w-full">
-              {DIFFICULTIES.map((diff) => {
-                const Icon = diff.icon;
-                const isSelected = selectedElo === diff.elo;
-                return (
-                  <AppRadioCard
-                    key={diff.id}
-                    value={String(diff.elo)}
-                    className="w-full"
-                  >
-                    <div className="flex flex-col items-center justify-center py-1 text-center">
-                      <Icon
-                        className={`h-4 w-4 mb-1.5 ${
-                          isSelected ? 'text-[var(--app-accent)]' : 'text-[var(--app-subtle)]'
-                        }`}
-                      />
-                      <span className="text-xs font-bold text-[var(--app-foreground)]">
-                        {diff.label}
-                      </span>
-                    </div>
-                  </AppRadioCard>
-                );
-              })}
-            </div>
+            {DIFFICULTIES.map((diff) => {
+              const Icon = diff.icon;
+              const isSelected = selectedElo === diff.elo;
+              return (
+                <AppRadioCard
+                  key={diff.id}
+                  value={String(diff.elo)}
+                  className="w-full"
+                >
+                  <div className="flex flex-col items-center justify-center py-1 text-center">
+                    <Icon
+                      className={`h-4 w-4 mb-1.5 ${
+                        isSelected ? 'text-[#030302]' : 'text-[var(--app-subtle)]'
+                      }`}
+                    />
+                    <span className="text-xs font-medium text-[#030302]">
+                      {diff.label}
+                    </span>
+                  </div>
+                </AppRadioCard>
+              );
+            })}
           </AppRadioGroup>
 
-          {/* Dynamic description box using AppSurface */}
-          <AppSurface
-            variant="raised"
-            radius="sm"
-            className="p-3.5 text-xs text-[var(--app-foreground)] space-y-1"
-          >
+          {/* Dynamic description box */}
+          <div className="p-4 text-xs text-[#030302] space-y-1 bg-[var(--app-muted-surface)]/60 rounded-[16px] border border-[var(--app-border)]">
             <p className="font-medium leading-relaxed">{currentDiff.description}</p>
             <p className="text-[11px] text-[var(--app-muted)]">
               <span className="font-semibold text-[var(--app-subtle)]">Đặc điểm Bot: </span>
               {currentDiff.botNotes}
             </p>
-          </AppSurface>
+          </div>
         </div>
 
-        {/* Color Selection: HeroUI RadioGroup */}
+        {/* Color Selection */}
         <div className="space-y-2.5">
-          <label className="block text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)]">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--app-subtle)]">
             Màu quân
           </label>
 
@@ -144,58 +135,56 @@ export default function PreGameLobby() {
             onChange={setSelectedColor}
             ariaLabel="Chọn màu quân"
             orientation="horizontal"
-            className="w-full"
+            className="w-full grid grid-cols-2 gap-3"
           >
-            <div className="grid grid-cols-2 gap-3 w-full">
-              {/* White Option */}
-              <AppRadioCard value="w" className="w-full">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">♔</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-[var(--app-foreground)]">Trắng</span>
-                      {selectedColor === 'w' && (
-                        <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />
-                      )}
-                    </div>
-                    <span className="text-[11px] text-[var(--app-muted)] block">
-                      Đi trước
-                    </span>
+            {/* White Option */}
+            <AppRadioCard value="w" className="w-full">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl select-none">♔</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-xs text-[#030302]">Trắng</span>
+                    {selectedColor === 'w' && (
+                      <Check className="h-3.5 w-3.5 text-[var(--app-secondary)]" />
+                    )}
                   </div>
+                  <span className="text-[11px] text-[var(--app-muted)] block">
+                    Đi trước
+                  </span>
                 </div>
-              </AppRadioCard>
+              </div>
+            </AppRadioCard>
 
-              {/* Black Option */}
-              <AppRadioCard value="b" className="w-full">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">♚</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-[var(--app-foreground)]">Đen</span>
-                      {selectedColor === 'b' && (
-                        <Check className="h-3.5 w-3.5 text-[var(--app-accent)]" />
-                      )}
-                    </div>
-                    <span className="text-[11px] text-[var(--app-muted)] block">
-                      Máy đi trước
-                    </span>
+            {/* Black Option */}
+            <AppRadioCard value="b" className="w-full">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl select-none">♚</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-xs text-[#030302]">Đen</span>
+                    {selectedColor === 'b' && (
+                      <Check className="h-3.5 w-3.5 text-[var(--app-secondary)]" />
+                    )}
                   </div>
+                  <span className="text-[11px] text-[var(--app-muted)] block">
+                    Máy đi trước
+                  </span>
                 </div>
-              </AppRadioCard>
-            </div>
+              </div>
+            </AppRadioCard>
           </AppRadioGroup>
         </div>
 
-        {/* Start Button - Single CTA */}
+        {/* Start Button */}
         <div className="pt-2">
           <AppButton
             variant="primary"
             size="lg"
-            className="w-full h-12 text-base font-bold shadow-xs"
+            className="w-full h-12 text-base font-semibold shadow-xs"
             onClick={handleStart}
             leftIcon={<Swords className="h-4 w-4" />}
           >
-            Bắt đầu ván
+            Bắt đầu ván đấu
           </AppButton>
         </div>
       </AppSurface>

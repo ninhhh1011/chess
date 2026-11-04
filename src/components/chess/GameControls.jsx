@@ -6,8 +6,8 @@ import { AppAlertDialog } from '@/ui/AppAlertDialog';
 import { AppSurface } from '@/ui/AppSurface';
 import { Lightbulb, RotateCcw, Plus, ArrowLeftRight, Flag, AlertTriangle } from 'lucide-react';
 
-export default function GameControls({ onHint, requestHint }) {
-  const { newGame, undoMove, flipBoard, resignGame, playState, setPlayState, isBotThinking } = useChessGame();
+export default function GameControls({ onHint, requestHint, flipBoard, isThinking }) {
+  const { returnToLobby, undoMove, resignGame, playState } = useChessGame();
   const [isResignOpen, setIsResignOpen] = useState(false);
   const [isNewGameOpen, setIsNewGameOpen] = useState(false);
 
@@ -17,11 +17,11 @@ export default function GameControls({ onHint, requestHint }) {
     <>
       <AppSurface
         variant="base"
-        radius="sm"
-        className="flex items-center justify-between gap-1.5 p-2 shadow-xs"
+        radius="full"
+        className="flex items-center justify-between gap-2 p-2 bg-white rounded-full border border-[var(--app-border)] shadow-xs"
       >
         {/* Primary / Contextual action: Gợi ý, Hoàn tác, Ván mới */}
-        <div className="flex items-center gap-1.5 flex-1 flex-wrap">
+        <div className="flex items-center gap-2 flex-1 flex-wrap">
           <AppButton
             size="sm"
             variant="primary"
@@ -29,7 +29,8 @@ export default function GameControls({ onHint, requestHint }) {
               if (requestHint) requestHint();
               if (onHint) onHint();
             }}
-            disabled={isBotThinking}
+            disabled={isThinking}
+            className="min-h-[40px]"
             leftIcon={<Lightbulb className="h-3.5 w-3.5" />}
             aria-label="Gợi ý nước đi"
           >
@@ -41,7 +42,8 @@ export default function GameControls({ onHint, requestHint }) {
             size="sm"
             variant="secondary"
             onClick={undoMove}
-            disabled={isBotThinking}
+            disabled={isThinking}
+            className="min-h-[40px]"
             leftIcon={<RotateCcw className="h-3.5 w-3.5" />}
             aria-label="Hoàn tác nước cờ"
           >
@@ -53,6 +55,7 @@ export default function GameControls({ onHint, requestHint }) {
             size="sm"
             variant="secondary"
             onClick={() => setIsNewGameOpen(true)}
+            className="min-h-[40px]"
             leftIcon={<Plus className="h-3.5 w-3.5" />}
             aria-label="Bắt đầu ván mới"
           >
@@ -61,14 +64,14 @@ export default function GameControls({ onHint, requestHint }) {
         </div>
 
         {/* Utility / Danger actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5 pr-1">
           <AppTooltip content="Lật bàn cờ" placement="top">
             <AppButton
               size="sm"
               variant="outline"
               onClick={flipBoard}
               aria-label="Lật bàn cờ"
-              className="h-8 w-8 p-0 shrink-0"
+              className="h-9 w-9 p-0 rounded-full shrink-0"
             >
               <ArrowLeftRight className="h-3.5 w-3.5" />
             </AppButton>
@@ -80,7 +83,7 @@ export default function GameControls({ onHint, requestHint }) {
               variant="danger"
               onClick={() => setIsResignOpen(true)}
               aria-label="Đầu hàng ván đấu"
-              className="h-8 w-8 p-0 shrink-0"
+              className="h-9 w-9 p-0 rounded-full shrink-0"
             >
               <Flag className="h-3.5 w-3.5" />
             </AppButton>
@@ -114,8 +117,7 @@ export default function GameControls({ onHint, requestHint }) {
         status="warning"
         icon={<Plus className="h-5 w-5 text-[var(--app-accent)]" />}
         onConfirm={() => {
-          newGame();
-          setPlayState('lobby');
+          returnToLobby();
         }}
       >
         Ván cờ hiện tại sẽ kết thúc và bạn sẽ được quay về phòng chờ để chọn mức độ Bot hoặc màu quân mới.

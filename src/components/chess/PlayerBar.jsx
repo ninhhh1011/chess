@@ -7,8 +7,8 @@ import { AppStatus } from '@/ui/AppStatus';
 /**
  * PlayerBar - compact player/opponent identity strip.
  */
-export default function PlayerBar({ position = 'top' }) {
-  const { activeGame, playerColor, boardOrientation, gameMode, botElo, isBotThinking, GAME_MODES } = useChessGame();
+export default function PlayerBar({ position = 'top', boardOrientation, isThinking }) {
+  const { activeGame, playerColor, botElo } = useChessGame();
 
   const currentTurn = activeGame.turn();
   const isTop = position === 'top';
@@ -27,36 +27,31 @@ export default function PlayerBar({ position = 'top' }) {
     displayBadge = playerColor === 'w' ? 'Trắng' : 'Đen';
     avatarSrc = null;
     isActive = currentTurn === playerColor;
-  } else if (gameMode === GAME_MODES.BOT) {
+  } else {
     displayName = BRAND_NAMES.bot;
     displayBadge = `ELO ${botElo}`;
     avatarSrc = coachAvatar;
-    isActive = currentTurn !== playerColor;
-  } else {
-    displayName = 'Đối thủ';
-    displayBadge = playerColor === 'w' ? 'Đen' : 'Trắng';
-    avatarSrc = null;
     isActive = currentTurn !== playerColor;
   }
 
   return (
     <div
-      className={`flex items-center justify-between rounded-[8px] px-3 py-2 transition-all ${
+      className={`flex items-center justify-between rounded-full px-4 py-2 transition-all ${
         isActive
-          ? 'bg-[var(--app-surface-raised)] border border-[var(--app-border-strong)]'
-          : 'bg-[var(--app-surface)] border border-[var(--app-border)]'
+          ? 'bg-white border border-[#030302] shadow-xs'
+          : 'bg-[var(--app-muted-surface)]/60 border border-[var(--app-border)]'
       }`}
     >
-      <div className="flex min-w-0 items-center gap-2">
+      <div className="flex min-w-0 items-center gap-2.5">
         <AppAvatar
           src={avatarSrc}
           alt={displayName}
           fallback={isPlayer ? 'B' : 'AI'}
           size="sm"
-          className="rounded-[6px]"
+          className="rounded-full"
         />
 
-        <span className={`min-w-0 truncate text-xs font-semibold ${isActive ? 'text-[var(--app-accent)]' : 'text-[var(--app-foreground)]'}`}>
+        <span className={`min-w-0 truncate text-xs font-semibold ${isActive ? 'text-[#030302]' : 'text-[var(--app-foreground)]'}`}>
           {displayName}
         </span>
 
@@ -68,10 +63,10 @@ export default function PlayerBar({ position = 'top' }) {
       {isActive && (
         <div className="flex items-center gap-1.5">
           <span
-            className={`h-2 w-2 rounded-full bg-[var(--app-accent)] ${!isPlayer && isBotThinking ? 'animate-pulse' : ''}`}
-            title={!isPlayer && isBotThinking ? UI_COPY.botThinking : undefined}
+            className={`h-2 w-2 rounded-full bg-[var(--app-secondary)] ${!isPlayer && isThinking ? 'animate-pulse' : ''}`}
+            title={!isPlayer && isThinking ? UI_COPY.botThinking : undefined}
           />
-          {!isPlayer && isBotThinking && (
+          {!isPlayer && isThinking && (
             <span className="hidden text-[11px] font-medium text-[var(--app-muted)] sm:inline">{UI_COPY.botThinking}</span>
           )}
         </div>

@@ -7,33 +7,20 @@ import { AppButton } from '@/ui/AppButton';
 import { AppStatus } from '@/ui/AppStatus';
 import { ChevronDown, ChevronUp, RotateCcw, Eye, Target, Sparkles } from 'lucide-react';
 
-function getResultKind({ game, playerColor, resultNotice }) {
-  if (game.isDraw() || resultNotice?.toLowerCase().includes('hòa')) return 'draw';
-  if (resultNotice?.toLowerCase().includes('đầu hàng')) return 'lose';
-  if (!game.isCheckmate()) return 'draw';
-
-  const winner = game.turn() === 'w' ? 'b' : 'w';
-  return winner === playerColor ? 'win' : 'lose';
-}
-
 export default function PostGameReview() {
   const navigate = useNavigate();
   const {
-    game,
-    playerColor,
-    resultNotice,
+    gameResult: resultKind,
     moveHistory,
     moveAnnotations,
-    setPlayState,
-    newGame,
-    gameGoal,
+    returnToLobby,
     enterAnalysisMode,
     restartGameWithCurrentSettings,
   } = useChessGame();
 
   const [showStats, setShowStats] = useState(false);
 
-  const resultKind = getResultKind({ game, playerColor, resultNotice });
+  if (!resultKind) return null;
   const resultCopy = RESULT_COPY[resultKind];
 
   const handlePlayAgain = () => {
@@ -42,11 +29,9 @@ export default function PostGameReview() {
 
   const handleReviewBoard = () => {
     enterAnalysisMode();
-    setPlayState('analysis');
   };
 
   // Compute move counts and collect real mistakes
-  let brilliant = 0;
   let great = 0;
   let bestMoves = 0;
   let good = 0;
@@ -94,8 +79,6 @@ export default function PostGameReview() {
       bestMoves += 1;
     } else if (annotation.tone === 'great') {
       great += 1;
-    } else if (annotation.tone === 'brilliant') {
-      brilliant += 1;
     }
   });
 
@@ -161,8 +144,7 @@ export default function PostGameReview() {
               variant="outline"
               size="sm"
               onClick={() => {
-                newGame();
-                setPlayState('lobby');
+                returnToLobby();
               }}
               className="flex-1 sm:flex-initial"
             >
@@ -218,11 +200,11 @@ export default function PostGameReview() {
                 return (
                   <div
                     key={idx}
-                    className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 space-y-2 text-xs"
+                    className="rounded-[16px] border border-[var(--app-border)] bg-[var(--app-muted-surface)]/50 p-3.5 space-y-2 text-xs"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-[var(--app-foreground)]">
+                        <span className="font-mono font-bold text-[#030302]">
                           Nước {m.moveNumber}{m.isBlackMove ? ' (Đen)' : ' (Trắng)'}
                         </span>
                         <AppStatus variant={conf.variant} size="sm">
@@ -237,13 +219,13 @@ export default function PostGameReview() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-[11px]">
-                      <div className="rounded-[6px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2">
+                      <div className="rounded-[12px] border border-[var(--app-border)] bg-white p-2.5">
                         <span className="text-[10px] text-[var(--app-muted)] block">Bạn đã đi:</span>
                         <span className="font-mono font-bold text-[var(--app-danger)] text-xs mt-0.5 block">
                           {m.playedSan || 'Chưa rõ'}
                         </span>
                       </div>
-                      <div className="rounded-[6px] border border-[var(--app-border)] bg-[var(--app-surface)] p-2">
+                      <div className="rounded-[12px] border border-[var(--app-border)] bg-white p-2.5">
                         <span className="text-[10px] text-[var(--app-muted)] block">Nước tối ưu:</span>
                         <span className="font-mono font-bold text-[var(--app-success)] text-xs mt-0.5 block">
                           {m.bestSan || 'Chưa có gợi ý'}
@@ -255,45 +237,45 @@ export default function PostGameReview() {
               })}
             </div>
           ) : (
-            <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-3 text-xs text-[var(--app-muted)] text-center">
+            <div className="rounded-[16px] border border-[var(--app-border)] bg-[var(--app-muted-surface)]/50 p-4 text-xs text-[var(--app-muted)] text-center">
               Không có nước đi sai lầm nghiêm trọng nào được ghi nhận trong ván đấu này.
             </div>
           )}
         </div>
 
         {/* 3. Collapsible Game Statistics (Collapsed by default) */}
-        <div className="rounded-[8px] border border-[var(--app-border)] bg-[var(--app-surface-raised)]/70 overflow-hidden">
+        <div className="rounded-[16px] border border-[var(--app-border)] bg-[var(--app-muted-surface)]/50 overflow-hidden">
           <AppButton
             variant="ghost"
             onClick={() => setShowStats(!showStats)}
-            className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-semibold text-[var(--app-muted)] hover:text-[var(--app-foreground)] hover:bg-[var(--app-surface-raised)] transition-colors rounded-none"
+            className="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-[var(--app-muted)] hover:text-[#030302] hover:bg-white/80 transition-colors rounded-none"
           >
             <span>Thống kê chi tiết ({moveHistory?.length || 0} nước đi)</span>
             {showStats ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </AppButton>
 
           {showStats && (
-            <div className="p-3 border-t border-[var(--app-border)] space-y-2.5">
+            <div className="p-3.5 border-t border-[var(--app-border)] space-y-2.5">
               <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                <div className="rounded-[12px] bg-white p-2.5 border border-[var(--app-border)]">
                   <div className="text-[10px] font-bold text-[var(--app-success)]">Tốt nhất</div>
-                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">
-                    {brilliant + great + bestMoves}
+                  <div className="font-mono font-bold text-sm text-[#030302] mt-0.5">
+                    {great + bestMoves}
                   </div>
                 </div>
-                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                <div className="rounded-[12px] bg-white p-2.5 border border-[var(--app-border)]">
                   <div className="text-[10px] font-bold text-[var(--app-muted)]">Bình thường</div>
-                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">{good}</div>
+                  <div className="font-mono font-bold text-sm text-[#030302] mt-0.5">{good}</div>
                 </div>
-                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                <div className="rounded-[12px] bg-white p-2.5 border border-[var(--app-border)]">
                   <div className="text-[10px] font-bold text-[var(--app-warning)]">Thiếu lực</div>
-                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">
+                  <div className="font-mono font-bold text-sm text-[#030302] mt-0.5">
                     {inaccuracies + mistakes}
                   </div>
                 </div>
-                <div className="rounded-[6px] bg-[var(--app-surface)] p-2 border border-[var(--app-border)]">
+                <div className="rounded-[12px] bg-white p-2.5 border border-[var(--app-border)]">
                   <div className="text-[10px] font-bold text-[var(--app-danger)]">Nghiêm trọng</div>
-                  <div className="font-mono font-bold text-sm text-[var(--app-foreground)] mt-0.5">{blunders}</div>
+                  <div className="font-mono font-bold text-sm text-[#030302] mt-0.5">{blunders}</div>
                 </div>
               </div>
             </div>

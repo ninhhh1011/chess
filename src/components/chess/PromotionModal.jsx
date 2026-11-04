@@ -1,6 +1,7 @@
 import { useChessGame } from '../../contexts/ChessGameContext';
 import { AppDialog } from '@/ui/AppDialog';
 import { AppButton } from '@/ui/AppButton';
+import { playPromotionSound } from '../../utils/sound';
 
 const PIECE_LABELS = {
   q: 'Hậu',
@@ -17,22 +18,20 @@ const PIECE_SYMBOLS = {
 };
 
 export default function PromotionModal() {
-  const { pendingPromotion, setPendingPromotion, makeMove } = useChessGame();
+  const { pendingPromotion, choosePromotion, cancelPromotion } = useChessGame();
 
   const isOpen = Boolean(pendingPromotion);
 
   if (!pendingPromotion) return null;
 
-  const { from, to } = pendingPromotion;
   const pieces = ['q', 'r', 'b', 'n'];
 
   function handleSelect(piece) {
-    makeMove(from, to, piece);
-    setPendingPromotion(null);
+    if (choosePromotion(piece)) playPromotionSound();
   }
 
   function handleCancel() {
-    setPendingPromotion(null);
+    cancelPromotion();
   }
 
   return (
@@ -61,12 +60,13 @@ export default function PromotionModal() {
             key={piece}
             variant="secondary"
             onClick={() => handleSelect(piece)}
-            className="h-28 flex flex-col items-center justify-center p-4 hover:border-[var(--app-accent)] hover:bg-[var(--app-surface-hover)]"
+            className="h-28 flex flex-col items-center justify-center p-4 rounded-[20px] bg-[var(--app-muted-surface)]/60 hover:bg-white hover:border-[#030302] hover:shadow-xs transition-all"
+            style={{ borderRadius: '20px' }}
           >
             <span className="text-4xl mb-1 select-none leading-none">
               {PIECE_SYMBOLS[piece]}
             </span>
-            <span className="text-xs font-bold text-[var(--app-foreground)]">
+            <span className="font-serif text-xs font-bold text-[#030302]">
               {PIECE_LABELS[piece]}
             </span>
           </AppButton>

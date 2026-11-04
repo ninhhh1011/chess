@@ -1,17 +1,15 @@
 import { useMemo } from 'react';
 
-function evaluationToWhitePawns(evaluation, fen) {
+function evaluationToWhitePawns(evaluation) {
   if (!evaluation) return 0;
 
-  const rawValue =
-    evaluation.type === 'mate' ? (evaluation.value > 0 ? 99 : -99) : (Number(evaluation.value) || 0) / 100;
-
-  const turn = fen?.split(' ')[1] || 'w';
-  return turn === 'b' ? -rawValue : rawValue;
+  return evaluation.type === 'mate'
+    ? (evaluation.value > 0 ? 99 : -99)
+    : (Number(evaluation.value) || 0) / 100;
 }
 
 function evaluationToPercent(analysis) {
-  const pawns = evaluationToWhitePawns(analysis?.evaluation, analysis?.fen);
+  const pawns = evaluationToWhitePawns(analysis?.evaluation);
   return Math.max(4, Math.min(96, 50 + Math.tanh(pawns / 4) * 44));
 }
 
@@ -38,7 +36,7 @@ export default function LiveEvaluationBar({ analysis, status, hidden }) {
   const display = useMemo(() => formatEvaluation(analysis?.evaluation), [analysis]);
 
   const whitePawns = useMemo(
-    () => evaluationToWhitePawns(analysis?.evaluation, analysis?.fen),
+    () => evaluationToWhitePawns(analysis?.evaluation),
     [analysis]
   );
 
@@ -49,17 +47,17 @@ export default function LiveEvaluationBar({ analysis, status, hidden }) {
 
   return (
     <div className="flex w-10 shrink-0 flex-col items-center gap-2 sm:w-12" role="img" aria-label={`Đánh giá: ${leader}`}>
-      <div className="rounded-lg border border-border bg-bg-surface px-1.5 py-1 text-[0.65rem] font-bold text-primary-300 sm:text-xs">
+      <div className="rounded-full border border-[var(--app-border)] bg-white px-2 py-0.5 text-[0.7rem] font-bold text-[#030302] shadow-2xs">
         {display || '---'}
       </div>
-      <div className="relative min-h-[260px] flex-1 overflow-hidden rounded-full border border-border bg-bg-base shadow-inner">
+      <div className="relative min-h-[260px] flex-1 overflow-hidden rounded-full border border-[var(--app-border)] bg-[#1c1c1a] shadow-inner w-4 sm:w-5">
         <div
-          className="absolute inset-x-0 bottom-0 bg-slate-100 transition-all duration-300"
+          className="absolute inset-x-0 bottom-0 bg-white transition-all duration-300"
           style={{ height: `${whitePercent}%` }}
         />
-        <div className="absolute inset-x-0 top-1/2 h-px bg-primary-400/70" />
+        <div className="absolute inset-x-0 top-1/2 h-0.5 bg-[var(--app-secondary)]" />
       </div>
-      <div className="text-center text-[0.62rem] font-bold uppercase leading-3 tracking-[0.12em] text-text-tertiary">
+      <div className="text-center text-[0.62rem] font-semibold uppercase leading-3 tracking-[0.08em] text-[var(--app-muted)]">
         {leader}
       </div>
     </div>

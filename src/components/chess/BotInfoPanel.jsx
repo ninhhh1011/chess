@@ -8,9 +8,7 @@ import { AppSurface } from '@/ui/AppSurface';
 const BOT_NAME = BRAND_NAMES.bot;
 
 export default function BotInfoPanel() {
-  const { gameMode, playerColor, botElo, GAME_MODES, PLAYER_COLORS } = useChessGame();
-
-  if (gameMode !== GAME_MODES.BOT) return null;
+  const { playerColor, botElo, PLAYER_COLORS } = useChessGame();
 
   const selectedBotLevel = BOT_ELO_LEVELS.find((level) => level.elo === botElo) || BOT_ELO_LEVELS[2];
   const playerColorLabel = playerColor === PLAYER_COLORS.WHITE ? 'trắng' : 'đen';

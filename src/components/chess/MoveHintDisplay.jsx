@@ -15,8 +15,8 @@ function getPieceLabel(piece) {
   return `${PIECE_LABELS[piece.type] || 'Quân'} ${piece.color === 'w' ? 'trắng' : 'đen'}`;
 }
 
-export default function MoveHintDisplay({ engineMove }) {
-  const { activeGame, selectedSquare, getLegalMoves } = useChessGame();
+export default function MoveHintDisplay({ engineMove, selectedSquare }) {
+  const { activeGame, getLegalMoves } = useChessGame();
 
   const selectedPiece = selectedSquare ? activeGame.get(selectedSquare) : null;
   const selectedLegalMoves = selectedSquare ? getLegalMoves(selectedSquare) : [];

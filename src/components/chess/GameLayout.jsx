@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useChessGame } from '../../contexts/ChessGameContext';
-import { getSanFromUci } from '../../utils/chessMoveUtils';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 
@@ -39,9 +38,12 @@ import { Settings, History, Activity, Sparkles, AlertTriangle } from 'lucide-rea
  */
 export default function GameLayout({
   liveAnalysis,
+  boardOrientation,
+  flipBoard,
   liveEvalStatus,
   engineHint,
-  setEngineHint,
+  onAnalysisRequestStart,
+  onBestMove,
   autoAnalyze,
   setAutoAnalyze,
   autoComment,
@@ -50,21 +52,54 @@ export default function GameLayout({
   reviewGameWithEngine,
   engineMove,
   showStartNotice,
+  isThinking,
   onRequestHint,
   onReviewFact,
 }) {
-  const { currentFen, currentPgn, moveHistory, activeGame, isGameOver, isCheck, botElo, playState, resignGame } = useChessGame();
+  const { currentFen, activeGame, botElo, playState, resignGame, playerColor, analysisMode, getLegalMoves } = useChessGame();
   const [activeTab, setActiveTab] = useState('moves');
   const [showResignConfirm, setShowResignConfirm] = useState(false);
+  const [selection, setSelection] = useState({ game: activeGame, square: null, hints: {} });
+  const selectedSquare = selection.game === activeGame ? selection.square : null;
+  const moveHints = selection.game === activeGame ? selection.hints : {};
+
+  function clearSelection() {
+    setSelection({ game: activeGame, square: null, hints: {} });
+  }
+
+  function selectSquare(square) {
+    const piece = square ? activeGame.get(square) : null;
+    if (!piece || piece.color !== activeGame.turn()) {
+      clearSelection();
+      return;
+    }
+    if (!analysisMode && (isThinking || piece.color !== playerColor)) return;
+
+    const hints = getLegalMoves(square).reduce((styles, move) => {
+      const targetPiece = activeGame.get(move.to);
+      styles[move.to] = targetPiece && targetPiece.color !== piece.color
+        ? { boxShadow: 'inset 0 0 0 4px rgba(234,179,8,0.42)' }
+        : {
+            backgroundImage: 'radial-gradient(circle, rgba(234,179,8,0.45) 0 18%, transparent 20%)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: '100% 100%',
+          };
+      return styles;
+    }, {});
+
+    setSelection({ game: activeGame, square, hints });
+  }
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
+    flipBoard,
     onHint: () => { setActiveTab('coach'); },
     onResign: () => setShowResignConfirm(true),
   });
 
   // Board keyboard navigation
-  useKeyboardNavigation();
+  useKeyboardNavigation({ selectedSquare, moveHints, selectSquare, clearSelection, isThinking });
 
   const tabs = [
     { id: 'moves', label: 'Ván đấu', icon: <History className="h-3.5 w-3.5" /> },
@@ -103,62 +138,62 @@ export default function GameLayout({
           <PromotionModal />
 
           {/* Main Layout Grid: Desktop board ~65%, sidebar ~340px */}
-          <div className="mx-auto grid w-full max-w-[1340px] gap-3 py-2 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="mx-auto grid w-full max-w-[1340px] gap-4 py-2 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]">
 
             {/* LEFT COLUMN: Board Area */}
             <AppSurface
               variant="base"
-              radius="md"
-              className="min-w-0 p-2.5 sm:p-3 space-y-2 shadow-xs"
+              radius="lg"
+              className="min-w-0 p-4 sm:p-6 space-y-3 bg-white rounded-[28px] border border-[var(--app-border)] shadow-[var(--shadow-card)]"
             >
               {/* Game status bar */}
-              <GameInfoBar botElo={botElo} />
+              <GameInfoBar botElo={botElo} isThinking={isThinking} />
 
               {/* Opponent strip - above board */}
-              <PlayerBar position="top" />
+              <PlayerBar position="top" boardOrientation={boardOrientation} isThinking={isThinking} />
 
               {/* Board with evaluation bar */}
-              <AppSurface
-                variant="raised"
-                radius="sm"
-                className="flex items-start justify-center gap-2 p-2 sm:p-3 bg-[var(--app-surface-raised)]/40"
-              >
+              <div className="flex items-start justify-center gap-3 p-3 sm:p-4 rounded-[20px] bg-[var(--app-muted-surface)]/40 border border-[var(--app-border)]">
                 <LiveEvaluationBar
                   analysis={liveAnalysis}
                   status={liveEvalStatus}
                   hidden={playState === 'playing' && !isReviewing}
                 />
                 <div className="flex min-w-0 flex-1 justify-center">
-                  <ChessBoardPanel engineHint={engineHint} />
+                  <ChessBoardPanel boardOrientation={boardOrientation} engineHint={engineHint} selectedSquare={selectedSquare} moveHints={moveHints} selectSquare={selectSquare} clearSelection={clearSelection} isThinking={isThinking} />
                 </div>
-              </AppSurface>
+              </div>
 
               {/* Player strip - below board */}
-              <PlayerBar position="bottom" />
+              <PlayerBar position="bottom" boardOrientation={boardOrientation} isThinking={isThinking} />
 
               {/* Controls visible directly under board on mobile */}
               <div className="block lg:hidden pt-1">
                 <GameControls
+                  flipBoard={flipBoard}
                   onHint={() => { setActiveTab('coach'); }}
                   requestHint={onRequestHint}
+                  isThinking={isThinking}
                 />
               </div>
 
               {/* Move hint */}
               {engineMove && (
                 <div className="mt-1">
-                  <MoveHintDisplay engineMove={engineMove} />
+                  <MoveHintDisplay engineMove={engineMove} selectedSquare={selectedSquare} />
                 </div>
               )}
             </AppSurface>
 
             {/* RIGHT COLUMN: Sidebar (3 tabs + settings popover) */}
-            <aside className="flex w-full flex-col gap-2.5 lg:sticky lg:top-20 lg:self-start">
+            <aside className="flex w-full flex-col gap-3 lg:sticky lg:top-20 lg:self-start">
               {/* Controls on desktop */}
               <div className="hidden lg:block">
                 <GameControls
+                  flipBoard={flipBoard}
                   onHint={() => { setActiveTab('coach'); }}
                   requestHint={onRequestHint}
+                  isThinking={isThinking}
                 />
               </div>
               <ReviewNavigator />
@@ -166,11 +201,11 @@ export default function GameLayout({
               {/* Tab Box */}
               <AppSurface
                 variant="base"
-                radius="md"
-                className="overflow-hidden shadow-xs"
+                radius="lg"
+                className="overflow-hidden bg-white rounded-[28px] border border-[var(--app-border)] shadow-[var(--shadow-card)]"
               >
                 {/* Tab Header with 3 main tabs + settings popover */}
-                <div className="flex items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-surface-raised)] pr-2">
+                <div className="flex items-center justify-between border-b border-[var(--app-border)] bg-[var(--app-muted-surface)]/60 pr-2">
                   <div className="flex-1">
                     <AppTabs
                       tabs={tabs}
@@ -185,14 +220,9 @@ export default function GameLayout({
                     title="Cài đặt ván đấu"
                     placement="bottom end"
                     trigger={
-                      <AppButton
-                        variant="ghost"
-                        size="sm"
-                        aria-label="Cài đặt ván cờ"
-                        className="h-7 w-7 p-0"
-                      >
-                        <Settings className="h-3.5 w-3.5" />
-                      </AppButton>
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--app-muted)] hover:bg-white hover:text-[#030302] transition-colors">
+                        <Settings className="h-3.5 w-3.5" aria-hidden="true" />
+                      </span>
                     }
                   >
                     <div className="w-64 p-1">
@@ -214,7 +244,8 @@ export default function GameLayout({
                   {activeTab === 'analysis' && (
                     <EngineAnalysisPanel
                       fen={currentFen}
-                      onBestMove={setEngineHint}
+                      onAnalysisRequestStart={onAnalysisRequestStart}
+                      onBestMove={onBestMove}
                       autoAnalyze={autoAnalyze}
                       onAutoAnalyzeChange={setAutoAnalyze}
                       autoComment={autoComment}
@@ -236,28 +267,6 @@ export default function GameLayout({
                       )}
                       <AICoachPanel
                         fen={currentFen}
-                        pgn={currentPgn}
-                        history={moveHistory}
-                        stockfish={
-                          liveAnalysis
-                            ? {
-                                bestMove: liveAnalysis.bestMove,
-                                bestMoveSan: liveAnalysis.bestMove
-                                  ? (() => {
-                                      try {
-                                        return getSanFromUci(liveAnalysis.fen, liveAnalysis.bestMove);
-                                      } catch {
-                                        return null;
-                                      }
-                                    })()
-                                  : null,
-                                evaluation: liveAnalysis.evaluation,
-                                pv: liveAnalysis.pv,
-                              }
-                            : null
-                        }
-                        turn={activeGame.turn()}
-                        status={isGameOver ? 'Kết thúc' : isCheck ? 'Chiếu' : 'Đang chơi'}
                       />
                     </div>
                   )}

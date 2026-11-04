@@ -14,13 +14,10 @@ const BOT_NAME = BRAND_NAMES.bot;
 
 export default function BotSettings() {
   const {
-    gameMode,
     playerColor,
     botElo,
-    changeGameMode,
     changePlayerColor,
     changeBotElo,
-    GAME_MODES,
     PLAYER_COLORS,
   } = useChessGame();
 
@@ -31,11 +28,6 @@ export default function BotSettings() {
     { id: 'stats', label: 'Thống kê' },
     { id: 'openings', label: 'Khai cuộc' },
     { id: 'pgn', label: 'PGN' },
-  ];
-
-  const gameModeOptions = [
-    { value: GAME_MODES.LOCAL, label: '2 người chơi tại chỗ' },
-    { value: GAME_MODES.BOT, label: `Đấu với ${BOT_NAME}` },
   ];
 
   const playerColorOptions = [
@@ -51,7 +43,6 @@ export default function BotSettings() {
 
   return (
     <section className="space-y-4">
-      {/* Game Mode Settings */}
       <AppSurface variant="raised" radius="md" className="p-4 space-y-3">
         <label className="text-xs font-bold uppercase tracking-wider text-[var(--app-subtle)] block">
           Chế độ chơi & Cấu hình Bot
@@ -59,29 +50,18 @@ export default function BotSettings() {
 
         <div className="grid gap-3 pt-1">
           <AppSelect
-            label="Chế độ chơi"
-            options={gameModeOptions}
-            value={gameMode}
-            onChange={(val) => changeGameMode(val)}
+            label="Màu quân của bạn"
+            options={playerColorOptions}
+            value={playerColor}
+            onChange={(val) => changePlayerColor(val)}
           />
 
-          {gameMode === GAME_MODES.BOT && (
-            <>
-              <AppSelect
-                label="Màu quân của bạn"
-                options={playerColorOptions}
-                value={playerColor}
-                onChange={(val) => changePlayerColor(val)}
-              />
-
-              <AppSelect
-                label={`Độ khó của ${BOT_NAME}`}
-                options={botEloOptions}
-                value={String(botElo)}
-                onChange={(val) => changeBotElo(Number(val))}
-              />
-            </>
-          )}
+          <AppSelect
+            label={`Độ khó của ${BOT_NAME}`}
+            options={botEloOptions}
+            value={String(botElo)}
+            onChange={(val) => changeBotElo(Number(val))}
+          />
         </div>
 
         <p className="text-xs text-[var(--app-muted)] pt-1">
