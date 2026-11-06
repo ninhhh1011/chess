@@ -37,4 +37,4 @@ node scripts/build-corpus-delivery.mjs rollback --output-root public/corpus
 
 Rollback rechecks the prior manifest and every chunk checksum before changing the pointer. A corrupt or incomplete target leaves `current.json` untouched.
 
-`src/data/generated/generatedPuzzles.json` remains ignored and is neither read nor required by build or runtime. A clean candidate assembled from tracked plus unignored files builds with the corpus and without that hidden local artifact.
+The obsolete synthetic output under `src/data/generated/` has been removed; the path remains ignored to prevent accidental reintroduction. Build and runtime use the verified assets under `public/corpus/` and do not require generated local puzzle data.

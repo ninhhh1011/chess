@@ -14,27 +14,37 @@ export function AuthProvider({ children }) {
       return;
     }
 
+    let active = true;
+    let receivedAuthEvent = false;
+
     async function init() {
       try {
         const { data: { session: currentSession } } = await supabase.auth.getSession();
-        setSession(currentSession);
-        setUser(currentSession?.user || null);
+        if (active && !receivedAuthEvent) {
+          setSession(currentSession);
+          setUser(currentSession?.user || null);
+        }
       } catch (error) {
         console.warn('[auth] Init error:', error);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
 
-    init();
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+      if (!active) return;
+      receivedAuthEvent = true;
       setSession(currentSession);
       setUser(currentSession?.user || null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    init();
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async ({ email, password, displayName }) => {
@@ -82,27 +92,14 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const refreshUser = async () => {
-    if (!isSupabaseConfigured) return null;
-    try {
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
-      setUser(currentUser);
-      return currentUser;
-    } catch (error) {
-      console.warn('[auth] Refresh user error:', error);
-      return null;
-    }
-  };
-
   const value = {
     user,
     session,
     loading,
-    isAuthenticated: !!user,
+    isSupabaseConfigured,
     signUp,
     signIn,
     signOut,
-    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -114,8 +111,4 @@ export function useAuth() {
     throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
-}
-
-export function useIsSupabaseConfigured() {
-  return isSupabaseConfigured;
 }

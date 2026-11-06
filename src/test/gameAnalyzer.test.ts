@@ -21,9 +21,14 @@ function result(fen: string, value: number, bestMove: string): AnalysisResult {
   return {
     success: true,
     source: 'stockfish_wasm',
+    perspective: 'white',
     fen,
     bestMove,
-    evaluation: { type: 'cp', value, display: String(value) },
+      evaluation: {
+        type: 'cp',
+        value: fen.split(' ')[1] === 'b' ? -value : value,
+        display: String(fen.split(' ')[1] === 'b' ? -value : value),
+      },
     depth: 8,
     pv: [bestMove],
     raw: [],
@@ -86,6 +91,16 @@ describe('two-pass game analyzer', () => {
     await expect(analyzeGame(request)).rejects.toThrow(
       'Pass 1 failed at ply 2/4: engine exploded'
     );
+  });
+
+  test('rejects engine results that violate the required White POV metadata', async () => {
+    const moves = positions();
+    analyzeFen.mockImplementation(async ({ fen }: EngineConfig) => ({
+      ...result(fen, 0, 'e2e4'),
+      perspective: 'black',
+    } as unknown as AnalysisResult));
+
+    await expect(analyzeGame(request)).rejects.toThrow(/invalid Stockfish result/);
   });
 
   test('reports the exact cancellation point', async () => {

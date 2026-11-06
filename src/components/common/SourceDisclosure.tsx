@@ -1,7 +1,6 @@
 import { Info } from 'lucide-react';
 import { AppTooltip } from '@/ui/AppTooltip';
 import { AppPopover } from '@/ui/AppPopover';
-import { AppButton } from '@/ui/AppButton';
 
 export interface SourceDisclosureProps {
   source?: 'stockfish' | 'coach-basic' | 'coach-llm' | 'unavailable';
@@ -54,15 +53,10 @@ export function SourceDisclosure({
       <AppPopover
         title="Chi tiết nguồn dữ liệu"
         trigger={
-          <AppButton
-            variant="ghost"
-            size="sm"
-            className="h-auto p-0 text-[10px] text-[var(--app-subtle)] hover:text-[var(--app-foreground)] flex items-center gap-1 min-h-0"
-            aria-label="Xem chi tiết nguồn dữ liệu phân tích"
-          >
+          <span className="inline-flex items-center gap-1 text-[10px] text-[var(--app-subtle)] hover:text-[var(--app-foreground)]">
             <span>Chi tiết</span>
-            <Info className="h-3 w-3" />
-          </AppButton>
+            <Info className="h-3 w-3" aria-hidden="true" />
+          </span>
         }
       >
         <div className="space-y-1.5 leading-relaxed text-[11px]">

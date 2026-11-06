@@ -63,7 +63,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
 
       // Wait for game to start
@@ -88,7 +87,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game with white (default)
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
 
       // Wait for bot to respond (if any)
@@ -123,9 +121,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game first
-      const newBtn = page.getByRole('button', { name: /Người mới/i });
-      await newBtn.waitFor({ state: 'visible', timeout: 5000 });
-      await newBtn.click();
 
       const startBtn = page.getByRole('button', { name: /Bắt đầu ván/i });
       await startBtn.waitFor({ state: 'visible', timeout: 5000 });
@@ -158,7 +153,7 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Select black
-      await page.getByRole('button', { name: /Đen/i }).click();
+      await page.getByRole('radio', { name: /Đen/ }).check({ force: true });
 
       // Start game
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
@@ -182,7 +177,7 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game with black
-      await page.getByRole('button', { name: /Đen/i }).click();
+      await page.getByRole('radio', { name: /Đen/ }).check({ force: true });
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
 
@@ -197,8 +192,6 @@ test.describe('Chess Game E2E', () => {
 
       // Dismiss any onboarding modal
       await dismissOnboarding(page);
-
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
     });
@@ -250,7 +243,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
 
       // Wait for any errors to appear (if engine fails)
@@ -277,7 +269,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Play through a few moves
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(3000);
 
@@ -293,8 +284,7 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Set up for a quick checkmate - play as black against weak opponent
-      await page.getByRole('button', { name: /Đen/i }).click();
-      await page.getByRole('button', { name: /Người mới/i }).click();
+      await page.getByRole('radio', { name: /Đen/ }).check({ force: true });
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
 
       // Wait for game to play out (or bot to respond)
@@ -328,7 +318,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start a game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
 
       // Play some moves
@@ -385,7 +374,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
 
@@ -403,7 +391,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
 
@@ -422,7 +409,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
 
@@ -456,7 +442,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
 
@@ -479,7 +464,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(2000);
 
@@ -539,7 +523,6 @@ test.describe('Chess Game E2E', () => {
       await dismissOnboarding(page);
 
       // Start game
-      await page.getByRole('button', { name: /Người mới/i }).click();
       await page.getByRole('button', { name: /Bắt đầu ván/i }).click();
       await page.waitForTimeout(3000);
 

@@ -10,8 +10,8 @@ import { useChessGame } from '../contexts/ChessGameContext';
  * - Escape: Cancel/hide modals
  * - Space: Toggle analysis mode
  */
-export function useKeyboardShortcuts({ onHint, onResign, onNewGame }) {
-  const { undoMove, flipBoard, playState } = useChessGame();
+export function useKeyboardShortcuts({ flipBoard, onHint, onResign, onNewGame }) {
+  const { undoMove, playState } = useChessGame();
 
   const handleKeyDown = useCallback(
     (e) => {

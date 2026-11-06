@@ -4,7 +4,7 @@ import { getUserProfile } from '../services/userProfileService';
 import coachAvatar from '../assets/avatarcoach.webp';
 import { BRAND_NAMES } from '../config/brand';
 import { isInstagramIntent, NINH_INSTAGRAM_URL } from '../utils/socialIntent';
-import type { CoachLevel, Evaluation } from '../types/ChessTypes';
+import type { CoachLevel } from '../types/ChessTypes';
 import { AppButton } from '@/ui/AppButton';
 import { AppField } from '@/ui/AppField';
 import { AppAvatar } from '@/ui/AppAvatar';
@@ -22,19 +22,11 @@ interface CoachAdvice {
   text: string;
   instagramUrl?: string;
   source?: 'llm' | 'basic' | 'unavailable';
+  evidenceUsed?: Array<'position'>;
 }
 
 interface AICoachPanelProps {
   fen?: string;
-  history?: string[];
-  pgn?: string;
-  turn?: string;
-  status?: string;
-  stockfish?: {
-    evaluation: Evaluation | null;
-    bestMove: string | null;
-  } | undefined;
-  openingContext?: unknown;
 }
 
 function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
@@ -103,7 +95,7 @@ function renderCoachAdvice(advice: CoachAdvice): React.ReactElement {
   return <p className="text-xs leading-relaxed text-[var(--app-foreground)]">{advice.text}</p>;
 }
 
-export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }: AICoachPanelProps) {
+export default function AICoachPanel({ fen }: AICoachPanelProps) {
   const [advice, setAdvice] = useState<CoachAdvice | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
@@ -131,8 +123,6 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
       const result: CoachResponseV1 = await askCoach({
         question: type,
         fen,
-        history,
-        pgn,
         playerLevel: level,
         responseStyle: 'short',
       });
@@ -141,6 +131,7 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
         type: type as AdviceType,
         text: result.reply,
         source: result.source,
+        evidenceUsed: result.evidenceUsed,
       });
     } catch {
       setAdvice({ type: 'custom', text: 'Không thể tải nhận xét từ Coach. Vui lòng thử lại.' });
@@ -262,6 +253,11 @@ export default function AICoachPanel({ fen, history = [], pgn = '', stockfish }:
               )}
             </div>
             {renderCoachAdvice(advice)}
+            <p className="text-[10px] text-[var(--app-subtle)]">
+              {advice.evidenceUsed?.includes('position')
+                ? 'Ngữ cảnh đã dùng: thế cờ hiện tại.'
+                : 'Không dùng phân tích vị trí bàn cờ cho câu trả lời này.'}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-6 text-center text-[var(--app-muted)]">

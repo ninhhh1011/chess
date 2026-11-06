@@ -15,42 +15,40 @@ vi.mock('../services/botService', () => ({
 
 // Test component that exposes context state and bot integration
 function TestBoard() {
+  const context = useChessGame();
   const {
     playState,
     playerColor,
     currentTurn,
-    isBotThinking,
     isGameOver,
     moveHistory,
-    setPlayState,
+    returnToLobby,
     startGame,
     makeMove,
     newGame,
     undoMove,
     botElo,
-    GAME_MODES,
     PLAYER_COLORS,
-    setIsBotThinking,
-  } = useChessGame();
+  } = context;
 
   return (
     <div>
       <div data-testid="play-state">{playState}</div>
       <div data-testid="player-color">{playerColor}</div>
       <div data-testid="current-turn">{currentTurn}</div>
-      <div data-testid="is-bot-thinking">{String(isBotThinking)}</div>
+      <div data-testid="has-bot-request-state">{String('isBotThinking' in context || 'setIsBotThinking' in context)}</div>
       <div data-testid="is-game-over">{String(isGameOver)}</div>
       <div data-testid="move-history">{JSON.stringify(moveHistory)}</div>
       <div data-testid="bot-elo">{botElo}</div>
       <div data-testid="move-count">{moveHistory.length}</div>
 
-      <button data-testid="btn-start" onClick={() => startGame({ elo: 800, color: PLAYER_COLORS.WHITE, mode: GAME_MODES.BOT })}>
+      <button data-testid="btn-start" onClick={() => startGame({ elo: 800, color: PLAYER_COLORS.WHITE })}>
         Start White
       </button>
-      <button data-testid="btn-start-black" onClick={() => startGame({ elo: 800, color: PLAYER_COLORS.BLACK, mode: GAME_MODES.BOT })}>
+      <button data-testid="btn-start-black" onClick={() => startGame({ elo: 800, color: PLAYER_COLORS.BLACK })}>
         Start Black
       </button>
-      <button data-testid="btn-lobby" onClick={() => setPlayState('lobby')}>
+      <button data-testid="btn-lobby" onClick={returnToLobby}>
         To Lobby
       </button>
       <button data-testid="btn-move-e4" onClick={() => makeMove('e2', 'e4')}>
@@ -64,12 +62,6 @@ function TestBoard() {
       </button>
       <button data-testid="btn-undo" onClick={undoMove}>
         Undo
-      </button>
-      <button data-testid="btn-bot-thinking" onClick={() => setIsBotThinking(true)}>
-        Set Bot Thinking
-      </button>
-      <button data-testid="btn-bot-done" onClick={() => setIsBotThinking(false)}>
-        Set Bot Done
       </button>
     </div>
   );
@@ -303,57 +295,9 @@ describe('ChessGameContext Integration - Bot Lifecycle', () => {
     });
   });
 
-  describe('Bot thinking state', () => {
-    it('tracks bot thinking state', async () => {
-      render(
-        <ChessGameProvider>
-          <TestBoard />
-        </ChessGameProvider>
-      );
-
-      await act(async () => {
-        screen.getByTestId('btn-start').click();
-      });
-
-      expect(screen.getByTestId('is-bot-thinking').textContent).toBe('false');
-
-      await act(async () => {
-        screen.getByTestId('btn-bot-thinking').click();
-      });
-
-      expect(screen.getByTestId('is-bot-thinking').textContent).toBe('true');
-
-      await act(async () => {
-        screen.getByTestId('btn-bot-done').click();
-      });
-
-      expect(screen.getByTestId('is-bot-thinking').textContent).toBe('false');
-    });
-
-    it('blocks moves when bot is thinking', async () => {
-      render(
-        <ChessGameProvider>
-          <TestBoard />
-        </ChessGameProvider>
-      );
-
-      await act(async () => {
-        screen.getByTestId('btn-start').click();
-      });
-
-      // Set bot thinking
-      await act(async () => {
-        screen.getByTestId('btn-bot-thinking').click();
-      });
-
-      // Try to move while bot is thinking
-      await act(async () => {
-        screen.getByTestId('btn-move-e4').click();
-      });
-
-      // Move should be blocked (history still empty)
-      expect(JSON.parse(screen.getByTestId('move-history').textContent).length).toBe(0);
-    });
+  it('does not expose bot request state from the game context', () => {
+    render(<ChessGameProvider><TestBoard /></ChessGameProvider>);
+    expect(screen.getByTestId('has-bot-request-state').textContent).toBe('false');
   });
 
   describe('Game mode validation', () => {

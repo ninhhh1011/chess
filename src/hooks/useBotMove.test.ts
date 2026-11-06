@@ -20,13 +20,11 @@ describe('useBotMove', () => {
       const mockMoveResult = { move: 'e7e5', source: 'stockfish' };
       (botService.getBotMove as ReturnType<typeof vi.fn>).mockResolvedValueOnce(mockMoveResult);
 
-      const onMoveStart = vi.fn();
       const onMoveComplete = vi.fn();
 
       const { result } = renderHook(() =>
         useBotMove({
           botElo: 1200,
-          onMoveStart,
           onMoveComplete,
         })
       );
@@ -43,33 +41,7 @@ describe('useBotMove', () => {
       // Should have completed and updated state
       expect(result.current.isThinking).toBe(false);
       expect(result.current.lastMove).toEqual(mockMoveResult);
-      expect(onMoveStart).toHaveBeenCalled();
       expect(onMoveComplete).toHaveBeenCalledWith(mockMoveResult, expect.any(Number));
-    });
-
-    it('calls onMoveStart callback when move begins', async () => {
-      // Use immediate resolution for this test
-      (botService.getBotMove as ReturnType<typeof vi.fn>).mockResolvedValue({
-        move: 'e7e5',
-        source: 'stockfish',
-      });
-
-      const onMoveStart = vi.fn();
-
-      const { result } = renderHook(() =>
-        useBotMove({
-          botElo: 1200,
-          onMoveStart,
-        })
-      );
-
-      // Start the move
-      await act(async () => {
-        await result.current.getMove('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
-      });
-
-      // After move completes, onMoveStart should have been called
-      expect(onMoveStart).toHaveBeenCalled();
     });
 
     it('handles cancelMove correctly', async () => {
@@ -234,6 +206,45 @@ describe('useBotMove', () => {
 
       // The final lastMove should be from the second request
       expect(result.current.lastMove).toEqual(move2);
+    });
+
+    it('rejects a stale response when a request is replaced with the same game generation', async () => {
+      let resolveFirst!: (value: BotMoveResult) => void;
+      let resolveSecond!: (value: BotMoveResult) => void;
+      const first = new Promise<BotMoveResult>((resolve) => { resolveFirst = resolve; });
+      const second = new Promise<BotMoveResult>((resolve) => { resolveSecond = resolve; });
+      (botService.getBotMove as ReturnType<typeof vi.fn>)
+        .mockReturnValueOnce(first)
+        .mockReturnValueOnce(second);
+
+      const firstMove = { move: 'e7e5', source: 'stockfish', elo: 1200, depth: 8, movetime: 800, skillLevel: 6 };
+      const secondMove = { move: 'd7d5', source: 'stockfish', elo: 1200, depth: 8, movetime: 800, skillLevel: 6 };
+      const onMoveComplete = vi.fn();
+      const { result } = renderHook(() => useBotMove({ onMoveComplete }));
+      let stale!: Promise<BotMoveResult>;
+      let current!: Promise<BotMoveResult>;
+
+      act(() => {
+        stale = result.current.getMove('same-position', 7);
+        current = result.current.getMove('same-position', 7);
+      });
+
+      await act(async () => {
+        resolveFirst(firstMove);
+        await expect(stale).resolves.toMatchObject({ move: null, source: 'stale' });
+      });
+      expect(onMoveComplete).not.toHaveBeenCalled();
+      expect(result.current.lastMove).toBe(null);
+      expect(result.current.isThinking).toBe(true);
+
+      await act(async () => {
+        resolveSecond(secondMove);
+        await expect(current).resolves.toEqual(secondMove);
+      });
+      expect(onMoveComplete).toHaveBeenCalledTimes(1);
+      expect(onMoveComplete).toHaveBeenCalledWith(secondMove, 7);
+      expect(result.current.lastMove).toEqual(secondMove);
+      expect(result.current.isThinking).toBe(false);
     });
 
     it('handles timeout by returning error result', async () => {

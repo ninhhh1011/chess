@@ -11,6 +11,7 @@
 import { render, screen, act, waitFor, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { StrictMode } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { ChessGameProvider, useChessGame } from '../contexts/ChessGameContext';
 import ChessGameBoard from './ChessGameBoard';
 
@@ -38,23 +39,66 @@ vi.mock('../services/analysis/gameAnalyzer', () => ({
 
 vi.mock('react-chessboard', async (importOriginal) => ({
   ...(await importOriginal()),
-  Chessboard: () => <div data-testid="chessboard" />,
+  Chessboard: ({ options }) => <div data-testid="chessboard" data-orientation={options.boardOrientation} />,
 }));
 
 import * as botService from '../services/botService';
 import * as gameAnalyzer from '../services/analysis/gameAnalyzer';
 import { getUserProfile } from '../services/userProfileService';
+import Play from '../pages/Play';
 
 // Expected FEN after 1.e4
 const FEN_AFTER_E4 = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1';
 const FEN_STARTING = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 function BotLifecycleDriver() {
-  const { startGame, makeMove, GAME_MODES } = useChessGame();
+  const { startGame, makeMove } = useChessGame();
   return (
     <>
-      <button onClick={() => startGame({ elo: 800, color: 'w', mode: GAME_MODES.BOT })}>Start white test game</button>
+      <button onClick={() => startGame({ elo: 800, color: 'w' })}>Start white test game</button>
       <button onClick={() => makeMove('e2', 'e4')}>Play e2e4</button>
+    </>
+  );
+}
+
+function GameOverDriver() {
+  const { startGame, makeMove } = useChessGame();
+  return (
+    <>
+      <button onClick={() => startGame({ color: 'w' })}>Start game-over test</button>
+      <button onClick={() => makeMove('f2', 'f3')}>Play f3</button>
+      <button onClick={() => makeMove('e7', 'e5', 'q', { byBot: true })}>Play e5</button>
+      <button onClick={() => makeMove('g2', 'g4')}>Play g4</button>
+      <button onClick={() => makeMove('d8', 'h4', 'q', { byBot: true })}>Play Qh4 mate</button>
+    </>
+  );
+}
+
+function RemountableGameBoard({ showBoard }) {
+  return <>{showBoard && <ChessGameBoard />}<GameOverDriver /></>;
+}
+
+function BotResetDriver() {
+  const { startGame, moveHistory } = useChessGame();
+  return (
+    <>
+      <button onClick={() => startGame({ elo: 800, color: 'b' })}>Start black reset test</button>
+      <output data-testid="reset-test-history">{JSON.stringify(moveHistory)}</output>
+    </>
+  );
+}
+
+function OrientationDriver() {
+  const context = useChessGame();
+  const { startGame, restartGameWithCurrentSettings, returnToLobby, makeMove } = context;
+  return (
+    <>
+      <span data-testid="context-owns-orientation">{String('boardOrientation' in context || 'flipBoard' in context)}</span>
+      <span data-testid="game-generation">{context.gameGeneration}</span>
+      <button onClick={() => startGame({ color: 'b' })}>Start black orientation test</button>
+      <button onClick={() => makeMove('e2', 'e4', 'q', { byBot: true })}>Make white move for orientation test</button>
+      <button onClick={restartGameWithCurrentSettings}>Restart orientation test</button>
+      <button onClick={returnToLobby}>Return to lobby orientation test</button>
     </>
   );
 }
@@ -110,6 +154,92 @@ describe('ChessGameBoard Integration - PRODUCTION BOT LIFECYCLE', () => {
   });
 
   describe('useBotMove Hook Integration', () => {
+    it('records one game-over result across rerenders and records the same PGN after reset', async () => {
+      const tree = (showBoard) => (
+        <StrictMode>
+          <MemoryRouter>
+            <ChessGameProvider>
+              <RemountableGameBoard showBoard={showBoard} />
+            </ChessGameProvider>
+          </MemoryRouter>
+        </StrictMode>
+      );
+      const { rerender } = render(tree(true));
+
+      const finishGame = async () => {
+        await act(async () => screen.getByRole('button', { name: 'Start game-over test' }).click());
+        await act(async () => screen.getByRole('button', { name: 'Play f3' }).click());
+        await act(async () => screen.getByRole('button', { name: 'Play e5' }).click());
+        await act(async () => screen.getByRole('button', { name: 'Play g4' }).click());
+        await act(async () => screen.getByRole('button', { name: 'Play Qh4 mate' }).click());
+      };
+
+      await finishGame();
+      await waitFor(() => expect(JSON.parse(localStorage.getItem('chess-game-stats')).gamesPlayed).toBe(1));
+      expect(getUserProfile().gamesPlayed).toBe(1);
+
+      rerender(tree(false));
+      rerender(tree(true));
+      expect(JSON.parse(localStorage.getItem('chess-game-stats')).gamesPlayed).toBe(1);
+      expect(getUserProfile().gamesPlayed).toBe(1);
+
+      // Replaying the same PGN in the replacement generation records independently.
+      await act(async () => screen.getByRole('button', { name: 'Chơi lại' }).click());
+      await act(async () => screen.getByRole('button', { name: 'Play f3' }).click());
+      await act(async () => screen.getByRole('button', { name: 'Play e5' }).click());
+      await act(async () => screen.getByRole('button', { name: 'Play g4' }).click());
+      await act(async () => screen.getByRole('button', { name: 'Play Qh4 mate' }).click());
+      await waitFor(() => expect(JSON.parse(localStorage.getItem('chess-game-stats')).gamesPlayed).toBe(2));
+      expect(getUserProfile().gamesPlayed).toBe(2);
+    }, 35000);
+
+    it('cancels an old request and reissues after a same-position game reset', async () => {
+      const resolvers = [];
+      botService.getBotMove.mockImplementation(() => new Promise((resolve) => resolvers.push(resolve)));
+
+      render(
+        <StrictMode>
+          <ChessGameProvider>
+            <ChessGameBoard />
+            <BotResetDriver />
+          </ChessGameProvider>
+        </StrictMode>
+      );
+
+      await act(async () => { screen.getByRole('button', { name: 'Start black reset test' }).click(); });
+      await waitFor(() => expect(botService.getBotMove).toHaveBeenCalledTimes(1));
+      await act(async () => { screen.getByRole('button', { name: 'Start black reset test' }).click(); });
+      await waitFor(() => expect(botService.getBotMove).toHaveBeenCalledTimes(2));
+
+      await act(async () => { resolvers[0]({ move: 'e2e4', source: 'stockfish_wasm', elo: 800 }); });
+      expect(screen.getByTestId('reset-test-history').textContent).toBe('[]');
+
+      await act(async () => { resolvers[1]({ move: 'e2e4', source: 'stockfish_wasm', elo: 800 }); });
+      await waitFor(() => expect(screen.getByTestId('reset-test-history').textContent).toBe('["e4"]'));
+    });
+
+    it('uses the hook request state to block board actions while the bot thinks', async () => {
+      botService.getBotMove.mockImplementation(() => new Promise(() => {}));
+
+      render(
+        <StrictMode>
+          <ChessGameProvider>
+            <ChessGameBoard />
+          </ChessGameProvider>
+        </StrictMode>
+      );
+
+      const blackBtn = await (screen.findByRole('radio', { name: /Đen/i }).catch(() => screen.findByRole('button', { name: /Đen/i })));
+      await act(async () => { blackBtn.click(); });
+      await act(async () => { (await screen.findByRole('button', { name: /Bắt đầu ván/i })).click(); });
+
+      await waitFor(() => {
+        expect(screen.getAllByRole('button', { name: /Gợi ý nước đi/i }).every((button) => button.disabled)).toBe(true);
+      });
+      expect(screen.getByRole('status')).toHaveAttribute('aria-label', expect.stringContaining('Máy đang suy nghĩ'));
+      expect(screen.getAllByText(/Đang tính nước/i).length).toBeGreaterThan(0);
+    });
+
     it('useBotMove hook is properly used in ChessGameBoard', async () => {
       botService.getBotMove.mockResolvedValue({
         move: 'e7e5',
@@ -349,6 +479,60 @@ describe('ChessGameBoard Integration - PRODUCTION BOT LIFECYCLE', () => {
       await act(async () => { (screen.queryByRole('tab', { name: /Hu.n luy.n/i }) || screen.getByRole('button', { name: /Hu.n luy.n/i })).click(); });
       expect(screen.queryByRole('button', { name: /Qu.n s.*v.n n.y/i })).not.toBeInTheDocument();
     });
+  });
+
+  it('owns board orientation in Play, resets it for new active boards, and preserves manual flips', async () => {
+    render(
+      <ChessGameProvider>
+        <Play />
+        <OrientationDriver />
+      </ChessGameProvider>
+    );
+
+    expect(screen.getByTestId('context-owns-orientation')).toHaveTextContent('false');
+
+    await act(async () => screen.getByRole('button', { name: 'Start black orientation test' }).click());
+    expect(await screen.findByTestId('chessboard')).toHaveAttribute('data-orientation', 'black');
+    expect(screen.getByTestId('game-generation')).toHaveTextContent('1');
+
+    await act(async () => screen.getAllByRole('button', { name: /L.t b.n c./i })[0].click());
+    expect(screen.getByTestId('chessboard')).toHaveAttribute('data-orientation', 'white');
+    await act(async () => screen.getByRole('button', { name: 'Make white move for orientation test' }).click());
+    expect(screen.getByTestId('chessboard')).toHaveAttribute('data-orientation', 'white');
+    expect(screen.getByTestId('game-generation')).toHaveTextContent('1');
+
+    await act(async () => screen.getByRole('button', { name: 'Restart orientation test' }).click());
+    expect(screen.getByTestId('chessboard')).toHaveAttribute('data-orientation', 'black');
+    expect(screen.getByTestId('game-generation')).toHaveTextContent('2');
+
+    await act(async () => screen.getAllByRole('button', { name: /L.t b.n c./i })[0].click());
+    await act(async () => screen.getByRole('button', { name: 'Return to lobby orientation test' }).click());
+    expect(screen.queryByTestId('chessboard')).not.toBeInTheDocument();
+
+    await act(async () => screen.getByRole('button', { name: 'Start black orientation test' }).click());
+    expect(await screen.findByTestId('chessboard')).toHaveAttribute('data-orientation', 'black');
+  });
+
+  it('routes the mobile flip control to the Play orientation owner', async () => {
+    const originalWidth = window.innerWidth;
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    try {
+      render(
+        <ChessGameProvider>
+          <Play />
+          <OrientationDriver />
+        </ChessGameProvider>
+      );
+      await act(async () => window.dispatchEvent(new Event('resize')));
+      await act(async () => screen.getByRole('button', { name: 'Start black orientation test' }).click());
+      expect(await screen.findByTestId('chessboard')).toHaveAttribute('data-orientation', 'black');
+
+      await act(async () => screen.getByRole('button', { name: /L.t b.n$/i }).click());
+      expect(screen.getByTestId('chessboard')).toHaveAttribute('data-orientation', 'white');
+    } finally {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth });
+      window.dispatchEvent(new Event('resize'));
+    }
   });
 
   describe('StrictMode Compatibility', () => {

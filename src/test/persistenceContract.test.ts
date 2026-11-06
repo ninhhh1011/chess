@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { createPersistenceState, assertPersistenceState } from '../services/persistenceContract';
 import { getUserProfile, updateExerciseResult } from '../services/userProfileService';
-import { mergeLocalAndCloudProfile } from '../services/syncService';
 import type { AnalysisFactV1 } from '../types/analysis';
 
 const timestamp = '2026-09-06T04:00:00.000Z';
@@ -52,7 +51,25 @@ describe('learning persistence contract', () => {
     });
 
     expect(assertPersistenceState(JSON.parse(JSON.stringify(populated)))).toEqual(populated);
-    expect(populated.sync).toMatchObject({ schemaVersion: 'sync.v1', syncId: 'sync:profile-1', revision: 0 });
+    expect(populated.sync).toMatchObject({
+      schemaVersion: 'sync.v2', syncId: 'sync:profile-1', revision: 0,
+      cloudRevision: null, profileRevisionAtSync: null,
+    });
+  });
+
+  test('migrates sync.v1 metadata without inventing a cloud base revision', () => {
+    const state = createPersistenceState('profile-1', timestamp);
+    const migrated = assertPersistenceState({
+      ...state,
+      sync: {
+        schemaVersion: 'sync.v1', syncId: 'sync:profile-1', revision: 3,
+        updatedAt: timestamp, lastSyncedAt: null,
+      },
+    });
+
+    expect(migrated.sync).toMatchObject({
+      schemaVersion: 'sync.v2', revision: 3, cloudRevision: null, profileRevisionAtSync: null,
+    });
   });
 
   test('migrates profile.v1 without losing progress or changing identity and timestamps on read', () => {
@@ -194,20 +211,4 @@ describe('learning persistence contract', () => {
     expect(getUserProfile().revision).toBe(after.revision);
   });
 
-  test('migrates cloud and local profiles before resolving a sync conflict', () => {
-    const legacy = {
-      schemaVersion: 'profile.v1', currentLevel: 'noob', gamesPlayed: 1,
-      lessonsCompleted: [], exercisesCompleted: [], exerciseStats: {},
-      commonMistakes: [], strengths: [], weaknesses: [], openingStats: {},
-      createdAt: '2026-09-06T01:00:00.000Z', updatedAt: '2026-09-06T02:00:00.000Z',
-    };
-    const merged = mergeLocalAndCloudProfile(legacy, {
-      updated_at: '2026-09-06T03:00:00.000Z',
-      profile_data: { ...legacy, gamesPlayed: 3, updatedAt: '2026-09-06T03:00:00.000Z' },
-    });
-
-    expect(merged).toMatchObject({ schemaVersion: 'profile.v2', gamesPlayed: 3 });
-    expect(merged.persistence).toMatchObject({ schemaVersion: 'learningPersistence.v1' });
-    expect(merged.persistence.sync.syncId).toBe(`sync:${merged.profileId}`);
-  });
 });

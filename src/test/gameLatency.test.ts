@@ -48,9 +48,10 @@ describe('Deterministic game-analysis unit contract (40 moves / 80 plies)', () =
       return {
         success: true,
         source: 'stockfish_wasm',
+        perspective: 'white',
         fen,
         bestMove,
-        evaluation: { type: 'cp', value: turn === 'w' ? whiteEval : -whiteEval, display: String(whiteEval) },
+        evaluation: { type: 'cp', value: whiteEval, display: String(whiteEval) },
         depth: 8,
         pv: bestMove ? [bestMove] : [],
         raw: [],

@@ -8,7 +8,7 @@
 // Note: This matches the engine Evaluation from ChessTypes.ts
 export interface Evaluation {
   type: 'cp' | 'mate';
-  /** Centipawn score (perspective-normalized) or mate-in-N */
+  /** Centipawn score (White POV: positive favors White) or signed mate-in-N. */
   value: number;
   /** Human-readable display string */
   display: string;
@@ -75,7 +75,7 @@ export interface AnalysisFactV1 {
   bestMove: MoveNotation;
   evalBefore: Evaluation;
   evalAfter: Evaluation;
-  /** Centipawn loss (null if best move) */
+  /** White POV evaluations are persisted; this is loss from `turn`'s perspective (null if best move). */
   centipawnLoss: number | null;
   classification: MoveClassification;
   candidates: CandidateLine[];

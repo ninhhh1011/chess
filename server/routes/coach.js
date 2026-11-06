@@ -1,54 +1,29 @@
-/**
- * Canonical Coach Endpoint - Express Server
- * Schema: coach.v1
- *
- * Local development runtime.
- * Uses shared coachHandler.js for business logic.
- */
-
+/** Express local transport; business behavior lives in api/coachHandler.js. */
 import { Router } from 'express';
-import { getCoachResponse } from '../../api/coachHandler.js';
+import {
+  checkCoachRateLimit,
+  getCoachResponse,
+} from '../../api/coachHandler.js';
+import { CoachRequestError, MAX_COACH_BODY_BYTES } from '../../shared/coachContract.js';
 
 const router = Router();
 
-/**
- * Canonical coach endpoint: POST /api/coach
- * Schema: coach.v1
- */
 router.post('/', async (req, res) => {
+  if (Buffer.byteLength(JSON.stringify(req.body ?? null), 'utf8') > MAX_COACH_BODY_BYTES) {
+    return res.status(413).json({ error: 'Request too large' });
+  }
+  if (!checkCoachRateLimit(req.ip)) return res.status(429).json({ error: 'Too many requests' });
+
   try {
-    const { schemaVersion, question, fen, playerLevel } = req.body || {};
-
-    // Validate schema version
-    if (schemaVersion !== 'coach.v1') {
-      return res.status(400).json({
-        error: 'Unsupported schema version',
-        supported: 'coach.v1'
-      });
-    }
-
-    if (!question || typeof question !== 'string') {
-      return res.status(400).json({
-        error: 'Question is required',
-        schemaVersion: 'coach.v1'
-      });
-    }
-
-    const result = await getCoachResponse({
-      question,
-      fen,
-      playerLevel,
-    });
-
-    // Return canonical coach.v1 response
-    return res.json(result);
+    return res.json(await getCoachResponse(req.body));
   } catch (error) {
-    console.error('[coach] Error:', error);
-    return res.status(500).json({
-      error: 'Coach service error',
-      schemaVersion: 'coach.v1',
-      source: 'unavailable',
-    });
+    if (error instanceof CoachRequestError) {
+      return res.status(error.status).json({
+        error: error.message,
+        ...(error.message === 'Unsupported schema version' ? { supported: 'coach.v1' } : {}),
+      });
+    }
+    return res.status(503).json({ error: 'Coach is unavailable' });
   }
 });
 

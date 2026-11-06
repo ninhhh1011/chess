@@ -21,6 +21,7 @@ vi.mock('../services/userProfileService', () => ({
 vi.mock('../services/authService', () => ({ signOutUser: vi.fn() }));
 vi.mock('../services/syncService', () => ({
   getSyncStatus: () => 'local_only', setSyncStatus: vi.fn(),
+  subscribeSyncStatus: () => () => {},
   syncLocalProfileToCloud: mocks.upload,
   loadCloudProfileToLocal: mocks.download,
   handleSyncPrompt: vi.fn(),

@@ -8,7 +8,6 @@
 import { Chess } from 'chess.js';
 import { analyzeFen, isEngineReady } from '../stockfishService';
 import {
-  normalizeEvalToWhite,
   calculateMoverCPL,
   classifyMove,
   determineSkillTags,
@@ -131,21 +130,15 @@ export async function analyzeGame(
         purpose: 'review',
       });
 
-      if (!beforeResult.evaluation || beforeResult.source !== 'stockfish_wasm') {
+      if (!beforeResult.evaluation || beforeResult.source !== 'stockfish_wasm' || beforeResult.perspective !== 'white') {
         throw new Error(`invalid Stockfish result for position before ply ${move.ply}`);
       }
-      if (!afterResult.evaluation || afterResult.source !== 'stockfish_wasm') {
+      if (!afterResult.evaluation || afterResult.source !== 'stockfish_wasm' || afterResult.perspective !== 'white') {
         throw new Error(`invalid Stockfish result for position after ply ${move.ply}`);
       }
 
-      const evalBefore = normalizeEvalToWhite(
-        { ...beforeResult.evaluation, depth: beforeResult.depth },
-        move.fenBefore.split(' ')[1] as 'w' | 'b'
-      );
-      const evalAfter = normalizeEvalToWhite(
-        { ...afterResult.evaluation, depth: afterResult.depth },
-        move.fen.split(' ')[1] as 'w' | 'b'
-      );
+      const evalBefore = { ...beforeResult.evaluation, depth: beforeResult.depth };
+      const evalAfter = { ...afterResult.evaluation, depth: afterResult.depth };
       const cpl = calculateMoverCPL(
         evalBefore,
         evalAfter,
@@ -306,7 +299,7 @@ async function analyzeSingleMove(
     purpose: 'review',
   });
 
-  if (!result.evaluation || result.source !== 'stockfish_wasm') {
+  if (!result.evaluation || result.source !== 'stockfish_wasm' || result.perspective !== 'white') {
     throw new Error('invalid Stockfish result');
   }
 
@@ -330,7 +323,7 @@ function buildAnalysisFact(
     to: bestMove.slice(2, 4),
     promotion: bestMove[4],
   }) : null;
-  if (!result.evaluation || result.source !== 'stockfish_wasm' || !bestMoveObj) {
+  if (!result.evaluation || result.source !== 'stockfish_wasm' || result.perspective !== 'white' || !bestMoveObj) {
     throw new Error('invalid Stockfish move evidence');
   }
 
@@ -339,18 +332,17 @@ function buildAnalysisFact(
     value: result.evaluation.value,
     depth: result.depth,
   };
-  const normalizedEval = normalizeEvalToWhite(eval_, turn);
   const candidates: CandidateLine[] = [{
     uci: bestMove,
     san: bestMoveObj.san,
-    eval: formatEvaluation(normalizedEval),
+    eval: formatEvaluation(eval_),
     pv: result.pv[0] === bestMove ? result.pv : [bestMove],
   }];
 
   const cpl = candidate.evalSwing;
 
   // Classify move
-  const classification = classifyMove(cpl, candidate.evalBefore);
+  const classification = classifyMove(cpl);
 
   // Determine skill tags
   const tags = determineSkillTags(

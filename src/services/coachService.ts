@@ -8,32 +8,8 @@
  * Schema version: coach.v1
  */
 
-import type { CoachLevel } from '../types/ChessTypes';
-
-// Coach response schema v1
-export interface CoachResponseV1 {
-  schemaVersion: 'coach.v1';
-  reply: string;
-  source: 'llm' | 'basic' | 'unavailable';
-  engineSource: 'stockfish_wasm' | 'fallback' | 'none';
-  knowledgeSource: 'none';
-  suggestedActions: Array<{
-    type: string;
-    targetId?: string;
-    label: string;
-  }>;
-}
-
-// Coach payload - canonical v1
-export interface CoachPayloadV1 {
-  schemaVersion: 'coach.v1';
-  question: string;
-  fen?: string;
-  history?: string[];
-  pgn?: string;
-  playerLevel: CoachLevel;
-  responseStyle?: 'short' | 'medium' | 'detailed';
-}
+import type { CoachLevelV1, CoachRequestV1, CoachResponseV1 } from '../../shared/coachContract';
+export type { CoachResponseV1 } from '../../shared/coachContract';
 
 // Provider configuration
 interface CoachConfig {
@@ -79,12 +55,10 @@ function getCoachConfig(): CoachConfig {
  * Accepts both legacy input and canonical v1 payload
  */
 function generateBasicExplanation(
-  payload: { question: string; fen?: string; playerLevel: CoachLevel; responseStyle?: 'short' | 'medium' | 'detailed' }
+  payload: { question: string; fen?: string; playerLevel: CoachLevelV1; responseStyle?: 'short' | 'medium' | 'detailed' }
 ): CoachResponseV1 {
-  const { question, fen, playerLevel } = payload;
+  const { question, playerLevel } = payload;
 
-  // Extract key concepts from question (without repeating it)
-  const hasEngineData = !!fen;
   const levelLabel = {
     noob: 'người mới',
     beginner: 'người mới bắt đầu',
@@ -98,9 +72,7 @@ function generateBasicExplanation(
   const q = question.toLowerCase();
 
   if (q.includes('nước đi') || q.includes('move') || q.includes('đi nào')) {
-    reply = hasEngineData
-      ? `Với trình độ ${levelLabel}, hãy ưu tiên nước phát triển quân hoặc kiểm soát trung tâm.`
-      : `Hãy kiểm tra các nước chiếu, ăn quân, và đe dọa trước khi chọn nước đi.`;
+    reply = `Hãy kiểm tra các nước chiếu, ăn quân, và đe dọa trước khi chọn nước đi.`;
   } else if (q.includes('khai cuộc') || q.includes('opening')) {
     reply = `Với ${levelLabel}, nên bắt đầu với các khai cuộc đơn giản như Italian Game hoặc London System.`;
   } else if (q.includes('tactic') || q.includes('đòn')) {
@@ -117,6 +89,7 @@ function generateBasicExplanation(
     source: 'basic',
     engineSource: 'none',
     knowledgeSource: 'none',
+    evidenceUsed: [],
     suggestedActions: [
       { type: 'exercise', label: 'Luyện bài tập cơ bản' },
     ],
@@ -132,6 +105,8 @@ function isCoachResponseV1(data: unknown): data is CoachResponseV1 {
     && (value.source === 'llm' || value.source === 'basic' || value.source === 'unavailable')
     && (value.engineSource === 'stockfish_wasm' || value.engineSource === 'fallback' || value.engineSource === 'none')
     && value.knowledgeSource === 'none'
+    && Array.isArray(value.evidenceUsed)
+    && value.evidenceUsed.every((item) => item === 'position')
     && Array.isArray(value.suggestedActions)
     && value.suggestedActions.every((action) => {
       if (!action || typeof action !== 'object') return false;
@@ -145,7 +120,7 @@ function isCoachResponseV1(data: unknown): data is CoachResponseV1 {
 /**
  * Call coach API with proper error handling
  */
-async function callCoachAPI(config: CoachConfig, payload: CoachPayloadV1): Promise<CoachResponseV1> {
+async function callCoachAPI(config: CoachConfig, payload: CoachRequestV1): Promise<CoachResponseV1> {
   const controller = new AbortController();
   const timeoutId = window.setTimeout(() => controller.abort(), config.timeout);
 
@@ -166,6 +141,7 @@ async function callCoachAPI(config: CoachConfig, payload: CoachPayloadV1): Promi
     const data = await response.json();
 
     if (!isCoachResponseV1(data)) throw new Error('Invalid coach.v1 response');
+    if (data.evidenceUsed.includes('position') && !payload.fen) throw new Error('Coach response cites missing position evidence');
     return data;
   } catch (error) {
     window.clearTimeout(timeoutId);
@@ -181,7 +157,8 @@ async function callCoachAPI(config: CoachConfig, payload: CoachPayloadV1): Promi
  * Ask the coach
  * Main entry point for coach functionality
  */
-export async function askCoach(payload: Omit<CoachPayloadV1, 'schemaVersion'>): Promise<CoachResponseV1> {
+export async function askCoach(payload: Omit<CoachRequestV1, 'schemaVersion'>): Promise<CoachResponseV1> {
+  if (!payload.question.trim() || payload.question.length > 1200) return generateBasicExplanation(payload);
   const config = getCoachConfig();
 
   // If no endpoint configured, use basic
@@ -190,7 +167,7 @@ export async function askCoach(payload: Omit<CoachPayloadV1, 'schemaVersion'>): 
   }
 
   try {
-    const fullPayload: CoachPayloadV1 = {
+    const fullPayload: CoachRequestV1 = {
       ...payload,
       schemaVersion: 'coach.v1',
     };

@@ -3,7 +3,14 @@ import { classifyMoveAnnotation } from './moveQuality';
 
 describe('moveQuality', () => {
   describe('classifyMoveAnnotation', () => {
-    it('classifies best move (playedBestMove is true)', () => {
+    it('does not classify a move when either evaluation is missing', () => {
+      expect(classifyMoveAnnotation({ before: {}, after: {}, playedUci: 'e2e4', playedSan: 'e4', color: 'w' }))
+        .toBeNull();
+      expect(classifyMoveAnnotation({ before: { evaluation: { type: 'cp', value: 0 } }, after: {}, playedUci: 'e2e4', playedSan: 'e4', color: 'w' }))
+        .toBeNull();
+    });
+
+    it('uses the canonical review classification for live annotations', () => {
       const annotation = classifyMoveAnnotation({
         before: { evaluation: { type: 'cp', value: 100 }, bestMove: 'e2e4', fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' },
         after: { evaluation: { type: 'cp', value: 110 } }, // +0.1 change
@@ -11,11 +18,7 @@ describe('moveQuality', () => {
         playedSan: 'e4',
         color: 'w',
       });
-      // Loss is small, played best move -> 'great' or 'best' depending on delta, but our logic says: 
-      // if (playedBestMove && loss < 0.15) -> great. Wait, logic is:
-      // if ((playedBestMove && delta >= 1.5) || delta >= 2.2) -> brilliant
-      // else if (playedBestMove || loss < 0.15) -> great
-      expect(annotation.tone).toBe('great');
+      expect(annotation.tone).toBe('best');
     });
 
     it('classifies blunder for huge loss', () => {
@@ -29,7 +32,31 @@ describe('moveQuality', () => {
       expect(annotation.tone).toBe('blunder');
     });
 
-    it('classifies brilliant for huge gain', () => {
+    it('measures a black move from Black’s perspective using White POV evaluations', () => {
+      const annotation = classifyMoveAnnotation({
+        before: { evaluation: { type: 'cp', value: 100 } },
+        after: { evaluation: { type: 'cp', value: 0 } },
+        playedUci: 'g8f6',
+        playedSan: 'Nf6',
+        color: 'b',
+      });
+      expect(annotation.loss).toBe(0);
+      expect(annotation.tone).toBe('best');
+    });
+
+    it('keeps different winning mate distances in the same live quality band', () => {
+      const annotation = classifyMoveAnnotation({
+        before: { evaluation: { type: 'mate', value: 3 } },
+        after: { evaluation: { type: 'mate', value: 1 } },
+        playedUci: 'e2e4',
+        playedSan: 'e4',
+        color: 'w',
+      });
+      expect(annotation.loss).toBe(0);
+      expect(annotation.tone).toBe('best');
+    });
+
+    it('uses best classification for a move that improves the mover position', () => {
       const annotation = classifyMoveAnnotation({
         before: { evaluation: { type: 'cp', value: -100 } },
         after: { evaluation: { type: 'cp', value: 300 } }, // +4 pawns delta
@@ -37,7 +64,7 @@ describe('moveQuality', () => {
         playedSan: 'e4',
         color: 'w',
       });
-      expect(annotation.tone).toBe('brilliant');
+      expect(annotation.tone).toBe('best');
     });
 
     it('classifies inaccuracy for moderate loss', () => {

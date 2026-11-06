@@ -5,14 +5,12 @@ import { AppAlertDialog } from '@/ui/AppAlertDialog';
 import { AppButton } from '@/ui/AppButton';
 import { RotateCcw, FlipHorizontal, Flag, Plus } from 'lucide-react';
 
-export default function MobileControls() {
+export default function MobileControls({ onFlipBoard }) {
   const {
     undoMove,
-    flipBoard,
     resignGame,
     playState,
-    setPlayState,
-    newGame,
+    returnToLobby,
   } = useChessGame();
   const { isMobile } = useMobileTouch();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -25,9 +23,8 @@ export default function MobileControls() {
   };
 
   const handleNewGame = () => {
-    newGame();
     setShowConfirm(false);
-    setPlayState('lobby');
+    returnToLobby();
   };
 
   return (
@@ -46,7 +43,7 @@ export default function MobileControls() {
 
           <AppButton
             variant="ghost"
-            onClick={flipBoard}
+            onClick={onFlipBoard}
             className="flex-col gap-1 py-2 px-3 h-auto min-h-[44px]"
           >
             <FlipHorizontal className="h-5 w-5 text-[var(--app-muted)]" />

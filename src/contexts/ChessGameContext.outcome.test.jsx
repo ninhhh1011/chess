@@ -1,0 +1,48 @@
+import { act, renderHook } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { ChessGameProvider, useChessGame } from './ChessGameContext';
+
+describe('ChessGameContext canonical live outcome', () => {
+  it('keeps resignation through analysis variations, derives board status separately, and clears on undo/reset', () => {
+    const { result } = renderHook(useChessGame, { wrapper: ChessGameProvider });
+    expect(result.current.outcome).toBeNull();
+    expect(result.current.gameResult).toBeNull();
+    act(() => result.current.resignGame());
+    expect(result.current.playState).toBe('lobby');
+    expect(result.current.outcome).toBeNull();
+    act(() => result.current.startGame({ color: 'b' }));
+    act(() => result.current.makeMove('e2', 'e4', undefined, { byBot: true }));
+    act(() => result.current.resignGame());
+    expect(result.current.outcome).toEqual({ reason: 'resignation', winner: 'w' });
+    expect(result.current.gameResult).toBe('lose');
+    expect(result.current.isGameOver).toBe(true);
+    expect(result.current.game.isGameOver()).toBe(false);
+    let attempted;
+    act(() => { attempted = result.current.makeMove('e7', 'e5'); });
+    expect(attempted).toBe(false);
+    const liveFen = result.current.game.fen();
+    act(() => result.current.enterAnalysisMode());
+    expect(result.current.isGameOver).toBe(false);
+    act(() => result.current.goToAnalysisPly(0));
+    act(() => result.current.makeMove('d2', 'd4'));
+    act(() => result.current.undoMove());
+    expect(result.current.game.fen()).toBe(liveFen);
+    expect(result.current.outcome).toEqual({ reason: 'resignation', winner: 'w' });
+    expect(result.current.gameResult).toBe('lose');
+    act(() => result.current.exitAnalysisMode());
+    expect(result.current.isGameOver).toBe(true);
+    act(() => result.current.undoMove());
+    expect(result.current.outcome).toBeNull();
+    expect(result.current.gameResult).toBeNull();
+    expect(result.current.isGameOver).toBe(false);
+    act(() => result.current.resignGame());
+    act(() => result.current.returnToLobby());
+    expect(result.current.outcome).toBeNull();
+    expect(result.current.playState).toBe('lobby');
+    act(() => result.current.startGame({}));
+    act(() => result.current.resignGame());
+    act(() => result.current.restartGameWithCurrentSettings());
+    expect(result.current.outcome).toBeNull();
+    expect(result.current.playState).toBe('playing');
+  });
+});

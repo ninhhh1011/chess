@@ -9,6 +9,7 @@ export interface Evaluation {
 export interface AnalysisResult {
   success: boolean;
   source: 'stockfish_wasm' | 'stockfish_wasm_partial' | 'fallback';
+  perspective: 'white';
   fen: string;
   bestMove: string | null;
   evaluation: Evaluation | null;

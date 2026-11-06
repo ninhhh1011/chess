@@ -4,13 +4,11 @@ import Layout from './components/Layout';
 import PageSkeleton from './components/PageSkeleton';
 import ErrorBoundary from './components/ErrorBoundary';
 import OnboardingModal from './components/OnboardingModal';
-import MobileControls from './components/MobileControls';
 import PerformanceOptimizer from './components/PerformanceOptimizer';
 
 const Home = lazy(() => import('./pages/Home.jsx'));
 const Learn = lazy(() => import('./pages/Learn'));
 const Play = lazy(() => import('./pages/Play'));
-const OnlinePlay = lazy(() => import('./pages/OnlinePlay'));
 const Exercises = lazy(() => import('./pages/Exercises'));
 const Training = lazy(() => import('./pages/Training'));
 const Openings = lazy(() => import('./pages/Openings'));
@@ -45,7 +43,6 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/learn" element={<Learn />} />
                 <Route path="/play" element={<Play />} />
-                <Route path="/play/online/:gameId" element={<OnlinePlay />} />
                 <Route path="/exercises" element={<Exercises />} />
                 <Route path="/training" element={<Training />} />
                 <Route path="/openings" element={<Openings />} />
@@ -57,7 +54,6 @@ export default function App() {
           </Layout>
           </ErrorBoundary>
           <OnboardingModal />
-          <MobileControls />
         </ChessGameProvider>
       </AuthProvider>
     </BrowserRouter>

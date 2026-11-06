@@ -17,18 +17,17 @@ export default function BoardThemeSelector() {
         label="Màu bàn cờ"
         value={currentTheme}
         onChange={setTheme}
-        className="w-full"
+        className="w-full grid grid-cols-3 gap-2 mt-1"
       >
-        <div className="grid grid-cols-3 gap-2 mt-1">
-          {Object.entries(themes).map(([id, themeData]) => {
-            const isSelected = currentTheme === id;
-            return (
-              <Radio
-                key={id}
-                value={id}
-                className="group relative cursor-pointer m-0 flex-col items-stretch overflow-hidden rounded-[8px] border p-0.5 transition-all data-[selected=true]:border-[var(--app-accent)] data-[selected=true]:ring-1 data-[selected=true]:ring-[var(--app-accent)] border-[var(--app-border)] hover:border-[var(--app-border-strong)]"
-                aria-label={themeData.name}
-              >
+        {Object.entries(themes).map(([id, themeData]) => {
+          const isSelected = currentTheme === id;
+          return (
+            <Radio
+              key={id}
+              value={id}
+              className="group relative cursor-pointer m-0 flex-col items-stretch overflow-hidden rounded-[8px] border p-0.5 transition-all data-[selected=true]:border-[var(--app-accent)] data-[selected=true]:ring-1 data-[selected=true]:ring-[var(--app-accent)] border-[var(--app-border)] hover:border-[var(--app-border-strong)]"
+              aria-label={themeData.name}
+            >
                 {/* Mini board preview */}
                 <div className="aspect-square grid grid-cols-4 overflow-hidden rounded-[6px]">
                   {Array.from({ length: 16 }).map((_, i) => {
@@ -51,10 +50,9 @@ export default function BoardThemeSelector() {
                 >
                   {themeData.name}
                 </div>
-              </Radio>
-            );
-          })}
-        </div>
+            </Radio>
+          );
+        })}
       </AppRadioGroup>
     </div>
   );

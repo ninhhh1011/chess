@@ -1,3 +1,5 @@
+import { evaluationForReview, moverEvaluationDelta } from '../../domain/engine/evaluation';
+
 /**
  * Evaluation Orientation System
  *
@@ -8,34 +10,9 @@
  * - Negative score = Black is better
  * - Mate scores preserve sign (mate in N for white = +N)
  *
- * Before computing centipawn loss, both evaluations MUST be normalized
- * to the same perspective (the side about to move).
+ * Stored and displayed engine evaluations remain in White's perspective.
+ * Mover-relative deltas apply the mover's sign only while measuring loss.
  */
-
-/**
- * Normalize evaluation to white's perspective
- * @param eval_ - Raw evaluation from engine
- * @param sideToMove - Side that generated this evaluation ('w' or 'b')
- * @returns Evaluation normalized to white's perspective
- */
-export function normalizeEvalToWhite(
-  eval_: { type: 'cp' | 'mate'; value: number; depth?: number },
-  sideToMove: 'w' | 'b'
-): { type: 'cp' | 'mate'; value: number; depth?: number } {
-  if (sideToMove === 'w') {
-    return eval_; // Already from white's perspective
-  }
-
-  // Flip for black's perspective
-  if (eval_.type === 'cp') {
-    return { ...eval_, value: -eval_.value };
-  }
-
-  // For mate, flipping side also flips the sign
-  // mate: 3 means "mate in 3 for side to move"
-  // If black to move says mate: 3, white is losing, so it's -3
-  return { ...eval_, value: -eval_.value };
-}
 
 /**
  * Convert UCI move score to centipawn loss
@@ -47,11 +24,7 @@ export function calculateCPL(
   playedEval: { type: 'cp' | 'mate'; value: number; depth?: number },
   bestEval: { type: 'cp' | 'mate'; value: number; depth?: number }
 ): number | null {
-  const score = (eval_: typeof playedEval) => eval_.type === 'cp'
-    ? eval_.value
-    : (eval_.value > 0 ? 100_000 - eval_.value * 100 : -100_000 - eval_.value * 100);
-
-  return Math.max(0, Math.round(score(bestEval) - score(playedEval)));
+  return Math.max(0, Math.round(evaluationForReview(bestEval) - evaluationForReview(playedEval)));
 }
 
 export function calculateMoverCPL(
@@ -59,21 +32,15 @@ export function calculateMoverCPL(
   evalAfter: { type: 'cp' | 'mate'; value: number; depth?: number },
   mover: 'w' | 'b'
 ): number | null {
-  return mover === 'w'
-    ? calculateCPL(evalAfter, evalBefore)
-    : calculateCPL(evalBefore, evalAfter);
+  return Math.max(0, Math.round(-moverEvaluationDelta(evalBefore, evalAfter, mover)));
 }
 
 /**
  * Classify a move based on centipawn loss
  * @param cpl - Centipawn loss (positive = worse)
- * @param evalBefore - Evaluation before the move (normalized to white)
  * @returns Move classification
  */
-export function classifyMove(
-  cpl: number | null,
-  evalBefore: { type: 'cp' | 'mate'; value: number }
-): 'best' | 'excellent' | 'good' | 'inaccuracy' | 'mistake' | 'blunder' | 'forced' | 'unclassified' {
+export function classifyMove(cpl: number | null): 'best' | 'excellent' | 'good' | 'inaccuracy' | 'mistake' | 'blunder' | 'forced' | 'unclassified' {
   if (cpl === null) return 'unclassified';
   if (cpl === 0) return 'best';
 
@@ -147,7 +114,7 @@ export function determineSkillTags(
 
 /**
  * Convert engine evaluation to our format
- * Engine typically returns: cp X or mate Y (always from engine's perspective)
+ * Raw UCI score token, before the Stockfish service normalizes to White POV.
  */
 export function parseEngineEval(
   engineOutput: string

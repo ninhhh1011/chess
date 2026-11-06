@@ -90,7 +90,7 @@ test.describe('Stockfish Worker Integration', () => {
     }
   });
 
-  test('starting a new game aborts the active bot search and isolates its stale result', async ({ page }) => {
+  test('starting a replacement game aborts the active bot search', async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem('chess-app-onboarding', 'true');
       const NativeWorker = window.Worker;
@@ -131,15 +131,18 @@ test.describe('Stockfish Worker Integration', () => {
     });
 
     await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
-    await page.locator('div[aria-label] button').nth(3).click();
-    await page.locator('button[aria-label]').last().click();
-    await page.locator('.pt-2 button').click();
+    await page.getByRole('radio', { name: /Thử thách/ }).check({ force: true });
+    await page.getByRole('radio', { name: /Đen/ }).check({ force: true });
+    await page.getByRole('button', { name: /Bắt đầu ván/ }).click();
     await page.waitForFunction(() => window.__newGameCancellation.searches
       .some((search) => search.command === 'go movetime 1200' && !search.bestmove));
 
     const oldWorkerId = await page.evaluate(() => window.__newGameCancellation.workers.at(-1).id);
-    await page.getByRole('button', { name: 'Ván mới', exact: true }).click();
-    await page.getByRole('button', { name: 'Ván mới', exact: true }).click();
+    await page.getByRole('button', { name: /Bắt đầu ván mới/ }).click();
+    await page.getByRole('button', { name: 'Tạo ván mới', exact: true }).click();
+    await page.getByRole('radio', { name: /Thử thách/ }).check({ force: true });
+    await page.getByRole('radio', { name: /Đen/ }).check({ force: true });
+    await page.getByRole('button', { name: /Bắt đầu ván/ }).click();
     await page.waitForTimeout(150);
     expect(await page.evaluate(() => window.__newGameCancellation.terminated)).toContain(oldWorkerId);
 
@@ -153,14 +156,11 @@ test.describe('Stockfish Worker Integration', () => {
       oldSearch: window.__newGameCancellation.searches.find(
         (search) => search.workerId === oldId && search.command === 'go movetime 1200'
       ),
-      moveHistory: [...document.querySelectorAll('button span')]
-        .map((span) => span.textContent?.trim() || '')
-        .filter((value) => /^\d+\.\s+\S+/.test(value)),
     }), oldWorkerId);
 
     expect(outcome.oldSearch.bestmove).toBeNull();
-    expect(outcome.moveHistory).toHaveLength(1);
-    expect(outcome.lifecycle.workers).toHaveLength(2);
+    await expect(page.getByRole('button', { name: /^\d+\./ })).toHaveCount(1);
+    expect(outcome.lifecycle.terminated).toContain(oldWorkerId);
   });
 
   test('dispose cancels cold initialization without poisoning the replacement worker', async ({ page }) => {

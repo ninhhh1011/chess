@@ -3,23 +3,14 @@ import supabase, { isSupabaseConfigured } from '../lib/supabaseClient';
 export async function getCloudProfile(userId) {
   if (!isSupabaseConfigured || !userId) return null;
 
-  try {
-    const { data, error } = await supabase
-      .from('user_progress')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
+  const { data, error } = await supabase
+    .from('user_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
 
-    if (error) {
-      console.warn('[cloudProfile] Get profile error:', error);
-      return null;
-    }
-
-    return data;
-  } catch (err) {
-    console.warn('[cloudProfile] Get profile exception:', err);
-    return null;
-  }
+  if (error) throw error;
+  return data;
 }
 
 export async function createCloudProfile(user, profileData = {}) {
@@ -56,32 +47,27 @@ export async function createCloudProfile(user, profileData = {}) {
   }
 }
 
-export async function saveCloudProfile(userId, profile) {
+export async function saveCloudProfile(userId, profile, expectedCloudRevision = null) {
   if (!isSupabaseConfigured || !userId) return null;
 
-  try {
-    const { data, error } = await supabase
-      .from('user_progress')
-      .upsert({
-        user_id: userId,
-        profile_data: profile,
-        updated_at: new Date().toISOString(),
-      }, {
-        onConflict: 'user_id',
-      })
+  const nextRevision = (expectedCloudRevision ?? 0) + 1;
+  const values = {
+    user_id: userId,
+    profile_data: profile,
+    cloud_revision: nextRevision,
+    updated_at: profile.persistence?.sync?.lastSyncedAt || new Date().toISOString(),
+  };
+  const query = supabase.from('user_progress');
+  const result = expectedCloudRevision === null
+    ? await query.insert(values).select().single()
+    : await query.update(values)
+      .eq('user_id', userId)
+      .eq('cloud_revision', expectedCloudRevision)
       .select()
-      .single();
+      .maybeSingle();
 
-    if (error) {
-      console.warn('[cloudProfile] Save profile error:', error);
-      return null;
-    }
-
-    return data;
-  } catch (err) {
-    console.warn('[cloudProfile] Save profile exception:', err);
-    return null;
-  }
+  if (result.error) throw result.error;
+  return result.data;
 }
 
 export async function updateCloudProgress(userId, updates) {

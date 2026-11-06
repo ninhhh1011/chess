@@ -1,13 +1,8 @@
 import { getSanFromUci } from './chessMoveUtils';
 import { COACH_TONE } from '../config/brand';
+import { calculateMoverCPL, classifyMove } from '../services/analysis/orientation';
 
 export const MOVE_QUALITY = {
-  brilliant: {
-    symbol: '!!',
-    label: 'Thiên tài',
-    shortLabel: 'Thiên tài',
-    tone: 'brilliant',
-  },
   great: {
     symbol: '!',
     label: 'Tuyệt',
@@ -52,52 +47,30 @@ export const MOVE_QUALITY = {
   },
 };
 
-function evaluationForColor(analysis, color) {
-  if (!analysis?.evaluation) return 0;
-  const whitePawns =
-    analysis.evaluation.type === 'mate'
-      ? analysis.evaluation.value > 0
-        ? 99
-        : -99
-      : (Number(analysis.evaluation.value) || 0) / 100;
-  return color === 'w' ? whitePawns : -whitePawns;
-}
-
 export function classifyMoveAnnotation({ before, after, playedUci, playedSan, color }) {
-  const beforeForMover = evaluationForColor(before, color);
-  const afterForMover = evaluationForColor(after, color);
-  const delta = afterForMover - beforeForMover;
-  const loss = Math.max(0, -delta);
-  
-  const playedBestMove = Boolean(before?.bestMove && playedUci === before.bestMove);
+  if (!before?.evaluation || !after?.evaluation) return null;
+  const cpl = calculateMoverCPL(before.evaluation, after.evaluation, color);
+  if (cpl === null) return null;
+  const classification = classifyMove(cpl);
+
   const bestSan = before?.bestMove ? getSanFromUci(before.fen, before.bestMove) : null;
-
-  let qualityKey = 'good';
-
-  if ((playedBestMove && delta >= 1.5) || delta >= 2.2) {
-    qualityKey = 'brilliant';
-  } else if (playedBestMove || loss < 0.15) {
-    qualityKey = 'great';
-  } else if (loss < 0.25) {
-    qualityKey = 'best';
-  } else if (loss < 0.6) {
-    qualityKey = 'good';
-  } else if (loss < 1.2) {
-    qualityKey = 'inaccuracy';
-  } else if (loss < 2.2) {
-    qualityKey = 'mistake';
-  } else {
-    qualityKey = 'blunder';
-  }
-
+  const qualityKey = {
+    best: 'best',
+    excellent: 'great',
+    good: 'good',
+    inaccuracy: 'inaccuracy',
+    mistake: 'mistake',
+    blunder: 'blunder',
+  }[classification];
   const quality = MOVE_QUALITY[qualityKey];
+  if (!quality) return null;
 
   return {
     symbol: quality.symbol,
     label: quality.label,
     shortLabel: quality.shortLabel,
     tone: quality.tone,
-    loss,
+    loss: cpl / 100,
     bestSan,
     playedSan,
   };

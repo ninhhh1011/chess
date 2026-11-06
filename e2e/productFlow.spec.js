@@ -83,10 +83,8 @@ test.describe('Coach Flow', () => {
     await page.goto(`${BASE_URL}/play`, { waitUntil: 'networkidle' });
     const skipBtn = page.getByRole('button', { name: /Bỏ qua/i });
     if (await skipBtn.isVisible({ timeout: 500 }).catch(() => false)) await skipBtn.click();
-    await page.getByRole('button', { name: /^Dễ -/ }).click();
-    await page.getByRole('button', { name: /^Trắng -/ }).click();
     await page.getByRole('button', { name: 'Bắt đầu ván' }).click();
-    await page.getByRole('button', { name: 'Huấn luyện' }).click();
+    await page.getByRole('tab', { name: /Huấn luyện/ }).click();
 
     await expect(page.getByText('Nguồn: Diễn giải cơ bản · Không dùng AI')).toBeVisible();
     await expect(page.getByText('Nguồn: AI Coach', { exact: true })).toHaveCount(0);

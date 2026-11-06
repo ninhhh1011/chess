@@ -11,7 +11,6 @@
 
 import { describe, test, expect } from 'vitest';
 import {
-  normalizeEvalToWhite,
   calculateCPL,
   calculateMoverCPL,
   classifyMove,
@@ -20,38 +19,6 @@ import {
 } from '../services/analysis/orientation';
 
 describe('Evaluation Orientation', () => {
-  describe('normalizeEvalToWhite', () => {
-    test('white perspective stays the same', () => {
-      const eval_ = { type: 'cp' as const, value: 50, depth: 10 };
-      const result = normalizeEvalToWhite(eval_, 'w');
-      expect(result.value).toBe(50);
-    });
-
-    test('black perspective flips sign for cp', () => {
-      const eval_ = { type: 'cp' as const, value: 50, depth: 10 };
-      const result = normalizeEvalToWhite(eval_, 'b');
-      expect(result.value).toBe(-50);
-    });
-
-    test('white mate stays positive', () => {
-      const eval_ = { type: 'mate' as const, value: 3, depth: 10 };
-      const result = normalizeEvalToWhite(eval_, 'w');
-      expect(result.value).toBe(3);
-    });
-
-    test('black mate becomes negative', () => {
-      const eval_ = { type: 'mate' as const, value: 3, depth: 10 };
-      const result = normalizeEvalToWhite(eval_, 'b');
-      expect(result.value).toBe(-3);
-    });
-
-    test('mate for black to avoid mate becomes positive', () => {
-      const eval_ = { type: 'mate' as const, value: -2, depth: 10 };
-      const result = normalizeEvalToWhite(eval_, 'b');
-      expect(result.value).toBe(2);
-    });
-  });
-
   describe('calculateCPL', () => {
     test('best move has 0 CPL', () => {
       const played = { type: 'cp' as const, value: 30 };
@@ -126,6 +93,15 @@ describe('Evaluation Orientation', () => {
         'b'
       )).toBe(0);
     });
+
+    test.each([
+      ['w', { type: 'mate' as const, value: 2 }, { type: 'mate' as const, value: 4 }, 200],
+      ['w', { type: 'mate' as const, value: -4 }, { type: 'mate' as const, value: -2 }, 200],
+      ['b', { type: 'mate' as const, value: -2 }, { type: 'mate' as const, value: -4 }, 200],
+      ['b', { type: 'mate' as const, value: 4 }, { type: 'mate' as const, value: 2 }, 200],
+    ] as const)('preserves mate-distance loss for %s mover', (mover, before, after, expected) => {
+      expect(calculateMoverCPL(before, after, mover)).toBe(expected);
+    });
   });
 
   describe('skill tags', () => {
@@ -149,27 +125,27 @@ describe('Evaluation Orientation', () => {
 
   describe('classifyMove', () => {
     test('best move', () => {
-      expect(classifyMove(0, { type: 'cp', value: 0 })).toBe('best');
+      expect(classifyMove(0)).toBe('best');
     });
 
     test('excellent (≤0.1 pawn)', () => {
-      expect(classifyMove(5, { type: 'cp', value: 0 })).toBe('excellent');
+      expect(classifyMove(5)).toBe('excellent');
     });
 
     test('good (≤0.3 pawn)', () => {
-      expect(classifyMove(20, { type: 'cp', value: 0 })).toBe('good');
+      expect(classifyMove(20)).toBe('good');
     });
 
     test('inaccuracy (≤0.8 pawn)', () => {
-      expect(classifyMove(60, { type: 'cp', value: 0 })).toBe('inaccuracy');
+      expect(classifyMove(60)).toBe('inaccuracy');
     });
 
     test('mistake (≤2 pawn)', () => {
-      expect(classifyMove(150, { type: 'cp', value: 0 })).toBe('mistake');
+      expect(classifyMove(150)).toBe('mistake');
     });
 
     test('blunder (>2 pawn)', () => {
-      expect(classifyMove(300, { type: 'cp', value: 0 })).toBe('blunder');
+      expect(classifyMove(300)).toBe('blunder');
     });
   });
 

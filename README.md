@@ -7,9 +7,9 @@
 - Chơi local với bot; đường chạy thành công dùng Stockfish WASM trong Web Worker.
 - Năm bài tập tích hợp sẵn trong `src/data/exercises.js`.
 - Hồ sơ và kế hoạch luyện tập lưu local; đồng bộ cloud là tùy chọn.
-- Baseline mới nhất: 572 unit/integration tests trong 31 file và 68 Playwright tests trong 4 file đều pass.
+- Baseline clean-checkout ngày 2026-10-07 tại commit `dd9a4aa`: 753 unit/integration tests pass; E2E phát hiện 72 tests, 51 pass và 21 fail do selector khởi tạo cũ. Đây là bằng chứng lịch sử trước các chỉnh sửa trong worktree; xem `docs/audit/BASELINE.md` để biết đầy đủ.
 
-Kho corpus bên ngoài hiện **không được bundle hoặc deploy**. Trang bài tập hiển thị rõ rằng người dùng đang dùng năm bài tập tích hợp. Coach có chế độ diễn giải cơ bản trung thực; live provider, Supabase/online play và hành vi offline/PWA vẫn cần các phase xác minh riêng.
+Kho corpus Lichess CC0 gồm 20.000 bài tập đã được bundle dưới dạng các chunk có kiểm tra checksum. Trang bài tập tải và xác thực delivery khi chạy; nếu tải hoặc xác thực thất bại, ứng dụng báo rõ và dùng năm bài tập tích hợp. Coach có chế độ diễn giải cơ bản trung thực; live provider, Supabase/deployed database và hành vi offline/PWA vẫn cần các phase xác minh riêng. Chơi online đã bị loại khỏi ứng dụng.
 
 ## Chạy local
 
@@ -31,11 +31,6 @@ npm run test:e2e -- --list
 npm run test:e2e
 ```
 
-## Tài liệu canonical
+## Tài liệu
 
-- [Current runtime source map](docs/CURRENT_RUNTIME.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Execution plan](docs/CODEX_TECH_EXECUTION_PLAN.md)
-- [Corpus deployment status](docs/CORPUS_DEPLOYMENT.md)
-
-Các báo cáo phase cũ chỉ là snapshot lịch sử. Khi số liệu hoặc trạng thái khác nhau, `CURRENT_RUNTIME.md` và các task/verifier report mới hơn được ưu tiên.
+Bắt đầu từ [chỉ mục tài liệu](docs/README.md); chỉ mở tài liệu phù hợp với task. [Current runtime source map](docs/CURRENT_RUNTIME.md) tóm tắt các luồng production hiện tại. Báo cáo phase và execution plan là tư liệu lịch sử, không thay thế source hoặc kiểm tra mới.

@@ -60,6 +60,7 @@ describe('Coach Service', () => {
           source: 'llm',
           engineSource: 'none',
           knowledgeSource: 'none',
+          evidenceUsed: [],
           suggestedActions: [],
         }),
       });
@@ -105,6 +106,28 @@ describe('Coach Service', () => {
       expect(response.source).toBe('basic');
       expect(response.reply).not.toBe('untrusted');
     });
+
+    it('rejects position evidence when no FEN was included in the request', async () => {
+      vi.stubEnv('VITE_USE_LOCAL_COACH', 'true');
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          schemaVersion: 'coach.v1',
+          reply: 'The position is winning.',
+          source: 'llm',
+          engineSource: 'none',
+          knowledgeSource: 'none',
+          evidenceUsed: ['position'],
+          suggestedActions: [],
+        }),
+      }));
+      vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      const response = await askCoach({ question: 'How is the position?', playerLevel: 'beginner' });
+
+      expect(response.source).toBe('basic');
+      expect(response.evidenceUsed).toEqual([]);
+    });
   });
 
   describe('Canonical server endpoint', () => {
@@ -123,6 +146,7 @@ describe('Coach Service', () => {
     });
 
     it('returns a safe basic response for a real request with position facts', async () => {
+      vi.stubEnv('CLAUDE_API_KEY', '');
       const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
       const request = new Request('http://localhost/api/coach', {
         method: 'POST',
@@ -143,6 +167,44 @@ describe('Coach Service', () => {
       expect(body.source).toBe('basic');
       expect(body.engineSource).toBe('none');
       expect(body.reply).not.toContain(fen);
+      expect(body.evidenceUsed).toEqual([]);
+    });
+
+    it('rejects invalid FEN and unconsumed request context', async () => {
+      const invalidFen = await edgeCoachHandler(new Request('http://localhost/api/coach', {
+        method: 'POST', body: JSON.stringify({
+          schemaVersion: 'coach.v1', question: 'Nên đi gì?', fen: 'bad-fen',
+        }),
+      }));
+      expect(invalidFen.status).toBe(400);
+
+      const legacyContext = await edgeCoachHandler(new Request('http://localhost/api/coach', {
+        method: 'POST', body: JSON.stringify({
+          schemaVersion: 'coach.v1', question: 'Nên đi gì?', history: ['e4'],
+        }),
+      }));
+      expect(legacyContext.status).toBe(400);
+      expect(await legacyContext.json()).toEqual({ error: 'Unsupported request field' });
+    });
+
+    it('rejects oversized request bodies before Coach processing', async () => {
+      const response = await edgeCoachHandler(new Request('http://localhost/api/coach', {
+        method: 'POST', body: JSON.stringify({ question: 'x'.repeat(9000) }),
+      }));
+      expect(response.status).toBe(413);
+    });
+
+    it('rate limits repeated guest requests by client address', async () => {
+      const address = `coach-test-${Date.now()}`;
+      const body = JSON.stringify({ schemaVersion: 'coach.v1', question: 'Nên tập gì?' });
+      const responses = [];
+      for (let index = 0; index < 11; index += 1) {
+        responses.push(await edgeCoachHandler(new Request('http://localhost/api/coach', {
+          method: 'POST', headers: { 'x-forwarded-for': address }, body,
+        })));
+      }
+      expect(responses.slice(0, 10).every((response) => response.status === 200)).toBe(true);
+      expect(responses[10].status).toBe(429);
     });
   });
 

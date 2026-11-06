@@ -32,7 +32,8 @@ export interface LearningPersistenceV1 {
   skillStates: SkillStateRecord[];
   trainingPlans: TrainingPlanRecord[];
   sync: {
-    schemaVersion: 'sync.v1'; syncId: string; revision: number; updatedAt: string; lastSyncedAt: string | null;
+    schemaVersion: 'sync.v2'; syncId: string; revision: number; updatedAt: string; lastSyncedAt: string | null;
+    cloudRevision: number | null; profileRevisionAtSync: number | null;
   };
 }
 
@@ -76,7 +77,10 @@ export function createPersistenceState(profileId: string, now = new Date().toISO
     puzzleAttempts: [],
     skillStates: [],
     trainingPlans: [],
-    sync: { schemaVersion: 'sync.v1', syncId: `sync:${profileId}`, revision: 0, updatedAt: now, lastSyncedAt: null },
+    sync: {
+      schemaVersion: 'sync.v2', syncId: `sync:${profileId}`, revision: 0, updatedAt: now, lastSyncedAt: null,
+      cloudRevision: null, profileRevisionAtSync: null,
+    },
   };
 }
 
@@ -218,10 +222,22 @@ export function assertPersistenceState(value: unknown): LearningPersistenceV1 {
   unique(plans, (item) => (item as TrainingPlanRecord).planId, 'trainingPlans');
 
 const sync = object(state.sync, 'sync');
-  if (sync.schemaVersion !== 'sync.v1' || sync.syncId !== `sync:${profileId}`
+  if (!['sync.v1', 'sync.v2'].includes(String(sync.schemaVersion)) || sync.syncId !== `sync:${profileId}`
     || !Number.isInteger(sync.revision) || Number(sync.revision) < 0) fail('sync');
   iso(sync.updatedAt, 'sync.updatedAt');
   if (sync.lastSyncedAt !== null) iso(sync.lastSyncedAt, 'sync.lastSyncedAt');
 
-  return { ...state, puzzleAttempts: attempts, skillStates: skills } as unknown as LearningPersistenceV1;
+  const cloudRevision = sync.cloudRevision === undefined ? null : sync.cloudRevision;
+  const profileRevisionAtSync = sync.profileRevisionAtSync === undefined ? null : sync.profileRevisionAtSync;
+  if ((cloudRevision !== null && (!Number.isInteger(cloudRevision) || Number(cloudRevision) < 0))
+    || (profileRevisionAtSync !== null && (!Number.isInteger(profileRevisionAtSync) || Number(profileRevisionAtSync) < 0))) {
+    fail('sync.revision metadata');
+  }
+
+  return {
+    ...state,
+    puzzleAttempts: attempts,
+    skillStates: skills,
+    sync: { ...sync, schemaVersion: 'sync.v2', cloudRevision, profileRevisionAtSync },
+  } as unknown as LearningPersistenceV1;
 }

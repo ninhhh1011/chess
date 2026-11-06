@@ -8,20 +8,13 @@ import { useChessGame } from '../contexts/ChessGameContext';
  * - Escape: deselect
  * - Tab: cycle through legal moves
  */
-export function useKeyboardNavigation() {
+export function useKeyboardNavigation({ selectedSquare, moveHints, selectSquare, clearSelection, isThinking }) {
   const {
     activeGame,
-    selectedSquare,
-    moveHints,
-    selectSquare,
-    makeMove,
-    clearSelection,
-    gameMode,
+    attemptMove,
     playerColor,
-    isBotThinking,
     isGameOver,
     playState,
-    GAME_MODES,
   } = useChessGame();
 
   const getSquareFromIndex = useCallback((file, rank) => {
@@ -40,10 +33,10 @@ export function useKeyboardNavigation() {
 
   const handleKeyDown = useCallback((e) => {
     // Only work during gameplay
-    if (playState !== 'playing' || isBotThinking || isGameOver) return;
+    if (playState !== 'playing' || isThinking || isGameOver) return;
 
     // In bot mode, only respond when it's player's turn
-    if (gameMode === GAME_MODES.BOT && activeGame.turn() !== playerColor) return;
+    if (activeGame.turn() !== playerColor) return;
 
     // Ignore if typing in input
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -96,11 +89,13 @@ export function useKeyboardNavigation() {
       const hints = Object.keys(moveHints);
       if (hints.length > 0) {
         const targetSquare = hints[0];
-        const result = makeMove(selectedSquare, targetSquare);
-        if (result) {
+        const result = attemptMove(selectedSquare, targetSquare);
+        if (result.status === 'moved') {
           clearSelection();
           // Select the moved piece's new position for quick follow-up
           setTimeout(() => selectSquare(targetSquare), 50);
+        } else if (result.status === 'promotion_required') {
+          clearSelection();
         }
       }
     } else if (key === 'Tab') {
@@ -124,17 +119,15 @@ export function useKeyboardNavigation() {
     selectedSquare,
     moveHints,
     selectSquare,
-    makeMove,
+    attemptMove,
     clearSelection,
     getSquareFromIndex,
     getIndexFromSquare,
-    gameMode,
     activeGame.turn,
     playerColor,
-    isBotThinking,
+    isThinking,
     isGameOver,
     playState,
-    GAME_MODES,
   ]);
 
   useEffect(() => {

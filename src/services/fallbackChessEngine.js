@@ -52,6 +52,7 @@ export async function analyzeFenFallback({ fen, elo = 1200 } = {}) {
   });
 }
 
+/** @param {{ fen?: string, elo?: number }} options */
 export async function getBestMoveFallback({ fen, elo = 1200 } = {}) {
   const analysis = await analyzeFenFallback({ fen, elo });
   return analysis.bestMove;

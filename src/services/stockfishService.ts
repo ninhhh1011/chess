@@ -1,6 +1,7 @@
 import { analyzeFenFallback, getBestMoveFallback } from './fallbackChessEngine';
 import { isLegalUciMove } from '../utils/chessMoveValidation';
 import type { AnalysisResult, EngineConfig, Evaluation } from '../types/ChessTypes';
+import { toWhitePerspective } from '../domain/engine/evaluation';
 
 const ENGINE_VERSION = '2026-05-30-simplified';
 const ENGINE_CRASH_BASE_COOLDOWN_MS = 60000;
@@ -16,11 +17,25 @@ let engineFailureCount = 0;
 let hasLoggedWorkerUnavailable = false;
 let engineInitPromise: Promise<boolean> | null = null;
 let cancelEngineInit: (() => void) | null = null;
-let currentAnalysis: { fen: string; cancel: (reason?: Error) => void } | null = null;
+let currentAnalysis: { requestId: number; fen: string; cancel: (reason?: Error) => void } | null = null;
 let analysisQueue: Promise<void> = Promise.resolve();
-
-// Simple request ID for request cancellation
 let currentRequestId = 0;
+let lifecycleGeneration = 0;
+let activeRequest: AnalysisRequest | null = null;
+
+interface AnalysisRequest {
+  generation: number;
+  controller: AbortController;
+  settled: boolean;
+  started: boolean;
+  abort: (reason: Error) => void;
+}
+
+const pendingRequests = new Set<AnalysisRequest>();
+
+function createAbortError(message: string): DOMException {
+  return new DOMException(message, 'AbortError');
+}
 
 function debug(...args: unknown[]) {
   if (typeof window !== 'undefined' && (window as unknown as { __DEV__?: boolean }).__DEV__ && localStorage.getItem('debugStockfish') === '1') {
@@ -179,7 +194,9 @@ export async function configureEngine(
  * Stop current engine analysis
  */
 export function stopEngine() {
-  if (worker) {
+  if (activeRequest) {
+    activeRequest.abort(createAbortError('Stockfish analysis stopped'));
+  } else if (worker) {
     worker.postMessage('stop');
   }
 }
@@ -188,9 +205,10 @@ export function stopEngine() {
  * Dispose of engine resources
  */
 export function disposeEngine() {
+  lifecycleGeneration += 1;
+  for (const request of [...pendingRequests]) request.abort(createAbortError('Stockfish engine disposed'));
   cancelEngineInit?.();
-  stopEngine();
-  currentAnalysis?.cancel();
+  currentAnalysis?.cancel(createAbortError('Stockfish engine disposed'));
   if (worker) {
     worker.terminate();
     worker = null;
@@ -203,15 +221,18 @@ export function disposeEngine() {
  * Cancel any pending analysis requests
  */
 export function cancelPendingAnalysis() {
-  currentAnalysis?.cancel(new DOMException('Stockfish analysis cancelled', 'AbortError'));
+  for (const request of [...pendingRequests]) request.abort(createAbortError('Stockfish analysis cancelled'));
 }
 
-async function fallbackAnalysis(fen: string, depth: number, elo: number, warning = 'Stockfish unavailable'): Promise<AnalysisResult> {
+async function fallbackAnalysis(fen: string, depth: number, elo: number, warning = 'Stockfish unavailable', signal?: AbortSignal): Promise<AnalysisResult> {
+  signal?.throwIfAborted();
   try {
     const fallback = await analyzeFenFallback({ fen, elo } as { fen: string; elo?: number });
+    signal?.throwIfAborted();
     return {
       success: !!fallback?.bestMove,
       source: 'fallback',
+      perspective: 'white',
       fen,
       bestMove: fallback?.bestMove || null,
       evaluation: fallback?.evaluation || null,
@@ -220,10 +241,12 @@ async function fallbackAnalysis(fen: string, depth: number, elo: number, warning
       raw: [],
       warning,
     };
-  } catch {
+  } catch (error) {
+    if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') throw error;
     return {
       success: false,
       source: 'fallback',
+      perspective: 'white',
       fen,
       bestMove: null,
       evaluation: null,
@@ -239,12 +262,75 @@ async function fallbackAnalysis(fen: string, depth: number, elo: number, warning
  * Analyze FEN position and return best move with evaluation
  */
 export function analyzeFen(config: EngineConfig): Promise<AnalysisResult> {
-  const result = analysisQueue.then(() => analyzeFenNow(config));
-  analysisQueue = result.then(() => undefined, () => undefined);
+  if (!config.fen) return Promise.reject(new Error('FEN is required'));
+  if (config.signal?.aborted) return Promise.reject(createAbortError('Stockfish analysis cancelled'));
+
+  const id = ++currentRequestId;
+  const request: AnalysisRequest = {
+    generation: lifecycleGeneration,
+    controller: new AbortController(),
+    settled: false,
+    started: false,
+    abort: () => undefined,
+  };
+
+  let resolveRequest!: (result: AnalysisResult) => void;
+  let rejectRequest!: (reason: unknown) => void;
+  const result = new Promise<AnalysisResult>((resolve, reject) => {
+    resolveRequest = resolve;
+    rejectRequest = reject;
+  });
+  let removeAbortListener = () => {};
+  const settle = (settler: () => void) => {
+    if (request.settled) return;
+    request.settled = true;
+    removeAbortListener();
+    pendingRequests.delete(request);
+    settler();
+  };
+  request.abort = (reason) => {
+    if (request.settled) return;
+    request.controller.abort(reason);
+    if (currentAnalysis?.requestId === id) currentAnalysis.cancel(reason);
+    else if (request.started && engineState === 'loading') {
+      cancelEngineInit?.();
+      worker?.terminate();
+      worker = null;
+      engineReady = false;
+      engineState = 'idle';
+    }
+    settle(() => rejectRequest(reason));
+  };
+  pendingRequests.add(request);
+
+  if (config.signal) {
+    const onAbort = () => request.abort(createAbortError('Stockfish analysis cancelled'));
+    config.signal.addEventListener('abort', onAbort, { once: true });
+    removeAbortListener = () => config.signal?.removeEventListener('abort', onAbort);
+  }
+
+  const run = analysisQueue.then(async () => {
+    if (request.settled) return;
+    if (request.generation !== lifecycleGeneration) {
+      request.abort(createAbortError('Stockfish engine disposed'));
+      return;
+    }
+    request.started = true;
+    activeRequest = request;
+    try {
+      const analysis = await analyzeFenNow({ ...config, signal: request.controller.signal }, id);
+      settle(() => resolveRequest(analysis));
+    } catch (error) {
+      settle(() => rejectRequest(error));
+    } finally {
+      if (activeRequest === request) activeRequest = null;
+    }
+  });
+  analysisQueue = run.then(() => undefined, () => undefined);
   return result;
 }
 
-async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
+async function analyzeFenNow(config: EngineConfig, requestId: number): Promise<AnalysisResult> {
   const { fen, depth = 10, movetime = null, elo = 1200, skillLevel = null, useSkillLevelOnly, signal } = config;
 
   if (!fen) {
@@ -258,7 +344,8 @@ async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
   if (!isEngineReady()) {
     const initialized = await initEngine();
     if (!initialized) {
-      return await fallbackAnalysis(fen, depth, effectiveElo);
+      signal?.throwIfAborted();
+      return await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish unavailable', signal);
     }
   }
   signal?.throwIfAborted();
@@ -269,17 +356,17 @@ async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
   }
   signal?.throwIfAborted();
 
-  const requestId = ++currentRequestId;
   const timeoutMs = depth <= 12 ? 3000 : depth <= 18 ? 4500 : 6000;
 
   return new Promise((resolve, reject) => {
     const analysisWorker = worker!;
-    const timeout = setTimeout(async () => {
+    const timeout = setTimeout(() => {
       if (settled) return;
       analysisWorker.terminate();
       if (worker === analysisWorker) worker = null;
       engineReady = false;
-      finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish timeout'));
+      engineState = 'idle';
+      fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish timeout', signal).then(finish, fail);
     }, timeoutMs);
 
     let settled = false;
@@ -299,9 +386,18 @@ async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
       if (settled) return;
       settled = true;
       cleanup();
-      currentAnalysis = null;
-      engineState = isEngineReady() ? 'ready' : 'idle';
+      if (currentAnalysis?.requestId === requestId) currentAnalysis = null;
+      if (worker === analysisWorker) engineState = isEngineReady() ? 'ready' : 'idle';
       resolve(result);
+    }
+
+    function fail(reason: unknown) {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      if (currentAnalysis?.requestId === requestId) currentAnalysis = null;
+      if (worker === analysisWorker) engineState = isEngineReady() ? 'ready' : 'idle';
+      reject(reason);
     }
 
     function cancel(reason = new Error('Stockfish analysis disposed')) {
@@ -311,21 +407,22 @@ async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
       analysisWorker.terminate();
       if (worker === analysisWorker) worker = null;
       engineReady = false;
-      currentAnalysis = null;
+      if (currentAnalysis?.requestId === requestId) currentAnalysis = null;
       engineState = 'idle';
       reject(reason);
     }
 
     const onAbort = () => cancel(new DOMException('Stockfish analysis cancelled', 'AbortError'));
     signal?.addEventListener('abort', onAbort, { once: true });
-    currentAnalysis = { fen, cancel };
+    currentAnalysis = { requestId, fen, cancel };
 
-    analysisWorker.onmessage = async (event: MessageEvent) => {
+    analysisWorker.onmessage = (event: MessageEvent) => {
+      if (settled || worker !== analysisWorker || currentAnalysis?.requestId !== requestId) return;
       const message = event.data;
 
       if (message.type === 'error') {
         disableEngine(message.error);
-        finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish error'));
+        fallbackAnalysis(fen, depth, effectiveElo, 'Stockfish error', signal).then(finish, fail);
         return;
       }
 
@@ -345,10 +442,16 @@ async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
 
       if (mateMatch) {
         const mateIn = parseInt(mateMatch[1], 10);
-        evaluation = { type: 'mate', value: mateIn, display: `Mate in ${Math.abs(mateIn)}` };
+        evaluation = toWhitePerspective(
+          { type: 'mate', value: mateIn, display: `Mate in ${Math.abs(mateIn)}` },
+          fen.split(' ')[1] === 'b' ? 'b' : 'w'
+        );
       } else if (cpMatch) {
         const cp = parseInt(cpMatch[1], 10);
-        evaluation = { type: 'cp', value: cp, display: `${cp >= 0 ? '+' : ''}${(cp / 100).toFixed(2)}` };
+        evaluation = toWhitePerspective(
+          { type: 'cp', value: cp, display: `${cp >= 0 ? '+' : ''}${(cp / 100).toFixed(2)}` },
+          fen.split(' ')[1] === 'b' ? 'b' : 'w'
+        );
       }
 
       // Parse PV
@@ -369,22 +472,24 @@ async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
           finish({
             success: true,
             source: 'stockfish_wasm',
+            perspective: 'white',
             fen,
             bestMove: candidate,
-            evaluation: evaluation || { type: 'cp', value: 0, display: '0.00' },
+            evaluation,
             depth: lastDepth || depth,
             pv,
             raw: [],
           });
         } else {
-          finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Invalid bestmove'));
+          fallbackAnalysis(fen, depth, effectiveElo, 'Invalid bestmove', signal).then(finish, fail);
         }
       }
     };
 
-    analysisWorker.onerror = async () => {
+    analysisWorker.onerror = () => {
+      if (settled || worker !== analysisWorker || currentAnalysis?.requestId !== requestId) return;
       disableEngine('Worker error');
-      finish(await fallbackAnalysis(fen, depth, effectiveElo, 'Worker error'));
+      fallbackAnalysis(fen, depth, effectiveElo, 'Worker error', signal).then(finish, fail);
     };
 
     try {
@@ -395,7 +500,7 @@ async function analyzeFenNow(config: EngineConfig): Promise<AnalysisResult> {
     } catch {
       disableEngine('Command error');
       // Use synchronous fallback since we're in a sync context
-      fallbackAnalysis(fen, depth, effectiveElo, 'Command error').then(finish);
+      fallbackAnalysis(fen, depth, effectiveElo, 'Command error', signal).then(finish, fail);
     }
   });
 }
@@ -407,7 +512,8 @@ export async function getBestMove(config: Omit<EngineConfig, 'purpose'>): Promis
   try {
     const result = await analyzeFen(config);
     return result.bestMove;
-  } catch {
-    return getBestMoveFallback({ elo: config.elo ?? 1200 });
+  } catch (error) {
+    if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') throw error;
+    return getBestMoveFallback({ fen: config.fen, elo: config.elo ?? 1200 });
   }
 }

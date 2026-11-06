@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { analyzeFen, isEngineReady, stopEngine } from '../../services/stockfishService';
+import { useEffect, useRef, useState } from 'react';
+import { analyzeFen, isEngineReady } from '../../services/stockfishService';
 import { formatEvaluation, getSanFromUci } from '../../utils/chessMoveUtils';
 import GameReviewPanel from './GameReviewPanel';
 import { BRAND_NAMES, UI_COPY } from '../../config/brand';
@@ -19,44 +19,67 @@ function getEvalPercent(evaluation) {
 /**
  * EngineAnalysisPanel - Option C styling with HeroUI foundation
  */
-export default function EngineAnalysisPanel({ fen, onBestMove, onReview, onReviewFact, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
+export default function EngineAnalysisPanel({ fen, onAnalysisRequestStart, onBestMove, onReview, onReviewFact, review, isReviewing, autoAnalyze, onAutoAnalyzeChange, autoComment }) {
   const [status, setStatus] = useState(() => (isEngineReady() ? 'Sẵn sàng' : 'Chưa tải'));
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const activeRequestRef = useRef(null);
   const bestSan = analysis?.bestMove ? getSanFromUci(analysis.fen, analysis.bestMove) : null;
   const whiteEvalPercent = getEvalPercent(analysis?.evaluation);
+  const sourceDisclosure = analysis?.source?.startsWith('stockfish')
+    ? 'Nguồn: Stockfish 18'
+    : analysis?.source?.startsWith('fallback')
+      ? 'Nguồn: Engine dự phòng'
+      : 'Nguồn: Chưa có kết quả';
 
   useEffect(() => {
     setAnalysis(null);
     setError('');
+    setIsAnalyzing(false);
+    setStatus(isEngineReady() ? 'Sẵn sàng' : 'Chưa tải');
+    return () => {
+      const request = activeRequestRef.current;
+      activeRequestRef.current = null;
+      request?.controller.abort();
+    };
   }, [fen]);
 
   async function runAnalysis(showHint = false) {
+    activeRequestRef.current?.controller.abort();
+    const request = { controller: new AbortController(), requestId: onAnalysisRequestStart?.() };
+    activeRequestRef.current = request;
     setIsAnalyzing(true);
     setError('');
     setStatus(isEngineReady() ? 'Đang phân tích' : 'Đang tải engine');
 
     try {
-      const result = await analyzeFen({ fen, depth: 10, purpose: showHint ? 'hint' : 'review' });
+      const result = await analyzeFen({ fen, depth: 10, purpose: showHint ? 'hint' : 'review', signal: request.controller.signal });
+      if (activeRequestRef.current !== request || request.controller.signal.aborted) return;
       setAnalysis(result);
       setStatus(result.source?.startsWith('fallback') ? 'Fallback' : 'Sẵn sàng');
       if (result.bestMove) {
-        onBestMove?.({ bestMove: result.bestMove, fen: result.fen, evaluation: result.evaluation });
+        onBestMove?.({ bestMove: result.bestMove, fen: result.fen || fen, evaluation: result.evaluation }, request.requestId);
       }
       if (showHint && result.bestMove) {
         setError(`${UI_COPY.hint}: ${getSanFromUci(result.fen, result.bestMove)}`);
       }
     } catch (err) {
+      if (activeRequestRef.current !== request || request.controller.signal.aborted || err?.name === 'AbortError') return;
       setStatus('Lỗi');
       setError(err.message || 'Engine chưa sẵn sàng');
     } finally {
-      setIsAnalyzing(false);
+      if (activeRequestRef.current === request) {
+        activeRequestRef.current = null;
+        setIsAnalyzing(false);
+      }
     }
   }
 
   function handleStop() {
-    stopEngine();
+    const request = activeRequestRef.current;
+    activeRequestRef.current = null;
+    request?.controller.abort();
     setIsAnalyzing(false);
     setStatus('Đã dừng');
   }
@@ -75,9 +98,9 @@ export default function EngineAnalysisPanel({ fen, onBestMove, onReview, onRevie
         </AppStatus>
       </div>
 
-      {/* Single source disclosure line per Section 14 */}
+      {/* Source reflects the engine result actually returned. */}
       <p className="text-[11px] text-[var(--app-subtle)]">
-        Nguồn: Stockfish 18 · Diễn giải cơ bản
+        {sourceDisclosure}
       </p>
 
       {/* Evaluation bar + info */}

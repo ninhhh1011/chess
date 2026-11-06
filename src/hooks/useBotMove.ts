@@ -4,7 +4,6 @@ import type { BotMoveResult } from '../types/ChessTypes';
 
 interface UseBotMoveOptions {
   botElo?: number;
-  onMoveStart?: () => void;
   onMoveComplete?: (move: BotMoveResult, gameGenId: number) => void;
   /** Timeout in ms for bot move request. Default 15000ms. */
   timeoutMs?: number;
@@ -20,28 +19,27 @@ interface UseBotMoveReturn {
 
 /**
  * Hook for managing bot move requests with proper cancellation.
- * Uses requestId (gameGenId) tracking to prevent stale responses from being applied.
+ * Uses a private request token to prevent stale responses from being applied.
  * Includes timeout handling to prevent infinite loading.
  *
- * IMPORTANT: gameGenId must be passed to distinguish between requests from different games
- * that may have the same initial FEN. This prevents old game responses from affecting new games.
+ * gameGenId is callback metadata; request freshness is tracked independently.
  */
 export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
-  const { botElo = 1200, onMoveStart, onMoveComplete, timeoutMs = 15000 } = options;
+  const { botElo = 1200, onMoveComplete, timeoutMs = 15000 } = options;
 
   const [isThinking, setIsThinking] = useState(false);
   const [lastMove, setLastMove] = useState<BotMoveResult | null>(null);
   const [requestId, setRequestId] = useState(0);
 
-  // Track current game generation ID to ignore stale responses
-  const currentGameGenIdRef = useRef(0);
+  // Request freshness must not depend on caller-supplied game generations.
+  const requestTokenRef = useRef(0);
   // Track active abort controller
   const abortControllerRef = useRef<AbortController | null>(null);
   // Track timeout ID for cleanup
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelMove = useCallback(() => {
-    currentGameGenIdRef.current += 1;
+    requestTokenRef.current += 1;
     // Clear any pending timeout
     if (timeoutRef.current) {
       window.clearTimeout(timeoutRef.current);
@@ -60,15 +58,22 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
       // Cancel any pending move first
       cancelMove();
 
-      // Use provided gameGenId or increment
-      const genId = gameGenId !== undefined ? gameGenId : currentGameGenIdRef.current + 1;
-      currentGameGenIdRef.current = genId;
-      setRequestId(genId);
+      const requestToken = requestTokenRef.current;
+      const callbackGameGenId = gameGenId ?? requestToken;
+      const staleResult: BotMoveResult = {
+        move: null,
+        source: 'stale',
+        elo: botElo,
+        depth: 0,
+        movetime: 0,
+        skillLevel: 0,
+        warning: 'Stale response ignored',
+      };
+      setRequestId(requestToken);
 
       const controller = new AbortController();
       abortControllerRef.current = controller;
       setIsThinking(true);
-      onMoveStart?.();
 
       // Create timeout to prevent infinite loading
       let timedOut = false;
@@ -90,18 +95,17 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
         ]);
 
         // Check if this response is still valid (request not cancelled/stale)
-        if (currentGameGenIdRef.current !== genId) {
-          console.debug('[useBotMove] Ignoring stale response', { genId, current: currentGameGenIdRef.current });
-          return lastMove || { move: null, source: 'stale', elo: botElo, depth: 0, movetime: 0, skillLevel: 0, warning: 'Stale response ignored' };
+        if (requestTokenRef.current !== requestToken) {
+          return staleResult;
         }
 
         setLastMove(result);
-        onMoveComplete?.(result, genId);
+        onMoveComplete?.(result, callbackGameGenId);
         return result;
       } catch (error) {
         // Check if this request is still current before handling error
-        if (currentGameGenIdRef.current !== genId) {
-          return lastMove || { move: null, source: 'stale', elo: botElo, depth: 0, movetime: 0, skillLevel: 0, warning: 'Stale response ignored' };
+        if (requestTokenRef.current !== requestToken) {
+          return staleResult;
         }
 
         const isTimeout = timedOut || (error instanceof Error && error.message === 'TIMEOUT');
@@ -116,7 +120,7 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
         };
 
         setLastMove(errorResult);
-        onMoveComplete?.(errorResult, genId);
+        onMoveComplete?.(errorResult, callbackGameGenId);
         return errorResult;
       } finally {
         // Always clear timeout
@@ -128,12 +132,12 @@ export function useBotMove(options: UseBotMoveOptions = {}): UseBotMoveReturn {
           abortControllerRef.current = null;
         }
         // Only clear thinking state if this is still the current request
-        if (currentGameGenIdRef.current === genId) {
+        if (requestTokenRef.current === requestToken) {
           setIsThinking(false);
         }
       }
     },
-    [botElo, onMoveStart, onMoveComplete, cancelMove, lastMove, timeoutMs]
+    [botElo, onMoveComplete, cancelMove, timeoutMs]
   );
 
   // Cleanup on unmount
